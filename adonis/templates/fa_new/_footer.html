@@ -1,0 +1,100 @@
+{% load static %}
+{# ───────────── Shared Persian footer (home + internal pages) ───────────── #}
+<footer class="adonis-fa-new-footer">
+    <div class="adonis-fa-new-container adonis-fa-new-footer-grid">
+
+        {# ── Brand column ── #}
+        <div class="adonis-fa-new-footer-brand">
+            <div class="adonis-fa-new-footer-brand-top">
+                {% with footer_logo_w=footer.logo_max_width|default:120 %}
+                {% if footer.footer_logo %}
+                    <img src="{{ footer.footer_logo.url }}" alt="{{ footer.brand_name }}" class="adonis-fa-new-footer-logo-img" width="{{ footer_logo_w }}">
+                {% elif settings.header_logo %}
+                    <img src="{{ settings.header_logo.url }}" alt="{{ footer.brand_name }}" class="adonis-fa-new-footer-logo-img" width="{{ footer_logo_w }}">
+                {% else %}
+                    <span class="adonis-fa-new-logo-mark">A</span>
+                {% endif %}
+                {% endwith %}
+                <span class="adonis-fa-new-footer-brand-text">
+                    <strong>{{ footer.brand_name|default:"آدونیس | ADONIS" }}</strong>
+                    <small>{{ footer.brand_tagline|default:"گروه توسعه و مشاوره اقامت در آتن" }}</small>
+                </span>
+            </div>
+
+            {% if footer.whatsapp_url or footer.telegram_url or footer.youtube_url or footer.x_url or footer.facebook_url or footer.instagram_url or footer.linkedin_url %}
+            <div class="fa-soc-wrapper">
+                {# خط اول: واتس‌اپ، تلگرام، یوتیوب، ایکس #}
+                <div class="fa-soc-row">
+                    {% if footer.whatsapp_url %}<a class="fa-soc fa-soc--whatsapp" href="{{ footer.whatsapp_url }}" target="_blank" rel="noopener" aria-label="واتس‌اپ"><i class="fa-brands fa-whatsapp"></i></a>{% endif %}
+                    {% if footer.telegram_url %}<a class="fa-soc fa-soc--telegram" href="{{ footer.telegram_url }}" target="_blank" rel="noopener" aria-label="تلگرام"><i class="fa-brands fa-telegram"></i></a>{% endif %}
+                    {% if footer.youtube_url %}<a class="fa-soc fa-soc--youtube" href="{{ footer.youtube_url }}" target="_blank" rel="noopener" aria-label="یوتیوب"><i class="fa-brands fa-youtube"></i></a>{% endif %}
+                    {% if footer.x_url %}<a class="fa-soc fa-soc--x" href="{{ footer.x_url }}" target="_blank" rel="noopener" aria-label="ایکس"><i class="fa-brands fa-x-twitter"></i></a>{% endif %}
+                </div>
+                {# خط دوم: فیسبوک، اینستاگرام، لینکدین #}
+                <div class="fa-soc-row">
+                    {% if footer.facebook_url %}<a class="fa-soc fa-soc--facebook" href="{{ footer.facebook_url }}" target="_blank" rel="noopener" aria-label="فیسبوک"><i class="fa-brands fa-facebook-f"></i></a>{% endif %}
+                    {% if footer.instagram_url %}<a class="fa-soc fa-soc--instagram" href="{{ footer.instagram_url }}" target="_blank" rel="noopener" aria-label="اینستاگرام"><i class="fa-brands fa-instagram"></i></a>{% endif %}
+                    {% if footer.linkedin_url %}<a class="fa-soc fa-soc--linkedin" href="{{ footer.linkedin_url }}" target="_blank" rel="noopener" aria-label="لینکدین"><i class="fa-brands fa-linkedin-in"></i></a>{% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        {# ── Offices column (Tehran + Athens) ── #}
+        <div class="adonis-fa-new-footer-offices">
+            <h4 class="adonis-fa-new-footer-title">دفاتر ما</h4>
+            {% if footer.tehran_address or footer.tehran_phone %}
+            <div class="fa-office">
+                <div class="fa-office-head"><i class="fa-solid fa-location-dot"></i><span>دفتر تهران</span></div>
+                {% if footer.tehran_address %}<p class="fa-office-addr">{{ footer.tehran_address }}</p>{% endif %}
+                {% if footer.tehran_phone %}<a class="fa-office-tel" dir="ltr" href="tel:{{ footer.tehran_phone|cut:' ' }}"><i class="fa-solid fa-phone"></i> {{ footer.tehran_phone }}</a>{% endif %}
+            </div>
+            {% endif %}
+            {% if footer.athens_address or footer.athens_phone %}
+            <div class="fa-office">
+                <div class="fa-office-head"><i class="fa-solid fa-location-dot"></i><span>دفتر آتن</span></div>
+                {% if footer.athens_address %}<p class="fa-office-addr">{{ footer.athens_address }}</p>{% endif %}
+                {% if footer.athens_phone %}<a class="fa-office-tel" dir="ltr" href="tel:{{ footer.athens_phone|cut:' ' }}"><i class="fa-solid fa-phone"></i> {{ footer.athens_phone }}</a>{% endif %}
+            </div>
+            {% endif %}
+        </div>
+
+        {# ── Quick links column ── #}
+        <div>
+            <h4 class="adonis-fa-new-footer-title">{{ footer.links_title|default:"دسترسی سریع" }}</h4>
+            <ul class="adonis-fa-new-footer-list">
+                {% if nav_items %}
+                    {% for item in nav_items %}
+                        {% if not item.parent_id %}
+                        <li><a href="{{ item.url }}">{{ item.label }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    {% for section in sections %}
+                        {% if section.section_type != 'consult' %}
+                        <li><a href="#{{ section.resolved_anchor_id }}">{{ section.eyebrow|default:section.get_section_type_display }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
+
+        {# ── Contact column ── #}
+        <div>
+            <h4 class="adonis-fa-new-footer-title">{{ footer.contact_title|default:"تماس" }}</h4>
+            <ul class="adonis-fa-new-footer-list">
+                {% if footer.email %}<li><a dir="ltr" href="mailto:{{ footer.email }}"><i class="fa-solid fa-envelope"></i> {{ footer.email }}</a></li>{% endif %}
+                {% if footer.whatsapp_url %}<li><a href="{{ footer.whatsapp_url }}" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> واتس‌اپ</a></li>{% endif %}
+                {% if footer.telegram_url %}<li><a href="{{ footer.telegram_url }}" target="_blank" rel="noopener"><i class="fa-brands fa-telegram"></i> تلگرام</a></li>{% endif %}
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="adonis-fa-new-footer-bottom">
+        <span>{{ footer.copyright_text|default:"© آدونیس گروپ — همه حقوق محفوظ است." }}</span>
+        {% if footer.footer_tag %}
+        <span class="adonis-fa-new-footer-tag">{{ footer.footer_tag }}</span>
+        {% endif %}
+    </div>
+</footer>

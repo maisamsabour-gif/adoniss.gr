@@ -1,0 +1,910 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="{{ CURRENT_LANG }}" dir="{% if CURRENT_LANG == 'fa' %}rtl{% else %}ltr{% endif %}">
+<head>
+    {% if GTM_ID %}
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','{{ GTM_ID }}');</script>
+    <!-- End Google Tag Manager -->
+    {% endif %}
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    {# Per-page LCP preload hints (hero image / hero video). Placed early so
+       the browser preload-scanner picks them up before stylesheets. #}
+    {% block head_preload %}{% endblock %}
+
+    <title>{% block title %}{{ SITE_NAME }} — {{ SITE_TAGLINE }}{% endblock %}</title>
+    {% if meta_description %}<meta name="description" content="{{ meta_description }}">{% endif %}
+    <meta name="robots" content="{{ robots_meta|default:'index, follow' }}">
+    {% if canonical_url %}<link rel="canonical" href="{{ canonical_url }}">{% endif %}
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{ SITE_NAME }}">
+    <meta property="og:title" content="{% block og_title %}{% if og_title %}{{ og_title }}{% else %}{{ SITE_NAME }}{% endif %}{% endblock %}">
+    <meta property="og:description" content="{% if og_description %}{{ og_description }}{% elif meta_description %}{{ meta_description }}{% endif %}">
+    {% if og_image %}<meta property="og:image" content="{{ og_image }}">{% endif %}
+    <meta property="og:locale" content="{% if CURRENT_LANG == 'tr' %}tr_TR{% else %}en_US{% endif %}">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="48x48" href="{% static 'images/favicon/favicon-48x48.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/favicon/apple-touch-icon.png' %}">
+
+    {# Fonts & front-end libraries are self-hosted under static/fonts and static/vendor
+       so the site renders fully without any international/CDN connectivity. #}
+    {% if GTM_ID or GOOGLE_ANALYTICS_ID %}
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://www.google-analytics.com">
+    {% endif %}
+
+    <link rel="stylesheet" href="{% static 'fonts/fonts.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/fontawesome/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/aos/aos.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/intl-tel-input/css/intlTelInput.css' %}">
+
+    {% block extra_css %}{% endblock %}
+
+    {% if GOOGLE_ANALYTICS_ID %}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ GOOGLE_ANALYTICS_ID }}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '{{ GOOGLE_ANALYTICS_ID }}');
+      {% if GOOGLE_ADS_CONVERSION_ID %}gtag('config', '{{ GOOGLE_ADS_CONVERSION_ID }}');{% endif %}
+    </script>
+    {% endif %}
+
+    {% if MICROSOFT_CLARITY_ID %}
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "{{ MICROSOFT_CLARITY_ID }}");
+    </script>
+    {% endif %}
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+
+    {% if GTM_ID %}
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ GTM_ID }}"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    {% endif %}
+
+    <!-- NAVBAR -->
+    <nav id="navbar" class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="container">
+
+            <a href="{% url 'home' %}" class="logo" aria-label="{{ SITE_NAME }} Home">
+                {% if header_settings and header_settings.logo %}
+                <img src="{{ header_settings.logo.url }}"
+                     alt="{{ header_settings.site_name|default:SITE_NAME }}"
+                     class="logo-image"
+                     width="{{ header_settings.logo_width|default:160 }}"
+                     height="{{ header_settings.logo_height|default:50 }}"
+                     loading="eager"
+                     decoding="async"
+                     fetchpriority="high">
+                {% else %}
+                <span class="logo-text">{{ header_settings.site_name|default:SITE_NAME }}</span>
+                {% endif %}
+            </a>
+
+            <ul id="navMenu" class="nav-menu" role="menubar">
+                {% if not header_settings or header_settings.show_home %}
+                <li role="none"><a href="{% url 'home' %}" class="nav-link{% if request.resolver_match.url_name == 'home' %} active{% endif %}" role="menuitem">{% trans "Home" %}</a></li>
+                {% endif %}
+                {% if not header_settings or header_settings.show_properties %}
+                <li role="none"><a href="{% url 'property_list' %}" class="nav-link{% if 'propert' in request.path %} active{% endif %}" role="menuitem">{% trans "Properties" %}</a></li>
+                {% endif %}
+                <li role="none"><a href="{% url 'greece_golden_visa' %}" class="nav-link{% if 'golden-visa' in request.path %} active{% endif %}" role="menuitem">{% trans "Golden Visa" %}</a></li>
+                {% if not header_settings or header_settings.show_partnerships %}
+                <li role="none"><a href="{% url 'partnerships' %}" class="nav-link{% if 'partnerships' in request.path %} active{% endif %}" role="menuitem">{% trans "Partnerships" %}</a></li>
+                {% endif %}
+                {% if not header_settings or header_settings.show_about %}
+                <li role="none"><a href="{% url 'about' %}" class="nav-link{% if request.resolver_match.url_name == 'about' %} active{% endif %}" role="menuitem">{% trans "About" %}</a></li>
+                {% endif %}
+                {% if not header_settings or header_settings.show_contact %}
+                <li role="none"><a href="{% url 'contact' %}" class="nav-link{% if request.resolver_match.url_name == 'contact' %} active{% endif %}" role="menuitem">{% trans "Contact" %}</a></li>
+                {% endif %}
+                <li role="none"><a href="{% url 'blog_list' %}" class="nav-link{% if 'blog' in request.path %} active{% endif %}" role="menuitem">{% trans "Blog" %}</a></li>
+            </ul>
+
+            <div class="nav-cta">
+                {% get_current_language as LANGUAGE_CODE %}
+                <div class="lang-switcher-form" role="navigation" aria-label="Language">
+                    {% get_available_languages as LANGUAGES_LIST %}
+                    {% for lang_code, lang_name in LANGUAGES_LIST %}
+                    <form class="lang-switcher-inner-form" action="{% url 'set_language' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="language" value="{{ lang_code }}">
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        <button type="submit" class="lang-btn{% if LANGUAGE_CODE == lang_code %} active{% endif %}" title="{{ lang_name }}">
+                            {% if lang_code == 'en' %}
+                            <span class="lang-flag" aria-hidden="true">
+                                <svg viewBox="0 0 20 15" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="20" height="15" fill="#012169"/>
+                                    <path d="M0 0l20 15M20 0L0 15" stroke="#fff" stroke-width="3"/>
+                                    <path d="M0 0l20 15M20 0L0 15" stroke="#C8102E" stroke-width="2"/>
+                                    <path d="M10 0v15M0 7.5h20" stroke="#fff" stroke-width="5"/>
+                                    <path d="M10 0v15M0 7.5h20" stroke="#C8102E" stroke-width="3"/>
+                                </svg>
+                            </span>
+                            {% elif lang_code == 'tr' %}
+                            <span class="lang-flag" aria-hidden="true">
+                                <svg viewBox="0 0 20 15" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="20" height="15" fill="#E30A17"/>
+                                    <circle cx="7.5" cy="7.5" r="4.5" fill="#fff"/>
+                                    <circle cx="9" cy="7.5" r="3.5" fill="#E30A17"/>
+                                    <polygon points="11.5,7.5 13,5.5 13,9.5" fill="#fff"/>
+                                    <polygon points="13,7.5 14.2,5.8 14.2,9.2" fill="#fff"/>
+                                </svg>
+                            </span>
+                            {% endif %}
+                            <span class="lang-label">{{ lang_code|upper }}</span>
+                        </button>
+                    </form>
+                    {% endfor %}
+                </div>
+
+                <div class="nav-cta-actions">
+                    {% if WHATSAPP_URL %}
+                    <a href="{{ WHATSAPP_URL }}" class="btn btn-whatsapp" target="_blank" rel="noopener noreferrer" aria-label="{% trans 'Contact on WhatsApp' %}">
+                        <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                        <span>{% trans "WhatsApp" %}</span>
+                    </a>
+                    {% endif %}
+                    {% if user.is_authenticated and user.is_staff %}
+                    <a href="{% url 'admin:index' %}" class="btn btn-login">
+                        <i class="fas fa-tachometer-alt" aria-hidden="true"></i>
+                        <span>{% trans "Admin" %}</span>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-login" aria-label="{% trans 'Staff Login' %}">
+                        <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <button id="navToggle" class="nav-toggle" aria-label="{% trans 'Toggle menu' %}" aria-expanded="false" aria-controls="navMenu">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </button>
+
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main id="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-grid">
+
+                <div class="footer-col footer-brand">
+                    <div class="footer-logo">
+                        {% if header_settings and header_settings.logo %}
+                        <img src="{{ header_settings.logo.url }}" alt="{{ SITE_NAME }}" style="height:50px;width:auto;filter:brightness(0) invert(1);" loading="lazy" decoding="async">
+                        {% else %}
+                        {{ footer_settings.company_name|default:SITE_NAME }}
+                        {% endif %}
+                    </div>
+                    <p class="footer-desc">{% if footer_settings and footer_settings.description %}{{ footer_settings.description|striptags }}{% else %}{{ SITE_TAGLINE }}{% endif %}</p>
+                    <div class="social-links">
+                        {% if footer_settings and footer_settings.instagram_url %}
+                        <a href="{{ footer_settings.instagram_url }}" target="_blank" rel="noopener noreferrer" class="social-instagram" aria-label="Instagram">
+                            <i class="fab fa-instagram" aria-hidden="true"></i>
+                        </a>
+                        {% endif %}
+                        {% if footer_settings and footer_settings.facebook_url %}
+                        <a href="{{ footer_settings.facebook_url }}" target="_blank" rel="noopener noreferrer" class="social-facebook" aria-label="Facebook">
+                            <i class="fab fa-facebook-f" aria-hidden="true"></i>
+                        </a>
+                        {% endif %}
+                        {% if footer_settings and footer_settings.linkedin_url %}
+                        <a href="{{ footer_settings.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="social-linkedin" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+                        </a>
+                        {% endif %}
+                        {% if footer_settings and footer_settings.x_url %}
+                        <a href="{{ footer_settings.x_url }}" target="_blank" rel="noopener noreferrer" class="social-x" aria-label="X (Twitter)">
+                            <i class="fab fa-x-twitter" aria-hidden="true"></i>
+                        </a>
+                        {% endif %}
+                        {% if footer_settings and footer_settings.youtube_url %}
+                        <a href="{{ footer_settings.youtube_url }}" target="_blank" rel="noopener noreferrer" class="social-youtube" aria-label="YouTube">
+                            <i class="fab fa-youtube" aria-hidden="true"></i>
+                        </a>
+                        {% endif %}
+                        {% if footer_settings and footer_settings.whatsapp_number %}
+                        <a href="https://wa.me/{{ footer_settings.whatsapp_number|cut:'+' }}" target="_blank" rel="noopener noreferrer" class="social-whatsapp" aria-label="WhatsApp">
+                            <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4>{% trans "Quick Links" %}</h4>
+                    <ul>
+                        <li><a href="{% url 'home' %}">{% trans "Home" %}</a></li>
+                        <li><a href="{% url 'about' %}">{% trans "About Us" %}</a></li>
+                        <li><a href="{% url 'property_list' %}">{% trans "Properties" %}</a></li>
+                        <li><a href="{% url 'greece_golden_visa' %}">{% trans "Golden Visa" %}</a></li>
+                        <li><a href="{% url 'partnerships' %}">{% trans "Partnerships" %}</a></li>
+                        <li><a href="{% url 'blog_list' %}">{% trans "Blog" %}</a></li>
+                        <li><a href="{% url 'contact' %}">{% trans "Contact" %}</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>{% trans "Services" %}</h4>
+                    <ul>
+                        <li><a href="{% url 'greece_golden_visa' %}">{% trans "Greek Golden Visa" %}</a></li>
+                        <li><a href="{% url 'property_list' %}">{% trans "Real Estate Investment" %}</a></li>
+                        <li><a href="{% url 'partnerships' %}">{% trans "B2B Partnerships" %}</a></li>
+                        <li><a href="{% url 'contact' %}">{% trans "Free Consultation" %}</a></li>
+                        <li><a href="{% url 'brochure_list' %}">{% trans "Brochures" %}</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>{% trans "Contact" %}</h4>
+                    <ul class="contact-info">
+                        {% if footer_settings and footer_settings.address %}
+                        <li>
+                            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                            <span>{{ footer_settings.address|striptags }}</span>
+                        </li>
+                        {% endif %}
+                        {% if footer_settings and footer_settings.phone_number %}
+                        <li>
+                            <i class="fas fa-phone" aria-hidden="true"></i>
+                            <a href="tel:{{ footer_settings.phone_number }}" class="footer-contact-link">{{ footer_settings.phone_number }}</a>
+                        </li>
+                        {% endif %}
+                        {% if footer_settings and footer_settings.phone_number_2 %}
+                        <li>
+                            <i class="fas fa-phone" aria-hidden="true"></i>
+                            <a href="tel:{{ footer_settings.phone_number_2 }}" class="footer-contact-link">{{ footer_settings.phone_number_2 }}</a>
+                        </li>
+                        {% endif %}
+                        {% if footer_settings and footer_settings.email %}
+                        <li>
+                            <i class="fas fa-envelope" aria-hidden="true"></i>
+                            <a href="mailto:{{ footer_settings.email }}" class="footer-contact-link">{{ footer_settings.email }}</a>
+                        </li>
+                        {% endif %}
+                        {% if WHATSAPP_URL %}
+                        <li>
+                            <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                            <a href="{{ WHATSAPP_URL }}" target="_blank" rel="noopener noreferrer" class="footer-contact-link">{% if "http" in WHATSAPP_NUMBER %}WhatsApp{% else %}{{ WHATSAPP_NUMBER }}{% endif %}</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom">
+                <p>{{ footer_settings.copyright_text|default:"© 2024 Adonis Group. All Rights Reserved." }}</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AI CHAT WIDGET -->
+    <div class="chat-widget" id="chatWidget" role="complementary" aria-label="{% trans 'Live Chat' %}">
+
+        <button class="chat-toggle" id="chatToggle" type="button" aria-expanded="false" aria-controls="chatWindow">
+            <span class="chat-icon-open" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+                    <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z"/>
+                    <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+                </svg>
+                <span class="chat-toggle-label">{% trans "Live Support" %}</span>
+            </span>
+            <span class="chat-icon-close" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </span>
+            <span class="chat-badge" id="chatBadge" aria-label="1 new message">1</span>
+        </button>
+
+        <div class="chat-window" id="chatWindow" style="display:none;" role="dialog" aria-labelledby="chatHeaderName" aria-modal="false">
+
+            <div class="chat-header">
+                <div class="chat-avatar" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                </div>
+                <div class="chat-header-text">
+                    <div class="chat-header-name" id="chatHeaderName">{% trans "Adonis Concierge" %}</div>
+                    <div class="chat-header-status" id="chatStatus">{% trans "Online — Usually replies instantly" %}</div>
+                </div>
+                <button class="chat-close" id="chatClose" type="button" aria-label="{% trans 'Close chat' %}">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+
+            <div class="chat-messages" id="chatMessages" role="log" aria-live="polite" aria-relevant="additions">
+                <div class="chat-message bot">
+                    <div class="chat-message-avatar" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <div class="chat-message-bubble">
+                        {% trans "👋 Hi! I'm your Adonis Group concierge. Ask me about the Greek Golden Visa, properties, or investment opportunities!" %}
+                        <ul class="chat-suggestions">
+                            <li data-question="{% trans 'Tell me about the Golden Visa program' %}">{% trans "Golden Visa program" %}</li>
+                            <li data-question="{% trans 'What properties do you have?' %}">{% trans "Available properties" %}</li>
+                            <li data-question="{% trans 'I want a free consultation' %}">{% trans "Free consultation" %}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" class="chat-input"
+                    placeholder="{% trans 'Type a message…' %}"
+                    maxlength="500" autocomplete="off"
+                    aria-label="{% trans 'Chat message input' %}">
+                <button class="chat-send" id="chatSend" type="button" aria-label="{% trans 'Send message' %}">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"/>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="chat-footer-brand">
+                <span>{% trans "Powered by" %} <strong>Adonis Group</strong></span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SCROLL TO TOP -->
+    <button id="scrollTopBtn" class="scroll-top-btn" aria-label="{% trans 'Scroll to top' %}" style="display:none;" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+        <i class="fas fa-chevron-up" aria-hidden="true"></i>
+    </button>
+
+    <!-- CONSULTATION MODAL -->
+    <div id="consultationModal" class="consultation-modal-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="consultModalTitle">
+        <div class="consultation-modal">
+            <button class="consultation-modal-close" onclick="closeConsultationModal()" aria-label="{% trans 'Close' %}">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+
+            <!-- Form panel -->
+            <div id="consultModalForm">
+                <div class="cm-header">
+                    <span class="cm-badge">{% trans "Free Consultation" %}</span>
+                    <h3 id="consultModalTitle">{% trans "Book Your Free Consultation" %}</h3>
+                    <p>{% trans "Fill in the form and our team will reach out to you within 24 hours." %}</p>
+                </div>
+                <form id="globalConsultForm" class="unified-site-form" method="POST" action="{% url 'submit_contact' %}" novalidate>
+                    {% csrf_token %}
+                    <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
+                    <div class="cm-field">
+                        <label for="gcf_name">{% trans "Full Name" %} *</label>
+                        <input type="text" id="gcf_name" name="full_name" placeholder="{% trans 'Your full name' %}" required>
+                    </div>
+                    <div class="cm-field">
+                        <label for="gcf_phone">{% trans "Phone Number" %} *</label>
+                        <input type="tel" id="gcf_phone" name="phone" placeholder="{% trans 'e.g. +30 210 000 0000' %}" required>
+                    </div>
+                    <div class="cm-field">
+                        <label for="gcf_email">{% trans "Email Address" %} *</label>
+                        <input type="email" id="gcf_email" name="email" placeholder="{% trans 'Your email address' %}" required>
+                    </div>
+                    <div class="cm-field">
+                        <label for="gcf_req">{% trans "Request Type" %}</label>
+                        <select id="gcf_req" name="request_type">
+                            <option value="customer">{% trans "Individual Investor" %}</option>
+                            <option value="agent">{% trans "Agent / Partner" %}</option>
+                        </select>
+                    </div>
+                    <div class="cm-field">
+                        <label for="gcf_msg">{% trans "Message (Optional)" %}</label>
+                        <textarea id="gcf_msg" name="message" rows="3" placeholder="{% trans 'Tell us about your requirements...' %}"></textarea>
+                    </div>
+                    {% if WHATSAPP_URL %}
+                    <input type="hidden" name="notes" value="source:consultation_modal">
+                    {% endif %}
+                    <button type="submit" class="cm-submit" id="globalConsultSubmit">
+                        <i class="fas fa-paper-plane" aria-hidden="true"></i> {% trans "Send Request" %}
+                    </button>
+                </form>
+                {% if WHATSAPP_URL %}
+                <div class="cm-whatsapp">
+                    <span>{% trans "or" %}</span>
+                    <a href="{{ WHATSAPP_URL }}" target="_blank" rel="noopener noreferrer" onclick="closeConsultationModal()">
+                        <i class="fab fa-whatsapp" aria-hidden="true"></i> {% trans "Chat on WhatsApp" %}
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Success panel -->
+            <div id="consultModalSuccess" class="cm-success" hidden>
+                <div class="cm-success__icon">
+                    <i class="fas fa-check" aria-hidden="true"></i>
+                </div>
+                {% if CURRENT_LANG == 'tr' %}
+                <h3>Başarıyla Gönderildi</h3>
+                <p>Talebiniz başarıyla gönderildi.<br>Ekibimiz kısa süre içinde sizinle iletişime geçecektir.</p>
+                <button class="cm-success-btn" onclick="closeConsultationModal()">Kapat</button>
+                {% else %}
+                <h3>Successfully Submitted</h3>
+                <p>Your request has been submitted successfully.<br>Our team will contact you shortly.</p>
+                <button class="cm-success-btn" onclick="closeConsultationModal()">Close</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script src="{% static 'vendor/aos/aos.js' %}" defer></script>
+    <script src="{% static 'js/main.min.js' %}" defer></script>
+
+    <script>
+    (function() {
+        window.addEventListener('load', function() {
+            if (window.AOS) {
+                AOS.init({ duration: 800, easing: 'ease-out-cubic', once: true, offset: 80 });
+            }
+        });
+
+        var scrollBtn = document.getElementById('scrollTopBtn');
+        if (scrollBtn) {
+            window.addEventListener('scroll', function() {
+                scrollBtn.style.display = window.pageYOffset > 400 ? 'flex' : 'none';
+            }, { passive: true });
+        }
+
+        // Nav toggle is handled by main.js (DOMContentLoaded) — no duplicate here.
+    })();
+
+    function openConsultationModal() {
+        var m = document.getElementById('consultationModal');
+        if (!m) return;
+        document.getElementById('consultModalForm').hidden = false;
+        document.getElementById('consultModalSuccess').hidden = true;
+        var f = document.getElementById('globalConsultForm');
+        if (f) f.reset();
+        m.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+    function closeConsultationModal() {
+        var m = document.getElementById('consultationModal');
+        if (m) { m.style.display = 'none'; document.body.style.overflow = ''; }
+    }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeConsultationModal();
+    });
+    document.addEventListener('click', function(e) {
+        if (e.target && e.target.id === 'consultationModal') closeConsultationModal();
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        var form = document.getElementById('globalConsultForm');
+        if (!form) return;
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var btn  = document.getElementById('globalConsultSubmit');
+            var orig = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> {% trans "Sending..." %}';
+            btn.disabled = true;
+            fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    form.reset();
+                    document.getElementById('consultModalForm').hidden = true;
+                    document.getElementById('consultModalSuccess').hidden = false;
+                } else {
+                    btn.innerHTML = orig; btn.disabled = false;
+                    alert('{% trans "Please fill in all required fields correctly." %}');
+                }
+            })
+            .catch(function() {
+                btn.innerHTML = orig; btn.disabled = false;
+                alert('{% trans "An error occurred. Please try again." %}');
+            });
+        });
+    });
+
+    function showSuccessPopup(message) {
+        var ov = document.createElement('div');
+        ov.id = 'globalSuccessOverlay';
+        ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:3000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);';
+        ov.innerHTML =
+            '<div style="background:#fff;border-radius:20px;padding:2.5rem 2rem;max-width:420px;width:90%;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,0.18);animation:cmSuccessPop 0.3s ease;">' +
+            '<div style="width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#d1fae5,#a7f3d0);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;box-shadow:0 4px 20px rgba(16,185,129,0.2);">' +
+            '<i class="fas fa-check" style="font-size:2rem;color:#059669;"></i></div>' +
+            '<h3 style="font-size:1.35rem;font-weight:700;color:#0b2948;margin:0 0 0.5rem;">' + (message || 'Successfully Submitted') + '</h3>' +
+            '<p style="color:#64748b;margin:0 0 1.5rem;line-height:1.8;font-size:0.95rem;">Our team will contact you shortly.</p>' +
+            '<button onclick="this.closest(\'#globalSuccessOverlay\').remove();document.body.style.overflow=\'\';" ' +
+            'style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.65rem 2rem;background:#0b5394;color:#fff;border:none;border-radius:10px;font-size:0.95rem;font-weight:600;cursor:pointer;font-family:inherit;transition:background 0.2s,transform 0.2s;">Close</button></div>';
+        ov.addEventListener('click', function(e) { if (e.target === ov) { ov.remove(); document.body.style.overflow = ''; } });
+        document.body.appendChild(ov);
+        document.body.style.overflow = 'hidden';
+    }
+
+    /* attachFormHandler: wires any inline contact form to AJAX submit
+       and shows the shared consultation success modal on success.
+       Used by pages like index.html that have an inline contact section. */
+    function attachFormHandler(form) {
+        if (!form) return;
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var btn  = form.querySelector('[type="submit"]');
+            var orig = btn ? btn.innerHTML : '';
+            if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btn.disabled = true; }
+            fetch(form.action || window.location.href, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    form.reset();
+                    /* Show the shared consultation success modal */
+                    var formPanel    = document.getElementById('consultModalForm');
+                    var successPanel = document.getElementById('consultModalSuccess');
+                    var modal        = document.getElementById('consultationModal');
+                    if (formPanel)    formPanel.hidden = true;
+                    if (successPanel) successPanel.hidden = false;
+                    if (modal)        { modal.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+                } else {
+                    if (btn) { btn.innerHTML = orig; btn.disabled = false; }
+                    alert('{% trans "Please fill in all required fields correctly." %}');
+                }
+            })
+            .catch(function() {
+                if (btn) { btn.innerHTML = orig; btn.disabled = false; }
+                alert('{% trans "An error occurred. Please try again." %}');
+            });
+        });
+    }
+    </script>
+
+    <style>
+    .scroll-top-btn {
+        position: fixed; bottom: 6rem; right: 1.75rem; z-index: 900;
+        width: 44px; height: 44px; border-radius: 50%;
+        background: rgba(13,94,175,0.9); color: #fff; border: none; cursor: pointer;
+        display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: all 0.25s; backdrop-filter: blur(8px);
+    }
+    .scroll-top-btn:hover { background: #0D5EAF; transform: translateY(-3px); box-shadow: 0 6px 20px rgba(13,94,175,0.4); }
+    /* ── Consultation Modal (unified modern style) ─────────────────────────── */
+    .consultation-modal-overlay {
+        position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 2000;
+        align-items: center; justify-content: center; backdrop-filter: blur(4px);
+        overflow-y: auto; padding: 1rem;
+    }
+    .consultation-modal {
+        background: #fff; border-radius: 20px; padding: 2rem;
+        max-width: 480px; width: 100%; position: relative;
+        animation: consultModalIn 0.3s ease; margin: auto;
+        box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+    }
+    @keyframes consultModalIn {
+        from { opacity: 0; transform: scale(0.92) translateY(12px); }
+        to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    @keyframes cmSuccessPop {
+        from { opacity: 0; transform: scale(0.9) translateY(16px); }
+        to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .consultation-modal-close {
+        position: absolute; top: 1rem; right: 1rem;
+        background: none; border: none; cursor: pointer; font-size: 1rem; color: #94a3b8;
+        width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+        border-radius: 50%; transition: background 0.2s, color 0.2s;
+    }
+    .consultation-modal-close:hover { background: #f1f5f9; color: #334155; }
+    .cm-header { margin-bottom: 1.25rem; }
+    .cm-badge {
+        display: inline-block; background: #f0f7ff; color: #0b5394;
+        font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em;
+        padding: 0.25rem 0.85rem; border-radius: 50px; margin-bottom: 0.5rem;
+    }
+    .cm-header h3 { font-size: 1.3rem; font-weight: 700; color: #0b2948; margin: 0.25rem 0 0.4rem; line-height: 1.4; }
+    .cm-header p  { color: #64748b; font-size: 0.9rem; line-height: 1.7; margin: 0; }
+    .cm-field { margin-bottom: 0.85rem; }
+    .cm-field label { display: block; font-size: 0.82rem; font-weight: 700; color: #334155; margin-bottom: 0.3rem; }
+    .cm-field input,
+    .cm-field select,
+    .cm-field textarea {
+        width: 100%; padding: 0.6rem 0.85rem; border: 1.5px solid #e2e8f0;
+        border-radius: 10px; font-size: 0.92rem; color: #1e293b;
+        transition: border-color 0.2s; background: #f8fafc; outline: none;
+        font-family: inherit; box-sizing: border-box;
+    }
+    .cm-field input:focus,
+    .cm-field select:focus,
+    .cm-field textarea:focus { border-color: #0b5394; background: #fff; }
+    .cm-field textarea { resize: vertical; min-height: 72px; }
+    /* standalone gold gradient submit — no dependency on btn-gold */
+    .cm-submit {
+        width: 100%; padding: 0.75rem; margin-top: 0.5rem;
+        background: linear-gradient(135deg, #C9A84C, #B8963E);
+        color: #fff; border: none; border-radius: 12px; font-size: 1rem;
+        font-weight: 700; cursor: pointer; font-family: inherit;
+        display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+        transition: filter 0.2s, transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 16px rgba(201,168,76,0.3);
+        text-decoration: none;
+    }
+    .cm-submit:hover  { filter: brightness(1.07); transform: translateY(-1px); box-shadow: 0 6px 22px rgba(201,168,76,0.4); }
+    .cm-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn-block { display: block; }
+    .cm-whatsapp {
+        text-align: center; margin-top: 1rem; color: #94a3b8; font-size: 0.85rem;
+        display: flex; align-items: center; gap: 0.5rem; justify-content: center;
+    }
+    .cm-whatsapp a {
+        color: #25d366; font-weight: 700; text-decoration: none;
+        display: inline-flex; align-items: center; gap: 0.3rem;
+    }
+    .cm-whatsapp a:hover { text-decoration: underline; }
+    /* success state */
+    .cm-success { text-align: center; padding: 1.5rem 0.5rem; }
+    .cm-success__icon {
+        width: 68px; height: 68px; border-radius: 50%;
+        background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 1rem;
+        box-shadow: 0 4px 20px rgba(16,185,129,0.2);
+    }
+    .cm-success__icon i { font-size: 2rem; color: #059669; }
+    .cm-success h3 { font-size: 1.35rem; font-weight: 700; color: #0b2948; margin-bottom: 0.5rem; }
+    .cm-success p  { color: #64748b; margin-bottom: 1.5rem; line-height: 1.8; font-size: 0.95rem; }
+    .cm-success-btn {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        padding: 0.65rem 2rem; background: #0b5394; color: #fff;
+        border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600;
+        cursor: pointer; font-family: inherit; transition: background 0.2s, transform 0.2s;
+        text-decoration: none;
+    }
+    .cm-success-btn:hover { background: #0a4880; transform: translateY(-1px); }
+    /* Unified public forms (EN/TR) — aligned with FA landing style */
+    .unified-site-form .form-group label,
+    .unified-site-form .ct-field label,
+    .unified-site-form .cm-field label,
+    .unified-site-form .pl-field label,
+    .unified-site-form .pc-field label,
+    .unified-site-form .pd-field label,
+    .unified-site-form .interest-field label {
+        display: block;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: #334155;
+        margin-bottom: 0.3rem;
+    }
+    .unified-site-form input[type="text"],
+    .unified-site-form input[type="email"],
+    .unified-site-form input[type="tel"],
+    .unified-site-form input[type="number"],
+    .unified-site-form input[type="url"],
+    .unified-site-form input[type="password"],
+    .unified-site-form select,
+    .unified-site-form textarea {
+        width: 100% !important;
+        padding: 0.6rem 0.85rem !important;
+        border: 1.5px solid #e2e8f0 !important;
+        border-radius: 10px !important;
+        font-size: 0.92rem !important;
+        color: #1e293b !important;
+        background: #f8fafc !important;
+        transition: border-color 0.2s, background 0.2s;
+        outline: none;
+        box-sizing: border-box;
+    }
+    .unified-site-form input[type="text"]:focus,
+    .unified-site-form input[type="email"]:focus,
+    .unified-site-form input[type="tel"]:focus,
+    .unified-site-form input[type="number"]:focus,
+    .unified-site-form input[type="url"]:focus,
+    .unified-site-form input[type="password"]:focus,
+    .unified-site-form select:focus,
+    .unified-site-form textarea:focus {
+        border-color: #0b5394 !important;
+        background: #fff !important;
+    }
+    .unified-site-form textarea {
+        resize: vertical;
+        min-height: 72px;
+    }
+    .unified-site-form button[type="submit"],
+    .unified-site-form input[type="submit"] {
+        width: 100%;
+        padding: 0.75rem;
+        margin-top: 0.5rem;
+        background: linear-gradient(135deg, #C9A84C, #B8963E) !important;
+        color: #fff !important;
+        border: none !important;
+        border-radius: 12px !important;
+        font-size: 1rem !important;
+        font-weight: 700 !important;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 16px rgba(201,168,76,0.3);
+        transition: filter 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    .unified-site-form button[type="submit"]:hover,
+    .unified-site-form input[type="submit"]:hover {
+        filter: brightness(1.07);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 22px rgba(201,168,76,0.4);
+    }
+    .unified-site-form button[type="submit"]:disabled,
+    .unified-site-form input[type="submit"]:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+    .unified-site-form .pl-checkbox-label input[type="checkbox"],
+    .unified-site-form .pl-consent input[type="checkbox"] {
+        width: auto !important;
+        padding: 0 !important;
+        border: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+    @media (max-width: 576px) {
+        .scroll-top-btn { right: 1rem; bottom: 5.5rem; }
+        .consultation-modal { padding: 1.5rem 1.25rem 1.25rem; }
+    }
+    /* intl-tel-input global overrides */
+    .iti { width: 100% !important; direction: ltr; display: block !important; }
+    .iti input,
+    .iti input[type="tel"] {
+        width: 100% !important;
+        direction: ltr !important;
+        text-align: left !important;
+        box-sizing: border-box !important;
+    }
+    /* Keep enough space for flag + dial code in EN/TR unified forms */
+    .unified-site-form .iti input[type="tel"] {
+        padding-left: 90px !important;
+        padding-right: 0.85rem !important;
+    }
+    .unified-site-form .iti__flag-container {
+        left: 0 !important;
+        right: auto !important;
+        z-index: 5;
+        pointer-events: auto;
+    }
+    .iti__flag-container { direction: ltr; }
+    .iti__selected-flag {
+        padding: 0 8px;
+        background: transparent !important;
+        height: 100%;
+    }
+    .iti__country-list {
+        z-index: 9999 !important;
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        max-height: 220px;
+        background: #fff !important;
+        color: #1e293b !important;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    body > .iti.iti--container {
+        z-index: 99999 !important;
+    }
+    body > .iti.iti--container .iti__country-list {
+        max-height: 45vh !important;
+    }
+    .iti__country-list .iti__country { padding: 8px 10px; }
+    .iti__country-list .iti__country:hover,
+    .iti__country-list .iti__country--highlight { background: #f1f5f9; }
+    .iti--separate-dial-code .iti__selected-dial-code {
+        font-size: 0.88rem;
+        margin-left: 4px;
+    }
+    .iti__flag { background-image: url("{% static 'vendor/intl-tel-input/img/flags.png' %}"); }
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+        .iti__flag { background-image: url("{% static 'vendor/intl-tel-input/img/flags@2x.png' %}"); }
+    }
+    /* Light-themed forms */
+    .cm-field .iti--separate-dial-code .iti__selected-dial-code,
+    .ct-field .iti--separate-dial-code .iti__selected-dial-code,
+    .pl-field .iti--separate-dial-code .iti__selected-dial-code,
+    .pd-field .iti--separate-dial-code .iti__selected-dial-code,
+    .interest-field .iti--separate-dial-code .iti__selected-dial-code,
+    .pc-field .iti--separate-dial-code .iti__selected-dial-code { color: #475569; }
+    /* Dark-themed forms (homepage contact, partnership inline) */
+    .form-group .iti--separate-dial-code .iti__selected-dial-code,
+    .pp-inline-form-card .iti--separate-dial-code .iti__selected-dial-code { color: rgba(255,255,255,0.75); }
+    .pp-inline-form-card .iti__country-list { background: #fff !important; color: #1e293b !important; }
+    </style>
+
+    <script src="{% static 'vendor/intl-tel-input/js/intlTelInput.min.js' %}" defer></script>
+    <script>
+    (function(){
+        var ITI_OPTS = {
+            utilsScript: "{% static 'vendor/intl-tel-input/js/utils.js' %}",
+            initialCountry: "gr",
+            preferredCountries: ["gr", "gb", "us", "ae", "cn", "ir", "tr"],
+            separateDialCode: true,
+            autoPlaceholder: "aggressive",
+            formatOnDisplay: true
+        };
+
+        document.addEventListener('submit', function(e) {
+            var form = e.target;
+            if (!form || form.tagName !== 'FORM') return;
+            form.querySelectorAll('input[type="tel"].iti-inited').forEach(function(tel) {
+                if (tel._iti) {
+                    var num = tel._iti.getNumber();
+                    if (num) tel.value = num;
+                }
+            });
+        }, true);
+
+        function initTelInputs(root) {
+            var inputs = (root || document).querySelectorAll('input[type="tel"]:not(.iti-inited)');
+            inputs.forEach(function(input) {
+                input.classList.add('iti-inited');
+                var iti = window.intlTelInput(input, ITI_OPTS);
+                input._iti = iti;
+            });
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function(){ initTelInputs(); });
+        } else {
+            initTelInputs();
+        }
+        var observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(m) {
+                m.addedNodes.forEach(function(n) {
+                    if (n.nodeType === 1) initTelInputs(n);
+                });
+            });
+        });
+        observer.observe(document.body || document.documentElement, { childList: true, subtree: true });
+        window.initTelInputs = initTelInputs;
+    })();
+    </script>
+
+    {% block extra_js %}{% endblock %}
+
+</body>
+</html>

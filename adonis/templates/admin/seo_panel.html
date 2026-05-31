@@ -1,0 +1,74 @@
+{% load static %}
+{# SEO Score Panel — included in change_form via BaseSEOAdmin extra_context #}
+{% if seo_report %}
+<style>
+.seo-panel{background:#fff;border:1px solid #d0d5dd;border-radius:10px;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;margin-bottom:24px;max-width:100%}
+.seo-panel-header{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid #e4e7ec;background:#f8f9fb}
+.seo-panel-header h3{margin:0;font-size:14px;font-weight:700;color:#1d2939;text-transform:uppercase;letter-spacing:.04em}
+.seo-score-badge{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;font-size:16px;font-weight:800;color:#fff}
+.seo-score-green{background:linear-gradient(135deg,#12B76A,#039855)}
+.seo-score-yellow{background:linear-gradient(135deg,#F79009,#DC6803)}
+.seo-score-red{background:linear-gradient(135deg,#F04438,#B42318)}
+.seo-panel-body{padding:16px 18px}
+.seo-issue-group{margin-bottom:14px}
+.seo-issue-group:last-child{margin-bottom:0}
+.seo-issue-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.seo-issue-label.critical{color:#B42318}
+.seo-issue-label.warning{color:#B54708}
+.seo-issue-label.suggestion{color:#344054}
+.seo-issue-item{font-size:13px;color:#475467;padding:4px 0 4px 18px;position:relative;line-height:1.5}
+.seo-issue-item::before{content:"";position:absolute;left:4px;top:11px;width:6px;height:6px;border-radius:50%}
+.seo-issue-item.critical::before{background:#F04438}
+.seo-issue-item.warning::before{background:#F79009}
+.seo-issue-item.suggestion::before{background:#98A2B3}
+.seo-panel-footer{padding:10px 18px;border-top:1px solid #e4e7ec;background:#f8f9fb;font-size:12px;color:#667085}
+</style>
+<div class="seo-panel">
+  <div class="seo-panel-header">
+    <span class="seo-score-badge {% if seo_report.score >= 80 %}seo-score-green{% elif seo_report.score >= 50 %}seo-score-yellow{% else %}seo-score-red{% endif %}">
+      {{ seo_report.score }}
+    </span>
+    <h3>SEO Score</h3>
+  </div>
+  <div class="seo-panel-body">
+    {% if seo_report.critical %}
+    <div class="seo-issue-group">
+      <div class="seo-issue-label critical">&#x274C; Critical Issues ({{ seo_report.critical|length }})</div>
+      {% for issue in seo_report.critical %}
+      <div class="seo-issue-item critical">{{ issue }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if seo_report.warnings %}
+    <div class="seo-issue-group">
+      <div class="seo-issue-label warning">&#x26A0;&#xFE0F; Warnings ({{ seo_report.warnings|length }})</div>
+      {% for issue in seo_report.warnings %}
+      <div class="seo-issue-item warning">{{ issue }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if seo_report.suggestions %}
+    <div class="seo-issue-group">
+      <div class="seo-issue-label suggestion">&#x1F4A1; Suggestions ({{ seo_report.suggestions|length }})</div>
+      {% for issue in seo_report.suggestions %}
+      <div class="seo-issue-item suggestion">{{ issue }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if not seo_report.critical and not seo_report.warnings and not seo_report.suggestions %}
+    <div style="text-align:center;padding:12px;color:#027A48;font-weight:600;">
+      &#x2705; Perfect — no SEO issues found.
+    </div>
+    {% endif %}
+  </div>
+  <div class="seo-panel-footer">
+    Score: {{ seo_report.score }}/100 &middot;
+    {{ seo_report.critical|length }} critical &middot;
+    {{ seo_report.warnings|length }} warnings &middot;
+    {{ seo_report.suggestions|length }} suggestions
+  </div>
+</div>
+{% endif %}

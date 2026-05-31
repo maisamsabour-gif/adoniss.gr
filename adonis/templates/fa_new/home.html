@@ -1,0 +1,934 @@
+{% load static fa_new_tags %}<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>{{ meta_title|default:"آدونیس | اقامت یونان از مسیر سرمایه‌گذاری" }}</title>
+    {% if meta_description %}<meta name="description" content="{{ meta_description }}">{% endif %}
+    <meta name="robots" content="{{ robots_content|default:'index, follow' }}">
+    {% if canonical_url %}<link rel="canonical" href="{{ canonical_url }}">{% endif %}
+
+    <meta name="theme-color" content="#060814">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="fa_IR">
+    <meta property="og:title" content="{{ og_title|default:meta_title|default:'آدونیس | اقامت یونان از مسیر سرمایه‌گذاری' }}">
+    {% if og_description or meta_description %}<meta property="og:description" content="{{ og_description|default:meta_description }}">{% endif %}
+    {% if og_image %}<meta property="og:image" content="{{ og_image }}">{% endif %}
+
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon/favicon-32x32.png' %}">
+
+    {# LCP hint: paint the hero poster ASAP #}
+    {% if hero_video_poster_url %}<link rel="preload" as="image" href="{{ hero_video_poster_url }}" fetchpriority="high">{% endif %}
+
+    <link rel="stylesheet" href="{% static 'fonts/fonts.css' %}">
+    {# Font Awesome is only used by footer icons (below the fold) → load it non-render-blocking #}
+    <link rel="stylesheet" href="{% static 'vendor/fontawesome/css/all.min.css' %}" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="{% static 'vendor/fontawesome/css/all.min.css' %}"></noscript>
+    {% if featured_properties %}<link rel="stylesheet" href="{% static 'css/vendor/swiper-bundle.min.css' %}">{% endif %}
+
+    <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fa-new/home.css' %}?v=20260531-restypes-tall">
+    <link rel="stylesheet" href="{% static 'css/fa-new/hero-scroll.css' %}?v=22-mobile">
+    <link rel="stylesheet" href="{% static 'css/fa-new/section-dynamic.css' %}?v=3-fix-bg">
+    <link rel="stylesheet" href="{% static 'css/fa-new/services.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'css/fa-new/projects.css' %}?v=1">
+    {# ── Admin-controlled hero color overrides ── #}
+    {% if settings %}
+    <style>
+        :root {
+            --hero-text:       {{ settings.hero_text_color|default:'#ffffff' }};
+            --hero-sub:        {{ settings.hero_subtitle_color|default:'#c8d8f0' }};
+            --hero-accent:     {{ settings.hero_accent_color|default:'#EAF2FF' }};
+            --hero-scrim:      {{ settings.hero_scrim_color|default:'#071527' }};
+            --hero-cta1-bg:    {{ settings.hero_cta_primary_bg|default:'#ffffff' }};
+            --hero-cta1-text:  {{ settings.hero_cta_primary_text|default:'#0B1F3A' }};
+            --hero-cta2-bd:    {{ settings.hero_cta_secondary_border|default:'rgba(255,255,255,0.35)' }};
+            --hero-cta2-text:  {{ settings.hero_cta_secondary_text|default:'#ffffff' }};
+        }
+        .hero-scene h1, .hero-scene h2      { color: var(--hero-text); }
+        .hero-scene h1 span, .hero-scene h2 span { color: var(--hero-accent) !important; }
+        .hero-sub                            { color: var(--hero-sub); }
+        .hero-scrim                          {
+            background: linear-gradient(
+                to bottom,
+                color-mix(in srgb, var(--hero-scrim) 30%, transparent) 0%,
+                color-mix(in srgb, var(--hero-scrim) 55%, transparent) 60%,
+                color-mix(in srgb, var(--hero-scrim) 75%, transparent) 100%
+            );
+        }
+        .btn-primary   { background: var(--hero-cta1-bg);   color: var(--hero-cta1-text); }
+        .btn-secondary { border-color: var(--hero-cta2-bd); color: var(--hero-cta2-text); }
+    </style>
+    {% endif %}
+</head>
+<body class="adonis-fa-new-body">
+
+    <a class="adonis-fa-new-skip-link" href="#adonis-fa-new-main">پرش به محتوای اصلی</a>
+
+    {# ───────────── Header / Menu (shared partial) ───────────── #}
+    {% include "fa_new/_header.html" with is_home=True %}
+
+    <main id="adonis-fa-new-main" class="adonis-fa-new-main">
+
+        {# ───────────── Hero ───────────── #}
+        <section class="adonis-fa-new-hero" id="adonis-fa-new-top">
+            <div class="hero-pin-stage">
+
+                <video class="adonis-fa-new-video"
+                       muted playsinline webkit-playsinline=""
+                       preload="metadata" disablepictureinpicture
+                       poster="{{ hero_video_poster_url }}"
+                       data-src-desktop="{{ hero_video_url }}"
+                       data-src-mobile="{{ hero_video_url_mobile|default:hero_video_url }}"
+                       src="{{ hero_video_url }}">
+                </video>
+                <script>
+                /* Pick the lighter hero video on phones before it loads (cache-safe). */
+                (function () {
+                    var v = document.currentScript.previousElementSibling;
+                    if (!v || v.tagName !== 'VIDEO') return;
+                    var m = v.getAttribute('data-src-mobile');
+                    if (m && window.matchMedia('(max-width: 768px)').matches && v.getAttribute('src') !== m) {
+                        v.setAttribute('src', m);
+                        v.load();
+                    }
+                })();
+                </script>
+
+                <div class="hero-scrim" aria-hidden="true"></div>
+
+                {# ── Overlay 1 ── label / title / subtitle from admin "متن‌های هیرو فارسی" #}
+                <div class="hero-scene"
+                     data-start="{{ settings.o1_start|default:0 }}"
+                     data-end="{{ settings.o1_end|default:30 }}">
+                    {% if settings.hero_label or settings.o1_eyebrow %}
+                    <p class="hero-eyebrow">{{ settings.hero_label|default:settings.o1_eyebrow }}</p>
+                    {% endif %}
+                    <h1>{% hero_headline settings.hero_title|default:settings.o1_title settings.o1_highlight %}</h1>
+                    {% if settings.hero_subtitle or settings.o1_subtitle %}
+                    <div class="hero-sub">{{ settings.hero_subtitle|default:settings.o1_subtitle|safe }}</div>
+                    {% endif %}
+                    {% if settings.hero_cta_text %}
+                    <div class="hero-cta-buttons" style="margin-top:1.5rem">
+                        <a href="{% if settings.hero_cta_url %}{{ settings.hero_cta_url }}{% else %}#{{ consult_anchor }}{% endif %}" class="btn-primary">
+                            {{ settings.hero_cta_text }}
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+
+                {# ── Overlay 2 ── #}
+                <div class="hero-scene"
+                     data-start="{{ settings.o2_start|default:30 }}"
+                     data-end="{{ settings.o2_end|default:60 }}">
+                    {% if settings.o2_eyebrow %}
+                    <p class="hero-eyebrow">{{ settings.o2_eyebrow }}</p>
+                    {% endif %}
+                    <h2>{% hero_headline settings.o2_title settings.o2_highlight %}</h2>
+                    {% if settings.o2_subtitle %}
+                    <div class="hero-sub">{{ settings.o2_subtitle|safe }}</div>
+                    {% endif %}
+                </div>
+
+                {# ── Overlay 3 ── #}
+                <div class="hero-scene"
+                     data-start="{{ settings.o3_start|default:60 }}"
+                     data-end="{{ settings.o3_end|default:85 }}">
+                    {% if settings.o3_eyebrow %}
+                    <p class="hero-eyebrow">{{ settings.o3_eyebrow }}</p>
+                    {% endif %}
+                    <h2>{% hero_headline settings.o3_title settings.o3_highlight %}</h2>
+                    {% if settings.o3_subtitle %}
+                    <div class="hero-sub">{{ settings.o3_subtitle|safe }}</div>
+                    {% endif %}
+                </div>
+
+                {# ── Overlay 4 — CTA slide ── #}
+                <div class="hero-scene hero-scene--cta"
+                     data-start="{{ settings.o4_start|default:85 }}"
+                     data-end="{{ settings.o4_end|default:101 }}">
+                    {% if settings.o4_eyebrow %}
+                    <p class="hero-eyebrow">{{ settings.o4_eyebrow }}</p>
+                    {% endif %}
+                    <h2>{% hero_headline settings.o4_title settings.o4_highlight %}</h2>
+                    <div class="hero-cta-buttons">
+                        <a href="{% if settings.cta_primary_url %}{{ settings.cta_primary_url }}{% else %}#{{ consult_anchor }}{% endif %}" class="btn-primary">
+                            {{ settings.cta_primary_label|default:settings.hero_cta_text }}
+                        </a>
+                        <a href="{% if settings.cta_secondary_url %}{{ settings.cta_secondary_url }}{% else %}#{{ projects_anchor }}{% endif %}" class="btn-secondary">
+                            {{ settings.cta_secondary_label }}
+                        </a>
+                    </div>
+                </div>
+
+                <div class="hero-scroll-hint" aria-hidden="true">
+                    <span class="hero-scroll-line"></span>
+                    <span>اسکرول کنید</span>
+                </div>
+
+            </div>
+        </section>
+
+        {# ───────────── Benefits Cards (under Hero) ───────────── #}
+        {% if benefits_cards %}
+        <section class="adonis-fa-new-section fa-benefits-cards-section"
+                 id="{{ benefits_anchor_id }}"
+                 {% if benefits_bg_image_url %}style="--fa-benefits-bg-image:url('{{ benefits_bg_image_url }}'); --fa-benefits-bg-opacity:{{ benefits_bg_opacity }}; --fa-benefits-bg-position:{{ benefits_bg_position }};"{% endif %}>
+            <div class="adonis-fa-new-container fa-benefits-cards-container" style="margin-top: -50px;">
+                <div class="adonis-fa-new-section-head fa-benefits-cards-head" data-fa-reveal>
+                    {% if benefits_eyebrow %}
+                    <span class="adonis-fa-new-eyebrow fa-benefits-cards-eyebrow">{{ benefits_eyebrow }}</span>
+                    {% endif %}
+                    {% if benefits_title %}
+                    <h2 class="adonis-fa-new-section-title fa-benefits-cards-title">{{ benefits_title }}</h2>
+                    {% endif %}
+                    {% if benefits_subtitle %}
+                    <p class="adonis-fa-new-section-lead fa-benefits-cards-subtitle">{{ benefits_subtitle }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="fa-benefits-cards-grid">
+                    {% for card in benefits_cards %}
+                    <article class="fa-benefit-card"
+                             data-fa-reveal
+                             data-fa-reveal-delay="{{ forloop.counter0|add:1 }}0">
+                        <div class="fa-benefit-card-icon-wrap" aria-hidden="true">
+                            {% if card.image_url %}
+                            <img class="fa-benefit-card-icon-image"
+                                 src="{{ card.image_url }}"
+                                 alt="{{ card.image_alt }}"
+                                 loading="lazy"
+                                 decoding="async">
+                            {% else %}
+                            <span class="fa-benefit-card-icon-svg">
+                                <svg viewBox="0 0 48 48" class="fa-benefit-card-icon-graphic" data-icon-key="{{ card.icon_key }}">
+                                    <circle cx="24" cy="24" r="22" class="icon-ring"/>
+                                    <path class="icon-stroke icon-path-1" />
+                                    <path class="icon-stroke icon-path-2" />
+                                </svg>
+                            </span>
+                            {% endif %}
+                        </div>
+                        <h3 class="fa-benefit-card-title">{{ card.title }}</h3>
+                        <p class="fa-benefit-card-desc">{{ card.description }}</p>
+                    </article>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        {# Decorative transition layer between Hero and Gateway #}
+        {% for section in sections_render %}
+            {% if section.section_type == 'gateway' and section.decorative_flowers_enabled %}
+            <div class="fa-bougainvillea-transition"
+                 data-section-style="{{ section.decorative_inline_style }}"
+                 {% if section.decorative_animation_enabled %}data-decorative-animate="1"{% endif %}
+                 {% if section.decorative_show_on_mobile %}data-decorative-mobile="1"{% endif %}
+                 aria-hidden="true">
+                <div class="fa-bougainvillea-branches">
+                    <div class="fa-bougainvillea-branch fa-bougainvillea-left">
+                        <img src="{% if section.decorative_left_image %}{{ section.decorative_left_image.url }}{% else %}{% static 'fa_new/images/bougainvillea-left.webp' %}{% endif %}"
+                             alt=""
+                             loading="lazy"
+                             decoding="async"
+                             fetchpriority="low">
+                    </div>
+                    <div class="fa-bougainvillea-branch fa-bougainvillea-right">
+                        <img src="{% if section.decorative_right_image %}{{ section.decorative_right_image.url }}{% else %}{% static 'fa_new/images/bougainvillea-right.webp' %}{% endif %}"
+                             alt=""
+                             loading="lazy"
+                             decoding="async"
+                             fetchpriority="low">
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+
+        {# ───────────── Dynamic sections from admin ───────────── #}
+        {% for section in sections_render %}
+
+            {# ── چرا یونان؟ ── #}
+            {% if section.section_type == 'why_greece' %}
+            {% with hero_item=section.items.all|first %}
+            <section class="adonis-fa-new-section adonis-fa-new-why-greece adonis-fa-new-why-greece--luxury {{ section.section_css_class }}"
+                     id="{{ section.resolved_anchor_id }}"
+                     data-section-style="{{ section.section_inline_style }}"
+                     {% if section.hide_image_on_mobile %}data-hide-image-mobile="1"{% endif %}>
+                <div class="fa-luxury-bg-text fa-luxury-bg-text-top" aria-hidden="true">ADONIS</div>
+                <div class="fa-luxury-bg-text fa-luxury-bg-text-bottom" aria-hidden="true">PROPERTY</div>
+
+                <div class="adonis-fa-new-container fa-luxury-container" style="max-width:var(--fa-section-container-max)">
+                    {% if section.eyebrow or section.title or section.subtitle %}
+                    <div class="fa-luxury-heading" data-fa-reveal>
+                        {% if section.eyebrow %}<span class="fa-luxury-eyebrow">{{ section.eyebrow }}</span>{% endif %}
+                        {% if section.title %}<h2 class="fa-luxury-title" data-fa-luxury-highlight>{{ section.title }}</h2>{% endif %}
+                        {% if section.subtitle %}<p class="fa-luxury-heading-lead">{{ section.subtitle }}</p>{% endif %}
+                    </div>
+                    {% endif %}
+
+                    <div class="fa-luxury-layout">
+                        <div class="fa-luxury-image-wrap" data-fa-reveal>
+                        {% if hero_item and hero_item.image %}
+                        <img src="{{ hero_item.image.url }}" alt="{{ hero_item.image_alt|default:hero_item.title|default:section.title|default:'سرمایه‌گذاری ملکی در یونان' }}">
+                        {% elif section.background_image %}
+                        <img src="{{ section.background_image.url }}" alt="{{ section.background_image_alt|default:section.title|default:'سرمایه‌گذاری ملکی در یونان' }}">
+                        {% elif section.section_image %}
+                        <img src="{{ section.section_image.url }}" alt="{{ section.title|default:'سرمایه‌گذاری ملکی در یونان' }}">
+                        {% else %}
+                            <div class="fa-luxury-image-placeholder" aria-hidden="true"></div>
+                            {% endif %}
+                        </div>
+
+                        <article class="fa-luxury-card" data-fa-reveal data-fa-reveal-delay="140">
+                            {% if section.description %}
+                            <p class="fa-luxury-card-text">{{ section.description }}</p>
+                            {% elif section.subtitle %}
+                            <p class="fa-luxury-card-text">{{ section.subtitle }}</p>
+                            {% endif %}
+
+                            {% with items=section.items.all %}
+                            {% if items %}
+                            <div class="fa-luxury-stats">
+                                {% for item in items %}
+                                    {% if item.stat_number or item.badge or item.title or item.subtitle or item.effective_description %}
+                                    <div class="fa-luxury-stat">
+                                        <strong>
+                                            {% if item.stat_number %}{{ item.stat_number }}
+                                            {% elif item.badge %}{{ item.badge }}
+                                            {% else %}{{ forloop.counter }}{% endif %}
+                                        </strong>
+                                        <span>{{ item.title|default:item.subtitle|default:item.effective_description }}</span>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            {% endwith %}
+
+                            {% if section.cta_primary_text and section.cta_primary_url %}
+                            <a href="{{ section.cta_primary_url }}"
+                               class="fa-luxury-btn"
+                               {% if section.cta_primary_url|slice:":4" == "http" %}target="_blank" rel="noopener"{% endif %}>
+                                {{ section.cta_primary_text }}
+                            </a>
+                            {% elif hero_item and hero_item.cta_label and hero_item.cta_url %}
+                            <a href="{{ hero_item.cta_url }}"
+                               class="fa-luxury-btn"
+                               {% if hero_item.cta_url|slice:":4" == "http" %}target="_blank" rel="noopener"{% endif %}>
+                                {{ hero_item.cta_label }}
+                            </a>
+                            {% elif section.cta_secondary_text and section.cta_secondary_url %}
+                            <a href="{{ section.cta_secondary_url }}"
+                               class="fa-luxury-btn"
+                               {% if section.cta_secondary_url|slice:":4" == "http" %}target="_blank" rel="noopener"{% endif %}>
+                                {{ section.cta_secondary_text }}
+                            </a>
+                            {% endif %}
+                        </article>
+                    </div>
+                </div>
+            </section>
+            {% endwith %}
+
+            {# ── خدمات آدونیس ── #}
+            {% elif section.section_type == 'services' %}
+            <section class="adonis-fa-new-section fa-services-section"
+                     id="fa-section-{{ section.section_type }}">
+                <div class="adonis-fa-new-container fa-services-container">
+                    {% if section.eyebrow or section.title or section.subtitle %}
+                    <div class="fa-services-head" data-fa-reveal>
+                        {% if section.eyebrow %}
+                        <span class="adonis-fa-new-eyebrow fa-services-eyebrow">{{ section.eyebrow }}</span>
+                        {% endif %}
+                        {% if section.title %}
+                        <h2 class="fa-services-title">{{ section.title }}</h2>
+                        {% endif %}
+                        {% if section.subtitle %}
+                        <p class="fa-services-subtitle">{{ section.subtitle }}</p>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
+                    <div class="fa-services-grid">
+                        <div class="fa-services-left-image">
+                            <img src="{% static 'fa_new/images/services-side.jpg' %}"
+                                 alt="خدمات آدونیس"
+                                 loading="lazy"
+                                 decoding="async">
+                        </div>
+                        <div class="fa-services-cards">
+                        {% for card in section.items.all %}
+                        {% if card.show_on_homepage %}
+                        <article class="fa-service-card{% if card.card_size == 'tall' %} fa-service-card--tall{% elif card.card_size == 'small' %} fa-service-card--small{% endif %}"
+                                 data-fa-reveal
+                                 data-fa-reveal-delay="{{ forloop.counter0|add:1 }}0">
+                            <div class="fa-service-card-media">
+                                {% if card.image %}
+                                <img class="fa-service-card-image"
+                                     src="{{ card.image.url }}"
+                                     alt="{{ card.title }}"
+                                     loading="lazy"
+                                     decoding="async">
+                                {% else %}
+                                <div class="fa-service-card-placeholder" data-card-index="{{ forloop.counter }}" aria-hidden="true"></div>
+                                {% endif %}
+                                <div class="fa-service-card-overlay" aria-hidden="true"></div>
+                            </div>
+                            <div class="fa-service-card-body">
+                                {% if card.badge and card.badge != 'tall' and card.badge != 'small' and card.badge != 'medium' and card.badge != 'wide' %}
+                                <span class="fa-service-card-chip">{{ card.badge }}</span>
+                                {% endif %}
+                                <h3 class="fa-service-card-title">{{ card.title }}</h3>
+                                {% if card.body %}
+                                <p class="fa-service-card-desc">{{ card.body }}</p>
+                                {% endif %}
+                                {% if card.cta_url %}
+                                <a href="{{ card.cta_url }}"
+                                   class="fa-service-card-btn"
+                                   {% if card.cta_url|slice:":4" == "http" %}target="_blank" rel="noopener"{% endif %}>
+                                    {{ card.cta_label|default:"مشاهده جزئیات" }}
+                                </a>
+                                {% endif %}
+                            </div>
+                        </article>
+                        {% endif %}
+                        {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {# ── چرا آدونیس؟ / آشنایی با آدونیس (legacy intro_stats) ── #}
+            {% elif section.section_type == 'why_adonis' or section.section_type == 'intro_stats' %}
+            <section class="adonis-fa-new-section adonis-fa-new-why-adonis {{ section.section_css_class }}"
+                     id="{{ section.resolved_anchor_id }}"
+                     data-section-style="{{ section.section_inline_style }}"
+                     {% if section.hide_image_on_mobile %}data-hide-image-mobile="1"{% endif %}>
+                <div class="adonis-fa-new-container adonis-fa-new-split" style="max-width:var(--fa-section-container-max)">
+                    <div class="adonis-fa-new-split-text" data-fa-reveal>
+                        {% if section.eyebrow %}<span class="adonis-fa-new-eyebrow">{{ section.eyebrow }}</span>{% endif %}
+                        {% if section.title %}<h2 class="adonis-fa-new-section-title">{{ section.title }}</h2>{% endif %}
+                        {% if section.subtitle %}<p class="adonis-fa-new-section-lead">{{ section.subtitle }}</p>{% endif %}
+                        {% if section.description %}<p class="adonis-fa-new-section-lead">{{ section.description }}</p>{% endif %}
+                        {# bullets: items without stat_number #}
+                        {% with bullets=section.items.all %}
+                        {% if bullets %}
+                        <ul class="adonis-fa-new-bullets">
+                            {% for item in bullets %}{% if not item.stat_number %}
+                            <li>
+                                <span class="adonis-fa-new-bullet-icon" aria-hidden="true">✓</span>
+                                {{ item.effective_description }}
+                            </li>
+                            {% endif %}{% endfor %}
+                        </ul>
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                    {# stat cards: items with stat_number #}
+                    <div class="adonis-fa-new-split-visual" data-fa-reveal data-fa-reveal-delay="160">
+                        {% for item in section.items.all %}{% if item.stat_number %}
+                        <div class="adonis-fa-new-stat-card{% if item.is_featured %} adonis-fa-new-stat-card--accent{% endif %}">
+                            <span class="adonis-fa-new-stat-num">{{ item.stat_number }}</span>
+                            <span class="adonis-fa-new-stat-label">{{ item.effective_description }}</span>
+                        </div>
+                        {% endif %}{% endfor %}
+                    </div>
+                </div>
+            </section>
+
+            {# ── مسیرهای گلدن ویزا ── #}
+            {% elif section.section_type == 'routes' %}
+            <section class="adonis-fa-new-section adonis-fa-new-routes {{ section.section_css_class }}"
+                     id="{{ section.resolved_anchor_id }}"
+                     data-section-style="{{ section.section_inline_style }}"
+                     {% if section.hide_image_on_mobile %}data-hide-image-mobile="1"{% endif %}>
+                <div class="adonis-fa-new-container" style="max-width:var(--fa-section-container-max)">
+                    {% if section.eyebrow or section.title or section.subtitle or section.description %}
+                    <div class="adonis-fa-new-section-head" data-fa-reveal>
+                        {% if section.eyebrow %}<span class="adonis-fa-new-eyebrow">{{ section.eyebrow }}</span>{% endif %}
+                        {% if section.title %}<h2 class="adonis-fa-new-section-title">{{ section.title }}</h2>{% endif %}
+                        {% if section.subtitle %}<p class="adonis-fa-new-section-lead">{{ section.subtitle }}</p>{% endif %}
+                        {% if section.description %}<p class="adonis-fa-new-section-lead">{{ section.description }}</p>{% endif %}
+                    </div>
+                    {% endif %}
+                    {% with items=section.items.all %}
+                    {% if items %}
+                    <div class="adonis-fa-new-grid adonis-fa-new-grid--3 {{ section.desktop_layout_class }} {{ section.mobile_layout_class }}">
+                        {% for item in items %}
+                        <article class="adonis-fa-new-route{% if item.is_featured %} adonis-fa-new-route--featured{% endif %}"
+                                 data-fa-reveal>
+                            {% if item.image %}
+                            <div class="adonis-fa-new-route-media">
+                                <img class="adonis-fa-new-route-img"
+                                     src="{{ item.image.url }}"
+                                     alt="{{ item.image_alt|default:item.title }}"
+                                     loading="lazy"
+                                     decoding="async">
+                            </div>
+                            {% endif %}
+                            <header class="adonis-fa-new-route-head">
+                                {% if item.badge %}
+                                <span class="adonis-fa-new-route-tag{% if item.is_featured %} adonis-fa-new-route-tag--gold{% endif %}">{{ item.badge }}</span>
+                                {% endif %}
+                                {% if item.title %}<h3>{{ item.title }}</h3>{% endif %}
+                            </header>
+                            {% if item.amount %}<p class="adonis-fa-new-route-amount">{{ item.amount }}</p>{% endif %}
+                            {% if item.subtitle %}<p class="adonis-fa-new-route-subtitle">{{ item.subtitle }}</p>{% endif %}
+                            {% if item.effective_description %}
+                            <ul class="adonis-fa-new-route-list">
+                                {% for line in item.effective_description|split_lines %}
+                                <li>{{ line }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                            <a href="{% if item.cta_url %}{{ item.cta_url }}{% else %}#{{ consult_anchor }}{% endif %}"
+                               class="adonis-fa-new-route-cta">
+                                {{ item.cta_label|default:"مشاوره این مسیر" }}
+                            </a>
+                        </article>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+                    {% if section.cta_primary_text and section.cta_primary_url %}
+                    <div class="adonis-fa-new-section-actions" data-fa-reveal>
+                        <a href="{{ section.cta_primary_url }}" class="adonis-fa-new-btn adonis-fa-new-btn--gold"
+                           {% if section.cta_primary_url|slice:":4" == "http" %}target="_blank" rel="noopener"{% endif %}>
+                            <span>{{ section.cta_primary_text }}</span>
+                        </a>
+                        {% if section.cta_secondary_text and section.cta_secondary_url %}
+                        <a href="{{ section.cta_secondary_url }}" class="adonis-fa-new-btn adonis-fa-new-btn--outline"
+                           {% if section.cta_secondary_url|slice:":4" == "http" %}target="_blank" rel="noopener"{% endif %}>
+                            <span>{{ section.cta_secondary_text }}</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </section>
+
+            {# ── پروژه‌های ساختمانی آدونیس ── #}
+            {% elif section.section_type == 'projects' %}
+            <section class="adonis-fa-new-section fa-projects-section"
+                     id="fa-section-{{ section.section_type }}">
+                <div class="adonis-fa-new-container fa-projects-container">
+
+                    {# ── Section header ── #}
+                    {% if section.eyebrow or section.title or section.subtitle %}
+                    <div class="fa-projects-head" data-fa-reveal>
+                        {% if section.eyebrow %}
+                        <span class="adonis-fa-new-eyebrow fa-projects-eyebrow">{{ section.eyebrow }}</span>
+                        {% endif %}
+                        {% if section.title %}
+                        <h2 class="fa-projects-title">{{ section.title }}</h2>
+                        {% endif %}
+                        {% if section.subtitle %}
+                        <p class="fa-projects-subtitle">{{ section.subtitle }}</p>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
+                    {# ── Project cards grid ── #}
+                    {% with items=section.items.all %}
+                    {% if items %}
+                    <div class="fa-projects-grid">
+                        {% for item in items %}
+                        {% if item.show_on_homepage %}
+                        <a class="fa-project-card"
+                           href="{{ item.cta_url|default:'#fa-section-consult' }}"
+                           {% if item.cta_url|slice:":4" == "http" %}target="_blank" rel="noopener"{% endif %}
+                           data-fa-reveal
+                           data-fa-reveal-delay="{{ forloop.counter0|add:1 }}0">
+                            <div class="fa-project-card-media">
+                                {% if item.image %}
+                                <img class="fa-project-card-image"
+                                     src="{{ item.image.url }}"
+                                     alt="{{ item.image_alt|default:item.title }}"
+                                     loading="lazy"
+                                     decoding="async">
+                                {% else %}
+                                <div class="fa-project-card-placeholder" data-card-index="{{ forloop.counter }}" aria-hidden="true"></div>
+                                {% endif %}
+                                <div class="fa-project-card-overlay" aria-hidden="true"></div>
+                            </div>
+                            <div class="fa-project-card-body">
+                                {% if item.badge %}
+                                <span class="fa-project-card-badge">{{ item.badge }}</span>
+                                {% endif %}
+                                {% if item.location %}
+                                <span class="fa-project-card-location">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z" fill="currentColor"/>
+                                    </svg>
+                                    {{ item.location }}
+                                </span>
+                                {% endif %}
+                                <h3 class="fa-project-card-title">{{ item.title }}</h3>
+                                {% if item.body %}
+                                <p class="fa-project-card-desc">{{ item.body }}</p>
+                                {% endif %}
+                                <span class="fa-project-card-btn">{{ item.cta_label|default:"مشاهده پروژه" }} ←</span>
+                            </div>
+                        </a>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+
+                    {# ── View More CTA ── #}
+                    {% if section.cta_label and section.cta_url %}
+                    <div class="fa-projects-cta" data-fa-reveal>
+                        <a href="{{ section.cta_url }}"
+                           class="fa-projects-cta-btn"
+                           {% if section.cta_url|slice:":4" == "http" %}target="_blank" rel="noopener"{% endif %}>
+                            {{ section.cta_label }}
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </section>
+
+            {# ── انواع اقامت یونان (۳ کارت لاکچری) ── #}
+            {% elif section.section_type == 'residency_types' %}
+            <section class="adonis-fa-new-section fa-restypes-section"
+                     id="{{ section.resolved_anchor_id }}"
+                     {% if section.background_image %}
+                     style="--fa-restypes-bg:url('{{ section.background_image.url }}');--fa-restypes-opacity:{{ section.background_image_opacity|default:40 }};--fa-restypes-pos:{{ section.background_image_position|default:'center center' }}"
+                     {% endif %}>
+                {# Background overlay #}
+                {% if section.background_image %}
+                <div class="fa-restypes-bg" aria-hidden="true"></div>
+                {% endif %}
+                
+                <div class="adonis-fa-new-container">
+                    {% if section.eyebrow or section.title or section.subtitle %}
+                    <div class="fa-restypes-head" data-fa-reveal>
+                        {% if section.eyebrow %}<span class="adonis-fa-new-eyebrow fa-restypes-eyebrow">{{ section.eyebrow }}</span>{% endif %}
+                        {% if section.title %}<h2 class="fa-restypes-title">{{ section.title }}</h2>{% endif %}
+                        {% if section.subtitle %}<p class="fa-restypes-subtitle">{{ section.subtitle }}</p>{% endif %}
+                    </div>
+                    {% endif %}
+
+                    <div class="fa-restypes-grid">
+                        {% for item in section.items.all %}
+                        <a class="fa-restype-card fa-restype-card--animate"
+                           href="{{ item.cta_url|default:'#' }}"
+                           {% if item.cta_url|slice:':4' == 'http' %}target="_blank" rel="noopener"{% endif %}
+                           data-fa-reveal 
+                           data-fa-reveal-delay="{{ forloop.counter0 }}50"
+                           style="--card-index:{{ forloop.counter0 }}">
+                            <div class="fa-restype-media">
+                                {% if item.image %}
+                                <img class="fa-restype-img" src="{{ item.image.url }}" alt="{{ item.image_alt|default:item.title }}" loading="lazy" decoding="async">
+                                {% else %}
+                                <div class="fa-restype-img fa-restype-ph" aria-hidden="true"></div>
+                                {% endif %}
+                                <div class="fa-restype-grad" aria-hidden="true"></div>
+                            </div>
+                            <div class="fa-restype-content">
+                                <h3 class="fa-restype-title">{{ item.title }}</h3>
+                                {% if item.body %}<p class="fa-restype-desc">{{ item.body }}</p>{% endif %}
+                                <span class="fa-restype-btn">{{ item.cta_label|default:"ادامه مطلب" }}
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </span>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+
+            {# ── پروژه‌های منتخب املاک (کاروسل) ── #}
+            {% elif section.section_type == 'featured_properties' %}
+            <section class="adonis-fa-new-section fa-featprop-section"
+                     id="{{ section.resolved_anchor_id }}">
+                <div class="adonis-fa-new-container">
+                    {% if section.eyebrow or section.title or section.subtitle %}
+                    <div class="fa-featprop-head" data-fa-reveal>
+                        {% if section.eyebrow %}<span class="adonis-fa-new-eyebrow">{{ section.eyebrow }}</span>{% endif %}
+                        {% if section.title %}<h2 class="fa-featprop-title">{{ section.title }}</h2>{% endif %}
+                        {% if section.subtitle %}<p class="fa-featprop-subtitle">{{ section.subtitle }}</p>{% endif %}
+                    </div>
+                    {% endif %}
+
+                    {% if featured_properties %}
+                    <div class="swiper fa-featprop-swiper">
+                        <div class="swiper-wrapper">
+                            {% for p in featured_properties %}
+                            <div class="swiper-slide">
+                                <a class="fa-featprop-card" href="{{ p.url }}">
+                                    <div class="fa-featprop-media">
+                                        {% if p.image_url %}
+                                        <img class="fa-featprop-img" src="{{ p.image_url }}" alt="{{ p.name }}" loading="lazy" decoding="async">
+                                        {% else %}
+                                        <div class="fa-featprop-img fa-featprop-ph" aria-hidden="true"></div>
+                                        {% endif %}
+                                        <div class="fa-featprop-grad" aria-hidden="true"></div>
+                                        {% if p.price_label %}<span class="fa-featprop-price">{{ p.price_label }}</span>{% endif %}
+                                    </div>
+                                    <div class="fa-featprop-body">
+                                        <h3 class="fa-featprop-name">{{ p.name }}</h3>
+                                        {% if p.location %}
+                                        <span class="fa-featprop-loc">
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1112 6.5a2.5 2.5 0 010 5z" fill="currentColor"/></svg>
+                                            {{ p.location }}
+                                        </span>
+                                        {% endif %}
+                                        <span class="fa-featprop-btn">مشاهده پروژه
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                        </span>
+                                    </div>
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="swiper-button-prev fa-featprop-nav"></div>
+                        <div class="swiper-button-next fa-featprop-nav"></div>
+                        <div class="swiper-pagination fa-featprop-pag"></div>
+                    </div>
+                    <div class="fa-featprop-cta" data-fa-reveal>
+                        <a href="/fa-new/properties/" class="fa-featprop-all">
+                            مشاهده همه املاک آدونیس
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </a>
+                    </div>
+                    {% else %}
+                    <p style="text-align:center;color:#64748b">هنوز ملکی برای نمایش در صفحه اصلی انتخاب نشده است. (در پنل ادمین → املاک → «نمایش در صفحه اصلی»)</p>
+                    {% endif %}
+                </div>
+            </section>
+
+            {# ── فرآیند همکاری ── #}
+            {% elif section.section_type == 'process' %}
+            <section class="adonis-fa-new-section adonis-fa-new-process {{ section.section_css_class }}"
+                     id="{{ section.resolved_anchor_id }}"
+                     data-section-style="{{ section.section_inline_style }}"
+                     {% if section.hide_image_on_mobile %}data-hide-image-mobile="1"{% endif %}>
+                <div class="adonis-fa-new-container" style="max-width:var(--fa-section-container-max)">
+                    {% if section.eyebrow or section.title or section.subtitle or section.description %}
+                    <div class="adonis-fa-new-section-head" data-fa-reveal>
+                        {% if section.eyebrow %}<span class="adonis-fa-new-eyebrow">{{ section.eyebrow }}</span>{% endif %}
+                        {% if section.title %}<h2 class="adonis-fa-new-section-title">{{ section.title }}</h2>{% endif %}
+                        {% if section.subtitle %}<p class="adonis-fa-new-section-lead">{{ section.subtitle }}</p>{% endif %}
+                        {% if section.description %}<p class="adonis-fa-new-section-lead">{{ section.description }}</p>{% endif %}
+                    </div>
+                    {% endif %}
+                    {% with items=section.items.all %}
+                    {% if items %}
+                    <ol class="adonis-fa-new-timeline">
+                        {% for item in items %}
+                        <li class="adonis-fa-new-timeline-item" data-fa-reveal>
+                            <span class="adonis-fa-new-timeline-num">{{ item.badge|default:forloop.counter }}</span>
+                            <div>
+                                {% if item.title %}<h3>{{ item.title }}</h3>{% endif %}
+                                {% if item.subtitle %}<p class="adonis-fa-new-timeline-subtitle">{{ item.subtitle }}</p>{% endif %}
+                                {% if item.effective_description %}<p>{{ item.effective_description }}</p>{% endif %}
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ol>
+                    {% endif %}
+                    {% endwith %}
+                </div>
+            </section>
+
+            {# ── اعتماد و تجربه ── #}
+            {% elif section.section_type == 'trust' %}
+            <section class="adonis-fa-new-section adonis-fa-new-trust {{ section.section_css_class }}"
+                     id="{{ section.resolved_anchor_id }}"
+                     data-section-style="{{ section.section_inline_style }}"
+                     {% if section.hide_image_on_mobile %}data-hide-image-mobile="1"{% endif %}>
+                <div class="adonis-fa-new-container" style="max-width:var(--fa-section-container-max)">
+                    {% if section.eyebrow or section.title or section.subtitle or section.description %}
+                    <div class="adonis-fa-new-section-head" data-fa-reveal>
+                        {% if section.eyebrow %}<span class="adonis-fa-new-eyebrow">{{ section.eyebrow }}</span>{% endif %}
+                        {% if section.title %}<h2 class="adonis-fa-new-section-title">{{ section.title }}</h2>{% endif %}
+                        {% if section.subtitle %}<p class="adonis-fa-new-section-lead">{{ section.subtitle }}</p>{% endif %}
+                        {% if section.description %}<p class="adonis-fa-new-section-lead">{{ section.description }}</p>{% endif %}
+                    </div>
+                    {% endif %}
+                    {% with items=section.items.all %}
+                    {% if items %}
+                    <div class="adonis-fa-new-grid adonis-fa-new-grid--3">
+                        {% for item in items %}
+                        <figure class="adonis-fa-new-quote" data-fa-reveal>
+                            <blockquote>«{{ item.effective_description }}»</blockquote>
+                            <figcaption>
+                                {% if item.author_name %}<span class="adonis-fa-new-quote-name">{{ item.author_name }}</span>{% endif %}
+                                {% if item.author_meta %}<span class="adonis-fa-new-quote-meta">{{ item.author_meta }}</span>{% endif %}
+                            </figcaption>
+                        </figure>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+                </div>
+            </section>
+
+            {# ── مشاوره رایگان ── #}
+            {% elif section.section_type == 'consult' %}
+            <section class="adonis-fa-new-section adonis-fa-new-consult {{ section.section_css_class }}"
+                     id="{{ section.resolved_anchor_id }}"
+                     data-section-style="{{ section.section_inline_style }}"
+                     {% if section.hide_image_on_mobile %}data-hide-image-mobile="1"{% endif %}>
+                <div class="adonis-fa-new-container" style="max-width:var(--fa-section-container-max)">
+                    <div class="adonis-fa-new-consult-card" data-fa-reveal>
+                        <div class="adonis-fa-new-consult-text">
+                            {% if section.eyebrow %}<span class="adonis-fa-new-eyebrow">{{ section.eyebrow }}</span>{% endif %}
+                            {% if section.title %}<h2 class="adonis-fa-new-section-title">{{ section.title }}</h2>{% endif %}
+                            {% if section.subtitle %}<p>{{ section.subtitle }}</p>{% endif %}
+                            {% if section.description %}<p>{{ section.description }}</p>{% endif %}
+                        </div>
+                        <div class="adonis-fa-new-consult-actions">
+                            {% for item in section.items.all %}
+                            <a class="adonis-fa-new-btn adonis-fa-new-btn--{{ item.badge|default:'gold' }} adonis-fa-new-btn--lg"
+                               href="{{ item.cta_url }}"
+                               {% if item.cta_url|slice:":4" == "http" %}target="_blank" rel="noopener"{% endif %}>
+                                <span>{{ item.cta_label }}</span>
+                            </a>
+                            {% empty %}
+                            {% if section.cta_primary_text and section.cta_primary_url %}
+                                <a class="adonis-fa-new-btn adonis-fa-new-btn--gold adonis-fa-new-btn--lg"
+                                   href="{{ section.cta_primary_url }}"
+                                   {% if section.cta_primary_url|slice:":4" == "http" %}target="_blank" rel="noopener"{% endif %}>
+                                    <span>{{ section.cta_primary_text }}</span>
+                                </a>
+                            {% endif %}
+                            {% if section.cta_secondary_text and section.cta_secondary_url %}
+                                <a class="adonis-fa-new-btn adonis-fa-new-btn--outline adonis-fa-new-btn--lg"
+                                   href="{{ section.cta_secondary_url }}"
+                                   {% if section.cta_secondary_url|slice:":4" == "http" %}target="_blank" rel="noopener"{% endif %}>
+                                    <span>{{ section.cta_secondary_text }}</span>
+                                </a>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {# ── Gateway two-card section ── #}
+            {% elif section.section_type == 'gateway' %}
+            <section class="adonis-fa-new-section adonis-fa-new-gateway {{ section.section_css_class }}"
+                     id="{{ section.resolved_anchor_id }}"
+                     data-section-style="{{ section.section_inline_style }}"
+                     {% if section.hide_image_on_mobile %}data-hide-image-mobile="1"{% endif %}>
+                <div class="adonis-fa-new-container" style="max-width:var(--fa-section-container-max)">
+                    <div class="adonis-fa-new-section-head" data-fa-reveal>
+                        {% if section.eyebrow %}<span class="adonis-fa-new-eyebrow">{{ section.eyebrow }}</span>{% endif %}
+                        {% if section.title %}<h2 class="adonis-fa-new-section-title">{{ section.title }}</h2>{% endif %}
+                        {% if section.subtitle %}<p class="adonis-fa-new-section-lead">{{ section.subtitle }}</p>{% endif %}
+                        {% if section.description %}<p class="adonis-fa-new-section-lead">{{ section.description }}</p>{% endif %}
+                    </div>
+
+                    <div class="adonis-fa-new-gateway-grid {{ section.desktop_layout_class }} {{ section.mobile_layout_class }}">
+                        {% with gateway_cards=section.active_gateway_cards %}
+                            {% if gateway_cards %}
+                                {% for card in gateway_cards %}
+                                <article class="adonis-fa-new-gateway-card"
+                                         data-fa-reveal
+                                         {% if not forloop.first %}data-fa-reveal-delay="120"{% endif %}
+                                         data-card-style="{{ card.card_inline_style }}">
+                                    {% if card.image %}
+                                    <img src="{{ card.image.url }}" alt="{{ card.image_alt|default:card.title|default:card.badge }}" class="adonis-fa-new-gateway-image{% if section.hide_image_on_mobile %} hide-mobile-image{% endif %}">
+                                    {% else %}
+                                    <div class="adonis-fa-new-gateway-image adonis-fa-new-gateway-image--placeholder{% if section.hide_image_on_mobile %} hide-mobile-image{% endif %}" aria-hidden="true"></div>
+                                    {% endif %}
+                                    {% if card.badge %}<span class="adonis-fa-new-gateway-label">{{ card.badge }}</span>{% endif %}
+                                    {% if card.title %}<h3>{{ card.title }}</h3>{% endif %}
+                                    {% if card.subtitle %}<p class="adonis-fa-new-gateway-subtitle">{{ card.subtitle }}</p>{% endif %}
+                                    {% if card.description %}<p class="adonis-fa-new-gateway-description">{{ card.description }}</p>{% endif %}
+                                    {% if card.cta_text and card.cta_link %}
+                                    <a href="{{ card.cta_link }}" class="adonis-fa-new-route-cta"
+                                       {% if card.cta_link|slice:":4" == "http" %}target="_blank" rel="noopener"{% endif %}>{{ card.cta_text }}</a>
+                                    {% endif %}
+                                </article>
+                                {% endfor %}
+                            {% else %}
+                                <article class="adonis-fa-new-gateway-card" data-fa-reveal data-card-style="{{ section.card_1_inline_style }}">
+                                    {% if section.card_1_image %}
+                                    <img src="{{ section.card_1_image.url }}" alt="{{ section.card_1_image_alt|default:section.card_1_title }}" class="adonis-fa-new-gateway-image{% if section.hide_image_on_mobile %} hide-mobile-image{% endif %}">
+                                    {% elif section.card_image_1 %}
+                                    <img src="{{ section.card_image_1.url }}" alt="{{ section.card_image_1_alt|default:section.card_1_title }}" class="adonis-fa-new-gateway-image{% if section.hide_image_on_mobile %} hide-mobile-image{% endif %}">
+                                    {% else %}
+                                    <div class="adonis-fa-new-gateway-image adonis-fa-new-gateway-image--placeholder{% if section.hide_image_on_mobile %} hide-mobile-image{% endif %}" aria-hidden="true"></div>
+                                    {% endif %}
+                                    {% if section.card_1_label %}<span class="adonis-fa-new-gateway-label">{{ section.card_1_label }}</span>{% endif %}
+                                    {% if section.card_1_title %}<h3>{{ section.card_1_title }}</h3>{% endif %}
+                                    {% if section.card_1_subtitle %}<p class="adonis-fa-new-gateway-subtitle">{{ section.card_1_subtitle }}</p>{% endif %}
+                                    {% if section.card_1_description %}<p class="adonis-fa-new-gateway-description">{{ section.card_1_description }}</p>{% endif %}
+                                    {% if section.card_1_cta_text and section.card_1_cta_link %}
+                                    <a href="{{ section.card_1_cta_link }}" class="adonis-fa-new-route-cta"
+                                       {% if section.card_1_cta_link|slice:":4" == "http" %}target="_blank" rel="noopener"{% endif %}>{{ section.card_1_cta_text }}</a>
+                                    {% endif %}
+                                </article>
+
+                                <article class="adonis-fa-new-gateway-card" data-fa-reveal data-fa-reveal-delay="120" data-card-style="{{ section.card_2_inline_style }}">
+                                    {% if section.card_2_image %}
+                                    <img src="{{ section.card_2_image.url }}" alt="{{ section.card_2_image_alt|default:section.card_2_title }}" class="adonis-fa-new-gateway-image{% if section.hide_image_on_mobile %} hide-mobile-image{% endif %}">
+                                    {% elif section.card_image_2 %}
+                                    <img src="{{ section.card_image_2.url }}" alt="{{ section.card_image_2_alt|default:section.card_2_title }}" class="adonis-fa-new-gateway-image{% if section.hide_image_on_mobile %} hide-mobile-image{% endif %}">
+                                    {% else %}
+                                    <div class="adonis-fa-new-gateway-image adonis-fa-new-gateway-image--placeholder{% if section.hide_image_on_mobile %} hide-mobile-image{% endif %}" aria-hidden="true"></div>
+                                    {% endif %}
+                                    {% if section.card_2_label %}<span class="adonis-fa-new-gateway-label">{{ section.card_2_label }}</span>{% endif %}
+                                    {% if section.card_2_title %}<h3>{{ section.card_2_title }}</h3>{% endif %}
+                                    {% if section.card_2_subtitle %}<p class="adonis-fa-new-gateway-subtitle">{{ section.card_2_subtitle }}</p>{% endif %}
+                                    {% if section.card_2_description %}<p class="adonis-fa-new-gateway-description">{{ section.card_2_description }}</p>{% endif %}
+                                    {% if section.card_2_cta_text and section.card_2_cta_link %}
+                                    <a href="{{ section.card_2_cta_link }}" class="adonis-fa-new-route-cta"
+                                       {% if section.card_2_cta_link|slice:":4" == "http" %}target="_blank" rel="noopener"{% endif %}>{{ section.card_2_cta_text }}</a>
+                                    {% endif %}
+                                </article>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </section>
+
+            {% endif %}
+        {% empty %}
+            {# No sections configured yet — show a placeholder so the page isn't blank #}
+            <div style="padding:6rem 2rem;text-align:center;color:#aaa;font-family:Vazirmatn,sans-serif">
+                <p>هیچ بخشی هنوز تعریف نشده است.</p>
+                <p>از پنل ادمین → <strong>بخش‌های صفحه /fa-new/</strong> بخش‌ها را اضافه کنید.</p>
+            </div>
+        {% endfor %}
+
+    </main>
+
+    {# ───────────── Footer (shared partial) ───────────── #}
+    {% include "fa_new/_footer.html" %}
+
+    {% if featured_properties %}
+    <script src="{% static 'js/vendor/swiper-bundle.min.js' %}" defer></script>
+    <script>
+    window.addEventListener('load', function () {
+        if (!window.Swiper) return;
+        new Swiper('.fa-featprop-swiper', {
+            slidesPerView: 1.15, spaceBetween: 18, loop: true, grabCursor: true, watchOverflow: true,
+            autoplay: { delay: 3500, disableOnInteraction: false, pauseOnMouseEnter: true },
+            navigation: { nextEl: '.fa-featprop-swiper .swiper-button-next', prevEl: '.fa-featprop-swiper .swiper-button-prev' },
+            pagination: { el: '.fa-featprop-swiper .swiper-pagination', clickable: true },
+            breakpoints: {
+                700:  { slidesPerView: 2, spaceBetween: 20 },
+                1000: { slidesPerView: 3, spaceBetween: 24 }
+            }
+        });
+    });
+    </script>
+    {% endif %}
+
+    <script src="{% static 'js/fa-new/home.js' %}?v=20260528-benefits-bg-1" defer></script>
+    <script src="{% static 'js/fa-new/section-dynamic.js' %}" defer></script>
+    <script src="{% static 'js/fa-new/hero-scroll.js' %}?v=18" defer></script>
+</body>
+</html>

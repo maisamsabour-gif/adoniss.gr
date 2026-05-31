@@ -1,0 +1,177 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   webinar-admin.css
+   Loaded only on the WebinarLandingSettings admin page (via
+   WebinarLandingSettingsAdmin.Media). Selectors are scoped to the
+   field-row classes Django renders, e.g. `.form-row.field-hero_subtitle`,
+   so this stylesheet has zero effect on any other admin page.
+   ────────────────────────────────────────────────────────────────────────── */
+
+:root {
+    --wba-gold:      #d4b057;
+    --wba-gold-dim:  #b08d35;
+    --wba-navy:      #0b2948;
+    --wba-text:      #0f172a;
+}
+
+/* Field-row alias used to keep selectors short below */
+.form-row.field-hero_subtitle,
+.form-row.field-hero_description,
+.form-row.field-success_text,
+.form-row.field-cta_title {
+    --wba-min-h: 280px;
+}
+.form-row.field-hero_description,
+.form-row.field-success_text {
+    --wba-min-h: 360px;
+}
+
+/* Make the editor column take the full available width inside Unfold */
+.form-row.field-hero_subtitle .grow,
+.form-row.field-hero_description .grow,
+.form-row.field-success_text .grow,
+.form-row.field-cta_title .grow {
+    max-width: 100% !important;
+}
+
+/* ── CKEditor 5 instance styling on these rows only ─────────────────────── */
+.form-row.field-hero_subtitle .ck.ck-editor,
+.form-row.field-hero_description .ck.ck-editor,
+.form-row.field-success_text .ck.ck-editor,
+.form-row.field-cta_title .ck.ck-editor {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    box-shadow:
+        0 1px 2px rgba(15, 23, 42, 0.06),
+        0 6px 18px -10px rgba(15, 23, 42, 0.18);
+}
+
+.form-row.field-hero_subtitle .ck-editor__editable,
+.form-row.field-hero_description .ck-editor__editable,
+.form-row.field-success_text .ck-editor__editable,
+.form-row.field-cta_title .ck-editor__editable {
+    min-height: var(--wba-min-h, 280px) !important;
+    max-height: 70vh;
+    direction: rtl;
+    text-align: right;
+    font-family: 'Vazirmatn', 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.95;
+    padding: 1.1rem 1.3rem !important;
+    background: #ffffff;
+    color: var(--wba-text);
+}
+
+.form-row.field-hero_subtitle .ck.ck-toolbar,
+.form-row.field-hero_description .ck.ck-toolbar,
+.form-row.field-success_text .ck.ck-toolbar,
+.form-row.field-cta_title .ck.ck-toolbar {
+    background: linear-gradient(180deg, #f8fafc, #eef2f7);
+    border-color: #cbd5e1;
+}
+
+.form-row.field-hero_subtitle .ck-button:hover,
+.form-row.field-hero_description .ck-button:hover,
+.form-row.field-success_text .ck-button:hover,
+.form-row.field-cta_title .ck-button:hover,
+.form-row.field-hero_subtitle .ck-button.ck-on,
+.form-row.field-hero_description .ck-button.ck-on,
+.form-row.field-success_text .ck-button.ck-on,
+.form-row.field-cta_title .ck-button.ck-on {
+    background: rgba(212, 176, 87, 0.18) !important;
+    color: var(--wba-text) !important;
+}
+
+/* RTL content baseline inside the editor (paragraphs, lists, quotes) */
+.form-row.field-hero_subtitle .ck-content,
+.form-row.field-hero_description .ck-content,
+.form-row.field-success_text .ck-content,
+.form-row.field-cta_title .ck-content {
+    direction: rtl;
+    text-align: right;
+}
+.form-row.field-hero_subtitle .ck-content p,
+.form-row.field-hero_description .ck-content p,
+.form-row.field-success_text .ck-content p,
+.form-row.field-cta_title .ck-content p {
+    direction: rtl;
+    text-align: right;
+    margin: 0 0 0.7em;
+}
+.form-row.field-hero_subtitle .ck-content ul,
+.form-row.field-hero_description .ck-content ul,
+.form-row.field-success_text .ck-content ul,
+.form-row.field-cta_title .ck-content ul,
+.form-row.field-hero_subtitle .ck-content ol,
+.form-row.field-hero_description .ck-content ol,
+.form-row.field-success_text .ck-content ol,
+.form-row.field-cta_title .ck-content ol {
+    padding-right: 1.5em;
+    padding-left: 0;
+    margin: 0 0 0.7em;
+}
+.form-row.field-hero_subtitle .ck-content blockquote,
+.form-row.field-hero_description .ck-content blockquote,
+.form-row.field-success_text .ck-content blockquote,
+.form-row.field-cta_title .ck-content blockquote {
+    border-right: 4px solid var(--wba-gold);
+    border-left: none;
+    padding: 0.4rem 1rem 0.4rem 0;
+    color: #475569;
+    background: #fefce8;
+    margin: 0.6rem 0;
+    border-radius: 0 8px 8px 0;
+}
+.form-row.field-hero_subtitle .ck-content h1,
+.form-row.field-hero_description .ck-content h1,
+.form-row.field-success_text .ck-content h1,
+.form-row.field-cta_title .ck-content h1,
+.form-row.field-hero_subtitle .ck-content h2,
+.form-row.field-hero_description .ck-content h2,
+.form-row.field-success_text .ck-content h2,
+.form-row.field-cta_title .ck-content h2,
+.form-row.field-hero_subtitle .ck-content h3,
+.form-row.field-hero_description .ck-content h3,
+.form-row.field-success_text .ck-content h3,
+.form-row.field-cta_title .ck-content h3,
+.form-row.field-hero_subtitle .ck-content h4,
+.form-row.field-hero_description .ck-content h4,
+.form-row.field-success_text .ck-content h4,
+.form-row.field-cta_title .ck-content h4 {
+    color: var(--wba-navy);
+    font-weight: 800;
+    line-height: 1.5;
+    margin: 0.4em 0 0.4em;
+}
+
+/* Fallback: if for any reason CKEditor fails to mount, the textarea
+   should still be a usable, readable Persian RTL editor (not a tiny strip
+   showing raw HTML). Limited to webinar fields only. */
+.form-row.field-hero_subtitle textarea.django_ckeditor_5,
+.form-row.field-hero_description textarea.django_ckeditor_5,
+.form-row.field-success_text textarea.django_ckeditor_5,
+.form-row.field-cta_title textarea.django_ckeditor_5 {
+    min-height: 240px !important;
+    width: 100% !important;
+    direction: rtl !important;
+    text-align: right !important;
+    font-family: 'Vazirmatn', 'Inter', sans-serif !important;
+    font-size: 14px !important;
+    line-height: 1.85 !important;
+    padding: 1rem !important;
+    border-radius: 10px !important;
+    border: 1px solid #cbd5e1 !important;
+    background: #ffffff !important;
+    color: var(--wba-text) !important;
+}
+
+/* Help text under each field — slightly more readable. */
+.form-row.field-hero_subtitle .help,
+.form-row.field-hero_description .help,
+.form-row.field-success_text .help,
+.form-row.field-cta_title .help {
+    color: #64748b;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    margin-top: 0.4rem;
+}

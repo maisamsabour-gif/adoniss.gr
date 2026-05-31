@@ -1,0 +1,732 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+
+{% block title %}{{ card.title }} – {% trans "Greek Golden Visa" %} | {{ site_settings.site_name }}{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="gvd-hero">
+    {% if card.image %}
+    <div class="gvd-hero-bg">
+        <img src="{{ card.image.url }}" alt="{{ card.title }}">
+    </div>
+    {% else %}
+    <div class="gvd-hero-bg gvd-hero-bg-fallback"></div>
+    {% endif %}
+    <div class="gvd-hero-overlay"></div>
+    <div class="container">
+        <div class="gvd-hero-content" data-aos="fade-up">
+            <a href="/" class="gvd-back-link">
+                <i class="fas fa-arrow-left"></i> {% trans "Back to Home" %}
+            </a>
+            <span class="gvd-hero-badge">
+                <i class="fas fa-passport"></i> {% trans "Greek Golden Visa" %}
+            </span>
+            <h1 class="gvd-hero-title">{{ card.title }}</h1>
+            <p class="gvd-hero-subtitle">{{ card.subtitle }}</p>
+            <div class="gvd-hero-price">
+                <span class="gvd-price-label">{{ card.price_label }}</span>
+                <span class="gvd-price-amount">{{ card.price_amount }}</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<section class="section gvd-content-section">
+    <div class="container">
+        <div class="gvd-content-grid">
+
+            <!-- Description -->
+            <div class="gvd-main-content" data-aos="fade-right">
+                <span class="section-badge"><i class="fas fa-info-circle"></i> {% trans "About This Tier" %}</span>
+                <h2 class="gvd-section-title">{{ card.title }}</h2>
+                <p class="gvd-description">{{ card.description }}</p>
+
+                <!-- Key Benefits -->
+                <div class="gvd-benefits">
+                    <h3>{% trans "Key Benefits" %}</h3>
+                    <div class="gvd-benefit-list">
+                        <div class="gvd-benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>{% trans "Full permanent residency in Greece and the EU" %}</span>
+                        </div>
+                        <div class="gvd-benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>{% trans "Family members included in the same application" %}</span>
+                        </div>
+                        <div class="gvd-benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>{% trans "No minimum stay requirement" %}</span>
+                        </div>
+                        <div class="gvd-benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>{% trans "Freedom to travel across 29 Schengen countries" %}</span>
+                        </div>
+                        <div class="gvd-benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>{% trans "Pathway to Greek citizenship and EU passport" %}</span>
+                        </div>
+                        <div class="gvd-benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>{% trans "Access to European banking and financial services" %}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="gvd-sidebar" data-aos="fade-left">
+                <!-- Price Card -->
+                <div class="gvd-price-card">
+                    <div class="gvd-price-card-header">
+                        <i class="fas fa-euro-sign"></i>
+                        <span>{% trans "Investment Threshold" %}</span>
+                    </div>
+                    <div class="gvd-price-card-amount">{{ card.price_amount }}</div>
+                    <p class="gvd-price-card-label">{{ card.price_label }}</p>
+                    <button type="button" class="gvd-cta-btn" onclick="openConsultationModal()">
+                        <i class="fas fa-calendar-check"></i>
+                        {% trans "Book Free Consultation" %}
+                    </button>
+                    <p class="gvd-cta-note">
+                        <i class="fas fa-shield-alt"></i>
+                        {% trans "No commitment. Free expert advice." %}
+                    </p>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="gvd-quick-stats">
+                    <div class="gvd-quick-stat">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <strong>{% trans "Processing Time" %}</strong>
+                            <span>{% trans "6–12 months" %}</span>
+                        </div>
+                    </div>
+                    <div class="gvd-quick-stat">
+                        <i class="fas fa-id-card"></i>
+                        <div>
+                            <strong>{% trans "Permit Validity" %}</strong>
+                            <span>{% trans "5 years (renewable)" %}</span>
+                        </div>
+                    </div>
+                    <div class="gvd-quick-stat">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <strong>{% trans "Family Members" %}</strong>
+                            <span>{% trans "Included (spouse + children + parents)" %}</span>
+                        </div>
+                    </div>
+                    <div class="gvd-quick-stat">
+                        <i class="fas fa-passport"></i>
+                        <div>
+                            <strong>{% trans "Passport Eligibility" %}</strong>
+                            <span>{% trans "After 7 years residency" %}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Other Investment Tiers -->
+{% if other_cards %}
+<section class="section gvd-other-tiers">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <span class="section-badge"><i class="fas fa-layer-group"></i> {% trans "Explore More" %}</span>
+            <h2 class="section-title" style="color:#ffffff;">{% trans "Other Investment Tiers" %}</h2>
+            <p class="section-desc" style="color:rgba(255,255,255,0.75);">{% trans "Compare all available Golden Visa investment categories" %}</p>
+        </div>
+        <div class="gvd-tiers-grid">
+            {% for other in other_cards %}
+            <a href="{{ other.get_absolute_url }}" class="gvd-tier-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                {% if other.image %}
+                <div class="gvd-tier-card-bg">
+                    <img src="{{ other.image.url }}" alt="{{ other.title }}" loading="lazy" decoding="async">
+                </div>
+                {% else %}
+                <div class="gvd-tier-card-bg gvd-tier-card-bg-fallback"></div>
+                {% endif %}
+                <div class="gvd-tier-card-overlay"></div>
+                <div class="gvd-tier-card-content">
+                    <div class="gvd-tier-price">{{ other.price_amount }}</div>
+                    <h3>{{ other.title }}</h3>
+                    <p>{{ other.subtitle }}</p>
+                    <span class="gvd-tier-more">{% trans "Learn More" %} <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA Banner -->
+<section class="gvd-cta-banner">
+    <div class="container">
+        <div class="gvd-cta-banner-content" data-aos="fade-up">
+            <div class="gvd-cta-banner-text">
+                <h2>{% trans "Ready to Start Your Greek Residency Journey?" %}</h2>
+                <p>{% trans "Our expert team will guide you through every step — from property selection to residence permit issuance." %}</p>
+            </div>
+            <button type="button" class="gvd-cta-btn gvd-cta-btn-large" onclick="openConsultationModal()">
+                <i class="fas fa-calendar-check"></i>
+                {% trans "Book Free Consultation" %}
+            </button>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ===== GOLDEN VISA DETAIL PAGE ===== */
+
+/* Hero */
+.gvd-hero {
+    position: relative;
+    min-height: 560px;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 5rem;
+    overflow: hidden;
+}
+
+.gvd-hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.gvd-hero-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.gvd-hero-bg-fallback {
+    background: linear-gradient(135deg, #0a1628 0%, #0d2847 50%, #0a1628 100%);
+}
+
+.gvd-hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(
+        180deg,
+        rgba(10,22,40,0.55) 0%,
+        rgba(10,22,40,0.7) 50%,
+        rgba(10,22,40,0.92) 100%
+    );
+}
+
+.gvd-hero .container {
+    position: relative;
+    z-index: 3;
+}
+
+.gvd-hero-content {
+    max-width: 760px;
+}
+
+.gvd-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255,255,255,0.7);
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    margin-bottom: 1.5rem;
+    transition: color 0.3s ease;
+}
+
+.gvd-back-link:hover {
+    color: #c9a227;
+    text-decoration: none;
+}
+
+.gvd-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    background: rgba(201,162,39,0.2);
+    border: 1px solid rgba(201,162,39,0.4);
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #c9a227;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 1.25rem;
+}
+
+.gvd-hero-title {
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+}
+
+.gvd-hero-subtitle {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    max-width: 600px;
+}
+
+.gvd-hero-price {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.gvd-price-label {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.6);
+    font-weight: 400;
+}
+
+.gvd-price-amount {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #c9a227, #e6c44d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+}
+
+/* Main Content */
+.gvd-content-section {
+    background: linear-gradient(180deg, #0a1628 0%, #f8fafc 15%);
+    padding: 5rem 0;
+}
+
+.gvd-content-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 3rem;
+    align-items: start;
+}
+
+/* Left Column */
+.gvd-section-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #0a1628;
+    margin: 1rem 0 1.5rem;
+    line-height: 1.3;
+}
+
+.gvd-description {
+    font-size: 1.05rem;
+    color: #475569;
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+}
+
+.gvd-benefits h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #0a1628;
+    margin-bottom: 1.25rem;
+}
+
+.gvd-benefit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.gvd-benefit-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.95rem;
+    color: #475569;
+    line-height: 1.5;
+}
+
+.gvd-benefit-item i {
+    color: #22c55e;
+    font-size: 1rem;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+/* Sidebar */
+.gvd-sidebar {
+    position: sticky;
+    top: 100px;
+}
+
+.gvd-price-card {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 2rem;
+    box-shadow: 0 10px 40px rgba(10,22,40,0.12);
+    border: 1px solid rgba(10,22,40,0.06);
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.gvd-price-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #64748b;
+    margin-bottom: 1rem;
+}
+
+.gvd-price-card-header i {
+    color: #c9a227;
+}
+
+.gvd-price-card-amount {
+    font-size: 2.8rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #c9a227, #b8860b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+}
+
+.gvd-price-card-label {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin-bottom: 1.75rem;
+}
+
+.gvd-cta-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, #c9a227, #e6c44d);
+    border-radius: 50px;
+    color: #0a1628;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(201,162,39,0.35);
+}
+
+.gvd-cta-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(201,162,39,0.45);
+    color: #0a1628;
+    text-decoration: none;
+}
+
+.gvd-cta-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: #94a3b8;
+    margin-top: 1rem;
+    margin-bottom: 0;
+}
+
+.gvd-cta-note i {
+    color: #22c55e;
+}
+
+/* Quick Stats */
+.gvd-quick-stats {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 40px rgba(10,22,40,0.08);
+    border: 1px solid rgba(10,22,40,0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.gvd-quick-stat {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 1rem 0.5rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.gvd-quick-stat:last-child {
+    border-bottom: none;
+}
+
+.gvd-quick-stat > i {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(201,162,39,0.1);
+    border-radius: 10px;
+    color: #c9a227;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.gvd-quick-stat div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.gvd-quick-stat strong {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #0a1628;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.gvd-quick-stat span {
+    font-size: 0.9rem;
+    color: #475569;
+}
+
+/* Other Tiers Section */
+.gvd-other-tiers {
+    background: linear-gradient(180deg, #0a1628 0%, #0d1f3c 100%);
+    padding: 5rem 0;
+}
+
+.gvd-tiers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+}
+
+.gvd-tier-card {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    height: 300px;
+    text-decoration: none;
+    display: block;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.gvd-tier-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    text-decoration: none;
+}
+
+.gvd-tier-card-bg {
+    position: absolute;
+    inset: 0;
+}
+
+.gvd-tier-card-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.gvd-tier-card:hover .gvd-tier-card-bg img {
+    transform: scale(1.08);
+}
+
+.gvd-tier-card-bg-fallback {
+    background: linear-gradient(135deg, #1a2a4a 0%, #0d1f3c 100%);
+}
+
+.gvd-tier-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(10,22,40,0.4) 40%,
+        rgba(10,22,40,0.9) 100%
+    );
+    transition: background 0.4s ease;
+}
+
+.gvd-tier-card:hover .gvd-tier-card-overlay {
+    background: linear-gradient(
+        180deg,
+        rgba(10,22,40,0.2) 0%,
+        rgba(10,22,40,0.55) 40%,
+        rgba(10,22,40,0.95) 100%
+    );
+}
+
+.gvd-tier-card-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem;
+    z-index: 2;
+    transform: translateY(0);
+    transition: transform 0.4s ease;
+}
+
+.gvd-tier-card:hover .gvd-tier-card-content {
+    transform: translateY(-6px);
+}
+
+.gvd-tier-price {
+    font-size: 1.6rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #c9a227, #e6c44d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.35rem;
+}
+
+.gvd-tier-card-content h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.3rem;
+    line-height: 1.3;
+}
+
+.gvd-tier-card-content p {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+}
+
+.gvd-tier-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #c9a227;
+    transition: gap 0.3s ease;
+}
+
+.gvd-tier-card:hover .gvd-tier-more {
+    gap: 10px;
+}
+
+/* CTA Banner */
+.gvd-cta-banner {
+    background: linear-gradient(135deg, #0d2847 0%, #1a3a5c 50%, #0d2847 100%);
+    padding: 4rem 0;
+    border-top: 1px solid rgba(201,162,39,0.15);
+}
+
+.gvd-cta-banner-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 3rem;
+}
+
+.gvd-cta-banner-text h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.75rem;
+}
+
+.gvd-cta-banner-text p {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.7);
+    max-width: 540px;
+    margin: 0;
+}
+
+.gvd-cta-btn-large {
+    width: auto;
+    flex-shrink: 0;
+    padding: 18px 36px;
+    font-size: 1rem;
+    white-space: nowrap;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .gvd-content-grid {
+        grid-template-columns: 1fr;
+    }
+    .gvd-sidebar {
+        position: static;
+    }
+    .gvd-quick-stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .gvd-quick-stat {
+        border-bottom: none;
+        border-right: 1px solid #f1f5f9;
+    }
+    .gvd-quick-stat:nth-child(2n) {
+        border-right: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .gvd-hero {
+        min-height: 420px;
+        padding-bottom: 3rem;
+    }
+    .gvd-hero-title {
+        font-size: 1.8rem;
+    }
+    .gvd-price-amount {
+        font-size: 1.8rem;
+    }
+    .gvd-tiers-grid {
+        grid-template-columns: 1fr;
+    }
+    .gvd-cta-banner-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    .gvd-cta-btn-large {
+        width: 100%;
+        max-width: 340px;
+    }
+    .gvd-cta-banner-text h2 {
+        font-size: 1.4rem;
+    }
+    .gvd-quick-stats {
+        grid-template-columns: 1fr;
+    }
+    .gvd-quick-stat {
+        border-right: none;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .gvd-quick-stat:last-child {
+        border-bottom: none;
+    }
+}
+</style>
+{% endblock %}

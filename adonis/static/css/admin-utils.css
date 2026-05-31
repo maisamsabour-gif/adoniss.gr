@@ -1,0 +1,100 @@
+/* Adonis Admin – Utility Styles
+ * Only non-theme-specific utilities live here.
+ * All Jazzmin-era sidebar/inline/fieldset rules have been removed —
+ * those conflicted with django-unfold and caused layout regressions.
+ */
+
+/* ===== QUICK ACCESS DASHBOARD ===== */
+#adonis-quick-access { margin-bottom: 1rem; }
+
+.qa-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+}
+.qa-stat {
+    background: #fff;
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.05);
+}
+.qa-stat-icon {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; flex-shrink: 0;
+}
+.qa-stat-icon.red    { background: #fee2e2; color: #ef4444; }
+.qa-stat-icon.orange { background: #ffedd5; color: #f97316; }
+.qa-stat-icon.blue   { background: #dbeafe; color: #3b82f6; }
+.qa-stat-icon.green  { background: #dcfce7; color: #22c55e; }
+.qa-stat h4 { font-size: 1.2rem; font-weight: 700; color: #0a1628; margin: 0; line-height: 1; }
+.qa-stat p  { font-size: .72rem; color: #64748b; margin: 2px 0 0; }
+
+/* Large grid – 4 columns on desktop */
+.qa-grid-compact {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+.qa-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 24px 12px;
+    border-radius: 14px;
+    text-decoration: none !important;
+    color: #fff !important;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-align: center;
+    transition: transform .2s, box-shadow .2s;
+}
+.qa-btn i    { font-size: 1.8rem; }
+.qa-btn span { line-height: 1.3; }
+.qa-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0,0,0,.22);
+    color: #fff !important;
+}
+
+/* Color variants */
+.qa-red    { background: linear-gradient(135deg,#ef4444,#dc2626); }
+.qa-orange { background: linear-gradient(135deg,#f97316,#ea580c); }
+.qa-pink   { background: linear-gradient(135deg,#ec4899,#db2777); }
+.qa-blue   { background: linear-gradient(135deg,#3b82f6,#2563eb); }
+.qa-green  { background: linear-gradient(135deg,#22c55e,#16a34a); }
+.qa-teal   { background: linear-gradient(135deg,#14b8a6,#0d9488); }
+.qa-gold   { background: linear-gradient(135deg,#c9a227,#a88b1e); }
+.qa-purple { background: linear-gradient(135deg,#8b5cf6,#7c3aed); }
+.qa-indigo { background: linear-gradient(135deg,#6366f1,#4f46e5); }
+.qa-cyan   { background: linear-gradient(135deg,#06b6d4,#0891b2); }
+.qa-gray   { background: linear-gradient(135deg,#64748b,#475569); }
+.qa-navy   { background: linear-gradient(135deg,#0d5eaf,#0a4a8a); }
+.qa-rose   { background: linear-gradient(135deg,#f43f5e,#e11d48); }
+
+/* Responsive */
+@media (max-width: 1200px) { .qa-grid-compact { grid-template-columns: repeat(3,1fr); } }
+@media (max-width: 768px) {
+    .qa-stats        { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .qa-grid-compact { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .qa-btn          { padding: 16px 10px; font-size: 0.82rem; }
+    .qa-btn i        { font-size: 1.4rem; }
+}
+@media (max-width: 480px) {
+    .qa-stats        { grid-template-columns: 1fr; }
+    .qa-grid-compact { grid-template-columns: 1fr; }
+    .qa-btn { flex-direction: row; justify-content: flex-start; text-align: left; padding: 14px 12px; font-size: .8rem; }
+    .qa-btn i { font-size: 1.25rem; }
+}
+
+/* ===== CKEditor ===== */
+.django-ckeditor-widget { width: 100% !important; }
+.ck-content p  { margin-bottom: 0.8em !important; line-height: 1.6 !important; }
+.ck-content    { font-size: 1rem !important; color: #334155 !important; }

@@ -1,0 +1,369 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   FA ADMIN FIX - Force readable input fields in Persian Admin
+   This file MUST be loaded LAST to override all dark theme styles
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* ── Base Input Reset ────────────────────────────────────────────────────────── */
+.admin-interface input,
+.admin-interface textarea,
+.admin-interface select,
+body.change-form input,
+body.change-form textarea,
+body.change-form select,
+body.change-list input,
+body.change-list textarea,
+body.change-list select,
+#content input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not([type="hidden"]),
+#content textarea,
+#content select,
+#content-main input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not([type="hidden"]),
+#content-main textarea,
+#content-main select,
+.form-row input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not([type="hidden"]),
+.form-row textarea,
+.form-row select,
+fieldset input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not([type="hidden"]),
+fieldset textarea,
+fieldset select {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    padding: 10px 12px !important;
+    font-size: 14px !important;
+    -webkit-text-fill-color: #111827 !important;
+    caret-color: #111827 !important;
+}
+
+/* ── Dark Mode Override ──────────────────────────────────────────────────────── */
+html.dark input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not([type="hidden"]),
+html.dark textarea,
+html.dark select,
+.dark input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not([type="hidden"]),
+.dark textarea,
+.dark select,
+[data-theme="dark"] input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not([type="hidden"]),
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    -webkit-text-fill-color: #111827 !important;
+    border-color: #cbd5e1 !important;
+}
+
+/* ── Placeholder Text ────────────────────────────────────────────────────────── */
+input::placeholder,
+textarea::placeholder,
+body.change-form input::placeholder,
+body.change-form textarea::placeholder,
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+    color: #6b7280 !important;
+    -webkit-text-fill-color: #6b7280 !important;
+    opacity: 1 !important;
+}
+
+/* ── Focus State ─────────────────────────────────────────────────────────────── */
+input:focus,
+textarea:focus,
+select:focus,
+body.change-form input:focus,
+body.change-form textarea:focus,
+body.change-form select:focus {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    -webkit-text-fill-color: #111827 !important;
+    border-color: #2563eb !important;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15) !important;
+    outline: none !important;
+}
+
+/* ── Inline Groups (Submenus, Related Items) ─────────────────────────────────── */
+.inline-group input,
+.inline-group textarea,
+.inline-group select,
+.inline-related input,
+.inline-related textarea,
+.inline-related select,
+.tabular input,
+.tabular textarea,
+.tabular select,
+.dynamic-submenus input,
+.dynamic-submenus textarea,
+.dynamic-submenus select {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    -webkit-text-fill-color: #111827 !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+.inline-group table td,
+.inline-related,
+.inline-related td,
+.dynamic-submenus,
+.dynamic-submenus td,
+.tabular td {
+    color: #111827 !important;
+}
+
+/* Dark mode inline groups */
+html.dark .inline-group input,
+html.dark .inline-group textarea,
+html.dark .inline-group select,
+html.dark .inline-related input,
+html.dark .inline-related textarea,
+html.dark .inline-related select,
+.dark .inline-group input,
+.dark .inline-group textarea,
+.dark .inline-group select {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    -webkit-text-fill-color: #111827 !important;
+}
+
+/* ── Select Dropdown ─────────────────────────────────────────────────────────── */
+select,
+html.dark select,
+.dark select {
+    background-color: #ffffff !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: left 12px center !important;
+    padding-left: 36px !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+}
+
+select option {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+}
+
+/* ── Checkbox & Radio ────────────────────────────────────────────────────────── */
+input[type="checkbox"],
+input[type="radio"] {
+    width: 18px !important;
+    height: 18px !important;
+    accent-color: #2563eb !important;
+    cursor: pointer !important;
+}
+
+/* ── Labels ──────────────────────────────────────────────────────────────────── */
+label,
+.form-row label,
+fieldset label,
+.inline-group label {
+    color: #374151 !important;
+    font-weight: 600 !important;
+}
+
+html.dark label,
+html.dark .form-row label,
+.dark label {
+    color: #e5e7eb !important;
+}
+
+/* ── Help Text ───────────────────────────────────────────────────────────────── */
+.help,
+.helptext,
+p.help {
+    color: #6b7280 !important;
+    font-size: 12px !important;
+}
+
+html.dark .help,
+html.dark .helptext,
+.dark .help {
+    color: #9ca3af !important;
+}
+
+/* ── Table Cells in Admin ────────────────────────────────────────────────────── */
+#result_list td input,
+#result_list td select,
+table.inline td input,
+table.inline td select {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    -webkit-text-fill-color: #111827 !important;
+    border: 1px solid #d1d5db !important;
+    padding: 6px 10px !important;
+    min-width: 60px !important;
+}
+
+/* ── Textarea Specific ───────────────────────────────────────────────────────── */
+textarea {
+    min-height: 80px !important;
+    resize: vertical !important;
+    line-height: 1.5 !important;
+}
+
+/* ── CKEditor / Rich Text Fields ─────────────────────────────────────────────── */
+.django-ckeditor-widget,
+.cke_editable,
+.ck-editor__editable {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+}
+
+/* ── Fieldset Headers ────────────────────────────────────────────────────────── */
+fieldset h2,
+.module h2 {
+    color: #1f2937 !important;
+}
+
+html.dark fieldset h2,
+html.dark .module h2,
+.dark fieldset h2 {
+    color: #f3f4f6 !important;
+}
+
+/* ── RTL Support ─────────────────────────────────────────────────────────────── */
+[dir="rtl"] input,
+[dir="rtl"] textarea,
+[dir="rtl"] select {
+    text-align: right !important;
+}
+
+[dir="rtl"] select {
+    background-position: left 12px center !important;
+    padding-left: 36px !important;
+    padding-right: 12px !important;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    input,
+    textarea,
+    select {
+        font-size: 16px !important; /* Prevents zoom on iOS */
+        padding: 12px !important;
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   SIDEBAR NAVIGATION - Colorful Section Headers
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* Navigation section headers */
+#nav-sidebar h2,
+#nav-sidebar-inner h2,
+nav h2 {
+    padding: 10px 16px !important;
+    margin: 8px 12px !important;
+    border-radius: 10px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+/* Color coding for each section */
+/* 1. تنظیمات صفحه اصلی - Blue */
+#nav-sidebar h2:nth-of-type(1),
+nav h2:first-of-type {
+    background: linear-gradient(135deg, #3b82f6, #60a5fa) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* 2. منو و زیرمنوها - Green */
+#nav-sidebar h2:nth-of-type(2) {
+    background: linear-gradient(135deg, #10b981, #34d399) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+}
+
+/* 3. پروژه‌های ساختمانی - Gold */
+#nav-sidebar h2:nth-of-type(3) {
+    background: linear-gradient(135deg, #c9a227, #e8d48a) !important;
+    color: #1a1a2e !important;
+    box-shadow: 0 4px 12px rgba(201, 162, 39, 0.3) !important;
+}
+
+/* 4. محتوا و بلاگ - Purple */
+#nav-sidebar h2:nth-of-type(4) {
+    background: linear-gradient(135deg, #8b5cf6, #a78bfa) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3) !important;
+}
+
+/* 5. پیام‌های دریافتی - Red */
+#nav-sidebar h2:nth-of-type(5) {
+    background: linear-gradient(135deg, #ef4444, #f87171) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
+}
+
+/* 6. سئو و بهینه‌سازی - Orange */
+#nav-sidebar h2:nth-of-type(6) {
+    background: linear-gradient(135deg, #f97316, #fb923c) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3) !important;
+}
+
+/* 7. کاربران و دسترسی - Cyan */
+#nav-sidebar h2:nth-of-type(7) {
+    background: linear-gradient(135deg, #0891b2, #22d3ee) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(8, 145, 178, 0.3) !important;
+}
+
+/* 8. پیش‌نمایش سایت - Dark */
+#nav-sidebar h2:nth-of-type(8) {
+    background: linear-gradient(135deg, #1e293b, #334155) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(30, 41, 59, 0.3) !important;
+}
+
+/* Navigation items under headers */
+#nav-sidebar ol li a,
+#nav-sidebar-inner ol li a,
+nav ol li a {
+    margin: 2px 16px !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+}
+
+#nav-sidebar ol li a:hover,
+#nav-sidebar-inner ol li a:hover,
+nav ol li a:hover {
+    background: rgba(59, 130, 246, 0.1) !important;
+    transform: translateX(-4px) !important;
+}
+
+/* Active item */
+#nav-sidebar ol li a.active,
+#nav-sidebar-inner ol li a.active,
+nav ol li a.active {
+    background: rgba(59, 130, 246, 0.15) !important;
+    font-weight: 600 !important;
+}
+
+/* ── Unfold Theme Specific Overrides ─────────────────────────────────────────── */
+.dark\:bg-base-900 input,
+.dark\:bg-base-900 textarea,
+.dark\:bg-base-900 select,
+.dark\:bg-white\/\[\.02\] input,
+.dark\:bg-white\/\[\.02\] textarea,
+.dark\:text-font-default-dark input,
+.dark\:text-font-default-dark textarea {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    -webkit-text-fill-color: #111827 !important;
+}
+
+/* Input wrapper backgrounds */
+.dark\:bg-base-900,
+.dark\:bg-white\/\[\.02\] {
+    /* Keep container dark but inputs white */
+}
+
+/* Force white on specific Unfold input containers */
+[class*="dark:"] input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+[class*="dark:"] textarea,
+[class*="dark:"] select:not([multiple]) {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    -webkit-text-fill-color: #111827 !important;
+}

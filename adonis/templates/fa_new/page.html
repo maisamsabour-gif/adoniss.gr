@@ -1,0 +1,51 @@
+{% load static %}<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+    <title>{{ meta_title|default:page.title }}</title>
+    {% if meta_description %}<meta name="description" content="{{ meta_description }}">{% endif %}
+    <meta name="robots" content="{{ robots_content|default:'index, follow' }}">
+    {% if canonical_url %}<link rel="canonical" href="{{ canonical_url }}">{% endif %}
+    <meta name="theme-color" content="#060814">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="fa_IR">
+    <meta property="og:title" content="{{ og_title|default:page.title }}">
+    {% if og_description or meta_description %}<meta property="og:description" content="{{ og_description|default:meta_description }}">{% endif %}
+    {% if og_image %}<meta property="og:image" content="{{ og_image }}">{% endif %}
+
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon/favicon-32x32.png' %}">
+    <link rel="stylesheet" href="{% static 'fonts/fonts.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/fontawesome/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fa-new/home.css' %}?v=20260529-gold-btn-v1">
+</head>
+<body class="adonis-fa-new-body">
+
+    <a class="adonis-fa-new-skip-link" href="#adonis-fa-new-main">پرش به محتوای اصلی</a>
+
+    {% include "fa_new/_header.html" with is_home=False %}
+
+    <main id="adonis-fa-new-main" class="adonis-fa-new-main">
+        <article class="fa-page-article">
+            <div class="adonis-fa-new-container">
+                <header class="fa-page-head">
+                    <h1>{{ page.title }}</h1>
+                </header>
+                <div class="fa-page-body">
+                    {% if page.body %}
+                        {{ page.body|safe }}
+                    {% else %}
+                        <p>محتوای این صفحه هنوز ثبت نشده است.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </article>
+    </main>
+
+    {% include "fa_new/_footer.html" %}
+
+    <script src="{% static 'js/fa-new/home.js' %}?v=20260528-benefits-bg-1" defer></script>
+</body>
+</html>

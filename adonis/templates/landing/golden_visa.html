@@ -1,0 +1,357 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+
+{% block title %}{% if meta_title %}{{ meta_title }} | {{ SITE_NAME }}{% else %}{% trans "Greek Golden Visa Program" %} | {{ SITE_NAME }}{% endif %}{% endblock %}
+{% block canonical_url %}{{ canonical_url|default:request.build_absolute_uri }}{% endblock %}
+{% block og_title %}{{ og_title|default:meta_title|default:page.hero_title }}{% endblock %}
+{% block og_description %}{{ og_description|default:meta_description }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/golden_visa_landing.min.css' %}">
+{% endblock %}
+
+{% block content %}
+
+
+<section class="gv-hero">
+    {% if page.hero_video %}
+    <video class="gv-hero__video" autoplay muted loop playsinline
+           {% if page.hero_image %}poster="{{ page.hero_image.url }}"{% endif %}
+           style="--gv-video-opacity:{{ page.hero_video_opacity|default:85 }};">
+        <source src="{{ page.hero_video.url }}" type="video/mp4">
+    </video>
+    {% elif page.hero_image %}
+    <div class="gv-hero__poster-fallback" style="background-image:url('{{ page.hero_image.url }}');background-size:cover;background-position:center;"></div>
+    {% endif %}
+    <div class="gv-hero__overlay"></div>
+    <div class="container">
+        <div class="gv-hero__content" data-aos="fade-up">
+            <span class="gv-hero__badge"><i class="fas fa-passport" aria-hidden="true"></i> {% trans "Golden Visa Program" %}</span>
+            <h1 class="gv-hero__title">{{ page.hero_title }}</h1>
+            {% if page.hero_subtitle %}<p class="gv-hero__subtitle">{{ page.hero_subtitle }}</p>{% endif %}
+            <div class="gv-hero__ctas">
+                <button type="button" class="btn btn-primary" onclick="openConsultationModal()">
+                    <i class="fas fa-calendar-check" aria-hidden="true"></i> {% trans "Free Consultation" %}
+                </button>
+                <a href="{% url 'property_list' %}" class="btn btn-outline-white">
+                    <i class="fas fa-building" aria-hidden="true"></i> {% trans "View Properties" %}
+                </a>
+            </div>
+            <div class="gv-hero__stats">
+                <div class="gv-stat">
+                    <span class="gv-stat__number">€250K</span>
+                    <span class="gv-stat__label">{% trans "Min. Investment" %}</span>
+                </div>
+                <div class="gv-stat">
+                    <span class="gv-stat__number">29</span>
+                    <span class="gv-stat__label">{% trans "Schengen Countries" %}</span>
+                </div>
+                <div class="gv-stat">
+                    <span class="gv-stat__number" style="font-size:1.6rem;">Permanent</span>
+                    <span class="gv-stat__label">{% trans "Residency Card" %}</span>
+                </div>
+                <div class="gv-stat">
+                    <span class="gv-stat__number">10+</span>
+                    <span class="gv-stat__label">{% trans "Years Experience" %}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% if page.intro_text %}
+<section class="gv-intro gv-intro-pad section-pad">
+    <div class="container">
+        <div class="gv-intro__inner" data-aos="fade-up">
+            <div class="gv-rich-content">{{ page.intro_text|safe }}</div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+{% if golden_visa_cards %}
+<section class="gv-tiers section-pad" id="investment-tiers">
+    <div class="container">
+        <div class="gv-section-header" data-aos="fade-up">
+            <span class="gv-badge"><i class="fas fa-coins" aria-hidden="true"></i> {% trans "Investment Options" %}</span>
+            <h2 class="gv-section-title">{% trans "Greek Golden Visa Investment Tiers" %}</h2>
+            <p class="gv-section-desc">{% trans "Choose the investment category that fits your goals and unlock European residency" %}</p>
+        </div>
+        <div class="gv-tiers__grid">
+            {% for card in golden_visa_cards %}
+            <a href="{% url 'golden_visa_card_detail' slug=card.pk %}" class="gv-tier-card{% if forloop.counter == 3 %} gv-tier-card--premium{% endif %}" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                <div class="gv-tier-card__bg">
+                    {% if card.image %}
+                    <img src="{{ card.image.url }}" alt="{{ card.image_alt|default:card.title }}" loading="lazy" decoding="async">
+                    {% endif %}
+                </div>
+                <div class="gv-tier-card__overlay"></div>
+                {% if card.price_amount %}
+                <div class="gv-tier-card__price">
+                    {% if card.price_label %}<span class="gv-tier-card__price-label">{{ card.price_label }}</span>{% endif %}
+                    <span class="gv-tier-card__price-amount">{{ card.price_amount }}</span>
+                </div>
+                {% endif %}
+                {% if forloop.counter == 3 %}
+                <div class="gv-tier-card__premium-badge"><i class="fas fa-gem" aria-hidden="true"></i> {% trans "Premium" %}</div>
+                {% endif %}
+                <div class="gv-tier-card__content">
+                    <h3 class="gv-tier-card__title">{{ card.title }}</h3>
+                    {% if card.subtitle %}<p class="gv-tier-card__desc">{{ card.subtitle }}</p>{% endif %}
+                    <span class="gv-tier-card__btn">{% trans "Learn More" %} <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+<section class="gv-mid-consult-banner">
+    <div class="container">
+        <div class="gv-mid-consult-banner__card" data-aos="fade-up">
+            <div class="gv-mid-consult-banner__content">
+                <span class="gv-mid-consult-banner__badge"><i class="fas fa-headset" aria-hidden="true"></i> {% trans "Expert Guidance" %}</span>
+                <h3 class="gv-mid-consult-banner__title">{% trans "Not sure which tier is right for you?" %}</h3>
+                <p class="gv-mid-consult-banner__text">{% trans "Our Golden Visa specialists will guide you through every option and help you choose the perfect investment for your family's future." %}</p>
+            </div>
+            <button type="button" class="btn gv-mid-consult-banner__btn" onclick="openConsultationModal()">
+                <i class="fas fa-calendar-check" aria-hidden="true"></i> {% trans "Book Free Consultation" %}
+            </button>
+        </div>
+    </div>
+</section>
+
+
+{% if page.section_1_title or page.section_1_text %}
+<section class="gv-zz-section gv-section1-pad section-pad">
+    <div class="container">
+        <div class="gv-zz-grid{% if not page.section_1_image %} gv-zz-grid--full{% endif %}" data-aos="fade-up">
+            <div class="gv-zz-text">
+                {% if page.section_1_title %}<h2 class="gv-zz-heading">{{ page.section_1_title }}</h2>{% endif %}
+                {% if page.section_1_text %}<div class="gv-rich-content">{{ page.section_1_text|safe }}</div>{% endif %}
+                <div style="margin-top:1.5rem;">
+                    <button type="button" class="btn btn-primary" onclick="openConsultationModal()">
+                        <i class="fas fa-calendar-check" aria-hidden="true"></i> {% trans "Get Started" %}
+                    </button>
+                </div>
+            </div>
+            {% if page.section_1_image %}
+            <div class="gv-zz-image">
+                <img class="gv-zz-img" src="{{ page.section_1_image.url }}" alt="{{ page.section_1_image_alt|default:page.section_1_title }}" loading="lazy" decoding="async">
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if page.section_2_title or page.section_2_text %}
+<section class="gv-zz-section gv-zz-section--alt section-pad">
+    <div class="container">
+        <div class="gv-zz-grid gv-zz-grid--reverse{% if not page.section_2_image %} gv-zz-grid--full{% endif %}" data-aos="fade-up">
+            <div class="gv-zz-text">
+                {% if page.section_2_title %}<h2 class="gv-zz-heading">{{ page.section_2_title }}</h2>{% endif %}
+                {% if page.section_2_text %}<div class="gv-rich-content">{{ page.section_2_text|safe }}</div>{% endif %}
+            </div>
+            {% if page.section_2_image %}
+            <div class="gv-zz-image">
+                <img class="gv-zz-img" src="{{ page.section_2_image.url }}" alt="{{ page.section_2_image_alt|default:page.section_2_title }}" loading="lazy" decoding="async">
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if page.section_3_title or page.section_3_text %}
+<section class="gv-zz-section section-pad">
+    <div class="container">
+        <div class="gv-zz-grid{% if not page.section_3_image %} gv-zz-grid--full{% endif %}" data-aos="fade-up">
+            <div class="gv-zz-text">
+                {% if page.section_3_title %}<h2 class="gv-zz-heading">{{ page.section_3_title }}</h2>{% endif %}
+                {% if page.section_3_text %}<div class="gv-rich-content">{{ page.section_3_text|safe }}</div>{% endif %}
+                <div style="margin-top:1.5rem;">
+                    <button type="button" class="btn btn-primary" onclick="openConsultationModal()">
+                        <i class="fas fa-calendar-check" aria-hidden="true"></i> {% trans "Schedule a Call" %}
+                    </button>
+                </div>
+            </div>
+            {% if page.section_3_image %}
+            <div class="gv-zz-image">
+                <img class="gv-zz-img" src="{{ page.section_3_image.url }}" alt="{{ page.section_3_image_alt|default:page.section_3_title }}" loading="lazy" decoding="async">
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+{% if page.benefits_title or page.benefits_text %}
+<section class="gv-benefits--photo section-pad" style="position:relative;">
+    {% if page.benefits_bg_image %}
+    <img src="{{ page.benefits_bg_image.url }}" alt="" loading="lazy" decoding="async"
+         style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+    {% endif %}
+    <div class="gv-benefits__overlay"></div>
+    <div class="container" style="position:relative;z-index:2;">
+        <div class="gv-section-header gv-section-header--light" data-aos="fade-up">
+            <span class="gv-badge gv-badge--gold"><i class="fas fa-check-circle" aria-hidden="true"></i> {% trans "Key Benefits" %}</span>
+            <h2 class="gv-section-title gv-section-title--white">{{ page.benefits_title }}</h2>
+        </div>
+        {% if page.benefits_text %}
+        <div class="gv-benefits__grid" data-aos="fade-up">
+            {% for line in page.benefits_text.splitlines %}
+            {% if line.strip %}
+            <div class="gv-benefit-card">
+                <span class="gv-benefit-card__num">{{ forloop.counter|stringformat:"02d" }}</span>
+                <div class="gv-benefit-card__icon-wrap"><i class="fas fa-check" aria-hidden="true"></i></div>
+                <p class="gv-benefit-card__text">{{ line }}</p>
+                <span class="gv-benefit-card__accent"></span>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endif %}
+
+
+{% if page.process_title and page.process_steps %}
+<section class="gv-process section-pad">
+    <div class="container">
+        <div class="gv-section-header" data-aos="fade-up">
+            <span class="gv-badge"><i class="fas fa-list-ol" aria-hidden="true"></i> {% trans "Step by Step" %}</span>
+            <h2 class="gv-section-title">{{ page.process_title }}</h2>
+        </div>
+        <div class="gv-process__timeline" data-aos="fade-up">
+            {% for step_line in page.process_steps.splitlines %}
+            {% if step_line.strip %}
+            <div class="gv-process__step">
+                <div class="gv-process__step-number">{{ forloop.counter }}</div>
+                <div class="gv-process__step-body"><p>{{ step_line }}</p></div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+{% if recent_posts %}
+<section class="section-pad" style="background:var(--gv-bg-alt,#f4f7fb);">
+    <div class="container">
+        <div class="gv-section-header" data-aos="fade-up">
+            <span class="gv-badge"><i class="fas fa-newspaper" aria-hidden="true"></i> {% trans "Latest Insights" %}</span>
+            <h2 class="gv-section-title">{% trans "Golden Visa Resources" %}</h2>
+        </div>
+        <div class="gv-articles__grid" data-aos="fade-up">
+            {% for post in recent_posts %}
+            <div class="gv-article-card">
+                {% if post.featured_image %}
+                <a href="{{ post.get_absolute_url }}" class="gv-article-card__img-link">
+                    <img class="gv-article-card__img" src="{{ post.featured_image.url }}" alt="{{ post.title }}" loading="lazy" decoding="async">
+                </a>
+                {% endif %}
+                <div class="gv-article-card__body">
+                    {% if post.category %}<span class="gv-article-card__cat">{{ post.category }}</span>{% endif %}
+                    <h3 class="gv-article-card__title"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+                    <p class="gv-article-card__excerpt">{{ post.excerpt|truncatewords:20 }}</p>
+                    <div class="gv-article-card__meta">
+                        <time><i class="far fa-calendar-alt"></i> {{ post.published_date|date:"M d, Y" }}</time>
+                        <a href="{{ post.get_absolute_url }}" class="gv-article-card__read-more">{% trans "Read More" %} <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+{% if faqs %}
+<section class="gv-faq section-pad">
+    <div class="gv-faq-bg">
+        <div class="gv-faq-bg__orb gv-faq-bg__orb--1"></div>
+        <div class="gv-faq-bg__orb gv-faq-bg__orb--2"></div>
+    </div>
+    <div class="container" style="position:relative;z-index:2;">
+        <div class="gv-faq-header" data-aos="fade-up">
+            <span class="gv-badge"><i class="fas fa-question-circle" aria-hidden="true"></i> {% trans "Got Questions?" %}</span>
+            <h2 class="gv-faq-header__title">{% trans "Frequently Asked Questions" %}</h2>
+            <p class="gv-faq-header__sub">{% trans "Everything you need to know about the Greek Golden Visa program." %}</p>
+        </div>
+        <div class="gv-faq-list" data-aos="fade-up">
+            {% for faq in faqs %}
+            <div class="gv-faq-card{% if forloop.first %} is-open{% endif %}">
+                <button class="gv-faq-card__head" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}">
+                    <span class="gv-faq-card__num">{{ forloop.counter|stringformat:"02d" }}</span>
+                    <span class="gv-faq-card__q">{{ faq.question }}</span>
+                    <span class="gv-faq-card__toggle">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path class="gv-faq-card__chevron-path" d="M2 5L7 10L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                </button>
+                <div class="gv-faq-card__body"{% if forloop.first %} style="max-height:500px;"{% endif %}>
+                    <div class="gv-faq-card__answer">{{ faq.answer|safe }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+<section class="section section-cta" style="background:linear-gradient(135deg,var(--gv-dark,#0D1B2A),var(--gv-mid,#1e3a5f));padding:4.5rem 0;">
+    <div class="container" style="text-align:center;color:#fff;">
+        <h2 style="color:#fff;margin-bottom:1rem;font-size:clamp(1.6rem,3.5vw,2.4rem);" data-aos="fade-up">{% trans "Ready to Start Your Golden Visa Journey?" %}</h2>
+        <p style="color:rgba(255,255,255,0.85);margin-bottom:2rem;max-width:600px;margin-left:auto;margin-right:auto;font-size:1.05rem;line-height:1.7;" data-aos="fade-up">
+            {% trans "Book a free consultation with our experts and take the first step towards European residency." %}
+        </p>
+        <div data-aos="fade-up">
+            <button type="button" class="btn btn-primary btn-primary--pulse" onclick="openConsultationModal()">
+                <i class="fas fa-calendar-check" aria-hidden="true"></i> {% trans "Book Free Consultation" %}
+            </button>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    var cards = document.querySelectorAll('.gv-faq-card');
+    cards.forEach(function(card) {
+        var head = card.querySelector('.gv-faq-card__head');
+        var body = card.querySelector('.gv-faq-card__body');
+        if (!head || !body) return;
+
+        head.addEventListener('click', function() {
+            var isOpen = card.classList.contains('is-open');
+
+            cards.forEach(function(other) {
+                other.classList.remove('is-open');
+                var ob = other.querySelector('.gv-faq-card__body');
+                var oh = other.querySelector('.gv-faq-card__head');
+                if (ob) ob.style.maxHeight = null;
+                if (oh) oh.setAttribute('aria-expanded', 'false');
+            });
+
+            if (!isOpen) {
+                card.classList.add('is-open');
+                head.setAttribute('aria-expanded', 'true');
+                body.style.maxHeight = body.scrollHeight + 'px';
+            }
+        });
+    });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,887 @@
+/* Persian Admin UI polish
+ * Scoped to Persian content models only.
+ *
+ * LAYOUT RULE: direction: rtl must NEVER be placed on body or html.
+ * It is scoped only to #content-main so the unfold sidebar/topbar
+ * (which rely on LTR flex/grid flow) are never affected.
+ */
+
+/* ── 1. Explicit LTR lock for the admin shell ────────────────────────────────
+ * Guards against any ancestor or browser-default RTL bleed.
+ * Covers the sidebar, topbar, and every layout wrapper unfold uses.
+ */
+body.app-core.model-fanewsettings.change-form,
+body.app-core.model-fanewsection.change-form,
+body.app-core.model-fafootersettings.change-form,
+body.app-core.model-fapersianpost.change-form,
+body.app-core.model-fapage.change-form,
+body.app-core.model-facontentpipeline.change-form,
+body.app-properties.model-fapropertyproxy.change-form,
+body.app-core.model-fanewsettings.change-list,
+body.app-core.model-fanewsection.change-list,
+body.app-core.model-fafootersettings.change-list,
+body.app-core.model-fapersianpost.change-list,
+body.app-core.model-fapage.change-list,
+body.app-core.model-facontentpipeline.change-list,
+body.app-properties.model-fapropertyproxy.change-list {
+    direction: ltr !important;
+}
+
+/* Sidebar, topbar and every structural wrapper must always stay LTR */
+body[class*="model-fa"] [id*="sidebar"],
+body[class*="model-fa"] [id*="nav-sidebar"],
+body[class*="model-fa"] nav,
+body[class*="model-fa"] header,
+body[class*="model-fa"] aside,
+body.app-properties.model-fapropertyproxy [id*="sidebar"],
+body.app-properties.model-fapropertyproxy nav,
+body.app-properties.model-fapropertyproxy header,
+body.app-properties.model-fapropertyproxy aside {
+    direction: ltr !important;
+}
+
+/* ── 2. RTL scoped ONLY to the page content area ─────────────────────────── */
+body.app-core.model-fanewsettings.change-form #content-main,
+body.app-core.model-fanewsection.change-form #content-main,
+body.app-core.model-fafootersettings.change-form #content-main,
+body.app-core.model-fapersianpost.change-form #content-main,
+body.app-core.model-fapage.change-form #content-main,
+body.app-core.model-facontentpipeline.change-form #content-main,
+body.app-properties.model-fapropertyproxy.change-form #content-main {
+    direction: rtl;
+    text-align: right;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Changelist pages: scope RTL to the results table + toolbar only */
+body.app-core.model-fanewsettings.change-list #content,
+body.app-core.model-fanewsection.change-list #content,
+body.app-core.model-fafootersettings.change-list #content,
+body.app-core.model-fapersianpost.change-list #content,
+body.app-core.model-fapage.change-list #content,
+body.app-core.model-facontentpipeline.change-list #content,
+body.app-properties.model-fapropertyproxy.change-list #content {
+    direction: rtl;
+    text-align: right;
+}
+
+
+body.app-core.model-fanewsettings.change-form fieldset.module,
+body.app-core.model-fanewsection.change-form fieldset.module,
+body.app-core.model-fafootersettings.change-form fieldset.module,
+body.app-core.model-fapersianpost.change-form fieldset.module,
+body.app-core.model-fapage.change-form fieldset.module,
+body.app-core.model-facontentpipeline.change-form fieldset.module,
+body.app-properties.model-fapropertyproxy.change-form fieldset.module {
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+
+body.app-core.model-fanewsettings.change-form fieldset.module > h2,
+body.app-core.model-fanewsection.change-form fieldset.module > h2,
+body.app-core.model-fafootersettings.change-form fieldset.module > h2,
+body.app-core.model-fapersianpost.change-form fieldset.module > h2,
+body.app-core.model-fapage.change-form fieldset.module > h2,
+body.app-core.model-facontentpipeline.change-form fieldset.module > h2,
+body.app-properties.model-fapropertyproxy.change-form fieldset.module > h2 {
+    font-size: 0.96rem;
+    font-weight: 800;
+}
+
+body.app-core.model-fanewsettings.change-form .form-row .field-line,
+body.app-core.model-fanewsection.change-form .form-row .field-line,
+body.app-core.model-fafootersettings.change-form .form-row .field-line,
+body.app-core.model-fapersianpost.change-form .form-row .field-line,
+body.app-core.model-fapage.change-form .form-row .field-line,
+body.app-core.model-facontentpipeline.change-form .form-row .field-line,
+body.app-properties.model-fapropertyproxy.change-form .form-row .field-line {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    border-bottom: 1px dashed #edf2f7;
+}
+
+body.app-core.model-fanewsettings.change-form .form-row:last-child .field-line,
+body.app-core.model-fanewsection.change-form .form-row:last-child .field-line,
+body.app-core.model-fafootersettings.change-form .form-row:last-child .field-line,
+body.app-core.model-fapersianpost.change-form .form-row:last-child .field-line,
+body.app-core.model-fapage.change-form .form-row:last-child .field-line,
+body.app-core.model-facontentpipeline.change-form .form-row:last-child .field-line,
+body.app-properties.model-fapropertyproxy.change-form .form-row:last-child .field-line {
+    border-bottom: 0;
+}
+
+body.app-core.model-fanewsettings.change-form .field-line > div > label,
+body.app-core.model-fanewsection.change-form .field-line > div > label,
+body.app-core.model-fafootersettings.change-form .field-line > div > label,
+body.app-core.model-fapersianpost.change-form .field-line > div > label,
+body.app-core.model-fapage.change-form .field-line > div > label,
+body.app-core.model-facontentpipeline.change-form .field-line > div > label,
+body.app-properties.model-fapropertyproxy.change-form .field-line > div > label {
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+
+body.app-core.model-fanewsettings.change-form .field-line .leading-relaxed.text-xs,
+body.app-core.model-fanewsection.change-form .field-line .leading-relaxed.text-xs,
+body.app-core.model-fafootersettings.change-form .field-line .leading-relaxed.text-xs,
+body.app-core.model-fapersianpost.change-form .field-line .leading-relaxed.text-xs,
+body.app-core.model-fapage.change-form .field-line .leading-relaxed.text-xs,
+body.app-core.model-facontentpipeline.change-form .field-line .leading-relaxed.text-xs,
+body.app-properties.model-fapropertyproxy.change-form .field-line .leading-relaxed.text-xs {
+    font-size: 0.74rem;
+    line-height: 1.8;
+    color: #64748b;
+}
+
+body.app-core.model-fanewsettings.change-form .field-line input[type="text"],
+body.app-core.model-fanewsettings.change-form .field-line input[type="number"],
+body.app-core.model-fanewsettings.change-form .field-line input[type="url"],
+body.app-core.model-fanewsettings.change-form .field-line textarea,
+body.app-core.model-fanewsettings.change-form .field-line select,
+body.app-core.model-fanewsection.change-form .field-line input[type="text"],
+body.app-core.model-fanewsection.change-form .field-line input[type="number"],
+body.app-core.model-fanewsection.change-form .field-line input[type="url"],
+body.app-core.model-fanewsection.change-form .field-line textarea,
+body.app-core.model-fanewsection.change-form .field-line select,
+body.app-core.model-fafootersettings.change-form .field-line input[type="text"],
+body.app-core.model-fafootersettings.change-form .field-line input[type="number"],
+body.app-core.model-fafootersettings.change-form .field-line input[type="url"],
+body.app-core.model-fafootersettings.change-form .field-line textarea,
+body.app-core.model-fafootersettings.change-form .field-line select,
+body.app-core.model-fapersianpost.change-form .field-line input[type="text"],
+body.app-core.model-fapersianpost.change-form .field-line input[type="number"],
+body.app-core.model-fapersianpost.change-form .field-line input[type="url"],
+body.app-core.model-fapersianpost.change-form .field-line textarea,
+body.app-core.model-fapersianpost.change-form .field-line select,
+body.app-core.model-fapage.change-form .field-line input[type="text"],
+body.app-core.model-fapage.change-form .field-line input[type="number"],
+body.app-core.model-fapage.change-form .field-line input[type="url"],
+body.app-core.model-fapage.change-form .field-line textarea,
+body.app-core.model-fapage.change-form .field-line select,
+body.app-core.model-facontentpipeline.change-form .field-line input[type="text"],
+body.app-core.model-facontentpipeline.change-form .field-line input[type="number"],
+body.app-core.model-facontentpipeline.change-form .field-line input[type="url"],
+body.app-core.model-facontentpipeline.change-form .field-line textarea,
+body.app-core.model-facontentpipeline.change-form .field-line select,
+body.app-properties.model-fapropertyproxy.change-form .field-line input[type="text"],
+body.app-properties.model-fapropertyproxy.change-form .field-line input[type="number"],
+body.app-properties.model-fapropertyproxy.change-form .field-line input[type="url"],
+body.app-properties.model-fapropertyproxy.change-form .field-line textarea,
+body.app-properties.model-fapropertyproxy.change-form .field-line select {
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+    min-height: 40px;
+    box-shadow: none;
+}
+
+body.app-core.model-fanewsettings.change-form .field-line .file-upload,
+body.app-core.model-fanewsection.change-form .field-line .file-upload,
+body.app-core.model-fafootersettings.change-form .field-line .file-upload,
+body.app-core.model-fapersianpost.change-form .field-line .file-upload,
+body.app-core.model-fapage.change-form .field-line .file-upload,
+body.app-core.model-facontentpipeline.change-form .field-line .file-upload,
+body.app-properties.model-fapropertyproxy.change-form .field-line .file-upload {
+    font-size: 0.8rem;
+    line-height: 1.8;
+}
+
+/* Tab controls for heavy Persian forms */
+.fa-admin-tabs-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 14px;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    position: sticky;
+    top: 70px;
+    z-index: 15;
+}
+
+.fa-admin-tab-btn {
+    border: 1px solid #cbd5e1;
+    background: #fff;
+    color: #334155;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    padding: 7px 10px;
+    cursor: pointer;
+    transition: all .15s ease;
+}
+
+.fa-admin-tab-btn:hover {
+    background: #f1f5f9;
+}
+
+.fa-admin-tab-btn.is-active {
+    background: #0f172a;
+    color: #fff;
+    border-color: #0f172a;
+}
+
+.fa-fieldset-hidden {
+    display: none !important;
+}
+
+.fa-admin-tab-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #e2e8f0;
+    border-top: 0;
+    border-radius: 0 0 12px 12px;
+    background: #fff;
+    padding: 8px 12px;
+    margin-bottom: 14px;
+}
+
+.fa-admin-tab-progress-label {
+    font-size: 0.74rem;
+    color: #475569;
+    white-space: nowrap;
+}
+
+.fa-admin-tab-progress-track {
+    flex: 1;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.fa-admin-tab-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #2563eb, #0ea5e9);
+    transition: width 0.2s ease;
+}
+
+.fa-admin-tab-progress-value {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: #0f172a;
+    min-width: 38px;
+    text-align: left;
+}
+
+.fa-admin-quick-nav {
+    margin: 0 0 14px;
+    padding: 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.fa-admin-quick-nav-title {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 8px;
+}
+
+.fa-admin-quick-nav-links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.fa-admin-quick-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #e2e8f0;
+    border-radius: 9px;
+    padding: 8px 10px;
+    text-decoration: none;
+    color: #0f172a;
+    background: #f8fafc;
+    font-size: 0.76rem;
+    transition: all .15s ease;
+}
+
+.fa-admin-quick-link:hover {
+    background: #eef2ff;
+    border-color: #c7d2fe;
+}
+
+.fa-admin-quick-link .material-symbols-outlined {
+    font-size: 16px;
+    color: #334155;
+}
+
+/* Inline items section on FaNewSection */
+#items-group .tabular-table td {
+    min-height: 50px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+#items-group .tabular-table textarea {
+    min-height: 90px;
+}
+
+@media (max-width: 960px) {
+    .fa-admin-tabs-nav {
+        position: static;
+    }
+    .fa-admin-quick-nav-links {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── 4. Premium Persian layout polish (forms) ───────────────────────────── */
+body[class*="model-fa"].change-form #content-main,
+body.app-properties.model-fapropertyproxy.change-form #content-main {
+    padding: 12px 18px 28px;
+}
+
+body[class*="model-fa"].change-form fieldset.module,
+body.app-properties.model-fapropertyproxy.change-form fieldset.module {
+    background: #ffffff;
+}
+
+body[class*="model-fa"].change-form fieldset.module .form-row,
+body.app-properties.model-fapropertyproxy.change-form fieldset.module .form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px 16px;
+    padding: 12px 16px;
+    border-bottom: 1px dashed #e5e7eb;
+}
+
+body[class*="model-fa"].change-form fieldset.module .form-row:last-of-type,
+body.app-properties.model-fapropertyproxy.change-form fieldset.module .form-row:last-of-type {
+    border-bottom: 0;
+}
+
+body[class*="model-fa"].change-form fieldset.module .form-row .field-line,
+body.app-properties.model-fapropertyproxy.change-form fieldset.module .form-row .field-line {
+    padding: 0;
+    border-bottom: 0;
+    margin: 0;
+}
+
+body[class*="model-fa"].change-form .aligned label,
+body.app-properties.model-fapropertyproxy.change-form .aligned label {
+    font-weight: 600;
+    color: #0f172a;
+}
+
+body[class*="model-fa"].change-form .help,
+body.app-properties.model-fapropertyproxy.change-form .help {
+    font-size: 0.74rem;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+body[class*="model-fa"].change-form .field-line input[type="text"],
+body[class*="model-fa"].change-form .field-line input[type="url"],
+body[class*="model-fa"].change-form .field-line input[type="number"],
+body[class*="model-fa"].change-form .field-line input[type="email"],
+body[class*="model-fa"].change-form .field-line textarea,
+body[class*="model-fa"].change-form .field-line select,
+body.app-properties.model-fapropertyproxy.change-form .field-line input[type="text"],
+body.app-properties.model-fapropertyproxy.change-form .field-line input[type="url"],
+body.app-properties.model-fapropertyproxy.change-form .field-line input[type="number"],
+body.app-properties.model-fapropertyproxy.change-form .field-line input[type="email"],
+body.app-properties.model-fapropertyproxy.change-form .field-line textarea,
+body.app-properties.model-fapropertyproxy.change-form .field-line select {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 8px 10px;
+}
+
+body[class*="model-fa"].change-form .field-line input[type="text"]:focus,
+body[class*="model-fa"].change-form .field-line input[type="url"]:focus,
+body[class*="model-fa"].change-form .field-line input[type="number"]:focus,
+body[class*="model-fa"].change-form .field-line input[type="email"]:focus,
+body[class*="model-fa"].change-form .field-line textarea:focus,
+body[class*="model-fa"].change-form .field-line select:focus,
+body.app-properties.model-fapropertyproxy.change-form .field-line input[type="text"]:focus,
+body.app-properties.model-fapropertyproxy.change-form .field-line input[type="url"]:focus,
+body.app-properties.model-fapropertyproxy.change-form .field-line input[type="number"]:focus,
+body.app-properties.model-fapropertyproxy.change-form .field-line input[type="email"]:focus,
+body.app-properties.model-fapropertyproxy.change-form .field-line textarea:focus,
+body.app-properties.model-fapropertyproxy.change-form .field-line select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    outline: none;
+}
+
+@media (max-width: 700px) {
+    body[class*="model-fa"].change-form fieldset.module .form-row,
+    body.app-properties.model-fapropertyproxy.change-form fieldset.module .form-row {
+        grid-template-columns: 1fr;
+        padding: 10px 12px;
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+ *  PREMIUM ADMIN POLISH — image upload cards, opacity sliders, fieldset chrome
+ *  Applies to ALL Persian / FA admin pages (loaded via fa-admin-ui.css)
+ * ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Image / File upload — premium card treatment ────────────────────── */
+body[class*="model-fa"].change-form .field-line:has(input[type="file"]),
+body[class*="model-fa"].change-form .fa-img-field,
+body.app-properties.model-fapropertyproxy.change-form .field-line:has(input[type="file"]) {
+    background: linear-gradient(180deg, #fafbff 0%, #f5f7fb 100%);
+    border: 1px dashed #cbd5e1;
+    border-radius: 14px;
+    padding: 16px !important;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+body[class*="model-fa"].change-form .field-line:has(input[type="file"]):hover,
+body[class*="model-fa"].change-form .fa-img-field:hover {
+    border-color: #6366f1;
+    background: linear-gradient(180deg, #f5f7ff 0%, #eff2ff 100%);
+}
+
+/* Unfold image preview wrapper — enlarge & polish */
+body[class*="model-fa"].change-form .field-line .mb-4.max-w-48 {
+    max-width: 220px !important;
+    margin: 0 0 14px !important;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.12);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: #fff;
+    position: relative;
+}
+
+body[class*="model-fa"].change-form .field-line .mb-4.max-w-48 a {
+    display: block;
+    line-height: 0;
+}
+
+body[class*="model-fa"].change-form .field-line .mb-4.max-w-48 img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+body[class*="model-fa"].change-form .field-line .mb-4.max-w-48:hover img {
+    transform: scale(1.04);
+}
+
+body[class*="model-fa"].change-form .field-line .mb-4.max-w-48::after {
+    content: "🔍 مشاهده در اندازه اصلی";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 6px 10px;
+    background: linear-gradient(0deg, rgba(15, 23, 42, 0.78), transparent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+}
+
+body[class*="model-fa"].change-form .field-line .mb-4.max-w-48:hover::after {
+    opacity: 1;
+}
+
+/* Unfold file_wrapper — toolbar feel */
+body[class*="model-fa"].change-form .field-line > div:has(> label[for$="-clear_id"]),
+body[class*="model-fa"].change-form .field-line > [class*="flex"]:has(input[type="file"]) {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+}
+
+body[class*="model-fa"].change-form .field-line input[type="text"][disabled][aria-label*="upload" i],
+body[class*="model-fa"].change-form .field-line input[type="text"][disabled][aria-label*="Choose" i] {
+    background: #fafbff !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    font-size: 12.5px !important;
+    color: #475569 !important;
+    direction: ltr;
+    text-align: left;
+    padding: 10px 14px !important;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace !important;
+}
+
+body[class*="model-fa"].change-form .field-line label[for$="_id"]:has(.material-symbols-outlined),
+body[class*="model-fa"].change-form .field-line a:has(.material-symbols-outlined) {
+    background: #f1f5f9 !important;
+    border-inline-start: 1px solid #e2e8f0 !important;
+    padding: 0 14px !important;
+    color: #475569 !important;
+    transition: background 0.15s, color 0.15s;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+body[class*="model-fa"].change-form .field-line label[for$="_id"]:has(.material-symbols-outlined):hover,
+body[class*="model-fa"].change-form .field-line a:has(.material-symbols-outlined):hover {
+    background: #2563eb !important;
+    color: #ffffff !important;
+}
+
+body[class*="model-fa"].change-form .field-line label[for$="_id"] .material-symbols-outlined,
+body[class*="model-fa"].change-form .field-line a .material-symbols-outlined {
+    font-size: 20px !important;
+}
+
+body[class*="model-fa"].change-form .field-line > div:has(input[type="checkbox"][name$="-clear"]) {
+    background: #fff8f1 !important;
+    border-inline-end: 1px solid #fed7aa !important;
+    padding: 0 12px !important;
+}
+
+body[class*="model-fa"].change-form .field-line label[for$="-clear_id"] {
+    display: flex !important;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #c2410c !important;
+    cursor: pointer;
+    margin: 0 !important;
+}
+
+body[class*="model-fa"].change-form .field-line label[for$="-clear_id"]::before {
+    content: "🗑";
+    font-size: 13px;
+}
+
+body[class*="model-fa"].change-form .field-line input[type="checkbox"][name$="-clear"] {
+    accent-color: #ef4444;
+    width: 14px;
+    height: 14px;
+}
+
+/* Fallback styling for default Django (non-Unfold) clearable file input. */
+body[class*="model-fa"].change-form .field-line p.file-upload,
+body[class*="model-fa"].change-form .file-upload {
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 14px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+body[class*="model-fa"].change-form .file-upload a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    border-radius: 999px;
+    color: #4338ca !important;
+    font-weight: 600;
+    text-decoration: none !important;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 11.5px;
+    direction: ltr;
+    max-width: 380px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+body[class*="model-fa"].change-form .file-upload a::before {
+    content: "📎";
+    font-size: 12px;
+}
+
+body[class*="model-fa"].change-form .file-upload a:hover {
+    background: #4338ca;
+    border-color: #4338ca;
+    color: #fff !important;
+}
+
+body[class*="model-fa"].change-form .file-upload input[type="checkbox"] {
+    accent-color: #ef4444;
+    margin: 0 6px 0 0;
+    width: 14px;
+    height: 14px;
+}
+
+body[class*="model-fa"].change-form .file-upload label[for$="-clear_id"],
+body[class*="model-fa"].change-form .file-upload .clearable-file-input label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    background: #fff8f1;
+    border: 1px solid #fed7aa;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #c2410c !important;
+    cursor: pointer;
+    margin: 0;
+}
+
+body[class*="model-fa"].change-form .field-line input[type="file"] {
+    cursor: pointer;
+    background: #f8fafc !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 10px !important;
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+    min-height: auto !important;
+    color: #475569;
+}
+
+body[class*="model-fa"].change-form .field-line input[type="file"]::file-selector-button {
+    background: linear-gradient(135deg, #2563eb 0%, #4338ca 100%);
+    border: 0;
+    color: #fff;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    margin-inline-end: 12px;
+    cursor: pointer;
+    transition: filter 0.15s;
+}
+
+body[class*="model-fa"].change-form .field-line input[type="file"]::file-selector-button:hover {
+    filter: brightness(1.08);
+}
+
+/* ── 2. Opacity / range-style numeric inputs — slider companion ──────────── */
+.fa-slider-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.fa-slider-row input[type="range"].fa-num-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    background: linear-gradient(
+        90deg,
+        #2563eb 0%,
+        #2563eb var(--fa-slider-val, 50%),
+        #e2e8f0 var(--fa-slider-val, 50%),
+        #e2e8f0 100%
+    );
+    border-radius: 999px;
+    outline: none;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+}
+
+.fa-slider-row input[type="range"].fa-num-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3px solid #2563eb;
+    cursor: grab;
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.35);
+    transition: transform 0.15s;
+}
+
+.fa-slider-row input[type="range"].fa-num-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+}
+
+.fa-slider-row input[type="range"].fa-num-slider::-webkit-slider-thumb:active {
+    cursor: grabbing;
+}
+
+.fa-slider-row input[type="range"].fa-num-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3px solid #2563eb;
+    cursor: grab;
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.35);
+}
+
+.fa-slider-row input[type="number"].fa-num-display {
+    width: 76px !important;
+    flex: 0 0 76px;
+    text-align: center !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    background: #eff6ff !important;
+    border: 1.5px solid #2563eb !important;
+    color: #1d4ed8 !important;
+    padding: 6px 8px !important;
+}
+
+.fa-slider-row .fa-num-suffix {
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 600;
+    min-width: 14px;
+}
+
+/* ── 3. Submit row — premium sticky bar ─────────────────────────────────── */
+body[class*="model-fa"].change-form #submit-row {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), #ffffff);
+    backdrop-filter: blur(10px);
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -6px 24px rgba(15, 23, 42, 0.08);
+    border-top: 1px solid #e2e8f0;
+    padding: 14px 18px !important;
+}
+
+body[class*="model-fa"].change-form #submit-row input[type="submit"],
+body[class*="model-fa"].change-form #submit-row button[type="submit"] {
+    background: linear-gradient(135deg, #2563eb 0%, #4338ca 100%);
+    border: 0;
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 10px 22px;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.32);
+    transition: transform 0.12s, box-shadow 0.12s, filter 0.12s;
+}
+
+body[class*="model-fa"].change-form #submit-row input[type="submit"]:hover,
+body[class*="model-fa"].change-form #submit-row button[type="submit"]:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.42);
+}
+
+body[class*="model-fa"].change-form #submit-row a.deletelink {
+    background: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+    padding: 9px 16px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+}
+
+body[class*="model-fa"].change-form #submit-row a.deletelink:hover {
+    background: #b91c1c;
+    color: #fff;
+    border-color: #b91c1c;
+}
+
+/* ── 4. Fieldset polish — left accent bar + nicer header ─────────────────── */
+body[class*="model-fa"].change-form fieldset.module {
+    position: relative;
+    border-radius: 14px !important;
+    border: 1px solid #e2e8f0 !important;
+    background: #ffffff !important;
+    overflow: hidden;
+}
+
+body[class*="model-fa"].change-form fieldset.module > h2,
+body[class*="model-fa"].change-form fieldset.module > .module-header {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    padding: 14px 18px 14px 22px !important;
+    color: #0f172a !important;
+    font-weight: 800 !important;
+    font-size: 14px !important;
+    position: relative;
+}
+
+body[class*="model-fa"].change-form fieldset.module > h2::before {
+    content: "";
+    position: absolute;
+    top: 14px;
+    bottom: 14px;
+    inset-inline-start: 10px;
+    width: 4px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #2563eb, #4338ca);
+}
+
+body[class*="model-fa"].change-form fieldset.module .description {
+    background: #fefce8;
+    border-bottom: 1px solid #fde68a;
+    padding: 10px 18px;
+    font-size: 12.5px;
+    color: #713f12;
+    line-height: 1.7;
+}
+
+/* ── 5. Field error message — distinct & polished ──────────────────────── */
+body[class*="model-fa"].change-form .errorlist,
+body[class*="model-fa"].change-form ul.errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 10px;
+}
+
+body[class*="model-fa"].change-form .errorlist li,
+body[class*="model-fa"].change-form ul.errorlist li {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-inline-start: 4px solid #ef4444;
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: #991b1b;
+    font-size: 12.5px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+body[class*="model-fa"].change-form .errorlist li::before {
+    content: "⚠";
+    font-size: 15px;
+}
+
+/* ── 6. Required field marker ────────────────────────────────────────────── */
+body[class*="model-fa"].change-form .field-line label.required::after,
+body[class*="model-fa"].change-form .required label::after {
+    content: "*";
+    color: #ef4444;
+    font-weight: 700;
+    margin-inline-start: 4px;
+}
+
+/* ── 7. Help text refinement ─────────────────────────────────────────────── */
+body[class*="model-fa"].change-form .help,
+body[class*="model-fa"].change-form .field-line .leading-relaxed.text-xs {
+    background: #f8fafc;
+    border-inline-start: 3px solid #94a3b8;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #475569;
+    font-size: 12px;
+    line-height: 1.7;
+    margin-top: 6px !important;
+}

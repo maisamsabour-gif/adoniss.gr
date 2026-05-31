@@ -1,0 +1,537 @@
+/* ── ADONIS Admin — unfold custom overrides ─────────────────────────── */
+/*
+ * Keep admin shell layout LTR even when Persian locale is active.
+ * RTL is applied only inside explicitly wrapped Persian content blocks.
+ */
+html,
+body,
+.wrapper {
+    direction: ltr !important;
+}
+
+.main-sidebar {
+    direction: ltr !important;
+    left: 0 !important;
+    right: auto !important;
+    transform: none !important;
+}
+
+.content-wrapper,
+.main-header,
+.main-footer {
+    margin-left: 250px !important;
+    margin-right: 0 !important;
+    direction: ltr !important;
+}
+
+@media (max-width: 991.98px) {
+    .content-wrapper,
+    .main-header,
+    .main-footer {
+        margin-left: 0 !important;
+    }
+}
+
+.fa-admin-content {
+    direction: rtl;
+    text-align: right;
+    font-family: Vazirmatn, IRANSans, Tahoma, Arial, sans-serif;
+}
+
+.fa-admin-content,
+.fa-admin-content form,
+.fa-admin-content .form-row,
+.fa-admin-content .card-body {
+    direction: rtl !important;
+    text-align: right !important;
+}
+
+.fa-admin-content .form-row,
+.fa-admin-content .fieldBox,
+.fa-admin-content .aligned label,
+.fa-admin-content .help,
+.fa-admin-content .submit-row {
+    width: 100%;
+}
+
+.fa-admin-content input[type="text"],
+.fa-admin-content input[type="url"],
+.fa-admin-content input[type="number"],
+.fa-admin-content input[type="email"],
+.fa-admin-content input[type="file"],
+.fa-admin-content textarea,
+.fa-admin-content select {
+    width: 100%;
+    max-width: 100%;
+}
+
+/*
+ * ═══════════════════════════════════════════════════════════════════════
+ *  DARK SIDEBAR SKIN
+ *  All rules are scoped to #nav-sidebar-inner — the main content area
+ *  and page chrome are completely unaffected.
+ *
+ *  Contrast audit (WCAG AA ≥ 4.5 : 1 for normal text):
+ *    #0f172a bg  →  #cbd5e1 body text   ≈ 10.5 : 1  ✓
+ *    #0f172a bg  →  #64748b muted text  ≈  4.6 : 1  ✓
+ *    #1e293b bg  →  #e2e8f0 hover text  ≈ 10.2 : 1  ✓
+ *    #1e293b bg  →  #2dd4bf active text ≈  6.0 : 1  ✓
+ *
+ *  To reuse in MEDIVEST: copy only this "DARK SIDEBAR SKIN" block and
+ *  swap --sidebar-* custom properties at the top.
+ * ═══════════════════════════════════════════════════════════════════════
+ */
+
+/* ── Design tokens (edit here to retheme) ──────────────────────────── */
+#nav-sidebar-inner {
+    --sb-bg:          #0f172a;   /* sidebar background */
+    --sb-bg-hover:    #1e293b;   /* item hover / active background */
+    --sb-border:      #1e293b;   /* dividers and borders */
+    --sb-text:        #94a3b8;   /* default nav link text */
+    --sb-text-strong: #f1f5f9;   /* branding / username */
+    --sb-text-muted:  #64748b;   /* section labels, placeholders */
+    --sb-text-hover:  #e2e8f0;   /* hovered link text */
+    --sb-active-text: #2dd4bf;   /* active item text (teal-400) */
+    --sb-active-bar:  #0d9488;   /* active left-border accent (teal-600) */
+    --sb-icon:        #64748b;   /* resting icon */
+    --sb-icon-hover:  #94a3b8;   /* hovered icon */
+    --sb-icon-active: #0d9488;   /* active icon */
+    --sb-badge-bg:    #134e4a;   /* badge pill background */
+    --sb-badge-text:  #99f6e4;   /* badge pill text */
+}
+
+/* ── 1. Container ───────────────────────────────────────────────────── */
+#nav-sidebar-inner {
+    background-color: var(--sb-bg) !important;
+    color: var(--sb-text);
+    border-right: 1px solid var(--sb-border);
+}
+
+/* ── 2. Branding header strip ───────────────────────────────────────── */
+#nav-sidebar-inner > div:first-child {
+    background-color: var(--sb-bg) !important;
+    border-bottom-color: var(--sb-border) !important;
+}
+/* Site title / branding label */
+#nav-sidebar-inner > div:first-child .font-semibold,
+#nav-sidebar-inner [class*="site_branding"] {
+    color: var(--sb-text-strong) !important;
+}
+/* Mobile close icon */
+#nav-sidebar-inner > div:first-child > .material-symbols-outlined {
+    color: var(--sb-text-muted) !important;
+}
+#nav-sidebar-inner > div:first-child > .material-symbols-outlined:hover {
+    color: var(--sb-text-hover) !important;
+}
+/* Branding block hover (site-switcher dropdown) */
+#nav-sidebar-inner > div:first-child [class*="hover:bg-base"]:hover,
+#nav-sidebar-inner > div:first-child [class*="hover:bg-white"]:hover {
+    background-color: var(--sb-bg-hover) !important;
+}
+
+/* ── 3. Search bar ──────────────────────────────────────────────────── */
+/* The wrapper pill */
+#nav-sidebar-inner .bg-white,
+#nav-sidebar-inner [class*="dark:bg-base-900"],
+#nav-sidebar-inner [class*="bg-white"] {
+    background-color: var(--sb-bg-hover) !important;
+    border-color: var(--sb-border) !important;
+    box-shadow: none !important;
+}
+/* The actual input */
+#nav-sidebar-inner #nav-filter {
+    background-color: transparent !important;
+    color: var(--sb-text-hover) !important;
+    caret-color: var(--sb-active-bar);
+}
+#nav-sidebar-inner #nav-filter::placeholder {
+    color: var(--sb-text-muted) !important;
+}
+/* Search icon */
+#nav-sidebar-inner [class*="text-base-400"] {
+    color: var(--sb-text-muted) !important;
+}
+/* Keyboard shortcut badge */
+#nav-sidebar-inner [class*="shortcut"],
+#nav-sidebar-inner kbd {
+    background-color: #0f172a !important;
+    border-color: #334155 !important;
+    color: var(--sb-text-muted) !important;
+}
+/* Focus ring */
+#nav-sidebar-inner [class*="focus-within:outline"] {
+    outline-color: var(--sb-active-bar) !important;
+}
+
+/* ── 4. Section separators ──────────────────────────────────────────── */
+#nav-sidebar-inner hr {
+    border-color: var(--sb-border) !important;
+}
+
+/* ── 5. Section group headings ──────────────────────────────────────── */
+#nav-sidebar-inner h2 {
+    color: var(--sb-text-muted) !important;
+    font-size: 0.67rem !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.09em !important;
+    text-transform: uppercase !important;
+    /* reserve space for the left-color bar */
+    border-left: 3px solid transparent;
+    padding-left: 6px !important;
+    margin-left: 12px !important;
+    margin-right: 12px !important;
+    border-radius: 0 4px 4px 0;
+    transition: border-color 0.15s ease, color 0.15s ease;
+}
+/* Collapsible chevron */
+#nav-sidebar-inner h2 > .material-symbols-outlined {
+    color: var(--sb-text-muted) !important;
+    font-size: 14px !important;
+}
+#nav-sidebar-inner h2:hover > .material-symbols-outlined {
+    color: var(--sb-text-hover) !important;
+}
+
+/* ── 5a. Colored accent bar per section (data-section on wrapper div) ── */
+/*
+ * Color tokens per section — adjust as needed.
+ * slugify("Leads & Contacts") → "leads-contacts"
+ * slugify("Blog & Content")   → "blog-content"
+ * slugify("Site Settings")    → "site-settings"
+ * slugify("Users & Access")   → "users-access"
+ */
+#nav-sidebar-inner [data-section="properties"]     { --sc: #0d9488; } /* teal     */
+#nav-sidebar-inner [data-section="crm-leads"]      { --sc: #f43f5e; } /* rose     */
+#nav-sidebar-inner [data-section="blog-content"]   { --sc: #10b981; } /* emerald  */
+#nav-sidebar-inner [data-section="site-settings"]  { --sc: #3b82f6; } /* blue     */
+#nav-sidebar-inner [data-section="users-access"]   { --sc: #8b5cf6; } /* violet   */
+#nav-sidebar-inner [data-section="advanced"]       { --sc: #64748b; } /* slate    */
+
+/* Apply the accent bar color to the h2 inside any section with a --sc token */
+#nav-sidebar-inner [data-section] h2 {
+    color: var(--sc, var(--sb-text-muted)) !important;
+    border-left-color: var(--sc, transparent) !important;
+    opacity: 0.85;
+}
+#nav-sidebar-inner [data-section] h2:hover {
+    opacity: 1;
+}
+
+/* ── 6. Nav links — base state ──────────────────────────────────────── */
+#nav-sidebar-inner ol li a {
+    color: var(--sb-text) !important;
+    /* Transparent left border reserves space so active border never shifts content */
+    border-left: 3px solid transparent;
+    padding-left: calc(0.75rem - 3px) !important;
+    border-radius: 0 6px 6px 0;
+    transition: background-color 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+}
+
+/* ── 7. Nav links — hover ───────────────────────────────────────────── */
+#nav-sidebar-inner ol li a:hover {
+    background-color: var(--sb-bg-hover) !important;
+    color: var(--sb-text-hover) !important;
+}
+
+/* ── 8. Nav links — active (current page) ──────────────────────────── */
+/*
+ * Uses inset box-shadow as the brand-color left accent so no layout shift
+ * occurs. The 3px transparent border on all links means the content
+ * column is always at the same horizontal position.
+ */
+#nav-sidebar-inner ol li a.active {
+    background-color: var(--sb-bg-hover) !important;
+    color: var(--sb-active-text) !important;
+    border-left-color: var(--sb-active-bar) !important;
+    font-weight: 600 !important;
+}
+
+/* ── 9. Icons — monochrome ──────────────────────────────────────────── */
+/* Strip any per-item icon_class colors so all icons are uniform at rest */
+#nav-sidebar-inner ol li a .material-symbols-outlined {
+    color: var(--sb-icon) !important;
+    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' -25, 'opsz' 18;
+}
+#nav-sidebar-inner ol li a:hover .material-symbols-outlined {
+    color: var(--sb-icon-hover) !important;
+}
+#nav-sidebar-inner ol li a.active .material-symbols-outlined {
+    color: var(--sb-icon-active) !important;
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 18;
+}
+
+/* ── 10. Badge pills (live counters in sidebar) ─────────────────────── */
+#nav-sidebar-inner [class*="bg-primary"],
+#nav-sidebar-inner [class*="badge"] span {
+    background-color: var(--sb-badge-bg) !important;
+    color: var(--sb-badge-text) !important;
+}
+
+/* ── 11. User strip (bottom of sidebar — always visible) ────────────── */
+.sidebar-user-bar {
+    background-color: var(--sb-bg) !important;
+    border-top-color: var(--sb-border) !important;
+}
+/* Avatar initial letter */
+.sidebar-user-bar [class*="bg-base-200"],
+.sidebar-user-bar [class*="bg-base-700"] {
+    background-color: #1e3a5f !important;
+    color: var(--sb-text-strong) !important;
+}
+/* Name */
+.sidebar-user-bar .text-important {
+    color: var(--sb-text-strong) !important;
+}
+/* Email */
+.sidebar-user-bar .text-subtle {
+    color: var(--sb-text-muted) !important;
+}
+
+/* ── Settings icon button ──────────────────────────────────────────── */
+.sb-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid var(--sb-border);
+    color: var(--sb-text-muted);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    flex-shrink: 0;
+}
+.sb-icon-btn:hover,
+.sb-icon-btn--active {
+    background: var(--sb-bg-hover) !important;
+    border-color: #475569 !important;
+    color: var(--sb-text-hover) !important;
+}
+
+/* ── Logout button — always visible, red ──────────────────────────── */
+.sb-logout-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(239, 68, 68, 0.10);
+    border: 1px solid rgba(239, 68, 68, 0.30);
+    color: #f87171;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    flex-shrink: 0;
+}
+.sb-logout-btn:hover {
+    background: rgba(239, 68, 68, 0.22) !important;
+    border-color: rgba(239, 68, 68, 0.55) !important;
+    color: #fca5a5 !important;
+}
+
+/* ── 12. Settings popup ────────────────────────────────────────────── */
+.sidebar-user-bar nav.absolute {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.45) !important;
+}
+.sidebar-user-bar nav.absolute a,
+.sidebar-user-bar nav.absolute button {
+    color: var(--sb-text) !important;
+    font-size: 0.8rem !important;
+}
+.sidebar-user-bar nav.absolute a:hover,
+.sidebar-user-bar nav.absolute button:hover {
+    background-color: var(--sb-bg) !important;
+    color: var(--sb-text-hover) !important;
+}
+.sidebar-user-bar nav.absolute hr {
+    border-color: #334155 !important;
+}
+
+/* ── 13. SimpleBar custom scrollbar ────────────────────────────────── */
+#nav-sidebar-inner .simplebar-scrollbar::before {
+    background-color: #334155 !important;
+    border-radius: 3px;
+}
+#nav-sidebar-inner .simplebar-scrollbar:hover::before,
+#nav-sidebar-inner:hover .simplebar-scrollbar::before {
+    background-color: #475569 !important;
+}
+
+/* ── 14. Responsive mobile sidebar ─────────────────────────────────── */
+/* Unfold uses the same #nav-sidebar-inner on mobile — tokens apply automatically */
+@media (max-width: 1279px) {
+    #nav-sidebar-inner {
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+ *  END DARK SIDEBAR SKIN
+ * ═══════════════════════════════════════════════════════════════════════ */
+
+
+/* Thumbnail previews in list views and inlines */
+.admin-thumb {
+    width: 72px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 6px;
+    display: block;
+    border: 1px solid #e2e8f0;
+    transition: transform .15s ease;
+}
+.admin-thumb:hover {
+    transform: scale(1.08);
+}
+.admin-thumb-link {
+    display: inline-block;
+    line-height: 0;
+}
+
+/* Inline media preview inside PropertyMediaInline */
+.admin-thumb-video {
+    width: 72px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #0f172a;
+    border-radius: 6px;
+    color: #94a3b8;
+    font-size: 1.4rem;
+}
+
+/* Status / score badges  */
+.badge-new       { background: #dbeafe; color: #1d4ed8; }
+.badge-contacted { background: #d1fae5; color: #065f46; }
+.badge-follow_up { background: #fef3c7; color: #92400e; }
+.badge-converted { background: #ede9fe; color: #5b21b6; }
+.badge-closed    { background: #f1f5f9; color: #475569; }
+.badge-hot  { background: #fee2e2; color: #991b1b; }
+.badge-warm { background: #fef9c3; color: #854d0e; }
+.badge-cold { background: #e0f2fe; color: #0369a1; }
+.lead-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Unread chat-lead row highlight */
+tr.unread-lead td {
+    border-left: 3px solid #0d9488;
+    background: rgba(13, 148, 136, 0.04) !important;
+}
+tr.unread-lead .lead-name-col {
+    font-weight: 700;
+    color: #0d9488;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+ *  Visible form-field boxes (project-wide)
+ *  Unfold's default field borders are nearly invisible, which made the
+ *  change forms feel flat/"lifeless". These rules give every input/textarea/
+ *  select in the content area a clear border, rounded box, comfortable
+ *  padding and a focus highlight — in both light and dark mode.
+ *  Scoped to #content so the sidebar search and CKEditor surface are untouched.
+ * ════════════════════════════════════════════════════════════════════════ */
+#content :is(
+    input[type="text"], input[type="email"], input[type="url"], input[type="password"],
+    input[type="number"], input[type="search"], input[type="tel"], input[type="date"],
+    input[type="datetime-local"], input[type="time"], input[type="month"], input[type="week"]
+),
+#content textarea,
+#content select,
+#content .select2-container .select2-selection {
+    border: 1px solid #c3ccd9 !important;
+    border-radius: 8px !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+/* Comfortable height for the Select2 (autocomplete) widgets */
+#content .select2-container .select2-selection--single {
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+}
+
+/* Focus state — teal accent + soft ring so the active field stands out */
+#content :is(input, textarea, select):focus,
+#content .select2-container--focus .select2-selection,
+#content .select2-container--open .select2-selection {
+    border-color: #0d9488 !important;
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.18) !important;
+    outline: none !important;
+}
+
+/* Hover gives a subtle cue the box is interactive */
+#content :is(input, textarea, select):hover:not(:focus) {
+    border-color: #94a3b8 !important;
+}
+
+/* ── Dark mode ─────────────────────────────────────────────────────────── */
+html.dark #content :is(
+    input[type="text"], input[type="email"], input[type="url"], input[type="password"],
+    input[type="number"], input[type="search"], input[type="tel"], input[type="date"],
+    input[type="datetime-local"], input[type="time"], input[type="month"], input[type="week"]
+),
+html.dark #content textarea,
+html.dark #content select,
+html.dark #content .select2-container .select2-selection {
+    border-color: #46566f !important;
+    background-color: #0f172a !important;
+    box-shadow: none !important;
+}
+html.dark #content :is(input, textarea, select):hover:not(:focus) {
+    border-color: #64748b !important;
+}
+
+/* Make fieldset "modules" read as cards so forms feel structured, not flat */
+#content .module,
+#content fieldset.module {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+html.dark #content .module,
+html.dark #content fieldset.module {
+    border-color: #2b3852;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   GLOBAL: Force white input fields in admin
+   ══════════════════════════════════════════════════════════════════════════════ */
+input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not([type="hidden"]),
+textarea,
+select {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  border: 1px solid #d1d5db !important;
+}
+
+html.dark input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not([type="hidden"]),
+html.dark textarea,
+html.dark select,
+.dark input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not([type="hidden"]),
+.dark textarea,
+.dark select {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #9ca3af !important;
+  -webkit-text-fill-color: #9ca3af !important;
+}

@@ -1,0 +1,2714 @@
+{% extends 'base.html' %}
+{% load static i18n cache %}
+
+{# ── LCP preload hints ──────────────────────────────────────────────────────
+   Tells the browser to fetch the hero asset(s) at maximum priority during
+   HTML parsing, before stylesheets or JS execute. Significantly improves LCP
+   when the hero is a poster image or static background. The video preload
+   hint is honoured by Chrome/Edge for autoplay <video> sources. #}
+{% block head_preload %}
+    {% if header_settings.hero_video_poster %}
+    {# Poster is the LCP element — eager-fetch with highest priority. #}
+    <link rel="preload" as="image" href="{{ header_settings.hero_video_poster.url }}" fetchpriority="high">
+    {% endif %}
+    {% comment %}
+    NOTE: the hero MP4 is intentionally NOT preloaded — see the lazy-load
+    IntersectionObserver loader at the bottom of the page (extra_js block).
+    Preloading it would defeat the entire purpose of swapping <source> in
+    only after the hero intersects the viewport.
+    {% endcomment %}
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    {% if header_settings.hero_video %}
+    {# ── Uploaded MP4 background — lazy-loaded via IntersectionObserver ── #}
+    {% comment %}
+    The <source> child is intentionally NOT rendered server-side. The
+    IntersectionObserver loader in the extra_js block (bottom of file)
+    appends it as soon as the hero intersects the viewport — or after a
+    2 s fallback for browsers without IntersectionObserver. Until then,
+    the poster image is the painted LCP element.
+    {% endcomment %}
+    <div class="hero-video-bg">
+        <video class="hero-lazy-video"
+               autoplay muted loop playsinline
+               preload="none"
+               width="1920" height="1080"
+               poster="{{ header_settings.hero_video_poster.url }}"
+               data-src="{{ header_settings.hero_video.url }}"
+               style="filter: brightness({{ header_settings.hero_brightness }}%){% if header_settings.hero_filter == 'grayscale' %} grayscale(100%){% elif header_settings.hero_filter == 'sepia' %} sepia(80%){% elif header_settings.hero_filter == 'blur' %} blur(3px){% elif header_settings.hero_filter == 'saturate' %} saturate(180%){% elif header_settings.hero_filter == 'contrast' %} contrast(140%){% endif %};">
+        </video>
+        <div class="hero-overlay hero-overlay-{{ header_settings.hero_overlay }}" style="--overlay-pct: {{ header_settings.hero_overlay_opacity }}%;"></div>
+    </div>
+    {% elif header_settings.hero_video_embed_url %}
+    {# ── YouTube URL background ───────────────────────────────────────────── #}
+    <div class="hero-video-bg hero-youtube-bg">
+        {% if header_settings.hero_video_poster %}
+        {# Poster rendered as a real <img> (not CSS bg) so the browser counts
+           it as the LCP element and respects fetchpriority. #}
+        <img src="{{ header_settings.hero_video_poster.url }}"
+             alt=""
+             class="hero-youtube-poster"
+             loading="eager"
+             fetchpriority="high"
+             decoding="async"
+             style="width:100%;height:100%;object-fit:cover;object-position:center;">
+        {% endif %}
+        <iframe src="{{ header_settings.hero_video_embed_url }}"
+                frameborder="0"
+                allow="autoplay; fullscreen"
+                aria-hidden="true"
+                tabindex="-1"
+                title=""></iframe>
+        <div class="hero-overlay hero-overlay-{{ header_settings.hero_overlay }}" style="--overlay-pct: {{ header_settings.hero_overlay_opacity }}%;"></div>
+    </div>
+    {% elif header_settings.hero_video_poster %}
+    {# ── Static poster/image fallback ────────────────────────────────────── #}
+    {# Rendered as a real <img> so it qualifies as the LCP element and the
+       browser honours fetchpriority="high" + preload hint above. #}
+    <div class="hero-bg" style="background:transparent;">
+        <img src="{{ header_settings.hero_video_poster.url }}"
+             alt=""
+             loading="eager"
+             fetchpriority="high"
+             decoding="async"
+             style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0;">
+        <div class="hero-overlay hero-overlay-{{ header_settings.hero_overlay }}" style="--overlay-pct: {{ header_settings.hero_overlay_opacity }}%;"></div>
+    </div>
+    {% else %}
+    {# ── Default gradient background ──────────────────────────────────────── #}
+    <div class="hero-bg">
+        <div class="hero-overlay"></div>
+    </div>
+    {% endif %}
+    <div class="container">
+        <div class="hero-content" data-aos="fade-up">
+            <span class="hero-badge">{% trans "Golden Visa Program" %}</span>
+            <h1 class="hero-title" style="color:#ffffff !important;">{{ header_settings.hero_title }}</h1>
+            <p class="hero-subtitle" style="color:rgba(255,255,255,0.9) !important;">{{ header_settings.hero_subtitle }}</p>
+            <div class="hero-buttons">
+                <button type="button" class="btn btn-gold btn-lg" onclick="openConsultationModal()">
+                    <i class="fas fa-calendar-check"></i> {% trans "Free Consultation" %}
+                </button>
+                <a href="{% url 'property_list' %}" class="btn btn-outline-white btn-lg">
+                    <i class="fas fa-building"></i> {% trans "Our Projects" %}
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">€250K</span>
+                    <span class="stat-label">{% trans "Starting Investment" %}</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">4th</span>
+                    <span class="stat-label">{% trans "Worldwide Passport Rank" %}</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">{% trans "Success Rate" %}</span>
+                </div>
+            </div>
+            <div class="hero-gv-cta">
+                <a href="{% url 'greece_golden_visa' %}" class="btn btn-golden-visa btn-lg">
+                    <i class="fas fa-star"></i> {% trans "What is Golden Visa?" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Intro Section (Video + Text) -->
+<section class="section section-intro" id="intro">
+    <div class="container">
+        <div class="intro-grid">
+            <!-- Video Side -->
+            <div class="intro-video-wrap" data-aos="fade-right">
+                {% if header_settings.intro_video %}
+                {# ── Uploaded MP4 ─────────────────────────────────────────── #}
+                <div class="intro-video-container" id="introVideoContainer">
+                    <video controls playsinline id="introVideoEl"
+                           {% if header_settings.intro_video_poster %}poster="{{ header_settings.intro_video_poster.url }}"{% endif %}>
+                        <source src="{{ header_settings.intro_video.url }}" type="video/mp4">
+                        {% trans "Your browser does not support the video tag." %}
+                    </video>
+                    <div class="intro-video-play" id="introPlayBtn">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                {% elif header_settings.intro_video_embed %}
+                {# ── YouTube URL — cover photo + click-to-play iframe ─────── #}
+                <div class="intro-video-container intro-yt-container" id="introVideoContainer">
+                    {% if header_settings.intro_video_poster %}
+                    <div class="intro-yt-cover" id="introYtCover"
+                         style="background-image:url('{{ header_settings.intro_video_poster.url }}');">
+                        <div class="intro-video-play" id="introPlayBtn">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="intro-yt-cover intro-yt-cover--nobg" id="introYtCover">
+                        <div class="intro-video-play" id="introPlayBtn">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <iframe id="introYtFrame"
+                            data-src="{{ header_settings.intro_video_embed }}"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen
+                            style="display:none; width:100%; aspect-ratio:16/9; border-radius:20px;"></iframe>
+                </div>
+                {% else %}
+                {# ── Placeholder ──────────────────────────────────────────── #}
+                <div class="intro-video-placeholder">
+                    <i class="fas fa-video"></i>
+                    <span>{% trans "Video Coming Soon" %}</span>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Text Side -->
+            <div class="intro-content" data-aos="fade-left">
+                <span class="intro-badge"><i class="fas fa-info-circle"></i> {% trans "About Us" %}</span>
+                <h2 class="intro-title">{{ header_settings.intro_title }}</h2>
+                <p class="intro-text">{{ header_settings.intro_text }}</p>
+                <div class="intro-features">
+                    <div class="intro-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>{% trans "Licensed Immigration Consultants" %}</span>
+                    </div>
+                    <div class="intro-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>{% trans "Offices in Athens & Tehran" %}</span>
+                    </div>
+                    <div class="intro-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>{% trans "Multilingual Support Team" %}</span>
+                    </div>
+                </div>
+                <div class="intro-buttons">
+                    <a href="{% url 'about' %}" class="btn btn-gold">
+                        <i class="fas fa-arrow-right"></i> {% trans "Learn More About Us" %}
+                    </a>
+                    <a href="{% url 'contact' %}" class="btn btn-outline">
+                        <i class="fas fa-phone-alt"></i> {% trans "Contact Us" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Greek Golden Visa Investment Tiers -->
+{% if golden_visa_cards %}
+{% cache 600 home_gv_tiers request.LANGUAGE_CODE %}
+<section class="section section-gv-tiers" id="golden-visa-tiers">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <span class="section-badge"><i class="fas fa-passport"></i> {% trans "Greek Golden Visa" %}</span>
+            <h2 class="section-title">{% trans "Greek Golden Visa Investment Tiers" %}</h2>
+            <p class="section-desc">{% trans "Choose the investment category that fits your goals and unlock European residency" %}</p>
+        </div>
+
+        <div class="gvt-cards-grid">
+            {% for card in golden_visa_cards %}
+            <div class="gvt-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}50">
+                <!-- Background Image -->
+                <div class="gvt-card-bg">
+                    {% if card.image %}
+                    <img src="{{ card.image.url }}" alt="{{ card.title }}" loading="lazy" decoding="async">
+                    {% else %}
+                    {# Fallback: Unsplash placeholder per tier order #}
+                    {% if forloop.counter == 1 %}
+                    <img src="{% static 'img/unsplash/1555993539-1732b0258235_900.jpg' %}" alt="{{ card.title }}" loading="lazy" decoding="async">
+                    {% elif forloop.counter == 2 %}
+                    <img src="{% static 'img/unsplash/1533105079780-92b9be482077_900.jpg' %}" alt="{{ card.title }}" loading="lazy" decoding="async">
+                    {% else %}
+                    <img src="{% static 'img/unsplash/1530841377377-3ff06c0ca713_900.jpg' %}" alt="{{ card.title }}" loading="lazy" decoding="async">
+                    {% endif %}
+                    {% endif %}
+                </div>
+
+                <!-- Dark Gradient Overlay -->
+                <div class="gvt-card-overlay"></div>
+
+                <!-- Price Badge (top-left) -->
+                <div class="gvt-price-badge">
+                    <span class="gvt-price-label">{{ card.price_label }}</span>
+                    <span class="gvt-price-amount">{{ card.price_amount }}</span>
+                </div>
+
+                <!-- Content (bottom, on gradient) -->
+                <div class="gvt-card-content">
+                    <h3 class="gvt-card-title">{{ card.title }}</h3>
+                    <p class="gvt-card-subtitle">{{ card.subtitle }}</p>
+                    <a href="{{ card.get_absolute_url }}" class="gvt-more-btn">
+                        {% trans "More" %} <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endcache %}
+{% endif %}
+
+<!-- Featured Properties – Portrait Grid -->
+{% cache 600 home_featured_properties request.LANGUAGE_CODE %}
+<section class="section section-prop-grid" id="fp-showcase">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <span class="section-badge"><i class="fas fa-crown"></i> {% trans "Golden Visa Properties" %}</span>
+            <h2 class="section-title">{% trans "Featured Investment Properties" %}</h2>
+            <p class="section-desc">{% trans "Handpicked properties qualifying for the Greek Golden Visa program" %}</p>
+        </div>
+
+        <div class="prop-grid">
+            {% if properties %}
+                {% for property in properties|slice:":6" %}
+                <a href="{{ property.get_absolute_url }}" class="prop-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}0">
+                    <!-- Background image -->
+                    <div class="prop-card-bg">
+                        {% if property.main_image %}
+                        <img src="{{ property.main_image.url }}" alt="{{ property.name }}" loading="lazy" decoding="async">
+                        {% else %}
+                        <div class="prop-img-placeholder"><i class="fas fa-building"></i></div>
+                        {% endif %}
+                    </div>
+                    <!-- Dark gradient overlay -->
+                    <div class="prop-card-overlay"></div>
+                    <!-- Badges (top) -->
+                    <div class="prop-card-badges">
+                        {% if property.golden_visa_eligible %}
+                        <span class="prop-price-badge">€{{ property.price_tier }}K</span>
+                        {% endif %}
+                        {% if property.status == 'sold_out_soon' %}
+                        <span class="prop-status-badge prop-status-fast">{% trans "Selling Fast" %}</span>
+                        {% elif property.status == 'sold_out' %}
+                        <span class="prop-status-badge prop-status-sold">{% trans "Sold Out" %}</span>
+                        {% endif %}
+                    </div>
+                    <!-- Content (bottom, on gradient) -->
+                    <div class="prop-card-content">
+                        <h3 class="prop-card-title">{{ property.name }}</h3>
+                        <p class="prop-card-loc"><i class="fas fa-map-marker-alt"></i> {{ property.area|default:property.location }}</p>
+                        <span class="prop-card-more">{% trans "More" %} <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                {% endfor %}
+            {% else %}
+                <!-- Demo cards -->
+                {% for demo in "123456" %}
+                <div class="prop-card prop-card-demo" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}0">
+                    <div class="prop-card-bg">
+                        <div class="prop-img-placeholder"><i class="fas fa-building"></i></div>
+                    </div>
+                    <div class="prop-card-overlay"></div>
+                    <div class="prop-card-badges">
+                        <span class="prop-price-badge">€{% if forloop.counter == 2 %}800{% elif forloop.counter == 3 %}400{% else %}250{% endif %}K</span>
+                    </div>
+                    <div class="prop-card-content">
+                        <h3 class="prop-card-title">{% if forloop.counter == 1 %}Noble Project{% elif forloop.counter == 2 %}Lotus Project{% elif forloop.counter == 3 %}Vironas Project{% elif forloop.counter == 4 %}Onyx Residential{% elif forloop.counter == 5 %}Elite Exclusive{% else %}Athens Heights{% endif %}</h3>
+                        <p class="prop-card-loc"><i class="fas fa-map-marker-alt"></i> {% if forloop.counter == 1 %}Southern Athens{% elif forloop.counter == 2 %}Vouliagmeni{% elif forloop.counter == 3 %}Vironas, Athens{% elif forloop.counter == 4 %}Alimos{% elif forloop.counter == 5 %}Glyfada{% else %}Kifissia{% endif %}</p>
+                        <span class="prop-card-more">{% trans "More" %} <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <div class="text-center mt-4" data-aos="fade-up">
+            <a href="{% url 'property_list' %}" class="prop-view-all-btn">
+                <i class="fas fa-th-large"></i> {% trans "View All Properties" %}
+            </a>
+        </div>
+    </div>
+</section>
+{% endcache %}
+
+<!-- Golden Visa & Greek Passport Section with Acropolis Background -->
+<section class="section section-golden-visa" id="services">
+    <!-- Background Image -->
+    <div class="gv-background">
+        <img src="{% static 'img/unsplash/1555993539-1732b0258235_1920.jpg' %}" alt="Acropolis Athens" loading="lazy" decoding="async">
+        <div class="gv-overlay"></div>
+    </div>
+    
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <span class="section-badge"><i class="fas fa-passport"></i> {{ fp.services_badge|default:"Golden Visa Program" }}</span>
+            <h2 class="section-title">{{ fp.services_title|default:"Greek Golden Visa & EU Passport" }}</h2>
+            <p class="section-desc">{{ fp.services_description|default:"Your gateway to European residency through strategic real estate investment" }}</p>
+        </div>
+        
+        <!-- Stats Row -->
+        <div class="gv-stats" data-aos="fade-up">
+            <div class="gv-stat">
+                <div class="gv-stat-number">€250K</div>
+                <div class="gv-stat-label">{% trans "Starting Investment" %}</div>
+            </div>
+            <div class="gv-stat">
+                <div class="gv-stat-number">4th</div>
+                <div class="gv-stat-label">{% trans "Passport Rank Worldwide" %}</div>
+            </div>
+            <div class="gv-stat">
+                <div class="gv-stat-number">100%</div>
+                <div class="gv-stat-label">{% trans "Success Rate" %}</div>
+            </div>
+            <div class="gv-stat">
+                <div class="gv-stat-number">29</div>
+                <div class="gv-stat-label">{% trans "Schengen Countries" %}</div>
+            </div>
+        </div>
+        
+        <!-- Benefits Grid -->
+        <div class="gv-benefits-grid">
+            <div class="gv-benefit" data-aos="fade-up" data-aos-delay="0">
+                <div class="gv-benefit-icon"><i class="fas fa-user-check"></i></div>
+                <h3>{% trans "No Physical Presence" %}</h3>
+                <p>{% trans "Complete the entire process remotely without visiting Greece" %}</p>
+            </div>
+            
+            <div class="gv-benefit" data-aos="fade-up" data-aos-delay="50">
+                <div class="gv-benefit-icon"><i class="fas fa-users"></i></div>
+                <h3>{% trans "Family Residency" %}</h3>
+                <p>{% trans "Include spouse, children, and parents in your application" %}</p>
+            </div>
+            
+            <div class="gv-benefit" data-aos="fade-up" data-aos-delay="100">
+                <div class="gv-benefit-icon"><i class="fas fa-passport"></i></div>
+                <h3>{% trans "EU Passport Path" %}</h3>
+                <p>{% trans "Pathway to Greek citizenship and EU passport" %}</p>
+            </div>
+            
+            <div class="gv-benefit" data-aos="fade-up" data-aos-delay="150">
+                <div class="gv-benefit-icon"><i class="fas fa-plane"></i></div>
+                <h3>{% trans "Schengen Access" %}</h3>
+                <p>{% trans "Travel freely across 29 Schengen countries" %}</p>
+            </div>
+            
+            <div class="gv-benefit" data-aos="fade-up" data-aos-delay="200">
+                <div class="gv-benefit-icon"><i class="fas fa-university"></i></div>
+                <h3>{% trans "European Bank Account" %}</h3>
+                <p>{% trans "Open and manage EU bank accounts with full access" %}</p>
+            </div>
+            
+            <div class="gv-benefit" data-aos="fade-up" data-aos-delay="250">
+                <div class="gv-benefit-icon"><i class="fas fa-shield-alt"></i></div>
+                <h3>{% trans "Secure Investment" %}</h3>
+                <p>{% trans "Stable European real estate market investment" %}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Residency Process – Card Style with Background Images -->
+<section class="section section-process-cards" id="process">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <span class="section-badge"><i class="fas fa-route"></i> {{ fp.process_badge|default:"Your Journey" }}</span>
+            <h2 class="section-title">{{ fp.process_title|default:"Residency Process" }}</h2>
+            <p class="section-desc">{{ fp.process_description|default:"Four simple steps to your Greek Golden Visa" }}</p>
+        </div>
+        
+        <!-- Process Cards Grid -->
+        <div class="process-cards-grid">
+            <!-- Step 1 -->
+            <div class="process-card" data-aos="fade-up" data-aos-delay="0">
+                <div class="process-card-bg" style="background-image: url('{% static 'img/unsplash/1573496359142-b8d87734a5a2_600.jpg' %}');"></div>
+                <div class="process-card-overlay"></div>
+                <div class="process-card-number">01</div>
+                <div class="process-card-content">
+                    <div class="process-card-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3>{% trans "Free Consultation" %}</h3>
+                    <p>{% trans "Begin with a free consultation where all your questions are answered by our expert team." %}</p>
+                    <div class="process-card-tags">
+                        <span><i class="fas fa-check"></i> {% trans "No commitment" %}</span>
+                        <span><i class="fas fa-check"></i> {% trans "Expert guidance" %}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 2 -->
+            <div class="process-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="process-card-bg" style="background-image: url('{% static 'img/unsplash/1560518883-ce09059eeffa_600.jpg' %}');"></div>
+                <div class="process-card-overlay"></div>
+                <div class="process-card-number">02</div>
+                <div class="process-card-content">
+                    <div class="process-card-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3>{% trans "Property Purchase" %}</h3>
+                    <p>{% trans "Select and purchase your property in person or remotely via power of attorney." %}</p>
+                    <div class="process-card-tags">
+                        <span><i class="fas fa-check"></i> {% trans "Remote purchase" %}</span>
+                        <span><i class="fas fa-check"></i> {% trans "Legal support" %}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 3 -->
+            <div class="process-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="process-card-bg" style="background-image: url('{% static 'img/unsplash/1450101499163-c8848c66ca85_600.jpg' %}');"></div>
+                <div class="process-card-overlay"></div>
+                <div class="process-card-number">03</div>
+                <div class="process-card-content">
+                    <div class="process-card-icon">
+                        <i class="fas fa-fingerprint"></i>
+                    </div>
+                    <h3>{% trans "Residence Permit" %}</h3>
+                    <p>{% trans "We secure your residence permit from the Greek Immigration Office with biometrics." %}</p>
+                    <div class="process-card-tags">
+                        <span><i class="fas fa-check"></i> {% trans "Athens appointment" %}</span>
+                        <span><i class="fas fa-check"></i> {% trans "Full assistance" %}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 4 -->
+            <div class="process-card process-card-final" data-aos="fade-up" data-aos-delay="300">
+                <div class="process-card-bg" style="background-image: url('/media/images/residence-card-handover.png');"></div>
+                <div class="process-card-overlay process-card-overlay-success"></div>
+                <div class="process-card-number">04</div>
+                <div class="process-card-badge"><i class="fas fa-trophy"></i> {% trans "Final Step" %}</div>
+                <div class="process-card-content">
+                    <div class="process-card-icon process-card-icon-success">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <h3>{% trans "Residence Card Issued" %}</h3>
+                    <p>{% trans "Your Greek permanent residence card grants full legal rights in Greece and the EU." %}</p>
+                    <div class="process-card-tags">
+                        <span><i class="fas fa-check"></i> {% trans "5-year validity" %}</span>
+                        <span><i class="fas fa-check"></i> {% trans "EU freedom" %}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-4" data-aos="fade-up">
+            <a href="#contact" class="process-cta-btn">
+                <span>{% trans "Start Your Journey" %}</span>
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Catalogue Download Banner -->
+{% if fp.catalogue_btn1_pdf or fp.catalogue_btn2_pdf %}
+<section class="catalogue-banner" data-aos="fade-up">
+    <div class="catalogue-banner-bg"></div>
+    <div class="catalogue-banner-pattern"></div>
+    <div class="container">
+        <div class="catalogue-banner-content">
+            <div class="catalogue-banner-text">
+                <span class="catalogue-badge"><i class="fas fa-file-pdf"></i> {{ fp.catalogue_badge_text|default:"Free Download" }}</span>
+                <h3>{{ fp.catalogue_heading|default:"Get Our Property Catalogues" }}</h3>
+                <p>{{ fp.catalogue_subtext|default:"Download our comprehensive guides with all available properties and pricing" }}</p>
+            </div>
+            <div class="catalogue-banner-buttons">
+                {% if fp.catalogue_btn1_pdf %}
+                <a href="{{ fp.catalogue_btn1_pdf.url }}" target="_blank" class="catalogue-btn catalogue-btn-gold">
+                    <i class="fas fa-building"></i>
+                    <span>
+                        <strong>{{ fp.catalogue_btn1_title|default:"Active Projects" }}</strong>
+                        <small>{{ fp.catalogue_btn1_label|default:"View Catalogue" }}</small>
+                    </span>
+                    <i class="fas fa-download"></i>
+                </a>
+                {% endif %}
+                {% if fp.catalogue_btn2_pdf %}
+                <a href="{{ fp.catalogue_btn2_pdf.url }}" target="_blank" class="catalogue-btn catalogue-btn-outline">
+                    <i class="fas fa-euro-sign"></i>
+                    <span>
+                        <strong>{{ fp.catalogue_btn2_title|default:"Property Price List" }}</strong>
+                        <small>{{ fp.catalogue_btn2_label|default:"Download PDF" }}</small>
+                    </span>
+                    <i class="fas fa-download"></i>
+                </a>
+                {% endif %}
+                {% if featured_brochure %}
+                <a href="{% url 'brochure_viewer' featured_brochure.slug %}" class="catalogue-btn catalogue-btn-flipbook">
+                    <i class="fas fa-book-open"></i>
+                    <span>
+                                <strong>{% trans "Interactive Flipbook" %}</strong>
+                                <small>{% trans "Browse Online" %}</small>
+                    </span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Testimonials Section - Full Image Cards -->
+{% cache 600 home_testimonials request.LANGUAGE_CODE %}
+<section class="section section-testimonials" id="testimonials">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <span class="section-badge"><i class="fas fa-star"></i> {% trans "Client Reviews" %}</span>
+            <h2 class="section-title" style="color: #0a1628 !important;">{% trans "What Our Clients Say" %}</h2>
+            <p class="section-desc">{% trans "Real stories from investors who achieved their European residency dream" %}</p>
+        </div>
+        
+        <div class="testimonials-carousel" data-aos="fade-up" data-aos-delay="100">
+            <div class="testimonials-track" id="testimonialsTrack">
+                {% for testimonial in testimonials %}
+                <div class="testimonial-card">
+                    <div class="tcard-image">
+                        {% if testimonial.image %}
+                        <img src="{{ testimonial.image.url }}" alt="{{ testimonial.client_name }}" loading="lazy" decoding="async">
+                        {% else %}
+                        <div class="tcard-placeholder"><i class="fas fa-user"></i></div>
+                        {% endif %}
+                    </div>
+                    <div class="tcard-gradient"></div>
+                    <div class="tcard-content">
+                        <div class="tcard-rating">
+                            {% for i in "12345" %}{% if forloop.counter <= testimonial.rating %}<i class="fas fa-star"></i>{% else %}<i class="far fa-star"></i>{% endif %}{% endfor %}
+                        </div>
+                        <p class="tcard-text">{{ testimonial.content|truncatewords:25 }}</p>
+                        <a href="{% url 'testimonial_detail' testimonial.pk %}" class="tcard-more">
+                            {% trans "Read More" %} <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <div class="tcard-author">
+                            <h4>{{ testimonial.client_name }}</h4>
+                            <span><i class="fas fa-map-marker-alt"></i> {{ testimonial.client_country }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="testimonial-card">
+                    <div class="tcard-image"><img src="{% static 'img/unsplash/1507003211169-0a1dd7228f2d_400.jpg' %}" alt="Client" width="400" height="500" loading="lazy" decoding="async"></div>
+                    <div class="tcard-gradient"></div>
+                    <div class="tcard-content">
+                        <div class="tcard-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <p class="tcard-text">Adonis Group made our dream of European residency a reality...</p>
+                        <div class="tcard-author"><h4>Mohammad R.</h4><span><i class="fas fa-map-marker-alt"></i> Iran</span></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="testimonials-nav">
+                <button class="testimonial-nav-btn testimonial-nav-prev" id="testimonialPrev"><i class="fas fa-chevron-left"></i></button>
+                <button class="testimonial-nav-btn testimonial-nav-next" id="testimonialNext"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            
+            <div class="testimonials-dots" id="testimonialsDots"></div>
+        </div>
+    </div>
+</section>
+{% endcache %}
+
+<!-- Testimonial Modal -->
+<div class="tmodal-overlay" id="testimonialModal">
+    <div class="tmodal">
+        <button class="tmodal-close" onclick="closeTestimonialModal()"><i class="fas fa-times"></i></button>
+        <div class="tmodal-image" id="tmodalImage"></div>
+        <div class="tmodal-body">
+            <div class="tmodal-rating" id="tmodalRating"></div>
+            <p class="tmodal-text" id="tmodalText"></p>
+            <div class="tmodal-author">
+                <h4 id="tmodalName"></h4>
+                <span id="tmodalCountry"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contact Section -->
+<section class="section section-contact" id="contact">
+    <div class="container">
+        <div class="contact-grid">
+            <div class="contact-info" data-aos="fade-right">
+                <span class="section-badge">{{ fp.contact_badge }}</span>
+                <h2>{{ fp.contact_title }}</h2>
+                <p>{{ fp.contact_description }}</p>
+                
+                <div class="contact-whatsapp">
+                    <h3>{% trans "Contact on WhatsApp" %}</h3>
+                    <p>{% trans "You can contact us via WhatsApp right now." %}</p>
+                    <a href="https://wa.me/{{ WHATSAPP_NUMBER|cut:'+' }}" class="btn btn-whatsapp" target="_blank">
+                        <i class="fab fa-whatsapp"></i> {% trans "Call on WhatsApp" %}
+                    </a>
+                </div>
+                
+                <div class="contact-details">
+                    <div class="detail">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <strong>{% trans "Address" %}</strong>
+                            <span>{{ SITE_ADDRESS }}</span>
+                        </div>
+                    </div>
+                    <div class="detail">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <strong>{% trans "Phone" %}</strong>
+                            <span>{{ SITE_PHONE }}</span>
+                        </div>
+                    </div>
+                    <div class="detail">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <strong>{% trans "Email" %}</strong>
+                            <span>{{ SITE_EMAIL }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contact-form-wrapper" data-aos="fade-left">
+                <form class="contact-form unified-site-form" id="contactForm" method="POST" action="{% url 'submit_contact' %}">
+                    {% csrf_token %}
+                    <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
+                    <div class="form-group">
+                        <label for="full_name">{% trans "Full Name" %}</label>
+                        <input type="text" id="full_name" name="full_name" class="form-input" placeholder="{% trans 'Your full name' %}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">{% trans "Phone Number" %}</label>
+                        <input type="tel" id="phone" name="phone" class="form-input" placeholder="{% trans 'Your phone number' %}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">{% trans "Email Address" %}</label>
+                        <input type="email" id="email" name="email" class="form-input" placeholder="{% trans 'Your email address' %}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="request_type">{% trans "Request Type" %}</label>
+                        <select id="request_type" name="request_type" class="form-select">
+                            <option value="customer">{% trans "Customer (Individual)" %}</option>
+                            <option value="agent">{% trans "Agent (Partner / Representative)" %}</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">{% trans "Message (Optional)" %}</label>
+                        <textarea id="message" name="message" class="form-textarea" rows="4" placeholder="{% trans 'Tell us about your requirements...' %}"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-gold btn-lg btn-block">
+                        <i class="fas fa-paper-plane"></i> {% trans "Book Consultation" %}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/bento-grid.min.css' %}?v=2.1">
+<style>
+/* ===== INTRO YOUTUBE COVER ===== */
+.intro-yt-container {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: #0b2948;
+    border-radius: 20px;
+    overflow: hidden;
+}
+.intro-yt-cover {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-color: #0b2948;
+    z-index: 2;
+    transition: opacity 0.35s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.intro-yt-cover--nobg {
+    background: linear-gradient(135deg, #0b2948 0%, #0d5eaf 100%);
+}
+.intro-yt-cover.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+.intro-yt-container iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 20px;
+}
+
+/* ===== GREEK GOLDEN VISA INVESTMENT TIERS ===== */
+.section-gv-tiers {
+    padding: 6rem 0;
+    background: linear-gradient(180deg, #f0f4f8 0%, #e8eef5 100%);
+}
+
+.section-gv-tiers .section-badge {
+    background: linear-gradient(135deg, rgba(201,162,39,0.15), rgba(201,162,39,0.08));
+    border: 1px solid rgba(201,162,39,0.3);
+    color: #b8860b;
+}
+
+.section-gv-tiers .section-title {
+    color: #0a1628 !important;
+}
+
+.section-gv-tiers .section-desc {
+    color: #475569 !important;
+}
+
+/* Cards Grid — 3 equal wide landscape cards */
+.gvt-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+}
+
+/* Individual Card */
+.gvt-card {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    height: 460px;
+    cursor: pointer;
+    box-shadow: 0 8px 30px rgba(10,22,40,0.15);
+    transition: box-shadow 0.4s ease;
+}
+
+.gvt-card:hover {
+    box-shadow: 0 20px 60px rgba(10,22,40,0.28);
+}
+
+/* Background Image */
+.gvt-card-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.gvt-card-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.gvt-card:hover .gvt-card-bg img {
+    transform: scale(1.07);
+}
+
+/* Dark Navy Gradient Overlay — bottom heavy */
+.gvt-card-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        transparent 25%,
+        rgba(10,22,40,0.25) 45%,
+        rgba(10,22,40,0.72) 65%,
+        rgba(10,22,40,0.96) 100%
+    );
+    transition: background 0.4s ease;
+}
+
+.gvt-card:hover .gvt-card-overlay {
+    background: linear-gradient(
+        180deg,
+        rgba(10,22,40,0.08) 0%,
+        rgba(10,22,40,0.18) 30%,
+        rgba(10,22,40,0.55) 55%,
+        rgba(10,22,40,0.85) 75%,
+        rgba(10,22,40,0.98) 100%
+    );
+}
+
+/* Price Badge — top-left */
+.gvt-price-badge {
+    position: absolute;
+    top: 22px;
+    left: 22px;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    background: rgba(10,22,40,0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(201,162,39,0.35);
+    border-radius: 14px;
+    padding: 10px 16px;
+    transition: transform 0.3s ease;
+}
+
+.gvt-card:hover .gvt-price-badge {
+    transform: translateY(-3px);
+}
+
+.gvt-price-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1;
+}
+
+.gvt-price-amount {
+    font-size: 1.35rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #c9a227, #e6c44d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+    white-space: nowrap;
+}
+
+/* Card Content — bottom */
+.gvt-card-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 4;
+    padding: 1.75rem 1.75rem 1.5rem;
+    transform: translateY(0);
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.gvt-card:hover .gvt-card-content {
+    transform: translateY(-8px);
+}
+
+.gvt-card-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.4rem;
+    line-height: 1.35;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.gvt-card-subtitle {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+    font-weight: 400;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.35s ease 0.05s, transform 0.35s ease 0.05s;
+}
+
+.gvt-card:hover .gvt-card-subtitle {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* "More" Button */
+.gvt-more-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    background: rgba(201,162,39,0.15);
+    border: 1px solid rgba(201,162,39,0.5);
+    border-radius: 50px;
+    color: #c9a227;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: 0.3px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+.gvt-card:hover .gvt-more-btn {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.gvt-more-btn:hover {
+    background: linear-gradient(135deg, #c9a227, #e6c44d);
+    border-color: transparent;
+    color: #0a1628;
+    text-decoration: none;
+}
+
+.gvt-more-btn i {
+    transition: transform 0.3s ease;
+    font-size: 0.7rem;
+}
+
+.gvt-more-btn:hover i {
+    transform: translateX(4px);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .gvt-cards-grid {
+        gap: 1.25rem;
+    }
+    .gvt-card {
+        height: 420px;
+    }
+}
+
+@media (max-width: 992px) {
+    .gvt-cards-grid {
+        grid-template-columns: 1fr;
+        max-width: 540px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .gvt-card {
+        height: 380px;
+    }
+    /* Show subtitle and button always on mobile */
+    .gvt-card-subtitle,
+    .gvt-more-btn {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 576px) {
+    .section-gv-tiers {
+        padding: 4rem 0;
+    }
+    .gvt-card {
+        height: 340px;
+    }
+    .gvt-card-content {
+        padding: 1.25rem;
+    }
+    .gvt-card-title {
+        font-size: 1.05rem;
+    }
+    .gvt-price-amount {
+        font-size: 1.15rem;
+    }
+}
+
+/* ===== FEATURED PROPERTIES – PORTRAIT GRID ===== */
+.section-prop-grid {
+    padding: 5rem 0;
+    background: linear-gradient(180deg, #0d1f3c 0%, #0a1628 100%);
+}
+
+/* ── Grid ── */
+.prop-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+}
+
+/* ── Card shell (portrait 4:5) ── */
+.prop-card {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    border-radius: 18px;
+    overflow: hidden;
+    display: block;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+    transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94),
+                box-shadow 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.prop-card:hover {
+    transform: translateY(-8px) scale(1.015);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    text-decoration: none;
+}
+
+/* ── Background image ── */
+.prop-card-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+.prop-card-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.prop-card:hover .prop-card-bg img {
+    transform: scale(1.08);
+}
+
+.prop-img-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a2a4a 0%, #0d1f3c 100%);
+    color: rgba(201,162,39,0.18);
+    font-size: 3.5rem;
+}
+
+/* ── Dark gradient overlay (bottom-heavy navy) ── */
+.prop-card-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        transparent 35%,
+        rgba(10,22,40,0.25) 55%,
+        rgba(10,22,40,0.7) 75%,
+        rgba(10,22,40,0.92) 100%
+    );
+    pointer-events: none;
+    transition: background 0.4s ease;
+}
+.prop-card:hover .prop-card-overlay {
+    background: linear-gradient(
+        180deg,
+        rgba(10,22,40,0.08) 0%,
+        rgba(10,22,40,0.15) 35%,
+        rgba(10,22,40,0.4) 55%,
+        rgba(10,22,40,0.78) 75%,
+        rgba(10,22,40,0.95) 100%
+    );
+}
+
+/* ── Badges (top) ── */
+.prop-card-badges {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    z-index: 4;
+}
+
+.prop-price-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 14px;
+    background: rgba(10,22,40,0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(201,162,39,0.3);
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #e6c44d;
+    letter-spacing: 0.4px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.prop-card:hover .prop-price-badge {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(201,162,39,0.25);
+}
+
+.prop-status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+.prop-status-fast {
+    background: rgba(234,88,12,0.85);
+    color: #fff;
+}
+.prop-status-sold {
+    background: rgba(220,38,38,0.82);
+    color: #fff;
+}
+
+/* ── Content (bottom, on gradient) ── */
+.prop-card-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.4rem 1.5rem 1.3rem;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.prop-card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+    line-height: 1.25;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    letter-spacing: 0.2px;
+}
+
+.prop-card-loc {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.72);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 400;
+}
+.prop-card-loc i {
+    color: #c9a227;
+    font-size: 0.68rem;
+    flex-shrink: 0;
+}
+
+/* "More →" link */
+.prop-card-more {
+    position: absolute;
+    bottom: 1.3rem;
+    right: 1.5rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.65);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: opacity 0.35s ease, transform 0.35s ease, color 0.25s ease;
+}
+.prop-card-more i {
+    font-size: 0.68rem;
+    transition: transform 0.25s ease;
+}
+.prop-card:hover .prop-card-more {
+    opacity: 1;
+    transform: translateX(0);
+    color: #c9a227;
+}
+.prop-card:hover .prop-card-more i {
+    transform: translateX(3px);
+}
+
+/* ── View all button ── */
+.prop-view-all-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 34px;
+    background: transparent;
+    border: 1.5px solid rgba(201,162,39,0.6);
+    border-radius: 50px;
+    color: #c9a227;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: 0.3px;
+    transition: background 0.28s ease, color 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
+}
+.prop-view-all-btn:hover {
+    background: #c9a227;
+    border-color: #c9a227;
+    color: #0a1628;
+    box-shadow: 0 10px 30px rgba(201,162,39,0.35);
+    text-decoration: none;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+    .prop-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+    }
+    .prop-card { aspect-ratio: 4 / 5; }
+}
+@media (max-width: 600px) {
+    .section-prop-grid { padding: 3.5rem 0; }
+    .prop-grid {
+        grid-template-columns: 1fr;
+        gap: 1.1rem;
+    }
+    .prop-card { aspect-ratio: 3 / 4; }
+    .prop-card-content { padding: 1.1rem 1.2rem 1rem; }
+    .prop-card-title { font-size: 1.1rem; }
+    .prop-card-more { opacity: 1; transform: translateX(0); }
+}
+
+/* ===== GOLDEN VISA SECTION WITH ACROPOLIS BACKGROUND ===== */
+.section-golden-visa {
+    position: relative;
+    padding: 6rem 0;
+    overflow: hidden;
+}
+
+.gv-background {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.gv-background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+}
+
+.gv-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        180deg,
+        rgba(10,22,40,0.85) 0%,
+        rgba(10,22,40,0.75) 30%,
+        rgba(10,22,40,0.8) 70%,
+        rgba(10,22,40,0.95) 100%
+    );
+}
+
+.section-golden-visa .container {
+    position: relative;
+    z-index: 2;
+}
+
+.section-golden-visa .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section-golden-visa .section-badge {
+    background: linear-gradient(135deg, rgba(201,162,39,0.2), rgba(201,162,39,0.1));
+    border: 1px solid rgba(201,162,39,0.3);
+    color: #c9a227;
+}
+
+.section-golden-visa .section-title {
+    color: #ffffff !important;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+}
+
+.section-golden-visa .section-desc {
+    color: rgba(255,255,255,0.8) !important;
+}
+
+/* Stats Row */
+.gv-stats {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin-bottom: 4rem;
+    flex-wrap: wrap;
+}
+
+.gv-stat {
+    text-align: center;
+    padding: 1.5rem 2rem;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    min-width: 160px;
+    transition: all 0.3s ease;
+}
+
+.gv-stat:hover {
+    transform: translateY(-5px);
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(201,162,39,0.3);
+}
+
+.gv-stat-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #c9a227, #e6c44d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+}
+
+.gv-stat-label {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Benefits Grid */
+.gv-benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.gv-benefit {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.gv-benefit:hover {
+    transform: translateY(-8px);
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(201,162,39,0.3);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.gv-benefit-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(201,162,39,0.15), rgba(201,162,39,0.05));
+    border: 1px solid rgba(201,162,39,0.25);
+    border-radius: 20px;
+    font-size: 1.5rem;
+    color: #c9a227;
+    transition: all 0.3s ease;
+}
+
+.gv-benefit:hover .gv-benefit-icon {
+    transform: scale(1.1);
+    box-shadow: 0 10px 30px rgba(201,162,39,0.2);
+}
+
+.gv-benefit h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.75rem;
+}
+
+.gv-benefit p {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .gv-stats {
+        gap: 1.5rem;
+    }
+    .gv-stat {
+        min-width: 140px;
+        padding: 1.25rem 1.5rem;
+    }
+    .gv-benefits-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .section-golden-visa {
+        padding: 4rem 0;
+    }
+    .gv-stats {
+        gap: 1rem;
+    }
+    .gv-stat {
+        min-width: 120px;
+        padding: 1rem;
+    }
+    .gv-stat-number {
+        font-size: 2rem;
+    }
+    .gv-benefits-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .gv-benefit {
+        padding: 1.5rem;
+    }
+}
+
+/* ===== RESIDENCY PROCESS - CARD STYLE WITH IMAGES ===== */
+.section-process-cards {
+    padding: 6rem 0;
+    background: linear-gradient(180deg, #0a1628 0%, #0d1f3c 50%, #0a1628 100%);
+}
+
+/* Cards Grid */
+.process-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+}
+
+/* Process Card */
+.process-card {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    cursor: pointer;
+}
+
+/* Background Image */
+.process-card-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.process-card:hover .process-card-bg {
+    transform: scale(1.08);
+}
+
+/* Overlay */
+.process-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        180deg,
+        rgba(10,22,40,0.3) 0%,
+        rgba(10,22,40,0.5) 40%,
+        rgba(10,22,40,0.85) 70%,
+        rgba(10,22,40,0.95) 100%
+    );
+    transition: background 0.4s ease;
+}
+
+.process-card:hover .process-card-overlay {
+    background: linear-gradient(
+        180deg,
+        rgba(10,22,40,0.4) 0%,
+        rgba(10,22,40,0.6) 40%,
+        rgba(10,22,40,0.9) 70%,
+        rgba(10,22,40,0.98) 100%
+    );
+}
+
+.process-card-overlay-success {
+    background: linear-gradient(
+        180deg,
+        rgba(10,40,30,0.3) 0%,
+        rgba(10,40,30,0.5) 40%,
+        rgba(10,40,30,0.85) 70%,
+        rgba(10,40,30,0.95) 100%
+    );
+}
+
+/* Step Number - Premium Box */
+.process-card-number {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #c9a227, #e6c44d);
+    border-radius: 16px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0a1628;
+    z-index: 3;
+    box-shadow: 0 10px 30px rgba(201,162,39,0.4);
+    transition: all 0.4s ease;
+}
+
+.process-card:hover .process-card-number {
+    transform: scale(1.1) rotate(-5deg);
+    box-shadow: 0 15px 40px rgba(201,162,39,0.5);
+}
+
+/* Final Step Badge */
+.process-card-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: linear-gradient(135deg, rgba(34,197,94,0.9), rgba(34,197,94,0.8));
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 3;
+    box-shadow: 0 8px 25px rgba(34,197,94,0.3);
+}
+
+/* Card Content */
+.process-card-content {
+    position: relative;
+    z-index: 2;
+    padding: 2rem;
+    transform: translateY(0);
+    transition: transform 0.4s ease;
+}
+
+.process-card:hover .process-card-content {
+    transform: translateY(-10px);
+}
+
+/* Card Icon */
+.process-card-icon {
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(201,162,39,0.15);
+    border: 1px solid rgba(201,162,39,0.3);
+    border-radius: 14px;
+    font-size: 1.3rem;
+    color: #c9a227;
+    margin-bottom: 1.25rem;
+    transition: all 0.3s ease;
+}
+
+.process-card:hover .process-card-icon {
+    transform: scale(1.1);
+    box-shadow: 0 10px 30px rgba(201,162,39,0.25);
+}
+
+.process-card-icon-success {
+    background: rgba(34,197,94,0.15);
+    border-color: rgba(34,197,94,0.3);
+    color: #22c55e;
+}
+
+/* Card Title */
+.process-card-content h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.75rem;
+    transition: color 0.3s ease;
+}
+
+.process-card:hover .process-card-content h3 {
+    color: #c9a227;
+}
+
+.process-card-final:hover .process-card-content h3 {
+    color: #22c55e;
+}
+
+/* Card Description */
+.process-card-content p {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+/* Card Tags */
+.process-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.process-card-tags span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.08);
+    padding: 6px 12px;
+    border-radius: 50px;
+    backdrop-filter: blur(5px);
+}
+
+.process-card-tags span i {
+    color: #22c55e;
+    font-size: 0.65rem;
+}
+
+/* CTA Button */
+.process-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 40px;
+    background: linear-gradient(135deg, #c9a227, #e6c44d);
+    border-radius: 60px;
+    color: #0a1628;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.4s ease;
+    box-shadow: 0 10px 30px rgba(201,162,39,0.3);
+}
+
+.process-cta-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(201,162,39,0.4);
+    color: #0a1628;
+    text-decoration: none;
+}
+
+.process-cta-btn i {
+    transition: transform 0.3s ease;
+}
+
+.process-cta-btn:hover i {
+    transform: translateX(5px);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .process-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .process-card {
+        min-height: 380px;
+    }
+}
+
+@media (max-width: 768px) {
+    .section-process-cards {
+        padding: 4rem 0;
+    }
+    .process-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .process-card {
+        min-height: 350px;
+    }
+    .process-card-number {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+    .process-card-content {
+        padding: 1.5rem;
+    }
+    .process-card-content h3 {
+        font-size: 1.15rem;
+    }
+    .process-cta-btn {
+        padding: 16px 32px;
+        font-size: 0.95rem;
+    }
+}
+
+/* ===== CATALOGUE DOWNLOAD BANNER ===== */
+.catalogue-banner {
+    position: relative;
+    padding: 3rem 0;
+    overflow: hidden;
+}
+
+.catalogue-banner-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #0d2847 0%, #1a3a5c 50%, #0d2847 100%);
+}
+
+.catalogue-banner-pattern {
+    position: absolute;
+    inset: 0;
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(201,162,39,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 50%, rgba(201,162,39,0.08) 0%, transparent 50%);
+    opacity: 0.8;
+}
+
+.catalogue-banner-pattern::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,162,39,0.3), transparent);
+}
+
+.catalogue-banner-pattern::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,162,39,0.3), transparent);
+}
+
+.catalogue-banner .container {
+    position: relative;
+    z-index: 2;
+}
+
+.catalogue-banner-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 3rem;
+}
+
+.catalogue-banner-text {
+    flex: 1;
+}
+
+.catalogue-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(201,162,39,0.15);
+    border: 1px solid rgba(201,162,39,0.3);
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #c9a227;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 1rem;
+}
+
+.catalogue-banner-text h3 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+}
+
+.catalogue-banner-text p {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.7);
+    margin: 0;
+}
+
+.catalogue-banner-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+.catalogue-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 24px;
+    border-radius: 16px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    min-width: 220px;
+}
+
+.catalogue-btn span {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.catalogue-btn span strong {
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.catalogue-btn span small {
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+.catalogue-btn > i:first-child {
+    font-size: 1.5rem;
+    width: 40px;
+    text-align: center;
+}
+
+.catalogue-btn > i:last-child {
+    font-size: 1rem;
+    opacity: 0.7;
+    transition: transform 0.3s ease;
+}
+
+.catalogue-btn:hover > i:last-child {
+    transform: translateY(3px);
+}
+
+.catalogue-btn-gold {
+    background: linear-gradient(135deg, #c9a227, #e6c44d);
+    color: #0a1628;
+    box-shadow: 0 8px 25px rgba(201,162,39,0.3);
+}
+
+.catalogue-btn-gold:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(201,162,39,0.4);
+    color: #0a1628;
+    text-decoration: none;
+}
+
+.catalogue-btn-outline {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #ffffff;
+    backdrop-filter: blur(10px);
+}
+
+.catalogue-btn-outline:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: #c9a227;
+    transform: translateY(-3px);
+    color: #ffffff;
+    text-decoration: none;
+}
+
+/* Flipbook Button - Teal/Cyan accent */
+.catalogue-btn-flipbook {
+    background: linear-gradient(135deg, #0891b2, #06b6d4);
+    color: #ffffff;
+    box-shadow: 0 8px 25px rgba(8,145,178,0.3);
+}
+
+.catalogue-btn-flipbook:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(8,145,178,0.4);
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.catalogue-btn-flipbook:hover > i:last-child {
+    transform: translateX(4px);
+    text-decoration: none;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .catalogue-banner-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 2rem;
+    }
+    .catalogue-banner-buttons {
+        flex-direction: column;
+        width: 100%;
+        max-width: 300px;
+    }
+    .catalogue-btn {
+        justify-content: center;
+        min-width: auto;
+    }
+}
+
+@media (max-width: 576px) {
+    .catalogue-banner {
+        padding: 2rem 0;
+    }
+    .catalogue-banner-text h3 {
+        font-size: 1.4rem;
+    }
+    .catalogue-btn {
+        padding: 14px 20px;
+    }
+}
+
+/* ===== TESTIMONIALS SECTION - Full Image Cards ===== */
+.section-testimonials {
+    padding: 5rem 0;
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    overflow: hidden;
+}
+
+.section-testimonials .section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, rgba(201,162,39,0.1), rgba(201,162,39,0.05));
+    border: 1px solid rgba(201,162,39,0.2);
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #c9a227;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 1rem;
+}
+
+.section-testimonials .section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #0D5EAF;
+    margin-bottom: 1rem;
+}
+
+.section-testimonials .section-desc {
+    font-size: 1.1rem;
+    color: #0a1628;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.testimonials-carousel {
+    position: relative;
+    margin-top: 3rem;
+    padding: 0 60px;
+}
+
+.testimonials-track {
+    display: flex;
+    gap: 20px;
+    transition: transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Full Image Testimonial Card */
+.testimonial-card {
+    flex: 0 0 calc(33.333% - 14px);
+    min-width: calc(33.333% - 14px);
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    height: 520px;
+    cursor: pointer;
+    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.6s ease, box-shadow 0.4s ease;
+    opacity: 0.45;
+    transform: scale(0.93);
+    filter: blur(1px);
+}
+
+.testimonial-card.tcard-active {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+}
+
+.testimonial-card.tcard-active:hover {
+    transform: scale(1.02) translateY(-4px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+}
+
+.tcard-image {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.tcard-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    transition: transform 0.5s ease;
+}
+
+.testimonial-card:hover .tcard-image img {
+    transform: scale(1.08);
+}
+
+.tcard-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0a1628, #0d5eaf);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.3);
+    font-size: 5rem;
+}
+
+.tcard-gradient {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.1) 70%, transparent 100%);
+}
+
+.tcard-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
+    padding: 24px;
+    color: #ffffff;
+}
+
+.tcard-rating {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 12px;
+}
+
+.tcard-rating i {
+    color: #c9a227;
+    font-size: 0.9rem;
+}
+
+.tcard-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.tcard-more {
+    background: transparent;
+    border: none;
+    color: #c9a227;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+}
+
+.tcard-more:hover {
+    color: #e6c44d;
+    gap: 10px;
+}
+
+.tcard-author {
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+}
+
+.tcard-author h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 4px;
+}
+
+.tcard-author span {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.7);
+}
+
+.tcard-author span i {
+    color: #c9a227;
+    margin-right: 4px;
+}
+
+/* Navigation Buttons */
+.testimonials-nav {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+.testimonial-nav-btn {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(201,162,39,0.2);
+    color: #0a1628;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+    pointer-events: auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+}
+
+.testimonial-nav-btn:hover {
+    background: linear-gradient(135deg, #c9a227, #d4af37);
+    color: #ffffff;
+    transform: scale(1.15);
+    box-shadow: 0 6px 25px rgba(201,162,39,0.35);
+    border-color: transparent;
+}
+.testimonial-nav-btn:active {
+    transform: scale(0.95);
+}
+
+/* Progress Dots */
+.testimonials-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 2rem;
+}
+.testimonials-dots .tdot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #d1d5db;
+    border: none;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    padding: 0;
+}
+.testimonials-dots .tdot.active {
+    background: linear-gradient(135deg, #c9a227, #d4af37);
+    width: 28px;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(201,162,39,0.4);
+}
+
+/* Testimonial Modal */
+.tmodal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.tmodal-overlay.active {
+    display: flex;
+}
+
+.tmodal {
+    background: #ffffff;
+    border-radius: 24px;
+    max-width: 550px;
+    width: 95%;
+    max-height: 85vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    animation: modalIn 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+@keyframes modalIn {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.tmodal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.5);
+    border: none;
+    color: #ffffff;
+    font-size: 1rem;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.tmodal-close:hover {
+    background: #ef4444;
+}
+
+.tmodal-image {
+    width: 100%;
+    height: 220px;
+    background: linear-gradient(135deg, #0a1628, #0d5eaf);
+    flex-shrink: 0;
+}
+
+.tmodal-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+}
+
+.tmodal-image:empty {
+    display: none;
+}
+
+.tmodal-body {
+    padding: 24px 28px 28px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.tmodal-rating {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+}
+
+.tmodal-rating i {
+    color: #c9a227;
+    font-size: 1.1rem;
+}
+
+.tmodal-text {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #475569;
+    margin-bottom: 24px;
+}
+
+.tmodal-author h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #0a1628;
+    margin: 0 0 4px;
+}
+
+.tmodal-author span {
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.tmodal-author span i {
+    color: #c9a227;
+    margin-right: 4px;
+}
+
+/* Responsive Testimonials */
+@media (max-width: 1200px) {
+    .testimonial-card {
+        flex: 0 0 calc(50% - 10px);
+        min-width: calc(50% - 10px);
+        height: 480px;
+    }
+}
+
+@media (max-width: 768px) {
+    .testimonials-carousel {
+        padding: 0 40px;
+    }
+    .testimonial-card {
+        flex: 0 0 100%;
+        min-width: 100%;
+        height: 500px;
+    }
+    .section-testimonials .section-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .testimonials-carousel {
+        padding: 0 30px;
+    }
+    .testimonial-nav-btn {
+        width: 40px;
+        height: 40px;
+    }
+    .testimonial-card {
+        height: 480px;
+    }
+    .tcard-content {
+        padding: 20px;
+    }
+}
+
+/* ── Consultation Modal ─────────────────────────────────────────────────── */
+
+/* =====================================================
+   Homepage GET IN TOUCH form — readability fix
+   The section background is dark blue (#0b4a8a). The global
+   .unified-site-form rules force inputs to a light-gray bg
+   with dark text, which is unreadable on the blue panel.
+   Restore the intended white-on-translucent design here only.
+   Scoped to .section-contact #contactForm so nothing else is touched.
+   (build: 2026-05-08-v6)
+   ===================================================== */
+.section-contact #contactForm input[type="text"],
+.section-contact #contactForm input[type="email"],
+.section-contact #contactForm input[type="tel"],
+.section-contact #contactForm input[type="number"],
+.section-contact #contactForm select,
+.section-contact #contactForm textarea {
+    color: #ffffff !important;
+    background-color: rgba(255,255,255,0.10) !important;
+    border-color: rgba(255,255,255,0.25) !important;
+}
+.section-contact #contactForm input:focus,
+.section-contact #contactForm select:focus,
+.section-contact #contactForm textarea:focus {
+    background-color: rgba(255,255,255,0.15) !important;
+    border-color: rgba(255,255,255,0.55) !important;
+}
+.section-contact #contactForm .form-group label {
+    color: #ffffff !important;
+}
+.section-contact #contactForm input::placeholder,
+.section-contact #contactForm textarea::placeholder {
+    color: rgba(255,255,255,0.65) !important;
+    opacity: 1 !important;
+}
+.section-contact #contactForm select option {
+    color: #0f172a;
+    background: #ffffff;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ===== INTRO VIDEO — click-to-play (YouTube iframe) =====
+(function () {
+    var playBtn   = document.getElementById('introPlayBtn');
+    var cover     = document.getElementById('introYtCover');
+    var frame     = document.getElementById('introYtFrame');
+
+    if (playBtn && cover && frame) {
+        function playIntroYt() {
+            // Load the iframe src (deferred until click to save bandwidth)
+            if (!frame.src) {
+                frame.src = frame.dataset.src;
+            }
+            frame.style.display = 'block';
+            cover.classList.add('hidden');
+        }
+        playBtn.addEventListener('click', playIntroYt);
+        cover.addEventListener('click', playIntroYt);
+    }
+
+    // Uploaded MP4 play button
+    var mp4Play = document.getElementById('introPlayBtn');
+    var mp4El   = document.getElementById('introVideoEl');
+    if (mp4Play && mp4El) {
+        var container = document.getElementById('introVideoContainer');
+        mp4Play.addEventListener('click', function () {
+            mp4El.play();
+            if (container) container.classList.add('playing');
+        });
+    }
+})();
+
+// ===== TESTIMONIALS CAROUSEL =====
+(function() {
+    var track = document.getElementById('testimonialsTrack');
+    var prevBtn = document.getElementById('testimonialPrev');
+    var nextBtn = document.getElementById('testimonialNext');
+    
+    if (!track) return;
+    
+    var cards = track.querySelectorAll('.testimonial-card');
+    var cardCount = cards.length;
+    var currentIndex = 0;
+    var autoPlayInterval;
+    var isHovered = false;
+    var isAnimating = false;
+    
+    function getVisibleCards() {
+        if (window.innerWidth <= 768) return 1;
+        if (window.innerWidth <= 1200) return 2;
+        return 3;
+    }
+    
+    function getCardWidth() {
+        var visible = getVisibleCards();
+        var gap = 24;
+        return (track.offsetWidth - (gap * (visible - 1))) / visible + gap;
+    }
+
+    function updateActiveCards() {
+        var visible = getVisibleCards();
+        for (var i = 0; i < cardCount; i++) {
+            var card = cards[i];
+            if (i >= currentIndex && i < currentIndex + visible) {
+                card.classList.add('tcard-active');
+                card.classList.remove('tcard-inactive');
+            } else {
+                card.classList.remove('tcard-active');
+                card.classList.add('tcard-inactive');
+            }
+        }
+    }
+    
+    function updateCarousel(animate) {
+        var offset = -currentIndex * getCardWidth();
+        if (animate) {
+            isAnimating = true;
+            track.style.transition = 'transform 0.7s cubic-bezier(0.23, 1, 0.32, 1)';
+            setTimeout(function() { isAnimating = false; }, 700);
+        } else {
+            track.style.transition = 'none';
+        }
+        track.style.transform = 'translateX(' + offset + 'px)';
+        updateActiveCards();
+    }
+    
+    function nextSlide() {
+        if (isAnimating) return;
+        var maxIndex = cardCount - getVisibleCards();
+        if (maxIndex < 0) maxIndex = 0;
+        if (currentIndex >= maxIndex) {
+            currentIndex = 0;
+        } else {
+            currentIndex++;
+        }
+        updateCarousel(true);
+    }
+    
+    function prevSlide() {
+        if (isAnimating) return;
+        var maxIndex = cardCount - getVisibleCards();
+        if (maxIndex < 0) maxIndex = 0;
+        if (currentIndex <= 0) {
+            currentIndex = maxIndex;
+        } else {
+            currentIndex--;
+        }
+        updateCarousel(true);
+    }
+    
+    function startAutoPlay() {
+        stopAutoPlay();
+        autoPlayInterval = setInterval(function() {
+            if (!isHovered) {
+                nextSlide();
+            }
+        }, 3500);
+    }
+    
+    function stopAutoPlay() {
+        if (autoPlayInterval) {
+            clearInterval(autoPlayInterval);
+        }
+    }
+    
+    // Event Listeners
+    if (nextBtn) nextBtn.addEventListener('click', function() { nextSlide(); startAutoPlay(); });
+    if (prevBtn) prevBtn.addEventListener('click', function() { prevSlide(); startAutoPlay(); });
+    
+    // Pause on hover
+    track.addEventListener('mouseenter', function() { isHovered = true; });
+    track.addEventListener('mouseleave', function() { isHovered = false; });
+    
+    // Touch / Swipe support
+    var touchStartX = 0;
+    var touchEndX = 0;
+    track.addEventListener('touchstart', function(e) { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
+    track.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        var diff = touchStartX - touchEndX;
+        if (Math.abs(diff) > 50) {
+            if (diff > 0) { nextSlide(); } else { prevSlide(); }
+            startAutoPlay();
+        }
+    }, {passive: true});
+    
+    // Handle resize
+    window.addEventListener('resize', function() {
+        var maxIndex = cardCount - getVisibleCards();
+        if (maxIndex < 0) maxIndex = 0;
+        if (currentIndex > maxIndex) currentIndex = maxIndex;
+        updateCarousel(false);
+    });
+    
+    // Build dots
+    var dotsContainer = document.getElementById('testimonialsDots');
+    function buildDots() {
+        if (!dotsContainer) return;
+        dotsContainer.innerHTML = '';
+        var maxIdx = cardCount - getVisibleCards();
+        if (maxIdx < 0) maxIdx = 0;
+        for (var d = 0; d <= maxIdx; d++) {
+            var dot = document.createElement('button');
+            dot.className = 'tdot' + (d === currentIndex ? ' active' : '');
+            dot.setAttribute('aria-label', 'Slide ' + (d + 1));
+            (function(idx) {
+                dot.addEventListener('click', function() {
+                    if (isAnimating) return;
+                    currentIndex = idx;
+                    updateCarousel(true);
+                    startAutoPlay();
+                });
+            })(d);
+            dotsContainer.appendChild(dot);
+        }
+    }
+
+    function updateDots() {
+        if (!dotsContainer) return;
+        var dots = dotsContainer.querySelectorAll('.tdot');
+        for (var i = 0; i < dots.length; i++) {
+            dots[i].classList.toggle('active', i === currentIndex);
+        }
+    }
+
+    // Override updateCarousel to also update dots
+    var _origUpdate = updateCarousel;
+    updateCarousel = function(animate) {
+        _origUpdate(animate);
+        updateDots();
+    };
+
+    // Initial setup
+    updateActiveCards();
+    buildDots();
+    startAutoPlay();
+    
+    // Rebuild dots on resize
+    window.addEventListener('resize', function() { buildDots(); });
+})();
+
+// ===== TESTIMONIAL MODAL =====
+function openTestimonialModal(name, country, content, imageUrl, rating) {
+    var modal = document.getElementById('testimonialModal');
+    var imgContainer = document.getElementById('tmodalImage');
+    var ratingContainer = document.getElementById('tmodalRating');
+    
+    document.getElementById('tmodalName').textContent = name;
+    document.getElementById('tmodalCountry').innerHTML = '<i class="fas fa-map-marker-alt"></i> ' + country;
+    document.getElementById('tmodalText').textContent = content;
+    
+    // Set image
+    if (imageUrl) {
+        imgContainer.innerHTML = '<img src="' + imageUrl + '" alt="' + name + '">';
+    } else {
+        imgContainer.innerHTML = '';
+    }
+    
+    // Set rating stars
+    var stars = '';
+    for (var i = 1; i <= 5; i++) {
+        stars += i <= rating ? '<i class="fas fa-star"></i>' : '<i class="far fa-star"></i>';
+    }
+    ratingContainer.innerHTML = stars;
+    
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeTestimonialModal() {
+    document.getElementById('testimonialModal').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Close modal on overlay click
+document.getElementById('testimonialModal').addEventListener('click', function(e) {
+    if (e.target === this) closeTestimonialModal();
+});
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeTestimonialModal();
+});
+
+// Page contact form
+attachFormHandler(document.getElementById('contactForm'));
+</script>
+
+{# Hero <video> lazy loader (see {% verbatim %}{% endverbatim %} note above) #}
+{% comment %}
+The hero <video data-src="..."> ships WITHOUT a <source> child, so the
+browser does NOT issue a network request for the MP4 during initial page
+load. The poster image (preloaded in head_preload block) is what the
+browser paints for LCP. Once the hero intersects the viewport (or the
+200 px rootMargin trigger fires), we inject the <source> element and call
+.load() to start fetching/decoding. Browsers without IntersectionObserver
+get a 2-second setTimeout fallback.
+{% endcomment %}
+<script>
+(function () {
+    var v = document.querySelector('video.hero-lazy-video[data-src]');
+    if (!v) return;
+
+    /* Mobile / Save-Data / slow-connection guard.
+       The hero MP4 can be tens of MB. On mobile networks it saturates the
+       connection, starves the LCP poster image of bandwidth, and pushes
+       LCP past 15s. The poster image is already painted as the LCP element,
+       so skipping the video on mobile keeps the hero looking identical
+       (static poster) while drastically improving mobile LCP/FCP.
+       Desktop behavior is unchanged. */
+    var isSmallViewport = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+    var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    var saveData = !!(conn && conn.saveData);
+    var slowNet  = !!(conn && conn.effectiveType && /(^|-)2g$|^slow-2g$/i.test(conn.effectiveType));
+    if (isSmallViewport || saveData || slowNet) {
+        return;
+    }
+
+    var loaded = false;
+    function load() {
+        if (loaded) return;
+        loaded = true;
+        var s = document.createElement('source');
+        s.src = v.dataset.src;
+        s.type = 'video/mp4';
+        v.appendChild(s);
+        v.load();
+        // autoplay attribute alone is not enough on some browsers after
+        // dynamic source injection; explicit play() with rejection swallow.
+        var p = v.play();
+        if (p && typeof p.catch === 'function') { p.catch(function () {}); }
+    }
+    /* Defer scheduling until after window.load so the heavy MP4 download
+       cannot compete with LCP-critical resources on the initial paint.
+       requestIdleCallback gives one extra micro-step for older browsers. */
+    function schedule() {
+        var start = function () {
+            if ('IntersectionObserver' in window) {
+                var io = new IntersectionObserver(function (entries, obs) {
+                    if (entries[0].isIntersecting) { load(); obs.disconnect(); }
+                }, { rootMargin: '200px' });
+                io.observe(v);
+            } else {
+                setTimeout(load, 2000);
+            }
+        };
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(start, { timeout: 1500 });
+        } else {
+            setTimeout(start, 250);
+        }
+    }
+    if (document.readyState === 'complete') {
+        schedule();
+    } else {
+        window.addEventListener('load', schedule, { once: true });
+    }
+})();
+</script>
+{% endblock %}

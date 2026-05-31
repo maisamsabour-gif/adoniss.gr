@@ -1,0 +1,464 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+
+{% block title %}{% if meta_title %}{{ meta_title }} | {{ SITE_NAME }}{% else %}Blog | {{ SITE_NAME }}{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ===== BLOG HERO WITH IMAGE ===== */
+.blog-hero {
+    position: relative;
+    min-height: 420px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding-top: 80px;
+}
+.blog-hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('/media/blog/blog-header.jpg');
+    background-size: cover;
+    background-position: center;
+}
+.blog-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(11,42,72,0.7) 0%, rgba(10,22,40,0.85) 60%, #0a1628 100%);
+}
+.blog-hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 2rem;
+}
+.blog-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.5rem;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 50px;
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.5px;
+}
+.blog-hero h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: #ffffff;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    text-shadow: 0 4px 30px rgba(0,0,0,0.3);
+}
+.blog-hero p {
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.9);
+    max-width: 650px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+/* ===== BLOG LIST SECTION ===== */
+.blog-list-section {
+    position: relative;
+    background: #0a1628;
+    padding: 4rem 0 6rem;
+}
+
+/* Filter */
+.blog-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-bottom: 3.5rem;
+    justify-content: center;
+}
+.blog-filter-btn {
+    padding: 0.7rem 1.5rem;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 50px;
+    color: rgba(255,255,255,0.8);
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+.blog-filter-btn:hover {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    transform: translateY(-2px);
+}
+.blog-filter-btn.active {
+    background: linear-gradient(135deg, #c9a227, #dbb84a);
+    color: #0b2948;
+    border-color: transparent;
+    font-weight: 600;
+}
+
+/* ===== BLOG GRID - LARGER CARDS ===== */
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem;
+}
+
+/* ===== BLOG CARD - PREMIUM DESIGN ===== */
+.blog-card {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #0e1a2e;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform-style: preserve-3d;
+}
+.blog-card:hover {
+    transform: translateY(-12px) scale(1.02);
+    border-color: rgba(201,162,39,0.3);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,162,39,0.1);
+}
+
+/* Card Image Container - Taller */
+.blog-card-img-wrap {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 280px;
+    overflow: hidden;
+}
+.blog-card-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.4s ease;
+}
+.blog-card:hover .blog-card-img-wrap img {
+    transform: scale(1.1);
+    filter: brightness(1.1);
+}
+
+/* Gradient Overlay on Image - matches card bg exactly */
+.blog-card-img-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(to top, #0e1a2e 0%, rgba(14,26,46,0.6) 50%, transparent 100%);
+    pointer-events: none;
+    transition: height 0.4s ease;
+}
+.blog-card:hover .blog-card-img-overlay {
+    height: 70%;
+}
+
+/* Title on Gradient */
+.blog-card-title-wrap {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem;
+    z-index: 2;
+}
+.blog-card-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.4;
+    margin: 0;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease;
+}
+.blog-card-title a {
+    color: inherit;
+    text-decoration: none;
+}
+.blog-card:hover .blog-card-title {
+    transform: translateY(-5px);
+}
+
+/* Category Badge */
+.blog-card-category {
+    position: absolute;
+    top: 1.25rem;
+    left: 1.25rem;
+    z-index: 3;
+    padding: 0.45rem 1rem;
+    background: linear-gradient(135deg, #c9a227, #dbb84a);
+    color: #0b2948;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(201,162,39,0.4);
+    transition: transform 0.3s ease;
+}
+.blog-card:hover .blog-card-category {
+    transform: scale(1.05);
+}
+
+/* Card Body */
+.blog-card-body {
+    padding: 1.75rem;
+}
+.blog-card-meta {
+    display: flex;
+    gap: 1.25rem;
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 1rem;
+}
+.blog-card-meta i {
+    margin-right: 0.4rem;
+    color: #c9a227;
+}
+.blog-card-excerpt {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+}
+.blog-card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: #c9a227;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+}
+.blog-card-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #c9a227;
+    transition: width 0.3s ease;
+}
+.blog-card-link:hover {
+    gap: 1rem;
+    color: #dbb84a;
+}
+.blog-card-link:hover::after {
+    width: 100%;
+}
+
+/* Placeholder */
+.blog-card-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(201,162,39,0.1), rgba(201,162,39,0.05));
+    font-size: 4rem;
+    color: rgba(201,162,39,0.3);
+}
+
+/* Empty State */
+.blog-empty {
+    grid-column: span 3;
+    text-align: center;
+    padding: 5rem 2rem;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+}
+.blog-empty i {
+    font-size: 4rem;
+    color: rgba(201,162,39,0.3);
+    margin-bottom: 1.5rem;
+    display: block;
+}
+.blog-empty h3 { color: #ffffff; margin-bottom: 0.5rem; font-size: 1.5rem; }
+.blog-empty p { color: rgba(255,255,255,0.6); }
+
+/* Pagination */
+.blog-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 4rem;
+}
+.page-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.page-btn:hover { 
+    background: rgba(201,162,39,0.2);
+    border-color: rgba(201,162,39,0.3);
+    transform: translateY(-2px);
+}
+.page-numbers { display: flex; gap: 0.5rem; }
+.page-num {
+    width: 45px; height: 45px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.page-num:hover, .page-num.active {
+    background: linear-gradient(135deg, #c9a227, #dbb84a);
+    color: #0b2948;
+    border-color: transparent;
+    transform: scale(1.1);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1200px) {
+    .blog-grid { gap: 2rem; }
+    .blog-card-img-wrap { height: 240px; }
+}
+@media (max-width: 1024px) {
+    .blog-grid { grid-template-columns: repeat(2, 1fr); }
+    .blog-empty { grid-column: span 2; }
+}
+@media (max-width: 768px) {
+    .blog-hero { min-height: 350px; }
+    .blog-hero h1 { font-size: 2.2rem; }
+    .blog-list-section { padding: 3rem 0 4rem; }
+    .blog-grid { 
+        grid-template-columns: 1fr; 
+        gap: 1.5rem;
+    }
+    .blog-card-img-wrap { height: 220px; }
+    .blog-empty { grid-column: span 1; }
+}
+@media (max-width: 576px) {
+    .blog-hero { min-height: 300px; padding: 8rem 0 2rem; }
+    .blog-hero h1 { font-size: 1.65rem; }
+    .blog-hero p { font-size: 0.88rem; }
+    .blog-card-img-wrap { height: 190px; }
+    .blog-card-content { padding: 1.1rem 1.25rem; }
+    .blog-card-title { font-size: 1rem; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero with Background Image -->
+<section class="blog-hero">
+    <div class="blog-hero-bg"></div>
+    <div class="blog-hero-overlay"></div>
+    <div class="blog-hero-content" data-aos="fade-up">
+        <span class="blog-hero-badge"><i class="fas fa-newspaper"></i> {% trans "Our Blog" %}</span>
+        <h1>{% trans "Insights & Updates" %}</h1>
+        <p>{% trans "Expert advice on Greek Golden Visa, property investment, lifestyle, and immigration news" %}</p>
+    </div>
+</section>
+
+<!-- Blog List -->
+<section class="blog-list-section">
+    <div class="container">
+        <!-- Category Filter -->
+        <div class="blog-filter" data-aos="fade-up">
+            <a href="{% url 'blog_list' %}" class="blog-filter-btn {% if not current_category %}active{% endif %}">
+                <i class="fas fa-th-large"></i> {% trans "All Posts" %}
+            </a>
+            {% for cat in categories %}
+            <a href="{% url 'blog_list' %}?category={{ cat.slug }}" class="blog-filter-btn {% if current_category == cat.slug %}active{% endif %}">
+                {{ cat.name }}
+            </a>
+            {% endfor %}
+        </div>
+
+        <!-- Posts Grid -->
+        <div class="blog-grid">
+            {% for post in posts %}
+            <article class="blog-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}50">
+                <!-- Image with Gradient Overlay -->
+                <a href="{{ post.get_absolute_url }}" class="blog-card-img-wrap">
+                    {% if post.featured_image %}
+                    <img src="{{ post.featured_image.url }}" alt="{{ post.featured_image_alt|default:post.title }}" loading="lazy" decoding="async">
+                    {% else %}
+                    <div class="blog-card-placeholder"><i class="fas fa-newspaper"></i></div>
+                    {% endif %}
+                    <div class="blog-card-img-overlay"></div>
+                    
+                    <!-- Title on Gradient -->
+                    <div class="blog-card-title-wrap">
+                        <h3 class="blog-card-title">{{ post.title }}</h3>
+                    </div>
+                    
+                    <!-- Category Badge -->
+                    {% if post.category %}
+                    <span class="blog-card-category">{{ post.category.name }}</span>
+                    {% endif %}
+                </a>
+                
+                <!-- Card Body -->
+                <div class="blog-card-body">
+                    <div class="blog-card-meta">
+                        <span><i class="fas fa-calendar-alt"></i> {{ post.published_date|date:"M d, Y" }}</span>
+                        {% if post.author %}<span><i class="fas fa-user"></i> {{ post.author }}</span>{% endif %}
+                    </div>
+                    <p class="blog-card-excerpt">{{ post.excerpt|truncatewords:20 }}</p>
+                    <a href="{{ post.get_absolute_url }}" class="blog-card-link">
+                        {% trans "Read Article" %} <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+            {% empty %}
+            <div class="blog-empty">
+                <i class="fas fa-newspaper"></i>
+                <h3>{% trans "No posts yet" %}</h3>
+                <p>{% trans "Check back soon for updates!" %}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if posts.has_other_pages %}
+        <div class="blog-pagination" data-aos="fade-up">
+            {% if posts.has_previous %}
+            <a href="?page={{ posts.previous_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}" class="page-btn">
+                <i class="fas fa-chevron-left"></i> {% trans "Previous" %}
+            </a>
+            {% endif %}
+            <div class="page-numbers">
+                {% for num in posts.paginator.page_range %}
+                {% if posts.number == num %}
+                <span class="page-num active">{{ num }}</span>
+                {% elif num > posts.number|add:'-3' and num < posts.number|add:'3' %}
+                <a href="?page={{ num }}{% if current_category %}&category={{ current_category }}{% endif %}" class="page-num">{{ num }}</a>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% if posts.has_next %}
+            <a href="?page={{ posts.next_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}" class="page-btn">
+                {% trans "Next" %} <i class="fas fa-chevron-right"></i>
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

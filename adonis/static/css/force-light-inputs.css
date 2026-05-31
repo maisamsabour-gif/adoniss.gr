@@ -1,0 +1,91 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   FORCE LIGHT INPUTS - Last loaded CSS to override everything
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* Reset ALL inputs to white with maximum specificity */
+html body input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not([type="hidden"]):not([type="range"]),
+html body textarea,
+html body select,
+html body .form-row input,
+html body .form-row textarea,
+html body .form-row select,
+html body #content input,
+html body #content textarea,
+html body #content select,
+html body fieldset input,
+html body fieldset textarea,
+html body fieldset select {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 6px !important;
+  caret-color: #1f2937 !important;
+  opacity: 1 !important;
+}
+
+/* Dark mode - still force white */
+html.dark body input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not([type="hidden"]):not([type="range"]),
+html.dark body textarea,
+html.dark body select,
+.dark input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not([type="hidden"]):not([type="range"]),
+.dark textarea,
+.dark select,
+[class*="dark:bg"] input,
+[class*="dark:bg"] textarea,
+[class*="dark:bg"] select {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  border-color: #d1d5db !important;
+}
+
+/* Tailwind's dark mode classes */
+.dark\:bg-base-900 input,
+.dark\:bg-base-900 textarea,
+.dark\:bg-base-900 select,
+.dark\:bg-white\/\[\.02\] input,
+.dark\:bg-white\/\[\.02\] textarea {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+}
+
+/* Placeholder text */
+html body input::placeholder,
+html body textarea::placeholder {
+  color: #9ca3af !important;
+  -webkit-text-fill-color: #9ca3af !important;
+  opacity: 1 !important;
+}
+
+/* Focus state */
+html body input:focus,
+html body textarea:focus,
+html body select:focus {
+  background: #ffffff !important;
+  border-color: #0891b2 !important;
+  box-shadow: 0 0 0 2px rgba(8, 145, 178, 0.2) !important;
+  outline: none !important;
+}
+
+/* Label text should be dark */
+html body label,
+html body .form-row label,
+html body fieldset label {
+  color: #374151 !important;
+}
+
+html.dark body label,
+.dark label {
+  color: #e5e7eb !important;
+}
+
+/* Help text */
+html body .help,
+html body .helptext {
+  color: #6b7280 !important;
+}

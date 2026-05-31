@@ -1,0 +1,579 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   FA PROPERTY ADMIN — Luxury Real Estate Admin Styling
+   پنل ادمین حرفه‌ای املاک فارسی
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* ── Global Luxury Variables ─────────────────────────────────────────────────── */
+:root {
+    --luxury-gold: #c9a227;
+    --luxury-gold-light: #e8d48a;
+    --luxury-dark: #1a1a2e;
+    --luxury-dark-lighter: #16213e;
+    --luxury-success: #059669;
+    --luxury-warning: #d97706;
+    --luxury-danger: #dc2626;
+    --luxury-muted: #6b7280;
+}
+
+/* ── Fieldset Headers — Elegant Gold Accents ─────────────────────────────────── */
+.module.aligned h2,
+fieldset h2 {
+    background: linear-gradient(135deg, var(--luxury-dark), var(--luxury-dark-lighter)) !important;
+    color: #fff !important;
+    padding: 14px 20px !important;
+    border-radius: 10px 10px 0 0 !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.3px;
+    border: none !important;
+    margin: 0 !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.module.aligned h2::before,
+fieldset h2::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 20px;
+    background: var(--luxury-gold);
+    border-radius: 2px;
+    margin-left: 8px;
+}
+
+/* ── Fieldset Content ────────────────────────────────────────────────────────── */
+fieldset .form-row {
+    padding: 12px 16px !important;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    transition: background-color 0.2s ease;
+}
+
+fieldset .form-row:hover {
+    background-color: rgba(201, 162, 39, 0.03);
+}
+
+fieldset .form-row:last-child {
+    border-bottom: none;
+}
+
+/* ── Input Fields — Modern Styling (Force White Background) ─────────────────── */
+/* Maximum specificity override for ALL inputs */
+html body input[type="text"],
+html body input[type="number"],
+html body input[type="url"],
+html body input[type="email"],
+html body input[type="password"],
+html body input[type="date"],
+html body input[type="datetime-local"],
+html body input[type="time"],
+html body input[type="tel"],
+html body textarea,
+html body select:not([multiple]) {
+    border: 2px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    padding: 10px 14px !important;
+    font-size: 14px !important;
+    transition: all 0.2s ease !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
+}
+
+/* Dark mode override - FORCE light inputs everywhere */
+html.dark body input,
+html.dark body textarea,
+html.dark body select,
+body.dark input,
+body.dark textarea,
+body.dark select,
+.dark input,
+.dark textarea,
+.dark select,
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
+    border-color: #e5e7eb !important;
+}
+
+/* Placeholder */
+input::placeholder,
+textarea::placeholder {
+    color: #9ca3af !important;
+    -webkit-text-fill-color: #9ca3af !important;
+}
+
+/* Focus state */
+html body input:focus,
+html body textarea:focus,
+html body select:focus {
+    border-color: var(--luxury-gold, #c9a227) !important;
+    box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.15) !important;
+    outline: none !important;
+    background: #ffffff !important;
+}
+
+/* ── TextArea — Rich Text Feel ───────────────────────────────────────────────── */
+#faproperty_form textarea {
+    min-height: 100px;
+    line-height: 1.6;
+    resize: vertical;
+}
+
+#faproperty_form textarea#id_description,
+#faproperty_form textarea#id_amenities,
+#faproperty_form textarea#id_investment_highlights {
+    min-height: 150px;
+    font-family: 'Vazirmatn', 'Tahoma', sans-serif;
+}
+
+/* ── Image Upload Fields — Gallery Style ─────────────────────────────────────── */
+/* Standard file input styling */
+input.fa-file-input,
+input[type="file"].fa-file-input {
+    display: block !important;
+    width: 100% !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    position: relative !important;
+    padding: 12px 15px !important;
+    border: 2px dashed #cbd5e1 !important;
+    border-radius: 10px !important;
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9) !important;
+    cursor: pointer !important;
+    font-family: 'Vazirmatn', 'Tahoma', sans-serif !important;
+    font-size: 14px !important;
+    transition: all 0.3s ease !important;
+}
+
+input.fa-file-input:hover,
+input[type="file"].fa-file-input:hover {
+    border-color: var(--luxury-gold) !important;
+    background: linear-gradient(135deg, #fffbeb, #fef3c7) !important;
+}
+
+input.fa-file-input:focus,
+input[type="file"].fa-file-input:focus {
+    outline: none !important;
+    border-color: var(--luxury-gold) !important;
+    box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.2) !important;
+}
+
+/* File input button styling (browser-specific) */
+input.fa-file-input::file-selector-button,
+input[type="file"].fa-file-input::file-selector-button {
+    background: linear-gradient(135deg, var(--luxury-gold), var(--luxury-gold-light)) !important;
+    color: var(--luxury-dark) !important;
+    border: none !important;
+    padding: 8px 16px !important;
+    border-radius: 6px !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    cursor: pointer !important;
+    margin-left: 10px !important;
+    transition: all 0.2s ease !important;
+}
+
+input.fa-file-input::file-selector-button:hover,
+input[type="file"].fa-file-input::file-selector-button:hover {
+    background: linear-gradient(135deg, var(--luxury-gold-light), var(--luxury-gold)) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Clear link styling */
+.clearable-file-input a.file-delete {
+    color: var(--luxury-danger);
+    margin-right: 10px;
+}
+
+/* Field wrapper for image fields */
+.field-image_1,
+.field-image_2,
+.field-image_3,
+.field-image_4,
+.field-image_5,
+.field-image_6,
+.field-image_7,
+.field-image_8,
+.field-image_9,
+.field-image_10,
+.field-image_11,
+.field-image_12,
+.field-image_13,
+.field-image_14,
+.field-image_15,
+.field-cover_image_slot {
+    padding: 10px 16px !important;
+    background: rgba(201, 162, 39, 0.03);
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.field-image_1 .file-upload,
+.field-image_2 .file-upload,
+.field-image_3 .file-upload,
+.field-image_4 .file-upload,
+.field-image_5 .file-upload,
+.field-image_6 .file-upload,
+.field-image_7 .file-upload,
+.field-image_8 .file-upload,
+.field-image_9 .file-upload,
+.field-image_10 .file-upload,
+.field-image_11 .file-upload,
+.field-image_12 .file-upload,
+.field-image_13 .file-upload,
+.field-image_14 .file-upload,
+.field-image_15 .file-upload {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px dashed #cbd5e1;
+    transition: all 0.3s ease;
+}
+
+.field-image_1 .file-upload:hover,
+.field-image_2 .file-upload:hover,
+.field-image_3 .file-upload:hover,
+.field-image_4 .file-upload:hover,
+.field-image_5 .file-upload:hover,
+.field-image_6 .file-upload:hover,
+.field-image_7 .file-upload:hover,
+.field-image_8 .file-upload:hover,
+.field-image_9 .file-upload:hover,
+.field-image_10 .file-upload:hover,
+.field-image_11 .file-upload:hover,
+.field-image_12 .file-upload:hover,
+.field-image_13 .file-upload:hover,
+.field-image_14 .file-upload:hover,
+.field-image_15 .file-upload:hover {
+    border-color: var(--luxury-gold);
+    background: linear-gradient(135deg, #fffbeb, #fef3c7);
+}
+
+/* ── Image Thumbnails ────────────────────────────────────────────────────────── */
+.file-upload a img {
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    max-height: 120px !important;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.file-upload a img:hover {
+    transform: scale(1.05);
+}
+
+/* ── Labels — Clean Typography ───────────────────────────────────────────────── */
+#faproperty_form label {
+    font-weight: 600 !important;
+    color: #374151 !important;
+    font-size: 13px !important;
+    margin-bottom: 6px !important;
+    display: block;
+}
+
+#faproperty_form .help {
+    color: #6b7280 !important;
+    font-size: 12px !important;
+    margin-top: 4px;
+    line-height: 1.5;
+}
+
+/* ── Collapse Sections — Smooth Animation ────────────────────────────────────── */
+fieldset.collapse h2 {
+    cursor: pointer;
+    position: relative;
+}
+
+fieldset.collapse h2::after {
+    content: '▼';
+    position: absolute;
+    left: 20px;
+    font-size: 10px;
+    transition: transform 0.3s ease;
+}
+
+fieldset.collapse.collapsed h2::after {
+    transform: rotate(-90deg);
+}
+
+/* ── Checkbox & Boolean Fields ───────────────────────────────────────────────── */
+#faproperty_form input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* ── Save Buttons — Luxury Gold ──────────────────────────────────────────────── */
+.submit-row input[type="submit"],
+.submit-row button {
+    background: linear-gradient(135deg, var(--luxury-gold), var(--luxury-gold-light)) !important;
+    color: var(--luxury-dark) !important;
+    border: none !important;
+    padding: 12px 28px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+    cursor: pointer;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 12px rgba(201, 162, 39, 0.3) !important;
+}
+
+.submit-row input[type="submit"]:hover,
+.submit-row button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(201, 162, 39, 0.4) !important;
+}
+
+.submit-row {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9) !important;
+    padding: 20px !important;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+/* ── Delete Button — Subtle Danger ───────────────────────────────────────────── */
+.submit-row .deletelink {
+    background: transparent !important;
+    color: var(--luxury-danger) !important;
+    border: 2px solid var(--luxury-danger) !important;
+    padding: 10px 20px !important;
+    border-radius: 8px !important;
+}
+
+.submit-row .deletelink:hover {
+    background: var(--luxury-danger) !important;
+    color: #fff !important;
+}
+
+/* ── List View — Clean Modern Table ─────────────────────────────────────────── */
+#result_list {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    background: #fff;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#result_list th {
+    background: #f8fafc !important;
+    color: #374151 !important;
+    padding: 14px 16px !important;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0.3px;
+    border-bottom: 2px solid #e5e7eb;
+    text-align: right;
+    font-size: 13px;
+}
+
+#result_list th a {
+    color: #374151 !important;
+    text-decoration: none;
+}
+
+#result_list th a:hover {
+    color: var(--luxury-gold) !important;
+}
+
+#result_list td {
+    padding: 14px 16px !important;
+    vertical-align: middle !important;
+    border-bottom: 1px solid #f1f5f9;
+    background: #fff !important;
+    color: #374151 !important;
+    font-size: 14px;
+}
+
+#result_list td a {
+    color: #1a1a2e !important;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+#result_list td a:hover {
+    color: var(--luxury-gold) !important;
+}
+
+#result_list tbody tr {
+    background: #fff !important;
+    transition: all 0.2s ease;
+}
+
+#result_list tbody tr:hover {
+    background: #fafafa !important;
+}
+
+#result_list tbody tr:hover td {
+    background: #fafafa !important;
+}
+
+/* Alternate row colors */
+#result_list tbody tr:nth-child(even) {
+    background: #fcfcfc !important;
+}
+
+#result_list tbody tr:nth-child(even) td {
+    background: #fcfcfc !important;
+}
+
+#result_list tbody tr:nth-child(even):hover,
+#result_list tbody tr:nth-child(even):hover td {
+    background: #f5f5f5 !important;
+}
+
+/* Action checkbox column */
+#result_list .action-checkbox-column {
+    width: 40px;
+    text-align: center;
+}
+
+/* Thumbnail column */
+#result_list td:first-child + td img,
+#result_list .field-thumbnail_preview img {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Status badges in list */
+#result_list td span[style*="border-radius"] {
+    display: inline-block;
+}
+
+/* ── Inline Forms — Gallery Manager Feel ─────────────────────────────────────── */
+.inline-group {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.inline-group h2 {
+    background: var(--luxury-dark) !important;
+    color: #fff !important;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    margin-bottom: 15px;
+}
+
+.inline-related {
+    background: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #e5e7eb;
+}
+
+/* ── Breadcrumbs — Subtle Navigation ─────────────────────────────────────────── */
+#container > .breadcrumbs {
+    background: transparent;
+    padding: 10px 20px;
+    color: var(--luxury-muted);
+    font-size: 13px;
+}
+
+#container > .breadcrumbs a {
+    color: var(--luxury-gold);
+    text-decoration: none;
+}
+
+#container > .breadcrumbs a:hover {
+    text-decoration: underline;
+}
+
+/* ── Add/Change Form Header ──────────────────────────────────────────────────── */
+#content > h1 {
+    color: var(--luxury-dark);
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 3px solid var(--luxury-gold);
+}
+
+/* ── Filter Sidebar — Clean Look ─────────────────────────────────────────────── */
+#changelist-filter {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    padding: 15px;
+}
+
+#changelist-filter h2 {
+    color: var(--luxury-dark);
+    font-size: 14px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--luxury-gold);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+#changelist-filter h3 {
+    color: var(--luxury-gold);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: 15px 0 8px;
+}
+
+#changelist-filter ul li a {
+    color: #374151;
+    padding: 6px 10px;
+    display: block;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+#changelist-filter ul li a:hover {
+    background: rgba(201, 162, 39, 0.1);
+    color: var(--luxury-dark);
+}
+
+#changelist-filter ul li.selected a {
+    background: var(--luxury-gold);
+    color: var(--luxury-dark);
+    font-weight: 600;
+}
+
+/* ── Responsive Adjustments ──────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+    #faproperty_form .form-row {
+        flex-direction: column;
+    }
+    
+    #faproperty_form .form-row > * {
+        width: 100% !important;
+        margin-bottom: 10px;
+    }
+}
+
+/* ── RTL Specific Fixes ──────────────────────────────────────────────────────── */
+[dir="rtl"] fieldset h2::before,
+.rtl fieldset h2::before {
+    margin-right: 8px;
+    margin-left: 0;
+}
+
+[dir="rtl"] fieldset.collapse h2::after,
+.rtl fieldset.collapse h2::after {
+    right: auto;
+    left: 20px;
+}
+
+/* ── Print Styles ────────────────────────────────────────────────────────────── */
+@media print {
+    .submit-row,
+    #changelist-filter,
+    .inline-group {
+        display: none !important;
+    }
+}

@@ -1,0 +1,74 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Grouped Amenity Checkbox Widget — admin/css/amenity_widget.css
+───────────────────────────────────────────────────────────────────────────── */
+
+.amenity-group-wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem 2rem;
+    padding: 0.5rem 0;
+}
+
+.amenity-group {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 1rem 1.1rem;
+}
+
+.amenity-cat-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #0D5EAF;
+    margin: 0 0 0.75rem;
+    padding-bottom: 0.45rem;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.amenity-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.amenity-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #334155;
+    cursor: pointer;
+    padding: 0.25rem 0.3rem;
+    border-radius: 6px;
+    transition: background 0.12s;
+}
+
+.amenity-label:hover {
+    background: #e0f2fe;
+    color: #0b2948;
+}
+
+.amenity-label input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    accent-color: #0D5EAF;
+    cursor: pointer;
+}
+
+@media (max-width: 1200px) {
+    .amenity-group-wrapper {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 800px) {
+    .amenity-group-wrapper {
+        grid-template-columns: 1fr;
+    }
+}

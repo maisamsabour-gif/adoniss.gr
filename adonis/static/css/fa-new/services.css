@@ -1,0 +1,397 @@
+/*
+ * fa-services.css — «خدمات آدونیس» section
+ * Asymmetric luxury image-card grid for /fa-new/ homepage.
+ * Cards 1 & 4: taller (520px) — Cards 2 & 3: shorter (400px) + offset downward
+ */
+
+/* ── Section shell ─────────────────────────────────────────────────────────── */
+.fa-services-section {
+    position: relative;
+    padding: clamp(64px, 7vw, 96px) 0 clamp(80px, 9vw, 128px);
+    background:
+        radial-gradient(70% 60% at 8% 20%,  rgba(96, 165, 250, 0.12), transparent 60%),
+        radial-gradient(65% 65% at 90% 75%, rgba(250, 204, 21, 0.08), transparent 60%),
+        linear-gradient(160deg, #04112a 0%, #071b40 55%, #0d2f63 100%);
+    overflow: hidden;
+}
+
+/* Subtle noise/texture overlay */
+.fa-services-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        linear-gradient(120deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 100%);
+    background-size: 120px 120px;
+    opacity: 0.4;
+    z-index: 0;
+}
+
+/* ── Container ─────────────────────────────────────────────────────────────── */
+.fa-services-container {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: clamp(16px, 4vw, 32px);
+}
+
+/* ── Section header ─────────────────────────────────────────────────────────── */
+.fa-services-head {
+    text-align: center;
+    margin-bottom: clamp(2.4rem, 4vw, 3.6rem);
+}
+
+.fa-services-eyebrow {
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #facc15;
+    margin-bottom: 0.8rem;
+}
+
+.fa-services-title {
+    font-size: clamp(1.7rem, 3.2vw, 2.4rem);
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 0.75rem;
+    line-height: 1.4;
+}
+
+.fa-services-subtitle {
+    font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+    color: rgba(224, 234, 255, 0.75);
+    max-width: 620px;
+    margin-inline: auto;
+    line-height: 1.75;
+}
+
+/* ── Asymmetric Grid ────────────────────────────────────────────────────────── */
+.fa-services-grid {
+    display: flex;
+    gap: 24px;
+    align-items: stretch;
+}
+
+/* ── Left image column ──────────────────────────────────────────────────────── */
+.fa-services-left-image {
+    width: 40%;
+    flex-shrink: 0;
+    border-radius: 16px;
+    overflow: hidden;
+    min-height: 500px;
+}
+
+.fa-services-left-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* ── Right cards column ─────────────────────────────────────────────────────── */
+.fa-services-cards {
+    width: 60%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-content: flex-start;
+}
+
+/* ── Base card ─────────────────────────────────────────────────────────────── */
+.fa-service-card {
+    position: relative;
+    height: 440px;
+    border-radius: 28px;
+    overflow: hidden;
+    border: 1px solid rgba(183, 206, 242, 0.14);
+    box-shadow:
+        0 8px 32px rgba(2, 10, 24, 0.32),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    cursor: default;
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease,
+        border-color 0.35s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Asymmetry: cards 1 & 4 are wider (55%) */
+.fa-services-cards .fa-service-card:nth-child(1),
+.fa-services-cards .fa-service-card:nth-child(4) {
+    flex: 0 0 calc(55% - 8px);
+    height: 300px;
+    margin-top: 0;
+}
+
+/* Asymmetry: cards 2 & 3 are narrower (45%) */
+.fa-services-cards .fa-service-card:nth-child(2),
+.fa-services-cards .fa-service-card:nth-child(3) {
+    flex: 0 0 calc(45% - 8px);
+    height: 300px;
+    margin-top: 0;
+}
+
+/* Badge-based size overrides from admin */
+.fa-service-card--tall {
+    height: 520px !important;
+    margin-top: 0 !important;
+}
+
+.fa-service-card--small {
+    height: 340px !important;
+    margin-top: 60px !important;
+}
+
+/* ── Hover state ───────────────────────────────────────────────────────────── */
+.fa-service-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(96, 165, 250, 0.42);
+    box-shadow:
+        0 20px 56px rgba(8, 40, 100, 0.44),
+        inset 0 1px 0 rgba(255, 255, 255, 0.10);
+}
+
+/* ── Image/media area ──────────────────────────────────────────────────────── */
+.fa-service-card-media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.fa-service-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform 0.42s ease;
+}
+
+.fa-service-card:hover .fa-service-card-image {
+    transform: scale(1.06);
+}
+
+/* ── Placeholder gradients (when no image uploaded) ────────────────────────── */
+.fa-service-card-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(160deg, #0d2348 0%, #1a3f72 55%, #0d2a58 100%);
+}
+
+.fa-service-card-placeholder[data-card-index="1"] {
+    background: linear-gradient(150deg, #071527 0%, #0f3460 45%, #16213e 100%);
+}
+
+.fa-service-card-placeholder[data-card-index="2"] {
+    background: linear-gradient(150deg, #0a1628 0%, #1c3a6e 45%, #112040 100%);
+}
+
+.fa-service-card-placeholder[data-card-index="3"] {
+    background: linear-gradient(150deg, #060e1e 0%, #0d2748 45%, #0a1930 100%);
+}
+
+.fa-service-card-placeholder[data-card-index="4"] {
+    background: linear-gradient(150deg, #071020 0%, #0f3050 45%, #091825 100%);
+}
+
+/* ── Dark overlay above image ──────────────────────────────────────────────── */
+.fa-service-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(4, 14, 32, 0.92) 0%,
+        rgba(4, 14, 32, 0.54) 45%,
+        rgba(4, 14, 32, 0.18) 100%
+    );
+    transition: background 0.35s ease;
+    z-index: 1;
+}
+
+.fa-service-card:hover .fa-service-card-overlay {
+    background: linear-gradient(
+        to top,
+        rgba(4, 14, 32, 0.88) 0%,
+        rgba(4, 14, 32, 0.48) 42%,
+        rgba(4, 14, 32, 0.22) 100%
+    );
+}
+
+/* ── Card body / text area ─────────────────────────────────────────────────── */
+.fa-service-card-body {
+    position: relative;
+    z-index: 2;
+    margin-top: auto;
+    padding: 0 22px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    direction: rtl;
+}
+
+/* ── Chip/badge ────────────────────────────────────────────────────────────── */
+.fa-service-card-chip {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: rgba(250, 204, 21, 0.18);
+    border: 1px solid rgba(250, 204, 21, 0.4);
+    color: #facc15;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+/* ── Title ─────────────────────────────────────────────────────────────────── */
+.fa-service-card-title {
+    margin: 0;
+    color: #ffffff;
+    font-size: clamp(1rem, 1.4vw, 1.18rem);
+    font-weight: 700;
+    line-height: 1.45;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Description ───────────────────────────────────────────────────────────── */
+.fa-service-card-desc {
+    margin: 0;
+    color: rgba(220, 232, 255, 0.82);
+    font-size: 0.82rem;
+    line-height: 1.65;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    line-clamp: 3;
+    overflow: hidden;
+}
+
+/* ── CTA button ────────────────────────────────────────────────────────────── */
+.fa-service-card-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+    padding: 7px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: rgba(255, 255, 255, 0.90);
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    background: transparent;
+    transition:
+        background 0.25s ease,
+        color 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+    white-space: nowrap;
+}
+
+.fa-service-card-btn::after {
+    content: "←";
+    font-size: 0.85em;
+    transition: transform 0.25s ease;
+}
+
+.fa-service-card:hover .fa-service-card-btn,
+.fa-service-card-btn:hover {
+    background: #ffffff;
+    color: #0b1f3a;
+    border-color: transparent;
+    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.18);
+}
+
+.fa-service-card:hover .fa-service-card-btn::after {
+    transform: translateX(-4px);
+}
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════ */
+
+/* Tablet: 2-column layout */
+@media (max-width: 1024px) {
+    .fa-services-grid {
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .fa-services-left-image {
+        width: 100%;
+        min-height: 280px;
+        max-height: 340px;
+    }
+
+    .fa-services-cards {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
+
+    .fa-services-cards .fa-service-card:nth-child(1),
+    .fa-services-cards .fa-service-card:nth-child(2),
+    .fa-services-cards .fa-service-card:nth-child(3),
+    .fa-services-cards .fa-service-card:nth-child(4) {
+        flex: unset;
+        height: 400px;
+        margin-top: 0;
+    }
+
+    .fa-service-card--tall {
+        height: 460px !important;
+    }
+}
+
+/* Small tablet: keep 2-col but smaller height */
+@media (max-width: 768px) {
+    .fa-services-section {
+        padding-block: clamp(48px, 6vw, 72px);
+    }
+
+    .fa-services-cards {
+        gap: 14px;
+    }
+
+    .fa-services-cards .fa-service-card:nth-child(n),
+    .fa-service-card--tall {
+        height: 340px !important;
+        margin-top: 0 !important;
+    }
+
+    .fa-service-card-body {
+        padding: 0 16px 18px;
+    }
+}
+
+/* Mobile: single column */
+@media (max-width: 540px) {
+    .fa-services-cards {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .fa-services-cards .fa-service-card:nth-child(n),
+    .fa-service-card--tall,
+    .fa-service-card--small {
+        height: 280px !important;
+        margin-top: 0 !important;
+    }
+
+    .fa-service-card-title {
+        font-size: 1rem;
+    }
+
+    .fa-service-card-desc {
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+    }
+}

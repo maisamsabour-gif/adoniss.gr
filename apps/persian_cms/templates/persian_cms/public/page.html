@@ -1,0 +1,14 @@
+{% extends "persian_cms/public/base.html" %}
+
+{% block content %}
+<main class="adonis-fa-new-main" style="padding:48px 0;">
+    <div class="adonis-fa-new-container">
+        <h1 class="adonis-fa-new-section-title">{% if page %}{{ page.title }}{% else %}صفحه فارسی{% endif %}</h1>
+        {% if page and page.body %}
+        <div class="adonis-fa-new-section-lead">{{ page.body|linebreaks }}</div>
+        {% else %}
+        <p class="adonis-fa-new-section-lead">محتوا هنوز در پنل فارسی ثبت نشده است.</p>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

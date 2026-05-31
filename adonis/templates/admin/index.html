@@ -1,0 +1,89 @@
+{% extends 'admin/base.html' %}
+{% load i18n %}
+
+{% block title %}Dashboard | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+    {% include "unfold/helpers/site_branding.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="flex flex-col gap-8 pb-8">
+
+    {# ── Welcome banner ─────────────────────────────────────────────────── #}
+    <div class="flex items-center gap-4 bg-gradient-to-r from-primary-700 to-primary-500 rounded-xl px-6 py-5 shadow-md">
+        <span class="material-symbols-outlined text-white text-4xl">waving_hand</span>
+        <div>
+            <p class="text-white font-semibold text-lg leading-tight">
+                Welcome back{% if dashboard_user_name %}, {{ dashboard_user_name }}{% endif %}
+            </p>
+            <p class="text-primary-100 text-sm mt-0.5">
+                ADONIS Group &mdash; Property Management Platform
+            </p>
+        </div>
+        <div class="ml-auto hidden sm:flex items-center gap-2 text-primary-100 text-sm">
+            <span class="material-symbols-outlined text-sm">schedule</span>
+            <span id="admin-clock"></span>
+        </div>
+    </div>
+
+    {# ── Quick Access cards ──────────────────────────────────────────────── #}
+    {% if dashboard_cards %}
+    <section>
+        <h2 class="font-semibold text-base text-important mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary-500 text-xl">bolt</span>
+            Quick Access
+        </h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {% for card in dashboard_cards %}
+            <a href="{{ card.link }}"
+               class="group relative flex flex-col gap-3 rounded-xl border border-base-200 dark:border-base-700 p-4 {{ card.bg }} hover:shadow-md hover:-translate-y-0.5 transition-all duration-150 cursor-pointer no-underline">
+
+                {# Icon + counter badge row #}
+                <div class="flex items-start justify-between">
+                    <span class="material-symbols-outlined text-3xl {{ card.icon_color }}">{{ card.icon }}</span>
+                    {% if card.counter is not None %}
+                    <span class="inline-flex items-center justify-center min-w-[1.5rem] h-6 px-1.5 rounded-full text-xs font-bold leading-none {{ card.badge_color }}">
+                        {{ card.counter }}
+                    </span>
+                    {% endif %}
+                </div>
+
+                {# Title + description #}
+                <div>
+                    <p class="font-semibold text-sm text-important leading-snug">{{ card.title }}</p>
+                    {% if card.description %}
+                    <p class="text-xs text-subtle mt-0.5 leading-snug">
+                        {% if card.counter is not None %}{{ card.counter }} {% endif %}{{ card.description }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                {# Hover arrow #}
+                <span class="absolute bottom-3 right-3 opacity-0 group-hover:opacity-60 transition-opacity">
+                    <span class="material-symbols-outlined text-base {{ card.icon_color }}">arrow_forward</span>
+                </span>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    {# ── Recent activity ─────────────────────────────────────────────────── #}
+    {% include "unfold/helpers/history.html" %}
+
+</div>
+
+<script>
+(function () {
+    var el = document.getElementById('admin-clock');
+    if (!el) return;
+    function tick() {
+        var now = new Date();
+        el.textContent = now.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+    }
+    tick();
+    setInterval(tick, 30000);
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,98 @@
+<div class="richtext-container" id="rtc_{{ widget.attrs.id }}">
+    <div class="richtext-toolbar">
+        <button type="button" class="rt-btn rt-bold" title="Bold"><i class="fas fa-bold"></i></button>
+        <button type="button" class="rt-btn rt-italic" title="Italic"><i class="fas fa-italic"></i></button>
+        <span class="rt-separator"></span>
+        <select class="rt-fontsize" title="Font Size">
+            <option value="">Size</option>
+            <option value="1">Small</option>
+            <option value="3">Normal</option>
+            <option value="5">Large</option>
+            <option value="7">X-Large</option>
+        </select>
+        <span class="rt-separator"></span>
+        <button type="button" class="rt-btn rt-clear" title="Clear Formatting"><i class="fas fa-eraser"></i></button>
+    </div>
+    <div class="rt-editor" contenteditable="true" id="rte_{{ widget.attrs.id }}"></div>
+    <input type="hidden" name="{{ widget.name }}" id="{{ widget.attrs.id }}" value="">
+</div>
+
+<style>
+.richtext-container { border: 1px solid #d2d6de; border-radius: 6px; overflow: hidden; background: #fff; }
+.richtext-toolbar { display: flex; align-items: center; gap: 4px; padding: 6px 10px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-bottom: 1px solid #d2d6de; }
+.rt-btn { width: 32px; height: 32px; border: 1px solid #ced4da; border-radius: 4px; background: #fff; color: #495057; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.rt-btn:hover { background: #e9ecef; border-color: #adb5bd; }
+.rt-btn.active { background: #0D5EAF; color: #fff; border-color: #0D5EAF; }
+.rt-separator { width: 1px; height: 24px; background: #ced4da; margin: 0 6px; }
+.rt-fontsize { padding: 5px 10px; border: 1px solid #ced4da; border-radius: 4px; background: #fff; font-size: 13px; cursor: pointer; }
+.rt-editor { width: 100%; min-height: 80px; padding: 12px; font-family: inherit; font-size: 14px; line-height: 1.6; box-sizing: border-box; outline: none; overflow-y: auto; }
+.rt-editor:focus { background: #fefefe; }
+.rt-editor:empty::before { content: 'Type here...'; color: #adb5bd; pointer-events: none; display: block; }
+</style>
+
+<script>
+(function() {
+    var fieldId = '{{ widget.attrs.id }}';
+    var hiddenInput = document.getElementById(fieldId);
+    var editor = document.getElementById('rte_' + fieldId);
+    var container = document.getElementById('rtc_' + fieldId);
+    if (!hiddenInput || !editor || !container) return;
+
+    var toolbar = container.querySelector('.richtext-toolbar');
+
+    // Load initial value (from Django's rendered value attribute or from widget.value)
+    var initVal = '{{ widget.value|escapejs }}';
+    if (initVal) {
+        editor.innerHTML = initVal;
+        hiddenInput.value = initVal;
+    }
+
+    // Continuous sync: hidden input always has latest editor content
+    setInterval(function() {
+        hiddenInput.value = editor.innerHTML;
+    }, 150);
+
+    function execCmd(cmd, val) {
+        editor.focus();
+        document.execCommand(cmd, false, val || null);
+        hiddenInput.value = editor.innerHTML;
+    }
+
+    if (toolbar) {
+        var boldBtn = toolbar.querySelector('.rt-bold');
+        var italicBtn = toolbar.querySelector('.rt-italic');
+        var clearBtn = toolbar.querySelector('.rt-clear');
+        var fontSelect = toolbar.querySelector('.rt-fontsize');
+
+        if (boldBtn) boldBtn.addEventListener('click', function(e) { e.preventDefault(); execCmd('bold'); });
+        if (italicBtn) italicBtn.addEventListener('click', function(e) { e.preventDefault(); execCmd('italic'); });
+        if (clearBtn) clearBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            execCmd('removeFormat');
+            hiddenInput.value = editor.innerHTML;
+        });
+        if (fontSelect) fontSelect.addEventListener('change', function() {
+            if (this.value) { execCmd('fontSize', this.value); }
+            this.value = '';
+        });
+    }
+
+    editor.addEventListener('keydown', function(e) {
+        if (e.ctrlKey || e.metaKey) {
+            if (e.key === 'b' || e.key === 'B') { e.preventDefault(); execCmd('bold'); }
+            else if (e.key === 'i' || e.key === 'I') { e.preventDefault(); execCmd('italic'); }
+        }
+    });
+
+    function updateBtnState() {
+        if (toolbar) {
+            var b = toolbar.querySelector('.rt-bold');
+            var i = toolbar.querySelector('.rt-italic');
+            if (b) b.classList.toggle('active', document.queryCommandState('bold'));
+            if (i) i.classList.toggle('active', document.queryCommandState('italic'));
+        }
+    }
+    editor.addEventListener('keyup', updateBtnState);
+    editor.addEventListener('mouseup', updateBtnState);
+})();
+</script>

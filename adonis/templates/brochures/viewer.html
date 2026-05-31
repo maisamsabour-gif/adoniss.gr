@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+
+{% block title %}{{ brochure.title }} – Brochure Viewer | {{ SITE_NAME }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/flipbook.css' %}?v={% now 'U' %}">
+<style>
+    /* Force full-height on the wrapping block element django/base injects */
+    body.fb-page { overflow: hidden !important; }
+    body.fb-page #main-content { padding: 0 !important; }
+</style>
+{% endblock %}
+
+{% block content %}
+{# Add fb-page class to body via JS (can't override body tag in Django template extend) #}
+<script>document.body.classList.add('fb-page');</script>
+
+<div class="fb-wrapper" id="fbWrapper">
+
+    {# ── Top bar ──────────────────────────────────────────────────────── #}
+    <div class="fb-topbar">
+        <a class="fb-back" href="/brochures/">
+            <i class="fas fa-chevron-left"></i> {% trans "Brochures" %}
+        </a>
+        <span class="fb-title">{{ brochure.title }}</span>
+        <div class="fb-topbar-actions">
+            {% if brochure.pdf_file %}
+            <button class="fb-icon-btn" id="fbDownload" title="Download PDF">
+                <i class="fas fa-download"></i>
+            </button>
+            {% endif %}
+            <button class="fb-icon-btn" id="fbFullscreen" title="Fullscreen">
+                <i class="fas fa-expand"></i>
+            </button>
+        </div>
+    </div>
+
+    {# ── Stage ────────────────────────────────────────────────────────── #}
+    <div class="fb-stage" id="fbStage">
+
+        {# Side navigation arrows #}
+        <button class="fb-arrow fb-arrow-prev" id="fbPrev" title="Previous page" disabled>
+            <i class="fas fa-chevron-left"></i>
+        </button>
+
+        {# Zoom wrapper → StPageFlip book #}
+        <div class="fb-zoom-wrap" id="fbZoomWrap">
+            <div id="fb-book"></div>
+        </div>
+
+        <button class="fb-arrow fb-arrow-next" id="fbNext" title="Next page">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+
+    </div>
+
+    {# ── Thumbnail strip (hidden by default) ──────────────────────────── #}
+    <div class="fb-thumbstrip hidden" id="fbThumbstrip"></div>
+
+    {# ── Bottom controls ─────────────────────────────────────────────── #}
+    <div class="fb-controls">
+
+        <div class="fb-controls-left">
+            <button class="fb-icon-btn" id="fbThumbToggle" title="Thumbnails">
+                <i class="fas fa-th-large"></i>
+            </button>
+        </div>
+
+        <div class="fb-controls-center">
+            <button class="fb-icon-btn" id="fbZoomOut" title="Zoom out">
+                <i class="fas fa-minus"></i>
+            </button>
+            <span class="fb-page-num" id="fbPageNum">
+                {% if brochure.is_ready %}1 / {{ brochure.page_count }}{% else %}–{% endif %}
+            </span>
+            <button class="fb-icon-btn" id="fbZoomIn" title="Zoom in">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+
+        <div class="fb-controls-right">
+            {% if brochure.pdf_file %}
+            <a href="{{ brochure.pdf_file.url }}" target="_blank"
+               class="fb-icon-btn" title="Open original PDF" style="text-decoration:none;">
+                <i class="fas fa-file-pdf"></i>
+            </a>
+            {% endif %}
+        </div>
+
+    </div>
+
+</div>{# .fb-wrapper #}
+
+
+{# ── Fallback embed (shown only when conversion failed or when JS disabled) ── #}
+{% if brochure.conversion_status == 'failed' and brochure.pdf_file %}
+<noscript>
+    <div style="padding:20px;">
+        <p>Your browser does not support JavaScript. You can still view the PDF directly:</p>
+        <embed src="{{ brochure.pdf_file.url }}" type="application/pdf"
+               width="100%" style="height:90vh;border:none;" />
+    </div>
+</noscript>
+{% endif %}
+{% endblock %}
+
+
+{% block extra_js %}
+{# Keep --fb-vh in sync with the real inner height so iOS address-bar
+   animation never causes a layout jump inside the flipbook wrapper. #}
+<script>
+(function () {
+    function setVh() {
+        document.documentElement.style.setProperty('--fb-vh', window.innerHeight + 'px');
+    }
+    setVh();
+    window.addEventListener('resize', setVh);
+    window.addEventListener('orientationchange', function () {
+        setTimeout(setVh, 200);   // small delay lets iOS finish its layout
+    });
+})();
+</script>
+
+{# Pass data to JS via a global object – avoids inline event handlers #}
+<script>
+window.FLIPBOOK_DATA = {
+    slug:        "{{ brochure.slug }}",
+    pageUrls:    {{ pages_json|safe }},
+    pageCount:   {{ brochure.page_count|default:0 }},
+    pageWidth:   {{ brochure.page_width|default:0 }},
+    pageHeight:  {{ brochure.page_height|default:0 }},
+    status:      "{{ brochure.conversion_status }}",
+    pagesApiUrl: "{% url 'brochure_pages_api' brochure.slug %}",
+    pdfUrl:      "{% if brochure.pdf_file %}{{ brochure.pdf_file.url }}{% endif %}"
+};
+</script>
+
+{# StPageFlip – local bundle, no CDN #}
+<script src="{% static 'js/vendor/page-flip.browser.js' %}" defer></script>
+{# Flipbook controller — depends on St (page-flip global). Defer preserves
+   document order, so it runs after page-flip.browser.js finishes loading. #}
+<script src="{% static 'js/flipbook.js' %}?v={% now 'U' %}" defer></script>
+{% endblock %}

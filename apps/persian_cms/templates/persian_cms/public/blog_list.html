@@ -1,0 +1,17 @@
+{% extends "persian_cms/public/base.html" %}
+
+{% block content %}
+<main class="adonis-fa-new-main" style="padding:48px 0;">
+    <div class="adonis-fa-new-container">
+        <h1 class="adonis-fa-new-section-title">بلاگ فارسی</h1>
+        {% for post in posts %}
+        <article style="margin-bottom:28px;">
+            <h2><a href="/fa-new/blog/{{ post.slug }}/">{{ post.title }}</a></h2>
+            {% if post.excerpt %}<p>{{ post.excerpt }}</p>{% endif %}
+        </article>
+        {% empty %}
+        <p class="adonis-fa-new-section-lead">هنوز پستی منتشر نشده است.</p>
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}

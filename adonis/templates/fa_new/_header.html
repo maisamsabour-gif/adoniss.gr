@@ -1,0 +1,99 @@
+{% load static %}
+{% comment %}
+Shared Persian header / menu (home + internal pages).
+Pass is_home=True on the home page so the logo/CTA use in-page anchors;
+on internal pages they link back to /fa-new/.
+{% endcomment %}
+<header class="adonis-fa-new-header" id="adonis-fa-new-header" data-fa-header>
+    <div class="adonis-fa-new-header-inner">
+        <a class="adonis-fa-new-logo" href="{% if is_home %}#adonis-fa-new-top{% else %}/fa-new/{% endif %}" aria-label="ADONIS">
+            {% if settings.header_logo %}
+                <img src="{{ settings.header_logo.url }}" alt="ADONIS" class="adonis-fa-new-logo-img">
+            {% elif header_logo_url %}
+                <img src="{{ header_logo_url }}" alt="ADONIS" class="adonis-fa-new-logo-img">
+            {% else %}
+                <span class="adonis-fa-new-logo-mark">A</span>
+                <span class="adonis-fa-new-logo-word">
+                    <span class="adonis-fa-new-logo-word-en">ADONIS</span>
+                    <span class="adonis-fa-new-logo-word-fa">آدونیس</span>
+                </span>
+            {% endif %}
+        </a>
+
+        <nav class="adonis-fa-new-nav" aria-label="منوی اصلی">
+            <ul class="adonis-fa-new-nav-list">
+                {% if nav_items %}
+                    {% for item in nav_items %}
+                        {% if not item.parent_id %}
+                            {% with children=item.children.all %}
+                            {% if children %}
+                            <li class="adonis-fa-new-nav-has-sub">
+                                <a href="{{ item.url }}"{% if item.open_in_new_tab %} target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                                <ul class="adonis-fa-new-subnav">
+                                    {% for child in children %}
+                                        {% if child.is_active %}
+                                        <li><a href="{{ child.url }}"{% if child.open_in_new_tab %} target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a></li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            {% else %}
+                            <li><a href="{{ item.url }}"{% if item.open_in_new_tab %} target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a></li>
+                            {% endif %}
+                            {% endwith %}
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <li><a href="/fa-new/">خانه</a></li>
+                    <li><a href="/fa-new/golden-visa/">گلدن ویزا</a></li>
+                    <li><a href="/fa-new/blog/">بلاگ</a></li>
+                    <li><a href="/fa-new/about/">درباره ما</a></li>
+                    <li><a href="/fa-new/contact/">تماس</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+
+        <div class="adonis-fa-new-header-actions">
+            <a class="adonis-fa-new-btn adonis-fa-new-btn--ghost" href="{% if is_home %}#{{ consult_anchor }}{% else %}/fa-new/#{{ consult_anchor }}{% endif %}">
+                <span>مشاوره</span>
+            </a>
+            <a class="adonis-fa-new-btn adonis-fa-new-btn--gold" href="{% if is_home %}#{{ consult_anchor }}{% else %}/fa-new/#{{ consult_anchor }}{% endif %}">
+                <span>دریافت مشاوره رایگان</span>
+            </a>
+            <button class="adonis-fa-new-burger" aria-label="باز کردن منو" data-fa-burger>
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+
+    <div class="adonis-fa-new-mobile-menu" data-fa-mobile-menu>
+        <ul>
+            {% if nav_items %}
+                {% for item in nav_items %}
+                    {% if not item.parent_id %}
+                    <li><a href="{{ item.url }}"{% if item.open_in_new_tab %} target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                        {% with children=item.children.all %}
+                        {% if children %}
+                        <ul class="adonis-fa-new-mobile-sub">
+                            {% for child in children %}
+                                {% if child.is_active %}
+                                <li><a href="{{ child.url }}"{% if child.open_in_new_tab %} target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {% endwith %}
+                    </li>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <li><a href="/fa-new/">خانه</a></li>
+                <li><a href="/fa-new/golden-visa/">گلدن ویزا</a></li>
+                <li><a href="/fa-new/blog/">بلاگ</a></li>
+                <li><a href="/fa-new/about/">درباره ما</a></li>
+                <li><a href="/fa-new/contact/">تماس</a></li>
+            {% endif %}
+            <li><a href="{% if is_home %}#{{ consult_anchor }}{% else %}/fa-new/#{{ consult_anchor }}{% endif %}" class="adonis-fa-new-mobile-cta">مشاوره رایگان</a></li>
+        </ul>
+    </div>
+</header>

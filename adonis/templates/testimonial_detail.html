@@ -1,0 +1,375 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+
+{% block title %}{{ testimonial.client_name }} - {% trans "Testimonial" %} | {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="td-hero">
+    <div class="td-hero-bg"></div>
+    <div class="td-hero-overlay"></div>
+    <div class="container">
+        <div class="td-hero-content" data-aos="fade-up">
+            <span class="section-badge" style="color:#fff;border-color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.1);">
+                <i class="fas fa-quote-left"></i> {% trans "Client Story" %}
+            </span>
+            <h1>{% trans "What Our Clients Say" %}</h1>
+            <p>{% trans "Real experiences from our valued clients" %}</p>
+        </div>
+    </div>
+</section>
+
+<!-- Main Testimonial -->
+<section class="td-main">
+    <div class="container">
+        <div class="td-card" data-aos="fade-up">
+            <div class="td-card-image">
+                {% if testimonial.image %}
+                <img src="{{ testimonial.image.url }}" alt="{{ testimonial.client_name }}" loading="lazy" decoding="async">
+                {% else %}
+                <div class="td-placeholder">
+                    <i class="fas fa-user"></i>
+                </div>
+                {% endif %}
+            </div>
+            <div class="td-card-content">
+                <div class="td-rating">
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= testimonial.rating %}
+                            <i class="fas fa-star"></i>
+                        {% else %}
+                            <i class="far fa-star"></i>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <blockquote class="td-quote">
+                    <i class="fas fa-quote-left td-quote-icon"></i>
+                    {{ testimonial.content }}
+                </blockquote>
+                <div class="td-author">
+                    <h3>{{ testimonial.client_name }}</h3>
+                    <span><i class="fas fa-map-marker-alt"></i> {{ testimonial.client_country }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Other Testimonials -->
+{% if other_testimonials %}
+<section class="td-others">
+    <div class="container">
+        <h2 class="td-others-title" data-aos="fade-up">{% trans "More Client Stories" %}</h2>
+        <div class="td-others-grid">
+            {% for t in other_testimonials %}
+            <a href="{% url 'testimonial_detail' t.pk %}" class="td-mini-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00">
+                <div class="td-mini-image">
+                    {% if t.image %}
+                    <img src="{{ t.image.url }}" alt="{{ t.client_name }}" loading="lazy" decoding="async">
+                    {% else %}
+                    <div class="td-mini-placeholder"><i class="fas fa-user"></i></div>
+                    {% endif %}
+                </div>
+                <div class="td-mini-content">
+                    <div class="td-mini-rating">
+                        {% for i in "12345" %}{% if forloop.counter <= t.rating %}<i class="fas fa-star"></i>{% else %}<i class="far fa-star"></i>{% endif %}{% endfor %}
+                    </div>
+                    <p class="td-mini-text">{{ t.content|truncatewords:15 }}</p>
+                    <div class="td-mini-author">
+                        <strong>{{ t.client_name }}</strong>
+                        <span>{{ t.client_country }}</span>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA -->
+<section class="td-cta">
+    <div class="container">
+        <div class="td-cta-box" data-aos="fade-up">
+            <h2>{% trans "Ready to Start Your Journey?" %}</h2>
+            <p>{% trans "Join our satisfied clients and secure your future in Greece" %}</p>
+            <button type="button" class="td-cta-btn" onclick="openConsultationModal()">{% trans "Book Free Consultation" %}</button>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Hero */
+.td-hero {
+    position: relative;
+    min-height: 340px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+.td-hero-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #0a1628 0%, #0d5eaf 100%);
+}
+.td-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.td-hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 4rem 0;
+}
+.td-hero-content h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 1rem 0 0.5rem;
+}
+.td-hero-content p {
+    font-size: 1.15rem;
+    color: rgba(255,255,255,0.8);
+}
+
+/* Main Testimonial */
+.td-main {
+    padding: 4rem 0;
+    background: #f8fafc;
+}
+.td-card {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 3rem;
+    background: #fff;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 10px 50px rgba(0,0,0,0.08);
+}
+.td-card-image {
+    height: 100%;
+    min-height: 450px;
+}
+.td-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.td-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0a1628, #0d5eaf);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.3);
+    font-size: 5rem;
+}
+.td-card-content {
+    padding: 3rem 3rem 3rem 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.td-rating {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 1.5rem;
+}
+.td-rating i {
+    color: #c9a227;
+    font-size: 1.3rem;
+}
+.td-quote {
+    position: relative;
+    font-size: 1.2rem;
+    line-height: 1.9;
+    color: #475569;
+    margin: 0 0 2rem;
+    padding-left: 2rem;
+}
+.td-quote-icon {
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #c9a227;
+    font-size: 1.5rem;
+    opacity: 0.5;
+}
+.td-author h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #0a1628;
+    margin: 0 0 0.3rem;
+}
+.td-author span {
+    font-size: 1rem;
+    color: #64748b;
+}
+.td-author span i {
+    color: #c9a227;
+    margin-right: 6px;
+}
+
+/* Other Testimonials */
+.td-others {
+    padding: 4rem 0;
+    background: #fff;
+}
+.td-others-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0a1628;
+    margin-bottom: 2.5rem;
+}
+.td-others-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+}
+.td-mini-card {
+    background: #f8fafc;
+    border-radius: 16px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+    border: 1px solid #e2e8f0;
+}
+.td-mini-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border-color: #c9a227;
+}
+.td-mini-image {
+    height: 180px;
+    overflow: hidden;
+}
+.td-mini-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+.td-mini-card:hover .td-mini-image img {
+    transform: scale(1.08);
+}
+.td-mini-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0a1628, #0d5eaf);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.3);
+    font-size: 2.5rem;
+}
+.td-mini-content {
+    padding: 1.25rem;
+}
+.td-mini-rating {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 0.75rem;
+}
+.td-mini-rating i {
+    color: #c9a227;
+    font-size: 0.85rem;
+}
+.td-mini-text {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #64748b;
+    margin: 0 0 1rem;
+}
+.td-mini-author strong {
+    display: block;
+    font-size: 0.95rem;
+    color: #0a1628;
+}
+.td-mini-author span {
+    font-size: 0.8rem;
+    color: #94a3b8;
+}
+
+/* CTA */
+.td-cta {
+    padding: 4rem 0;
+    background: linear-gradient(135deg, #0a1628 0%, #0d5eaf 100%);
+}
+.td-cta-box {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+.td-cta-box h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 0.75rem;
+}
+.td-cta-box p {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.8);
+    margin: 0 0 1.5rem;
+}
+.td-cta-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #c9a227, #d4af37);
+    color: #fff;
+    padding: 14px 36px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.td-cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(201,162,39,0.4);
+    color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .td-others-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 992px) {
+    .td-card {
+        grid-template-columns: 1fr;
+    }
+    .td-card-image {
+        min-height: 350px;
+    }
+    .td-card-content {
+        padding: 2rem;
+    }
+}
+@media (max-width: 768px) {
+    .td-hero-content h1 {
+        font-size: 2rem;
+    }
+    .td-quote {
+        font-size: 1.05rem;
+    }
+    .td-others-grid {
+        grid-template-columns: 1fr;
+    }
+    .td-mini-card {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+    }
+    .td-mini-image {
+        height: 100%;
+        min-height: 140px;
+    }
+}
+</style>
+{% endblock %}

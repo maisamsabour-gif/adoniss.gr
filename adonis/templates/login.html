@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Log In" %} | {{ SITE_NAME }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.password-input-wrap {
+    position: relative;
+}
+.password-input-wrap .form-input {
+    padding-right: 3rem;
+}
+.login-form .form-input {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #1e293b;
+}
+.login-form .form-input:focus {
+    border-color: #0D5EAF;
+    box-shadow: 0 0 0 3px rgba(13,94,175,0.12);
+    background: #ffffff;
+}
+.login-form .form-input::placeholder {
+    color: #94a3b8;
+}
+.login-form .form-group label {
+    color: #374151;
+}
+.password-toggle {
+    position: absolute;
+    right: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #94a3b8;
+    font-size: 1rem;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.2s;
+}
+.password-toggle:hover {
+    color: #0D5EAF;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section login-section">
+    <div class="container">
+        <div class="login-wrapper" data-aos="fade-up">
+            <div class="login-header">
+                <h2>{% trans "Log In" %}</h2>
+                <p>{% trans "Enter your credentials to access your account" %}</p>
+            </div>
+
+            {% if form.errors %}
+            <div class="login-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>{% trans "Invalid username or password. Please try again." %}</span>
+            </div>
+            {% endif %}
+
+            <form method="POST" class="login-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_username">{% trans "Username" %}</label>
+                    <input type="text" id="id_username" name="username" class="form-input" placeholder="{% trans 'Your username' %}" required autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_password">{% trans "Password" %}</label>
+                    <div class="password-input-wrap">
+                        <input type="password" id="id_password" name="password" class="form-input" placeholder="{% trans 'Your password' %}" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword()" tabindex="-1">
+                            <i class="fas fa-eye" id="toggleIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-gold btn-lg btn-block">
+                    <i class="fas fa-sign-in-alt"></i> {% trans "Log In" %}
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function togglePassword() {
+    var input = document.getElementById('id_password');
+    var icon = document.getElementById('toggleIcon');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+    }
+}
+</script>
+{% endblock %}

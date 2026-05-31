@@ -1,0 +1,630 @@
+{% extends "admin/change_form_seo.html" %}
+{% load i18n static %}
+
+{% block form_before %}
+{{ block.super }}
+
+{% if original %}
+  {% if original.is_active %}
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+              background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;
+              padding:12px 18px;margin-bottom:14px;">
+    <span style="font-size:.9rem;font-weight:600;color:#166534;">
+      ✅ This property is <strong>visible on the website</strong>.
+    </span>
+    <a href="{% url 'admin:properties_property_toggle_active' original.pk %}"
+       onclick="return confirm('Hide "{{ original.name }}" from the website?')"
+       style="display:inline-flex;align-items:center;gap:6px;padding:7px 18px;
+              border-radius:8px;font-size:.82rem;font-weight:700;text-decoration:none;
+              background:#dc2626;color:#fff;border:none;cursor:pointer;">
+      🚫 Hide from site
+    </a>
+  </div>
+  {% else %}
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+              background:#fef2f2;border:1.5px solid #fca5a5;border-radius:10px;
+              padding:12px 18px;margin-bottom:14px;">
+    <span style="font-size:.9rem;font-weight:600;color:#991b1b;">
+      🚫 This property is <strong>hidden from the website</strong>.
+    </span>
+    <a href="{% url 'admin:properties_property_toggle_active' original.pk %}"
+       onclick="return confirm('Show "{{ original.name }}" on the website?')"
+       style="display:inline-flex;align-items:center;gap:6px;padding:7px 18px;
+              border-radius:8px;font-size:.82rem;font-weight:700;text-decoration:none;
+              background:#16a34a;color:#fff;border:none;cursor:pointer;">
+      ✅ Show on site
+    </a>
+  </div>
+  {% endif %}
+{% endif %}
+
+<div style="background:linear-gradient(90deg,#0d9488,#2563eb);color:#fff;padding:10px 20px;border-radius:8px;margin-bottom:16px;font-weight:600;font-size:14px;">
+    ℹ️ Use the tabs below to navigate between sections without scrolling.
+</div>
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+
+<style>
+/* ── Google Places / Nominatim autocomplete dropdown ─────────────── */
+.pac-container {
+  z-index: 999999 !important;
+  font-family: inherit;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.15);
+}
+.pac-item { font-size: .85rem; padding: 8px 12px; cursor: pointer; }
+.pac-item:hover { background: #f0f9ff; }
+
+/* ── Nominatim fallback dropdown ─────────────────────────────────── */
+#nominatim-dropdown {
+  position: absolute;
+  z-index: 999999;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.15);
+  max-width: 620px;
+  width: 100%;
+  display: none;
+  margin-top: 2px;
+  max-height: 280px;
+  overflow-y: auto;
+}
+#nominatim-dropdown .nom-item {
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: .85rem;
+  border-bottom: 1px solid #f3f4f6;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+#nominatim-dropdown .nom-item:last-child { border-bottom: none; }
+#nominatim-dropdown .nom-item:hover { background: #f0f9ff; }
+#nominatim-dropdown .nom-item .nom-icon { color: #9ca3af; flex-shrink: 0; margin-top: 2px; }
+#nominatim-dropdown .nom-item .nom-text { flex: 1; }
+#nominatim-dropdown .nom-item .nom-type {
+  font-size: .72rem; color: #9ca3af; margin-top: 2px;
+}
+
+/* ── Status pill ─────────────────────────────────────────────────── */
+.places-status-ok {
+  display: inline-flex; align-items: center; gap: .4rem;
+  margin-top: .5rem; padding: .35rem .85rem;
+  border-radius: 6px; font-size: .78rem; font-weight: 600;
+  background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0;
+}
+.places-status-warn {
+  display: inline-flex; align-items: center; gap: .4rem;
+  margin-top: .5rem; padding: .35rem .85rem;
+  border-radius: 6px; font-size: .78rem; font-weight: 600;
+  background: #fef9c3; color: #92400e; border: 1px solid #fde68a;
+}
+.places-status-info {
+  display: inline-flex; align-items: center; gap: .4rem;
+  margin-top: .5rem; padding: .35rem .85rem;
+  border-radius: 6px; font-size: .78rem; font-weight: 500;
+  background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe;
+}
+.places-status-error {
+  display: inline-flex; align-items: center; gap: .4rem;
+  margin-top: .5rem; padding: .35rem .85rem;
+  border-radius: 6px; font-size: .78rem; font-weight: 600;
+  background: #fef2f2; color: #991b1b; border: 1px solid #fecaca;
+}
+
+/* ── Clear / Re-geocode buttons ──────────────────────────────────── */
+#places-clear-btn, #places-regeo-btn {
+  margin-top: .4rem; margin-left: .4rem;
+  padding: .28rem .72rem; border-radius: 6px;
+  border: 1px solid #d1d5db; background: #f9fafb;
+  color: #374151; font-size: .78rem; cursor: pointer;
+  font-weight: 500;
+}
+#places-clear-btn:hover { background: #fee2e2; color: #b91c1c; border-color: #fca5a5; }
+#places-regeo-btn:hover { background: #eff6ff; color: #1d4ed8; border-color: #93c5fd; }
+
+/* ── Coordinate confirmation card ────────────────────────────────── */
+#places-coords-card {
+  display: none;
+  margin-top: .75rem;
+  padding: .6rem 1rem;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  font-size: .8rem;
+  color: #166534;
+  font-family: 'SF Mono', 'Fira Mono', monospace;
+  gap: .5rem;
+}
+#places-coords-card strong { color: #0f4c25; }
+
+/* ── Admin map preview ───────────────────────────────────────────── */
+#places-map-wrap {
+  display: none;
+  margin-top: .85rem;
+}
+#places-map-wrap .map-label {
+  font-size: .75rem; font-weight: 600; color: #374151;
+  margin-bottom: .3rem; letter-spacing: .03em; text-transform: uppercase;
+}
+#places-map-wrap .map-sublabel {
+  font-size: .72rem; color: #6b7280; margin-bottom: .5rem;
+}
+#places-preview-map {
+  width: 100%; max-width: 560px; height: 230px;
+  border-radius: 10px; border: 2px solid #d1fae5;
+  overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,.10);
+}
+
+/* ── API key mode badge ──────────────────────────────────────────── */
+#places-mode-badge {
+  display: inline-flex; align-items: center; gap: .35rem;
+  margin-top: .5rem; padding: .3rem .7rem;
+  border-radius: 6px; font-size: .72rem; font-weight: 600;
+}
+.mode-google {
+  background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0;
+}
+.mode-nominatim {
+  background: #fef9c3; color: #92400e; border: 1px solid #fde68a;
+}
+</style>
+
+<script>
+"use strict";
+/* =====================================================================
+   Property Admin — Address Autocomplete (Google Places OR Nominatim)
+   =====================================================================
+   Two modes:
+     A) Google Places (preferred) — when GOOGLE_MAPS_API_KEY is set
+        → real-time dropdown from Google, + Google Maps admin preview
+     B) Nominatim fallback — when no API key is configured
+        → queries OpenStreetMap Nominatim on keypress (debounced),
+          shows results in a custom dropdown, + Leaflet map preview
+   Both modes write the same hidden fields read by save_model().
+   ===================================================================== */
+
+var _GOOGLE_KEY = "{{ google_maps_api_key|escapejs }}";
+var _HAS_GOOGLE = (_GOOGLE_KEY !== "");
+window._placeConfirmed = false;
+
+/* ── Shared helpers ──────────────────────────────────────────────── */
+function _setHidden(name, value) {
+  var el = document.querySelector('input[name="' + name + '"]');
+  if (el) el.value = value;
+}
+
+function _showStatus(msg, cls) {
+  var el = document.getElementById("places-status");
+  if (!el) return;
+  el.textContent = msg;
+  el.className = cls;
+  el.style.display = msg ? "inline-flex" : "none";
+}
+
+function _setCoords(lat, lng) {
+  var card = document.getElementById("places-coords-card");
+  if (!card) return;
+  if (lat === null) { card.style.display = "none"; card.innerHTML = ""; }
+  else {
+    card.style.display = "flex";
+    card.innerHTML = "<strong>\uD83D\uDCCD Confirmed:</strong>&nbsp;" +
+      "Lat&nbsp;<strong>" + lat.toFixed(6) + "</strong>&nbsp;&nbsp;" +
+      "Lng&nbsp;<strong>" + lng.toFixed(6) + "</strong>";
+  }
+}
+
+function _clearAll(input) {
+  if (input) input.value = "";
+  _setHidden("_places_lat", "");
+  _setHidden("_places_lng", "");
+  _setHidden("_places_place_id", "");
+  _setHidden("_places_postal", "");
+  window._placeConfirmed = false;
+  _showStatus("", "");
+  _setCoords(null, null);
+  var wrap = document.getElementById("places-map-wrap");
+  if (wrap) wrap.style.display = "none";
+  var dd = document.getElementById("nominatim-dropdown");
+  if (dd) dd.style.display = "none";
+}
+
+function _applySelection(lat, lng, address, placeId, postal, input) {
+  if (input) input.value = address;
+  _setHidden("_places_lat", lat.toFixed(6));
+  _setHidden("_places_lng", lng.toFixed(6));
+  _setHidden("_places_place_id", placeId || "");
+  _setHidden("_places_postal", postal || "");
+  window._placeConfirmed = true;
+  _showStatus("\u2705 " + address + (postal ? "  \uD83D\uDCEE " + postal : ""), "places-status-ok");
+  _setCoords(lat, lng);
+}
+
+/* ── Get radius from form ────────────────────────────────────────── */
+function _getRadius() {
+  var el = document.getElementById("id_public_radius_m");
+  return el ? (parseInt(el.value, 10) || 400) : 400;
+}
+
+/* =================================================================
+   MODE A: Google Places Autocomplete
+   (called as the Maps JS API callback)
+   ================================================================= */
+window.initPropertyPlaces = function () {
+  var input = document.getElementById("id_address_private");
+  if (!input || !window.google || !window.google.maps || !window.google.maps.places) return;
+
+  var ac = new google.maps.places.Autocomplete(input, {
+    componentRestrictions: { country: "gr" },
+    fields: ["formatted_address", "geometry", "place_id", "address_components"],
+    types: ["geocode", "establishment"],
+  });
+
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") e.preventDefault();
+  });
+
+  input.addEventListener("input", function () {
+    window._placeConfirmed = false;
+    _setCoords(null, null);
+    _showStatus("\u26A0 Text changed \u2014 please re-select from Google suggestions.", "places-status-warn");
+  });
+
+  var previewMap = null, previewMarker = null, previewCircle = null;
+
+  function showGoogleMap(lat, lng) {
+    var wrap = document.getElementById("places-map-wrap");
+    if (wrap) wrap.style.display = "block";
+    var mapEl = document.getElementById("places-preview-map");
+    if (!mapEl) return;
+    var center = { lat: lat, lng: lng };
+    if (!previewMap) {
+      previewMap = new google.maps.Map(mapEl, {
+        center: center, zoom: 15,
+        mapTypeControl: false, streetViewControl: false,
+        fullscreenControl: false, zoomControl: true,
+        gestureHandling: "cooperative",
+        styles: [{ featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }] }],
+      });
+    } else { previewMap.setCenter(center); }
+    if (previewMarker) previewMarker.setMap(null);
+    previewMarker = new google.maps.Marker({
+      position: center, map: previewMap,
+      title: "Exact private location",
+      icon: { path: google.maps.SymbolPath.CIRCLE, scale: 8, fillColor: "#dc2626", fillOpacity: .9, strokeColor: "#fff", strokeWeight: 2 },
+    });
+    if (previewCircle) previewCircle.setMap(null);
+    previewCircle = new google.maps.Circle({
+      map: previewMap, center: center, radius: _getRadius(),
+      strokeColor: "#2563eb", strokeOpacity: .6, strokeWeight: 2,
+      fillColor: "#2563eb", fillOpacity: .08,
+    });
+    previewMap.fitBounds(previewCircle.getBounds());
+  }
+
+  ac.addListener("place_changed", function () {
+    var place = ac.getPlace();
+    if (!place || !place.geometry || !place.geometry.location) {
+      _showStatus("\u26A0 No coordinates returned \u2014 select a different suggestion.", "places-status-warn");
+      window._placeConfirmed = false;
+      return;
+    }
+    var lat = place.geometry.location.lat();
+    var lng = place.geometry.location.lng();
+    var postal = "";
+    (place.address_components || []).forEach(function (c) {
+      if (c.types.indexOf("postal_code") !== -1) postal = c.long_name;
+    });
+    _applySelection(lat, lng, place.formatted_address || "", place.place_id || "", postal, input);
+    showGoogleMap(lat, lng);
+  });
+
+  /* Wire clear / re-geocode buttons */
+  var clearBtn = document.getElementById("places-clear-btn");
+  if (clearBtn) clearBtn.addEventListener("click", function () { _clearAll(input); input.focus(); });
+  var regeoBtn = document.getElementById("places-regeo-btn");
+  if (regeoBtn) regeoBtn.addEventListener("click", function () { input.focus(); input.select(); _showStatus("\u2139\uFE0F Re-type the address, then pick from Google suggestions.", "places-status-info"); });
+
+  /* Show map for an existing property with saved coords */
+  _loadExistingCoords(input, showGoogleMap);
+};
+
+/* =================================================================
+   MODE B: Nominatim Fallback Autocomplete
+   (used when no GOOGLE_MAPS_API_KEY is configured)
+   ================================================================= */
+function initNominatimFallback() {
+  var input = document.getElementById("id_address_private");
+  if (!input) return;
+
+  var dropdown = document.getElementById("nominatim-dropdown");
+  if (!dropdown) {
+    dropdown = document.createElement("div");
+    dropdown.id = "nominatim-dropdown";
+    input.parentNode.style.position = "relative";
+    input.parentNode.appendChild(dropdown);
+  }
+
+  var debounceTimer = null;
+  var currentQuery = "";
+
+  input.addEventListener("input", function () {
+    var q = input.value.trim();
+    window._placeConfirmed = false;
+    _setCoords(null, null);
+    if (q.length < 3) { dropdown.style.display = "none"; return; }
+    currentQuery = q;
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(function () { searchNominatim(q); }, 400);
+  });
+
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") e.preventDefault();
+    if (e.key === "Escape") dropdown.style.display = "none";
+  });
+
+  document.addEventListener("click", function (e) {
+    if (!dropdown.contains(e.target) && e.target !== input) dropdown.style.display = "none";
+  });
+
+  function searchNominatim(query) {
+    var url = "https://nominatim.openstreetmap.org/search?" +
+      "q=" + encodeURIComponent(query + ", Greece") +
+      "&format=json&addressdetails=1&limit=6&countrycodes=gr";
+    fetch(url, { headers: { "User-Agent": "AdonisGroupAdmin/1.0" } })
+      .then(function (r) { return r.json(); })
+      .then(function (results) {
+        if (input.value.trim() !== currentQuery) return;
+        renderDropdown(results);
+      })
+      .catch(function () {
+        dropdown.innerHTML = '<div class="nom-item"><span class="nom-text" style="color:#9ca3af;">Search failed. Try again.</span></div>';
+        dropdown.style.display = "block";
+      });
+  }
+
+  function renderDropdown(results) {
+    if (!results || results.length === 0) {
+      dropdown.innerHTML = '<div class="nom-item"><span class="nom-text" style="color:#9ca3af;">No results found. Try a different query.</span></div>';
+      dropdown.style.display = "block";
+      return;
+    }
+    dropdown.innerHTML = "";
+    results.forEach(function (r) {
+      var item = document.createElement("div");
+      item.className = "nom-item";
+      var postal = (r.address && r.address.postcode) ? r.address.postcode : "";
+      item.innerHTML =
+        '<span class="nom-icon">\uD83D\uDCCD</span>' +
+        '<span class="nom-text">' + escapeHtml(r.display_name) +
+        (r.type ? '<br><span class="nom-type">' + r.type + '</span>' : '') +
+        '</span>';
+      item.addEventListener("click", function () {
+        var lat = parseFloat(r.lat);
+        var lng = parseFloat(r.lon);
+        _applySelection(lat, lng, r.display_name, "", postal, input);
+        dropdown.style.display = "none";
+        showLeafletMap(lat, lng);
+      });
+      dropdown.appendChild(item);
+    });
+    dropdown.style.display = "block";
+  }
+
+  function escapeHtml(str) {
+    var d = document.createElement("div");
+    d.textContent = str;
+    return d.innerHTML;
+  }
+
+  /* Leaflet map preview for Nominatim mode */
+  var leafletLoaded = false;
+  var leafletMap = null, leafletMarker = null, leafletCircle = null;
+
+  function loadLeaflet(cb) {
+    if (leafletLoaded) { cb(); return; }
+    var css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "{% static 'vendor/leaflet/leaflet.css' %}";
+    document.head.appendChild(css);
+    var js = document.createElement("script");
+    js.src = "{% static 'vendor/leaflet/leaflet.js' %}";
+    js.onload = function () { leafletLoaded = true; cb(); };
+    document.head.appendChild(js);
+  }
+
+  function showLeafletMap(lat, lng) {
+    var wrap = document.getElementById("places-map-wrap");
+    if (wrap) wrap.style.display = "block";
+    var mapEl = document.getElementById("places-preview-map");
+    if (!mapEl) return;
+    loadLeaflet(function () {
+      if (!leafletMap) {
+        leafletMap = L.map(mapEl, { center: [lat, lng], zoom: 15, zoomControl: true, scrollWheelZoom: false });
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution: "&copy; OpenStreetMap", maxZoom: 18,
+        }).addTo(leafletMap);
+      } else {
+        leafletMap.setView([lat, lng], 15);
+      }
+      if (leafletMarker) leafletMap.removeLayer(leafletMarker);
+      leafletMarker = L.circleMarker([lat, lng], { radius: 8, color: "#dc2626", fillColor: "#dc2626", fillOpacity: .9, weight: 2 }).addTo(leafletMap);
+      if (leafletCircle) leafletMap.removeLayer(leafletCircle);
+      leafletCircle = L.circle([lat, lng], { radius: _getRadius(), color: "#2563eb", fillColor: "#2563eb", fillOpacity: .08, weight: 2, dashArray: "6 4" }).addTo(leafletMap);
+      leafletMap.fitBounds(leafletCircle.getBounds());
+    });
+  }
+
+  /* Wire buttons */
+  var clearBtn = document.getElementById("places-clear-btn");
+  if (clearBtn) clearBtn.addEventListener("click", function () { _clearAll(input); input.focus(); });
+  var regeoBtn = document.getElementById("places-regeo-btn");
+  if (regeoBtn) regeoBtn.addEventListener("click", function () { input.focus(); input.select(); _showStatus("\u2139\uFE0F Re-type the address, then pick a result from the dropdown.", "places-status-info"); });
+
+  _loadExistingCoords(input, showLeafletMap);
+}
+
+/* =================================================================
+   Shared: load existing property coords into map on page open
+   ================================================================= */
+function _loadExistingCoords(input, showMapFn) {
+  var latEl = document.getElementById("id_lat_private");
+  var lngEl = document.getElementById("id_lng_private");
+  var savedLat = latEl ? parseFloat(latEl.value) : NaN;
+  var savedLng = lngEl ? parseFloat(lngEl.value) : NaN;
+  if (!isNaN(savedLat) && !isNaN(savedLng) && savedLat !== 0 && savedLng !== 0) {
+    _setCoords(savedLat, savedLng);
+    showMapFn(savedLat, savedLng);
+    if (input && input.value) {
+      _showStatus("\uD83D\uDCCD Saved address \u2014 coordinates confirmed (see map below).", "places-status-ok");
+      window._placeConfirmed = true;
+    }
+  } else if (input && input.value) {
+    _showStatus("\u26A0 Address typed but NO coordinates stored \u2014 please search and select again.", "places-status-warn");
+  }
+}
+
+/* =================================================================
+   Client-side save validation (both modes)
+   ================================================================= */
+document.addEventListener("DOMContentLoaded", function () {
+  var adminForm = document.querySelector("#content-main form") ||
+                  document.querySelector("form[method='post']");
+  if (!adminForm) return;
+
+  adminForm.addEventListener("submit", function (e) {
+    var addrEl   = document.getElementById("id_address_private");
+    var latInput = document.querySelector('input[name="_places_lat"]');
+    var savedLat = document.getElementById("id_lat_private");
+
+    var addrValue  = (addrEl   ? addrEl.value   : "").trim();
+    var pendingLat = (latInput ? latInput.value : "").trim();
+    var hasSaved   = (savedLat ? savedLat.value : "").trim();
+
+    if (addrValue && !pendingLat && !hasSaved) {
+      if (!confirm(
+        "\u26A0 Location Warning:\n\n" +
+        '"' + addrValue + '" was typed but no coordinates were captured.\n' +
+        "The map circle will NOT appear on the property page.\n\n" +
+        "To fix: clear the field, re-type, and SELECT from the dropdown.\n\n" +
+        "OK = save without map  |  Cancel = go back and fix"
+      )) {
+        e.preventDefault();
+      }
+    }
+  });
+
+  /* ── Init the correct mode after DOM is ready ─────────────────── */
+  if (!_HAS_GOOGLE) {
+    initNominatimFallback();
+  }
+});
+</script>
+
+{% if google_maps_api_key %}
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key|escapejs }}&libraries=places&callback=initPropertyPlaces"
+        async defer></script>
+{% endif %}
+
+{% endblock %}
+
+
+{% block after_related_objects %}
+{{ block.super }}
+
+{# Hidden inputs — JS writes to them, save_model reads from POST #}
+<input type="hidden" name="_places_lat"      id="id__places_lat"      value="">
+<input type="hidden" name="_places_lng"      id="id__places_lng"      value="">
+<input type="hidden" name="_places_place_id" id="id__places_place_id" value="">
+<input type="hidden" name="_places_postal"   id="id__places_postal"   value="">
+
+<script>
+(function () {
+  "use strict";
+  function injectAddressUI() {
+    var input = document.getElementById("id_address_private");
+    if (!input || document.getElementById("places-status")) return;
+
+    var parent = input.parentNode;
+    var ref    = input.nextSibling;
+    function ins(el) { parent.insertBefore(el, ref); ref = el.nextSibling; }
+
+    /* Mode badge — tells the admin which geocoding mode is active */
+    var badge = document.createElement("span");
+    badge.id = "places-mode-badge";
+    if (_HAS_GOOGLE) {
+      badge.className = "mode-google";
+      badge.innerHTML = "\uD83D\uDFE2 Google Places active \u2014 type to see suggestions";
+    } else {
+      badge.className = "mode-nominatim";
+      badge.innerHTML = "\uD83D\uDFE1 Nominatim mode (no Google API key) \u2014 type 3+ chars to search";
+    }
+    ins(badge);
+    ins(document.createElement("br"));
+
+    /* Status pill */
+    var pill = document.createElement("span");
+    pill.id = "places-status";
+    pill.style.display = "none";
+    ins(pill);
+
+    /* Clear button */
+    var clearBtn = document.createElement("button");
+    clearBtn.type = "button"; clearBtn.id = "places-clear-btn";
+    clearBtn.textContent = "\u2715 Clear address";
+    ins(clearBtn);
+
+    /* Re-geocode button */
+    var regeoBtn = document.createElement("button");
+    regeoBtn.type = "button"; regeoBtn.id = "places-regeo-btn";
+    regeoBtn.textContent = "\uD83D\uDD04 Re-select address";
+    ins(regeoBtn);
+
+    ins(document.createElement("br"));
+
+    /* Coordinate card */
+    var coordsCard = document.createElement("div");
+    coordsCard.id = "places-coords-card";
+    coordsCard.style.display = "none";
+    ins(coordsCard);
+
+    /* Map preview */
+    var mapWrap = document.createElement("div");
+    mapWrap.id = "places-map-wrap";
+    mapWrap.style.display = "none";
+    mapWrap.innerHTML =
+      '<p class="map-label">\uD83D\uDCCD Admin Location Preview <span style="font-weight:400;text-transform:none;color:#9ca3af;font-size:.7rem;">(private \u2014 never sent to browsers)</span></p>' +
+      '<p class="map-sublabel">' +
+        '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#dc2626;vertical-align:middle;margin-right:4px;"></span>Red dot = exact private address &nbsp;|&nbsp; ' +
+        '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:rgba(37,99,235,0.35);border:2px solid #2563eb;vertical-align:middle;margin-right:4px;"></span>Blue circle = public privacy radius' +
+      '</p>' +
+      '<div id="places-preview-map"></div>';
+    ins(mapWrap);
+
+    /* If no Google key, show setup instructions */
+    if (!_HAS_GOOGLE) {
+      var banner = document.createElement("div");
+      banner.style.cssText = "margin-top:12px;padding:12px 16px;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;font-size:.82rem;color:#9a3412;line-height:1.5;max-width:620px;";
+      banner.innerHTML =
+        '<strong>\uD83D\uDD11 Want Google autocomplete instead?</strong><br>' +
+        'Add your API key to <code style="background:#fef3c7;padding:0 4px;border-radius:3px;">.env</code>:<br>' +
+        '<code style="display:block;margin:6px 0;background:#fef3c7;padding:6px 10px;border-radius:4px;">GOOGLE_MAPS_API_KEY=AIzaSy...YourKeyHere</code>' +
+        'Enable these APIs in <a href="https://console.cloud.google.com/google/maps-apis/credentials" target="_blank" rel="noopener">Google Cloud Console</a>:<br>' +
+        '\u2022 Maps JavaScript API &nbsp;\u2022 Places API &nbsp;\u2022 Geocoding API<br>' +
+        '<br>The current <strong>Nominatim mode</strong> works without a key but is less precise.';
+      ins(banner);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", injectAddressUI);
+  } else {
+    injectAddressUI();
+  }
+})();
+</script>
+
+{% endblock %}

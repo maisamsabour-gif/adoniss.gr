@@ -1,0 +1,31 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="content">
+    <h1>{{ title }}</h1>
+    <p>{{ question }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="{{ action_name }}_selected">
+        <input type="hidden" name="confirm_action" value="yes">
+
+        {% for obj in queryset %}
+            <input type="hidden" name="{{ action_checkbox_name }}" value="{{ obj.pk }}">
+        {% endfor %}
+
+        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:12px 14px;margin:10px 0 16px;">
+            <strong>{% trans "Selected objects" %}:</strong>
+            <ul style="margin:8px 0 0 18px;">
+                {% for obj in queryset %}
+                    <li>{{ obj }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <button type="submit" class="button default">{{ button_label }}</button>
+        <a href="." class="button" style="margin-left:8px;">{% trans "Cancel" %}</a>
+    </form>
+</div>
+{% endblock %}

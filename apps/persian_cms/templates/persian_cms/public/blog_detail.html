@@ -1,0 +1,15 @@
+{% extends "persian_cms/public/base.html" %}
+
+{% block content %}
+<main class="adonis-fa-new-main" style="padding:48px 0;">
+    <div class="adonis-fa-new-container">
+        {% if post %}
+        <h1 class="adonis-fa-new-section-title">{{ post.title }}</h1>
+        {% if post.featured_image %}<img src="{{ post.featured_image.url }}" alt="{{ post.og_title|default:post.title }}" style="max-width:100%;height:auto;margin-bottom:24px;">{% endif %}
+        <div class="adonis-fa-new-section-lead">{{ post.body|safe }}</div>
+        {% else %}
+        <h1 class="adonis-fa-new-section-title">مقاله یافت نشد</h1>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

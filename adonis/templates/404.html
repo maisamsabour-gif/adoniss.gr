@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Page Not Found" %} | {{ SITE_NAME }}{% endblock %}
+{% block robots_meta %}noindex, nofollow{% endblock %}
+
+{% block content %}
+<section style="min-height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 4rem 1rem;">
+    <div>
+        <h1 style="font-size: 5rem; margin-bottom: 0.5rem; opacity: 0.3;">404</h1>
+        <h2 style="margin-bottom: 1rem;">{% trans "Page Not Found" %}</h2>
+        <p style="margin-bottom: 2rem; color: #666;">{% trans "The page you are looking for does not exist or has been moved." %}</p>
+        <a href="{% url 'home' %}" class="btn btn-primary">{% trans "Back to Home" %}</a>
+    </div>
+</section>
+{% endblock %}

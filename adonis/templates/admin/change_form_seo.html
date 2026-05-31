@@ -1,0 +1,118 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block extrahead %}
+{{ block.super }}
+<script>window.CKEDITOR_GLOBAL_LICENSE_KEY = "GPL";</script>
+{% endblock %}
+
+{% block after_related_objects %}
+{{ block.super }}
+{% include "admin/seo_panel.html" %}
+
+<script>
+(function() {
+  "use strict";
+  window.CKEDITOR_GLOBAL_LICENSE_KEY = "GPL";
+
+  function getCSRF() {
+    var el = document.querySelector("input[name=csrfmiddlewaretoken]");
+    return el ? el.value : "";
+  }
+
+  function forceInitAll() {
+    var textareas = document.querySelectorAll("textarea.django_ckeditor_5");
+    if (textareas.length === 0) return;
+    if (!window.ClassicEditor) return;
+
+    var eds = window.editors || {};
+
+    textareas.forEach(function(ta) {
+      if (ta.id.indexOf("__prefix__") !== -1) return;
+      if (eds[ta.id]) return;
+
+      var container = ta.closest(".ck-editor-container");
+      if (container && container.querySelector(".ck.ck-editor")) return;
+
+      var scriptId = ta.id + "_script";
+      var configEl = document.getElementById(scriptId);
+      if (!configEl) {
+        var span = document.getElementById(scriptId + "-span");
+        if (span) configEl = span.querySelector('script[type="application/json"]');
+      }
+      if (!configEl) return;
+
+      var config;
+      try { config = JSON.parse(configEl.textContent); }
+      catch(e) { return; }
+
+      config.licenseKey = "GPL";
+
+      var uploadInput = document.getElementById(scriptId + "-ck-editor-5-upload-url");
+      if (uploadInput) {
+        config.simpleUpload = {
+          uploadUrl: uploadInput.getAttribute("data-upload-url") || "/ckeditor5/image_upload/",
+          headers: { "X-CSRFToken": getCSRF() }
+        };
+      }
+
+      ta.removeAttribute("data-processed");
+      ta.style.display = "block";
+
+      window.ClassicEditor.create(ta, config)
+        .then(function(editor) {
+          editor.model.document.on("change:data", function() {
+            var t = document.getElementById(ta.id);
+            if (t) t.value = editor.getData();
+          });
+          if (!window.editors) window.editors = {};
+          window.editors[ta.id] = editor;
+
+          setTimeout(function() {
+            try { editor.editing.view.forceRender(); } catch(e) {}
+            var editable = editor.editing.view.getDomRoot();
+            if (editable) {
+              editable.style.minHeight = "560px";
+              editable.style.height = "auto";
+            }
+          }, 200);
+        })
+        .catch(function(err) {
+          console.error("[ck_init] Failed:", ta.id, err);
+          ta.removeAttribute("data-processed");
+          ta.style.display = "block";
+          ta.style.width = "100%";
+          ta.style.minHeight = "500px";
+          ta.style.fontSize = "14px";
+          ta.style.padding = "16px";
+          ta.style.borderRadius = "8px";
+          ta.style.border = "2px solid #fbbf24";
+          ta.style.background = "#fffbeb";
+        });
+    });
+  }
+
+  function schedule() {
+    [300, 800, 1500, 3000, 5000, 8000].forEach(function(d) {
+      setTimeout(forceInitAll, d);
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", schedule);
+  } else {
+    schedule();
+  }
+
+  window.addEventListener("load", function() {
+    setTimeout(forceInitAll, 500);
+    setTimeout(forceInitAll, 2000);
+  });
+
+  document.addEventListener("alpine:initialized", function() {
+    setTimeout(forceInitAll, 300);
+    setTimeout(forceInitAll, 1500);
+  });
+})();
+</script>
+{% endblock %}

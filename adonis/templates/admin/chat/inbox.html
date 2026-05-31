@@ -1,0 +1,136 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block title %}Live Chat Inbox{% endblock %}
+
+{% block extrahead %}
+<style>
+:root {
+  --lc-gold:  #c9a84c;
+  --lc-navy:  #0f1e35;
+  --lc-mid:   #1a2f4a;
+  --lc-text:  #e8edf4;
+  --lc-muted: #8fa3bb;
+  --lc-card:  rgba(255,255,255,.05);
+  --lc-border:rgba(255,255,255,.08);
+  --lc-radius:16px;
+}
+.lc-page { padding: 28px 32px; font-family: "Inter", sans-serif; }
+.lc-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+.lc-header h1 { font-size: 1.5rem; font-weight: 700; color: var(--lc-text); margin: 0; }
+.lc-badge-count {
+  background: var(--lc-gold); color: var(--lc-navy);
+  font-size: .75rem; font-weight: 700; padding: 2px 9px;
+  border-radius: 999px; letter-spacing: .04em;
+}
+.lc-empty {
+  text-align: center; padding: 60px 20px;
+  color: var(--lc-muted); font-size: 1rem;
+}
+.lc-empty i { font-size: 2.5rem; margin-bottom: 12px; display: block; opacity: .4; }
+.lc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
+.lc-card {
+  background: var(--lc-card);
+  border: 1px solid var(--lc-border);
+  border-radius: var(--lc-radius);
+  padding: 20px 22px;
+  text-decoration: none;
+  color: var(--lc-text);
+  transition: border-color .2s, transform .2s, box-shadow .2s;
+  display: block;
+}
+.lc-card:hover {
+  border-color: var(--lc-gold);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(0,0,0,.3);
+  color: var(--lc-text);
+  text-decoration: none;
+}
+.lc-card__top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+.lc-card__phase {
+  font-size: .7rem; font-weight: 700; letter-spacing: .07em;
+  text-transform: uppercase; padding: 3px 10px; border-radius: 999px;
+}
+.lc-card__phase--pending_agent { background: rgba(251,191,36,.15); color: #fbbf24; border: 1px solid rgba(251,191,36,.3); }
+.lc-card__phase--human         { background: rgba(34,197,94,.15);  color: #22c55e;  border: 1px solid rgba(34,197,94,.3); }
+.lc-card__phase--closed        { background: rgba(148,163,184,.1); color: #94a3b8;  border: 1px solid rgba(148,163,184,.2); }
+.lc-card__key  { font-family: monospace; font-size: .75rem; color: var(--lc-muted); }
+.lc-card__page { font-size: .82rem; color: var(--lc-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 10px; }
+.lc-card__meta { display: flex; justify-content: space-between; font-size: .78rem; color: var(--lc-muted); }
+.lc-card__unread {
+  background: #ef4444; color: #fff;
+  font-size: .7rem; font-weight: 700;
+  padding: 1px 7px; border-radius: 999px;
+  margin-left: 8px;
+}
+.lc-card__agent { color: var(--lc-gold); font-weight: 600; font-size: .8rem; }
+.lc-refresh { margin-left: auto; }
+.lc-refresh a {
+  color: var(--lc-muted); font-size: .82rem;
+  text-decoration: none; display: flex; align-items: center; gap: 6px;
+}
+.lc-refresh a:hover { color: var(--lc-gold); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="lc-page">
+  <div class="lc-header">
+    <h1><i class="fas fa-comments" style="color:var(--lc-gold)"></i> &nbsp;Live Chat Inbox</h1>
+    {% if sessions %}
+      <span class="lc-badge-count">{{ sessions|length }}</span>
+    {% endif %}
+    <div class="lc-refresh">
+      <a href="{% url 'agent_chat_inbox' %}">
+        <i class="fas fa-sync-alt"></i> Refresh
+      </a>
+    </div>
+  </div>
+
+  {% if not sessions %}
+    <div class="lc-empty">
+      <i class="fas fa-inbox"></i>
+      No active chat sessions right now.
+    </div>
+  {% else %}
+    <div class="lc-grid">
+      {% for s in sessions %}
+      <a class="lc-card" href="{% url 'agent_chat_session' s.session_key %}">
+        <div class="lc-card__top">
+          <span class="lc-card__phase lc-card__phase--{{ s.phase }}">
+            {% if s.phase == 'pending_agent' %}⏳ Waiting{% elif s.phase == 'human' %}🟢 Live{% else %}{{ s.phase }}{% endif %}
+          </span>
+          <span class="lc-card__key">{{ s.session_key|slice:":12" }}…</span>
+        </div>
+
+        <div class="lc-card__page">
+          <i class="fas fa-globe" style="opacity:.5"></i> {{ s.page_url|default:"—" }}
+        </div>
+
+        <div class="lc-card__meta">
+          <span>
+            <i class="fas fa-clock" style="opacity:.5"></i>
+            {{ s.updated_at|timesince }} ago
+          </span>
+          <span>
+            {% if s.unread_user_messages %}
+              <span class="lc-card__unread">{{ s.unread_user_messages }} new</span>
+            {% endif %}
+            {% if s.agent %}
+              <span class="lc-card__agent">
+                <i class="fas fa-user-tie"></i> {{ s.agent.get_full_name|default:s.agent.username }}
+              </span>
+            {% endif %}
+          </span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+
+<script>
+// Auto-refresh inbox every 15 s
+setTimeout(function () { location.reload(); }, 15000);
+</script>
+{% endblock %}

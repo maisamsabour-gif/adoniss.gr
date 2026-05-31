@@ -1,0 +1,601 @@
+{% load static %}<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>{{ meta_title|default:property.name }}</title>
+    {% if meta_description %}<meta name="description" content="{{ meta_description }}">{% endif %}
+    <meta name="robots" content="{{ robots_content|default:'index, follow' }}">
+    {% if canonical_url %}<link rel="canonical" href="{{ canonical_url }}">{% endif %}
+    <meta property="og:title" content="{{ og_title|default:property.name }}">
+    <meta property="og:description" content="{{ og_description|default:meta_description }}">
+    {% if og_image %}<meta property="og:image" content="{{ og_image }}">{% endif %}
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#060814">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon/favicon-32x32.png' %}">
+    <link rel="stylesheet" href="{% static 'fonts/fonts.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/fontawesome/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fa-new/home.css' %}?v=20260529-gold-btn-v1">
+    <style>
+        /* Property Detail Styles */
+        .fa-prop-hero {
+            position: relative;
+            height: 60vh;
+            min-height: 400px;
+            max-height: 600px;
+            overflow: hidden;
+        }
+        .fa-prop-hero-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .fa-prop-hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%);
+        }
+        .fa-prop-hero-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 3rem;
+            color: #fff;
+        }
+        .fa-prop-title {
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            font-weight: 800;
+            margin: 0 0 0.5rem;
+            font-family: "Vazirmatn", "Estedad", sans-serif;
+        }
+        .fa-prop-tagline {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin: 0;
+        }
+        .fa-prop-badges {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .fa-prop-badge {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .fa-prop-badge-gold {
+            background: linear-gradient(135deg, #c9a227, #e8d48a);
+            color: #1a1a2e;
+            font-weight: 600;
+        }
+        
+        /* Content Section */
+        .fa-prop-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+        .fa-prop-grid {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 2.5rem;
+        }
+        @media (max-width: 900px) {
+            .fa-prop-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Main Info */
+        .fa-prop-main h2 {
+            font-size: 1.5rem;
+            color: #1a1a2e;
+            margin: 0 0 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #c9a227;
+        }
+        .fa-prop-desc {
+            color: #475569;
+            line-height: 1.9;
+            font-size: 1rem;
+            white-space: pre-line;
+        }
+        
+        /* Specs Grid */
+        .fa-prop-specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .fa-prop-spec {
+            background: #f8fafc;
+            padding: 1.25rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .fa-prop-spec-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .fa-prop-spec-val {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+        .fa-prop-spec-label {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 0.25rem;
+        }
+        
+        /* Features */
+        .fa-prop-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+        }
+        .fa-prop-feature {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            color: #166534;
+            padding: 0.6rem 1.1rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* Sidebar */
+        .fa-prop-sidebar {
+            position: sticky;
+            top: 2rem;
+        }
+        .fa-prop-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        .fa-prop-price {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1a1a2e;
+            margin: 0 0 0.5rem;
+        }
+        .fa-prop-price-note {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        .fa-prop-cta {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, #c9a227, #e8d48a);
+            color: #1a1a2e;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-decoration: none;
+            margin-top: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .fa-prop-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(201,162,39,0.4);
+        }
+        .fa-prop-contact {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+            color: #475569;
+            font-size: 0.95rem;
+        }
+        .fa-prop-contact i {
+            color: #c9a227;
+        }
+        
+        /* Gallery */
+        .fa-prop-gallery {
+            margin: 2.5rem 0;
+        }
+        .fa-prop-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .fa-prop-gallery-item {
+            aspect-ratio: 4/3;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .fa-prop-gallery-item:hover {
+            transform: scale(1.02);
+        }
+        .fa-prop-gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Location */
+        .fa-prop-location {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+        .fa-prop-location h3 {
+            margin: 0 0 1rem;
+            color: #1a1a2e;
+        }
+        .fa-prop-distances {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        .fa-prop-distance {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #475569;
+        }
+        .fa-prop-distance i {
+            color: #c9a227;
+        }
+        
+        /* Related */
+        .fa-prop-related {
+            background: #fff;
+            padding: 4rem 1.5rem;
+            margin-top: 3rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        .fa-prop-related-header {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+        }
+        .fa-prop-related h2 {
+            color: #1a1a2e;
+            margin: 0 0 0.5rem;
+            font-size: 1.75rem;
+        }
+        .fa-prop-related-subtitle {
+            color: #64748b;
+            font-size: 1rem;
+        }
+        .fa-prop-related-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        @media (max-width: 1100px) {
+            .fa-prop-related-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @media (max-width: 800px) {
+            .fa-prop-related-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 500px) {
+            .fa-prop-related-grid {
+                grid-template-columns: 1fr;
+                max-width: 320px;
+            }
+        }
+        
+        /* Related Property Card */
+        .fa-related-card {
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+        }
+        .fa-related-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+        .fa-related-card-img {
+            aspect-ratio: 3/4;
+            overflow: hidden;
+            position: relative;
+        }
+        .fa-related-card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        .fa-related-card:hover .fa-related-card-img img {
+            transform: scale(1.08);
+        }
+        .fa-related-card-img-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e, #2d3748);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-size: 3rem;
+        }
+        .fa-related-card-price {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: linear-gradient(135deg, #c9a227, #e8d48a);
+            color: #1a1a2e;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+        .fa-related-card-body {
+            padding: 1.25rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .fa-related-card-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin: 0 0 0.5rem;
+            line-height: 1.4;
+        }
+        .fa-related-card-loc {
+            color: #64748b;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: auto;
+        }
+        .fa-related-card-loc i {
+            color: #c9a227;
+        }
+        
+        /* Empty state */
+        .fa-prop-related-empty {
+            text-align: center;
+            color: #64748b;
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body class="adonis-fa-new-body">
+    <a class="adonis-fa-new-skip-link" href="#adonis-fa-new-main">پرش به محتوای اصلی</a>
+    {% include "fa_new/_header.html" with is_home=False %}
+
+    <main id="adonis-fa-new-main" class="adonis-fa-new-main">
+        <!-- Hero -->
+        <section class="fa-prop-hero">
+            {% if property.main_image %}
+            <img class="fa-prop-hero-img" src="{{ property.main_image.url }}" alt="{{ property.main_image_alt|default:property.name }}">
+            {% else %}
+            <div class="fa-prop-hero-img" style="background:#1a1a2e"></div>
+            {% endif %}
+            <div class="fa-prop-hero-overlay"></div>
+            <div class="fa-prop-hero-content">
+                <div style="max-width:1200px;margin:0 auto">
+                    <h1 class="fa-prop-title">{{ property.name }}</h1>
+                    {% if property.tagline %}<p class="fa-prop-tagline">{{ property.tagline }}</p>{% endif %}
+                    <div class="fa-prop-badges">
+                        {% if property.location %}<span class="fa-prop-badge"><i class="fas fa-map-marker-alt"></i> {{ property.location }}</span>{% endif %}
+                        {% if property.status %}<span class="fa-prop-badge fa-prop-badge-gold">{{ property.get_status_display }}</span>{% endif %}
+                        {% if property.golden_visa_eligible %}<span class="fa-prop-badge fa-prop-badge-gold">🇪🇺 گلدن ویزا</span>{% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Content -->
+        <div class="fa-prop-content">
+            <div class="fa-prop-grid">
+                <!-- Main Column -->
+                <div class="fa-prop-main">
+                    <!-- Description -->
+                    {% if property.description %}
+                    <section>
+                        <h2>درباره پروژه</h2>
+                        <div class="fa-prop-desc">{{ property.description }}</div>
+                    </section>
+                    {% endif %}
+                    
+                    <!-- Specs -->
+                    <section>
+                        <h2>مشخصات</h2>
+                        <div class="fa-prop-specs">
+                            {% if property.size_min or property.size_max %}
+                            <div class="fa-prop-spec">
+                                <div class="fa-prop-spec-icon">📐</div>
+                                <div class="fa-prop-spec-val">{% if property.size_min and property.size_max %}{{ property.size_min }}-{{ property.size_max }}{% elif property.size_min %}{{ property.size_min }}+{% else %}{{ property.size_max }}{% endif %}</div>
+                                <div class="fa-prop-spec-label">متراژ (متر)</div>
+                            </div>
+                            {% endif %}
+                            {% if property.bedrooms_min or property.bedrooms_max %}
+                            <div class="fa-prop-spec">
+                                <div class="fa-prop-spec-icon">🛏️</div>
+                                <div class="fa-prop-spec-val">{% if property.bedrooms_min and property.bedrooms_max %}{{ property.bedrooms_min }}-{{ property.bedrooms_max }}{% elif property.bedrooms_min %}{{ property.bedrooms_min }}+{% else %}{{ property.bedrooms_max }}{% endif %}</div>
+                                <div class="fa-prop-spec-label">اتاق خواب</div>
+                            </div>
+                            {% endif %}
+                            {% if property.bathrooms %}
+                            <div class="fa-prop-spec">
+                                <div class="fa-prop-spec-icon">🚿</div>
+                                <div class="fa-prop-spec-val">{{ property.bathrooms }}</div>
+                                <div class="fa-prop-spec-label">حمام</div>
+                            </div>
+                            {% endif %}
+                            {% if property.floors %}
+                            <div class="fa-prop-spec">
+                                <div class="fa-prop-spec-icon">🏢</div>
+                                <div class="fa-prop-spec-val">{{ property.floors }}</div>
+                                <div class="fa-prop-spec-label">طبقه</div>
+                            </div>
+                            {% endif %}
+                            {% if property.parking_spaces %}
+                            <div class="fa-prop-spec">
+                                <div class="fa-prop-spec-icon">🅿️</div>
+                                <div class="fa-prop-spec-val">{{ property.parking_spaces }}</div>
+                                <div class="fa-prop-spec-label">پارکینگ</div>
+                            </div>
+                            {% endif %}
+                            {% if property.year_built %}
+                            <div class="fa-prop-spec">
+                                <div class="fa-prop-spec-icon">📅</div>
+                                <div class="fa-prop-spec-val">{{ property.year_built }}</div>
+                                <div class="fa-prop-spec-label">سال ساخت</div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </section>
+                    
+                    <!-- Features -->
+                    {% if property.feature_1 or property.feature_2 or property.feature_3 or property.feature_4 %}
+                    <section>
+                        <h2>ویژگی‌های برجسته</h2>
+                        <div class="fa-prop-features">
+                            {% if property.feature_1 %}<span class="fa-prop-feature">{{ property.feature_1 }}</span>{% endif %}
+                            {% if property.feature_2 %}<span class="fa-prop-feature">{{ property.feature_2 }}</span>{% endif %}
+                            {% if property.feature_3 %}<span class="fa-prop-feature">{{ property.feature_3 }}</span>{% endif %}
+                            {% if property.feature_4 %}<span class="fa-prop-feature">{{ property.feature_4 }}</span>{% endif %}
+                        </div>
+                    </section>
+                    {% endif %}
+                    
+                    <!-- Amenities -->
+                    {% if property.amenities %}
+                    <section>
+                        <h2>امکانات و تسهیلات</h2>
+                        <div class="fa-prop-desc">{{ property.amenities }}</div>
+                    </section>
+                    {% endif %}
+                    
+                    <!-- Gallery -->
+                    {% if images %}
+                    <section class="fa-prop-gallery">
+                        <h2>گالری تصاویر</h2>
+                        <div class="fa-prop-gallery-grid">
+                            {% for img in images %}
+                            <div class="fa-prop-gallery-item">
+                                <img src="{{ img.url }}" alt="{{ img.alt }}" loading="lazy">
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </section>
+                    {% endif %}
+                    
+                    <!-- Location -->
+                    {% if property.address or property.distance_to_sea or property.distance_to_center or property.distance_to_airport %}
+                    <section class="fa-prop-location">
+                        <h3><i class="fas fa-map-marker-alt" style="color:#c9a227"></i> موقعیت مکانی</h3>
+                        {% if property.address %}<p style="margin:0 0 1rem;color:#475569">{{ property.address }}</p>{% endif %}
+                        <div class="fa-prop-distances">
+                            {% if property.distance_to_sea %}<span class="fa-prop-distance"><i class="fas fa-water"></i> {{ property.distance_to_sea }} تا ساحل</span>{% endif %}
+                            {% if property.distance_to_center %}<span class="fa-prop-distance"><i class="fas fa-city"></i> {{ property.distance_to_center }} تا مرکز شهر</span>{% endif %}
+                            {% if property.distance_to_airport %}<span class="fa-prop-distance"><i class="fas fa-plane"></i> {{ property.distance_to_airport }} تا فرودگاه</span>{% endif %}
+                        </div>
+                    </section>
+                    {% endif %}
+                </div>
+                
+                <!-- Sidebar -->
+                <aside class="fa-prop-sidebar">
+                    <div class="fa-prop-card">
+                        {% if property.price or property.price_label %}
+                        <div class="fa-prop-price">
+                            {% if property.price_label %}{{ property.price_label }}{% else %}€{{ property.price|floatformat:0 }}{% endif %}
+                        </div>
+                        {% if property.price_per_sqm %}<div class="fa-prop-price-note">€{{ property.price_per_sqm|floatformat:0 }} / متر مربع</div>{% endif %}
+                        {% endif %}
+                        
+                        {% if property.rental_yield %}<div style="margin-top:1rem;padding:0.75rem;background:#f0fdf4;border-radius:8px;color:#166534"><i class="fas fa-chart-line"></i> بازده اجاره: {{ property.rental_yield }}٪</div>{% endif %}
+                        
+                        {% if property.available_units and property.total_units %}
+                        <div style="margin-top:1rem;padding:0.75rem;background:#fef3c7;border-radius:8px;color:#92400e"><i class="fas fa-building"></i> {{ property.available_units }} از {{ property.total_units }} واحد موجود</div>
+                        {% endif %}
+                        
+                        <a href="/fa-new/#fa-section-consult" class="fa-prop-cta">درخواست مشاوره رایگان</a>
+                        
+                        <div class="fa-prop-contact">
+                            <i class="fas fa-phone"></i>
+                            <span>{{ footer.phone|default:"+30 211 234 5678" }}</span>
+                        </div>
+                        <div class="fa-prop-contact">
+                            <i class="fas fa-envelope"></i>
+                            <span>{{ footer.email|default:"info@adonisgreece.com" }}</span>
+                        </div>
+                    </div>
+                    
+                    {% if property.delivery_date or property.timeline_stage %}
+                    <div class="fa-prop-card">
+                        <h4 style="margin:0 0 1rem;color:#1a1a2e">زمان‌بندی پروژه</h4>
+                        {% if property.timeline_stage %}<div style="margin-bottom:0.75rem"><i class="fas fa-flag" style="color:#c9a227"></i> {{ property.get_timeline_stage_display }}</div>{% endif %}
+                        {% if property.delivery_date %}<div><i class="fas fa-calendar" style="color:#c9a227"></i> تحویل: {{ property.delivery_date }}</div>{% endif %}
+                    </div>
+                    {% endif %}
+                </aside>
+            </div>
+        </div>
+        
+        <!-- Related Properties -->
+        {% if related_properties %}
+        <section class="fa-prop-related">
+            <div class="fa-prop-related-header">
+                <h2>پروژه‌های مشابه</h2>
+                <p class="fa-prop-related-subtitle">سایر پروژه‌های منتخب آدونیس برای سرمایه‌گذاری</p>
+            </div>
+            <div class="fa-prop-related-grid">
+                {% for p in related_properties %}
+                <a class="fa-related-card" href="{{ p.get_absolute_url }}">
+                    <div class="fa-related-card-img">
+                        {% if p.main_image %}
+                        <img src="{{ p.main_image.url }}" alt="{{ p.name }}" loading="lazy">
+                        {% else %}
+                        <div class="fa-related-card-img-placeholder">🏢</div>
+                        {% endif %}
+                        {% if p.price_label or p.price %}
+                        <span class="fa-related-card-price">{% if p.price_label %}{{ p.price_label }}{% else %}€{{ p.price|floatformat:0 }}{% endif %}</span>
+                        {% endif %}
+                    </div>
+                    <div class="fa-related-card-body">
+                        <h3 class="fa-related-card-name">{{ p.name }}</h3>
+                        {% if p.location %}<span class="fa-related-card-loc"><i class="fas fa-map-marker-alt"></i> {{ p.location }}</span>{% endif %}
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+    </main>
+
+    {% include "fa_new/_footer.html" %}
+    <script src="{% static 'js/fa-new/home.js' %}?v=20260528-benefits-bg-1" defer></script>
+</body>
+</html>

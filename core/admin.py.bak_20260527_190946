@@ -1,0 +1,1919 @@
+"""
+core/admin.py — Admin registrations for all core app models.
+Reconstructed from bytecode and project conventions.
+"""
+import json
+
+from django import forms
+from django.contrib import admin, messages
+from django.db import transaction
+from django.http import JsonResponse
+from django.urls import path
+from django.utils.html import format_html
+
+from django_ckeditor_5.widgets import CKEditor5Widget
+
+from core.admin_base import ModelAdmin, TabularInline, StackedInline, TranslationAdmin
+from core.admin_dashboard_seo import seo_dashboard
+from core.admin_mixins import AuditAdminMixin, RoleProtectedAdminMixin, SoftDeleteAdminMixin
+from core.admin_openai import make_translate_actions
+from core.admin_seo import BaseSEOAdmin, SEO_FIELDSET
+from core.rbac import (
+    ROLE_ADMIN,
+    ROLE_CONTENT,
+    ROLE_CONTENT_ADMIN,
+    ROLE_CONTENT_MANAGER,
+    ROLE_PROPERTY_BLOG_EDITOR,
+    ROLE_PROPERTY_BLOG_MGR,
+    ROLE_SALES,
+    ROLE_SUPPORT,
+    ROLE_SUPERADMIN,
+)
+
+from .models import (
+    AboutPageSettings,
+    AuditLog,
+    BlogCategory,
+    BlogPost,
+    ChatLead,
+    ChatMessage,
+    ChatSession,
+    ChatSessionMessage,
+    ContactSubmission,
+    Customer,
+    ErrorLog,
+    Event,
+    EventImage,
+    FAQ,
+    FooterSettings,
+    FrontPageSettings,
+    GoldenVisaCard,
+    GoldenVisaFaLandingPage,
+    GoldenVisaFaProcessStep,
+    GoldenVisaLandingPage,
+    HeaderSettings,
+    Office,
+    PageSEO,
+    PartnerLead,
+    PartnershipPageSettings,
+    ProcessStep,
+    PropertiesPageSettings,
+    Service,
+    SiteSettings,
+    SlugHistory,
+    TeamMember,
+    Testimonial,
+    WebinarLandingSettings,
+    WebinarRegistration,
+    FaNewSettings,
+    FaNewSection,
+    FaNewSectionItem,
+    FaNewGatewayCard,
+    FaNavMenuItem,
+    FaFooterSettings,
+)
+
+# ── Disable bulk hard-delete globally ─────────────────────────────────────────
+
+if "delete_selected" in admin.site._actions:
+    admin.site.disable_action("delete_selected")
+
+
+# ── Register SEO dashboard custom view ────────────────────────────────────────
+
+def _register_seo_dashboard():
+    from django.urls import path
+    original_get_urls = admin.site.__class__.get_urls
+
+    def get_urls(self):
+        custom = [path("seo-dashboard/", self.admin_view(seo_dashboard), name="seo_dashboard")]
+        return custom + original_get_urls(self)
+
+    admin.site.__class__.get_urls = get_urls
+
+
+_register_seo_dashboard()
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Site / Header / Footer Settings
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@admin.register(SiteSettings)
+class SiteSettingsAdmin(RoleProtectedAdminMixin, AuditAdminMixin, ModelAdmin):
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_CONTENT_ADMIN]
+
+    fieldsets = (
+        ("General", {
+            "fields": (
+                "site_name", "tagline",
+                "whatsapp_number", "phone_number", "email", "address",
+            ),
+        }),
+        ("Social Media", {
+            "fields": ("instagram_url", "facebook_url", "linkedin_url"),
+        }),
+        ("Notifications", {
+            "fields": (
+                "telegram_bot_token", "telegram_chat_id", "telegram_enabled",
+            ),
+        }),
+        ("SEO & Analytics", {
+            "fields": (
+                "meta_description", "meta_keywords",
+                "google_analytics_id",
+                "google_ads_conversion_id", "google_ads_conversion_label",
+                "microsoft_clarity_id",
+            ),
+        }),
+    )
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(HeaderSettings)
+class HeaderSettingsAdmin(RoleProtectedAdminMixin, AuditAdminMixin, TranslationAdmin):
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_CONTENT_ADMIN, ROLE_CONTENT]
+
+    fieldsets = (
+        ("Logo", {
+            "fields": ("site_name", "logo", "logo_width", "logo_height"),
+        }),
+        ("Hero Section (Homepage)", {
+            "fields": (
+                "hero_title", "hero_subtitle",
+                "hero_video", "hero_video_url", "hero_video_poster",
+                "hero_video_embed_url",
+                "hero_overlay", "hero_overlay_opacity",
+                "hero_filter", "hero_brightness",
+            ),
+        }),
+        ("Intro Section", {
+            "fields": (
+                "intro_video", "intro_video_url", "intro_video_poster",
+                "intro_video_embed_url",
+                "intro_title", "intro_text",
+            ),
+        }),
+        ("Navigation", {
+            "fields": (
+                "whatsapp_number", "contact_button_text",
+                "show_home", "show_properties", "show_partnerships",
+                "show_about", "show_contact",
+            ),
+        }),
+    )
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(FooterSettings)
+class FooterSettingsAdmin(RoleProtectedAdminMixin, AuditAdminMixin, TranslationAdmin):
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_CONTENT_ADMIN, ROLE_CONTENT]
+
+    fieldsets = (
+        ("Company", {
+            "fields": (
+                "company_name", "description", "copyright_text", "address",
+            ),
+        }),
+        ("Contact", {
+            "fields": ("phone_number", "phone_number_2", "email", "whatsapp_number", "whatsapp_button_text"),
+        }),
+        ("Social Media", {
+            "fields": (
+                "instagram_url", "facebook_url", "linkedin_url",
+                "x_url", "youtube_url",
+            ),
+        }),
+    )
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Services & Process Steps
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@admin.register(Service)
+class ServiceAdmin(RoleProtectedAdminMixin, AuditAdminMixin, TranslationAdmin):
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_CONTENT_ADMIN, ROLE_CONTENT]
+    list_display = ["title", "icon", "order", "is_active"]
+    list_editable = ["order", "is_active"]
+    search_fields = ["title"]
+
+
+@admin.register(ProcessStep)
+class ProcessStepAdmin(RoleProtectedAdminMixin, AuditAdminMixin, ModelAdmin):
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_CONTENT_ADMIN, ROLE_CONTENT]
+    list_display = ["step_number", "title", "is_active"]
+    list_editable = ["is_active"]
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Contact & Lead Forms
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@admin.register(ContactSubmission)
+class ContactSubmissionAdmin(RoleProtectedAdminMixin, SoftDeleteAdminMixin, AuditAdminMixin, ModelAdmin):
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_SALES, ROLE_SUPPORT]
+    list_display = ["full_name", "phone", "email", "request_type", "source", "is_read", "created_at", "superadmin_delete_btn"]
+    list_filter = ["request_type", "source", "is_read", "deleted_at"]
+    search_fields = ["full_name", "phone", "email"]
+    list_editable = ["is_read"]
+    readonly_fields = ["created_at", "source"]
+
+    fieldsets = (
+        ("Contact Info", {
+            "fields": ("full_name", "phone", "email", "request_type", "message", "property_interest"),
+        }),
+        ("Status", {
+            "fields": ("source", "is_read", "notes", "created_at"),
+        }),
+    )
+
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
+
+    def delete_model(self, request, obj):
+        obj.hard_delete()
+
+    def delete_queryset(self, request, queryset):
+        for obj in queryset:
+            obj.hard_delete()
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        if request.user.is_superuser:
+            actions['bulk_hard_delete_selected'] = (
+                self.__class__.bulk_hard_delete_selected,
+                'bulk_hard_delete_selected',
+                '🗑 حذف دائمی موارد انتخاب‌شده (Superadmin)',
+            )
+        return actions
+
+    def bulk_hard_delete_selected(self, request, queryset):
+        from django.template.response import TemplateResponse
+        if request.POST.get('confirm_bulk_delete') != 'yes':
+            # Pass PKs as a plain list so the template can iterate directly
+            selected_pks = list(queryset.values_list('pk', flat=True))
+            context = {
+                **self.admin_site.each_context(request),
+                'opts': self.model._meta,
+                'queryset': queryset,
+                'count': len(selected_pks),
+                'action_checkbox_name': admin.helpers.ACTION_CHECKBOX_NAME,
+                'selected_pks': selected_pks,
+                'title': 'تأیید حذف دائمی',
+            }
+            return TemplateResponse(request, 'admin/contact_bulk_delete_confirm.html', context)
+
+        count = queryset.count()
+        for obj in queryset:
+            obj.hard_delete()
+        self.message_user(request, f'{count} لید به‌صورت دائمی حذف شد.', level=messages.SUCCESS)
+
+    bulk_hard_delete_selected.short_description = '🗑 حذف دائمی موارد انتخاب‌شده (Superadmin)'
+
+    @admin.display(description="")
+    def superadmin_delete_btn(self, obj):
+        from django.urls import reverse
+        if not (hasattr(self, '_request') and self._request and self._request.user.is_superuser):
+            return ""
+        url = reverse("admin:core_contactsubmission_delete", args=[obj.pk])
+        return format_html(
+            '<button type="button" class="pl-delete-trigger" data-url="{}" '
+            'style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;'
+            'border-radius:6px;background:#fee2e2;color:#dc2626;font-size:0.8rem;'
+            'font-weight:600;cursor:pointer;border:1px solid #fca5a5;">'
+            '<span style="font-size:0.9rem;">🗑</span> حذف'
+            '</button>',
+            url,
+        )
+
+    def changelist_view(self, request, extra_context=None):
+        self._request = request
+        return super().changelist_view(request, extra_context=extra_context)
+
+
+@admin.register(PartnerLead)
+class PartnerLeadAdmin(RoleProtectedAdminMixin, AuditAdminMixin, ModelAdmin):
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_SALES, ROLE_SUPPORT]
+    list_display = ["first_name", "last_name", "email", "phone", "partner_type", "country", "created_at", "superadmin_delete_btn"]
+    list_filter = ["partner_type", "country"]
+    search_fields = ["first_name", "last_name", "email", "phone"]
+    readonly_fields = ["created_at"]
+
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
+
+    @admin.display(description="")
+    def superadmin_delete_btn(self, obj):
+        from django.urls import reverse
+        if not (hasattr(self, '_request') and self._request and self._request.user.is_superuser):
+            return ""
+        url = reverse("admin:core_partnerlead_delete", args=[obj.pk])
+        return format_html(
+            '<button type="button" class="pl-delete-trigger" data-url="{}" '
+            'style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;'
+            'border-radius:6px;background:#fee2e2;color:#dc2626;font-size:0.8rem;'
+            'font-weight:600;cursor:pointer;border:1px solid #fca5a5;">'
+            '<span style="font-size:0.9rem;">🗑</span> حذف'
+            '</button>',
+            url,
+        )
+
+    def changelist_view(self, request, extra_context=None):
+        self._request = request
+        return super().changelist_view(request, extra_context=extra_context)
+
+
+@admin.register(Customer)
+class CustomerAdmin(RoleProtectedAdminMixin, SoftDeleteAdminMixin, AuditAdminMixin, ModelAdmin):
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_SALES, ROLE_SUPPORT]
+    list_display = ["full_name", "email", "phone", "created_at"]
+    search_fields = ["full_name", "email", "phone"]
+    readonly_fields = ["created_at", "updated_at"]
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Chat
+# ═══════════════════════════════════════════════════════════════════════════════
+
+class ChatMessageInline(TabularInline):
+    model = ChatMessage
+    extra = 0
+    readonly_fields = ["direction", "message", "created_at"]
+    fields = ["direction", "message", "created_at"]
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(ChatLead)
+class ChatLeadAdmin(RoleProtectedAdminMixin, SoftDeleteAdminMixin, AuditAdminMixin, ModelAdmin):
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_SALES, ROLE_SUPPORT]
+    list_display = [
+        "name", "phone", "status", "lead_score", "is_read",
+        "assigned_to", "follow_up_date", "created_at",
+    ]
+    list_filter = ["status", "lead_score", "is_read", "source", "deleted_at"]
+    search_fields = ["name", "phone", "topic", "summary"]
+    list_editable = ["status", "lead_score", "is_read"]
+    readonly_fields = ["created_at", "telegram_sent", "telegram_sent_at"]
+    date_hierarchy = "created_at"
+
+    fieldsets = (
+        ("Lead Info", {
+            "fields": (
+                "name", "phone", "topic", "country",
+                "source", "source_page", "page_url", "language",
+            ),
+        }),
+        ("Status & Assignment", {
+            "fields": (
+                "status", "lead_score", "is_read",
+                "assigned_to", "follow_up_date", "last_contact_at",
+            ),
+        }),
+        ("Notes", {
+            "fields": ("summary", "internal_notes", "conversation_json"),
+        }),
+        ("Telegram", {
+            "fields": ("telegram_sent", "telegram_sent_at"),
+            "classes": ("collapse",),
+        }),
+        ("Timestamps", {
+            "fields": ("created_at",),
+            "classes": ("collapse",),
+        }),
+    )
+
+
+class ChatSessionMessageInline(TabularInline):
+    model = ChatSessionMessage
+    extra = 0
+    readonly_fields = ["role", "content", "is_read", "created_at"]
+    fields = ["role", "content", "is_read", "created_at"]
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(ChatSession)
+class ChatSessionAdmin(RoleProtectedAdminMixin, ModelAdmin):
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_SALES, ROLE_SUPPORT]
+    list_display = ["session_key", "phase", "lead", "agent", "created_at"]
+    list_filter = ["phase"]
+    search_fields = ["session_key"]
+    readonly_fields = ["session_key", "created_at", "updated_at"]
+    inlines = [ChatSessionMessageInline]
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Testimonials, FAQs
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@admin.register(Testimonial)
+class TestimonialAdmin(RoleProtectedAdminMixin, AuditAdminMixin, TranslationAdmin):
+    allowed_roles = [
+        ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_CONTENT_ADMIN, ROLE_CONTENT,
+        ROLE_CONTENT_MANAGER,
+    ]
+    list_display = ["client_name", "client_country", "rating", "is_active", "created_at"]
+    list_filter = ["is_active", "rating"]
+    list_editable = ["is_active"]
+    search_fields = ["client_name", "client_country"]
+
+    fieldsets = (
+        ("Client", {
+            "fields": ("client_name", "client_country", "image", "image_alt", "rating", "is_active"),
+        }),
+        ("Content", {
+            "fields": ("content",),
+        }),
+        SEO_FIELDSET,
+    )
+
+    def get_fieldsets(self, request, obj=None):
+        from core.admin_seo import _filter_fieldsets
+        return _filter_fieldsets(super().get_fieldsets(request, obj), self.model, self)
+
+
+@admin.register(FAQ)
+class FAQAdmin(RoleProtectedAdminMixin, AuditAdminMixin, TranslationAdmin):
+    allowed_roles = [
+        ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_CONTENT_ADMIN, ROLE_CONTENT,
+        ROLE_CONTENT_MANAGER,
+    ]
+    list_display = ["question", "order", "is_active"]
+    list_editable = ["order", "is_active"]
+    search_fields = ["question", "answer"]
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# About Page Settings
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@admin.register(AboutPageSettings)
+class AboutPageSettingsAdmin(RoleProtectedAdminMixin, AuditAdminMixin, TranslationAdmin):
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_CONTENT_ADMIN, ROLE_CONTENT]
+
+    fieldsets = (
+        ("Hero Section", {
+            "fields": (
+                "hero_title", "hero_subtitle",
+                "hero_image", "hero_video_url",
+            ),
+            "description": (
+                "Upload a hero background image or enter a video URL. "
+                "If both are set, the image takes priority. "
+                "Leave both empty to show the default blue gradient."
+            ),
+        }),
+        ("Office Media", {
+            "fields": (
+                "office_video", "office_video_poster",
+                "office_image_1", "office_image_2", "office_image_3",
+                "about_exterior_image",
+            ),
+        }),
+        ("About Text", {
+            "fields": ("about_title", "about_text"),
+        }),
+        ("Team Section", {
+            "fields": ("team_title", "team_subtitle"),
+        }),
+    )
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Office & Team
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@admin.register(Office)
+class OfficeAdmin(RoleProtectedAdminMixin, AuditAdminMixin, TranslationAdmin):
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_CONTENT_ADMIN, ROLE_CONTENT]
+    list_display = ["city", "country", "phone_number", "order", "is_active"]
+    list_editable = ["order", "is_active"]
+
+
+@admin.register(TeamMember)
+class TeamMemberAdmin(RoleProtectedAdminMixin, AuditAdminMixin, TranslationAdmin):
+    allowed_roles = [
+        ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_CONTENT_ADMIN, ROLE_CONTENT,
+        ROLE_CONTENT_MANAGER,
+    ]
+    list_display = ["name", "position", "order", "is_active"]
+    list_editable = ["order", "is_active"]
+    search_fields = ["name", "position"]
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Front Page Settings
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@admin.register(FrontPageSettings)
+class FrontPageSettingsAdmin(RoleProtectedAdminMixin, AuditAdminMixin, TranslationAdmin):
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_CONTENT_ADMIN, ROLE_CONTENT]
+
+    fieldsets = (
+        ("Typography", {
+            "fields": ("heading_font", "body_font", "heading_size", "body_size", "body_color"),
+            "classes": ("collapse",),
+        }),
+        ("Services Section", {
+            "fields": (
+                "services_badge", "services_title", "services_description",
+            ),
+        }),
+        ("Process Section", {
+            "fields": (
+                "process_badge", "process_title", "process_description",
+            ),
+        }),
+        ("Catalogue Section", {
+            "fields": (
+                "catalogue_badge_text", "catalogue_heading", "catalogue_subtext",
+                "catalogue_btn1_title", "catalogue_btn1_label",
+                "catalogue_btn2_title", "catalogue_btn2_label",
+            ),
+        }),
+        ("Contact Section", {
+            "fields": (
+                "contact_badge", "contact_title", "contact_description",
+            ),
+        }),
+    )
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Blog
+# ═══════════════════════════════════════════════════════════════════════════════
+
+class BlogPostAdminForm(forms.ModelForm):
+    """Force CKEditor5Widget for the content field for all users."""
+
+    class Meta:
+        model = BlogPost
+        fields = "__all__"
+        widgets = {
+            "content": CKEditor5Widget(config_name="blog", attrs={"class": "django_ckeditor_5"}),
+        }
+
+
+BLOG_FIELD_PAIRS = [
+    ("title_en", "title_tr"),
+    ("slug_en", "slug_tr"),
+    ("excerpt_en", "excerpt_tr"),
+    ("content_en", "content_tr"),
+    ("meta_title_en", "meta_title_tr"),
+    ("meta_description_en", "meta_description_tr"),
+    ("og_title_en", "og_title_tr"),
+    ("og_description_en", "og_description_tr"),
+]
+
+
+@admin.register(BlogPost)
+class BlogPostAdmin(
+    BaseSEOAdmin,
+    RoleProtectedAdminMixin,
+    AuditAdminMixin,
+    TranslationAdmin,
+):
+    form = BlogPostAdminForm
+    allowed_roles = [
+        ROLE_SUPERADMIN, ROLE_ADMIN,
+        ROLE_CONTENT_ADMIN, ROLE_CONTENT, ROLE_CONTENT_MANAGER,
+        ROLE_PROPERTY_BLOG_EDITOR, ROLE_PROPERTY_BLOG_MGR,
+    ]
+
+    list_display = [
+        "title", "category", "author", "is_published", "noindex", "seo_status", "is_featured",
+        "published_date", "views",
+    ]
+    list_filter = ["is_published", "noindex", "seo_status", "is_featured", "category", "published_date"]
+    list_editable = ["is_published", "noindex", "seo_status", "is_featured"]
+    search_fields = ["title", "slug", "excerpt", "author"]
+    prepopulated_fields = {"slug": ("title",)}
+    date_hierarchy = "published_date"
+
+    readonly_fields = ["created_at", "updated_at", "views"]
+
+    class Media:
+        css = {"all": ("admin/css/seo_preview.css",)}
+        js = ("admin/js/seo_preview.js",)
+
+    fieldsets = (
+        ("Content", {
+            "fields": (
+                "title", "slug", "category", "author",
+                "excerpt", "content",
+            ),
+        }),
+        ("Featured Image", {
+            "fields": ("featured_image", "featured_image_alt"),
+        }),
+        ("Publishing", {
+            "fields": ("is_published", "is_featured", "published_date"),
+        }),
+        SEO_FIELDSET,
+        ("OG / Social", {
+            "fields": ("og_title", "og_description"),
+            "classes": ("collapse",),
+        }),
+        ("Statistics", {
+            "fields": ("views",),
+            "classes": ("collapse",),
+        }),
+    )
+
+    actions = make_translate_actions(BLOG_FIELD_PAIRS)
+
+
+@admin.register(BlogCategory)
+class BlogCategoryAdmin(RoleProtectedAdminMixin, AuditAdminMixin, TranslationAdmin):
+    allowed_roles = [
+        ROLE_SUPERADMIN, ROLE_ADMIN,
+        ROLE_CONTENT_ADMIN, ROLE_CONTENT, ROLE_CONTENT_MANAGER,
+        ROLE_PROPERTY_BLOG_EDITOR, ROLE_PROPERTY_BLOG_MGR,
+    ]
+    list_display = ["name", "slug", "order", "is_active"]
+    list_editable = ["order", "is_active"]
+    prepopulated_fields = {"slug": ("name",)}
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Partnership Page Settings
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@admin.register(PartnershipPageSettings)
+class PartnershipPageSettingsAdmin(RoleProtectedAdminMixin, AuditAdminMixin, TranslationAdmin):
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_CONTENT_ADMIN, ROLE_CONTENT]
+
+    fieldsets = (
+        ("Hero", {
+            "fields": ("hero_title", "hero_subtitle", "hero_image"),
+        }),
+        ("Video Section", {
+            "fields": (
+                "video", "video_cover", "video_url",
+                "video_title", "video_subtitle",
+            ),
+        }),
+        ("B2B Section", {
+            "fields": ("b2b_title", "b2b_text", "b2b_image"),
+        }),
+        ("Benefits", {
+            "fields": (
+                "benefit_1_icon", "benefit_1_title", "benefit_1_text",
+                "benefit_2_icon", "benefit_2_title", "benefit_2_text",
+                "benefit_3_icon", "benefit_3_title", "benefit_3_text",
+                "benefit_4_icon", "benefit_4_title", "benefit_4_text",
+                "benefit_5_icon", "benefit_5_title", "benefit_5_text",
+                "benefit_6_icon", "benefit_6_title", "benefit_6_text",
+            ),
+        }),
+        ("CTA", {
+            "fields": ("cta_title", "cta_text", "cta_button_text"),
+        }),
+    )
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Properties Page Settings
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@admin.register(PropertiesPageSettings)
+class PropertiesPageSettingsAdmin(RoleProtectedAdminMixin, AuditAdminMixin, TranslationAdmin):
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_CONTENT_ADMIN, ROLE_CONTENT]
+
+    fieldsets = (
+        ("Hero", {
+            "fields": (
+                "hero_title", "hero_subtitle", "hero_badge",
+                "hero_video", "hero_video_poster", "hero_image",
+            ),
+        }),
+        ("Intro Section", {
+            "fields": ("intro_title", "intro_text"),
+        }),
+    )
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Golden Visa Cards
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@admin.register(GoldenVisaCard)
+class GoldenVisaCardAdmin(
+    BaseSEOAdmin,
+    RoleProtectedAdminMixin,
+    AuditAdminMixin,
+    TranslationAdmin,
+):
+    allowed_roles = [
+        ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_CONTENT_ADMIN, ROLE_CONTENT,
+        ROLE_CONTENT_MANAGER,
+    ]
+    list_display = ["title", "subtitle", "order", "is_active"]
+    list_editable = ["order", "is_active"]
+    search_fields = ["title", "subtitle"]
+
+    fieldsets = (
+        ("Card Content", {
+            "fields": ("title", "subtitle", "description", "image", "image_alt", "order", "is_active"),
+        }),
+        SEO_FIELDSET,
+    )
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Events
+# ═══════════════════════════════════════════════════════════════════════════════
+
+class EventImageInline(TabularInline):
+    model = EventImage
+    extra = 1
+    fields = ["image", "caption", "order", "is_active"]
+
+
+class EventAdminForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        fields = "__all__"
+        widgets = {
+            "full_description": CKEditor5Widget(
+                config_name="event", attrs={"class": "django_ckeditor_5"}
+            ),
+        }
+
+
+@admin.register(Event)
+class EventAdmin(BaseSEOAdmin, RoleProtectedAdminMixin, AuditAdminMixin, TranslationAdmin):
+    form = EventAdminForm
+    allowed_roles = [
+        ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_CONTENT_ADMIN, ROLE_CONTENT,
+        ROLE_CONTENT_MANAGER,
+    ]
+    list_display = ["title", "event_date", "location", "order", "is_active"]
+    list_filter = ["is_active", "event_date"]
+    list_editable = ["order", "is_active"]
+    search_fields = ["title", "slug", "short_description"]
+    prepopulated_fields = {"slug": ("title",)}
+    readonly_fields = ["created_at", "updated_at"]
+    inlines = [EventImageInline]
+
+    fieldsets = (
+        ("Event Info", {
+            "fields": (
+                "title", "slug", "short_description", "full_description",
+                "thumbnail", "thumbnail_alt",
+                "video_file", "video_url",
+                "event_date", "location",
+                "order", "is_active",
+            ),
+        }),
+        SEO_FIELDSET,
+        ("Timestamps", {
+            "fields": ("created_at", "updated_at"),
+            "classes": ("collapse",),
+        }),
+    )
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Golden Visa Landing Pages
+# ═══════════════════════════════════════════════════════════════════════════════
+
+GV_FIELD_PAIRS = [
+    ("hero_title_en", "hero_title_tr"),
+    ("hero_subtitle_en", "hero_subtitle_tr"),
+    ("intro_text_en", "intro_text_tr"),
+    ("section_1_title_en", "section_1_title_tr"),
+    ("section_1_text_en", "section_1_text_tr"),
+    ("section_2_title_en", "section_2_title_tr"),
+    ("section_2_text_en", "section_2_text_tr"),
+    ("section_3_title_en", "section_3_title_tr"),
+    ("section_3_text_en", "section_3_text_tr"),
+    ("tier_250_title_en", "tier_250_title_tr"),
+    ("tier_250_desc_en", "tier_250_desc_tr"),
+    ("tier_400_title_en", "tier_400_title_tr"),
+    ("tier_400_desc_en", "tier_400_desc_tr"),
+    ("tier_800_title_en", "tier_800_title_tr"),
+    ("tier_800_desc_en", "tier_800_desc_tr"),
+    ("benefits_title_en", "benefits_title_tr"),
+    ("benefits_text_en", "benefits_text_tr"),
+    ("process_title_en", "process_title_tr"),
+]
+
+
+@admin.register(GoldenVisaLandingPage)
+class GoldenVisaLandingPageAdmin(RoleProtectedAdminMixin, AuditAdminMixin, TranslationAdmin):
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_CONTENT_ADMIN, ROLE_CONTENT]
+    list_display = ["__str__", "is_published", "noindex", "seo_status", "robots_index"]
+    list_editable = ["is_published", "noindex", "seo_status", "robots_index"]
+
+    fieldsets = (
+        ("Hero Section (/greece-golden-visa/)", {
+            "fields": (
+                "hero_title", "hero_subtitle",
+                "hero_image", "hero_image_alt",
+                "hero_video", "hero_video_opacity",
+            ),
+        }),
+        ("Intro", {
+            "fields": ("intro_text",),
+        }),
+        ("Sections", {
+            "fields": (
+                "section_1_title", "section_1_text", "section_1_image", "section_1_image_alt",
+                "section_2_title", "section_2_text", "section_2_image", "section_2_image_alt",
+                "section_3_title", "section_3_text", "section_3_image", "section_3_image_alt",
+            ),
+        }),
+        ("Investment Tiers", {
+            "fields": (
+                "tier_250_title", "tier_250_desc", "tier_250_image", "tier_250_image_alt",
+                "tier_400_title", "tier_400_desc", "tier_400_image", "tier_400_image_alt",
+                "tier_800_title", "tier_800_desc", "tier_800_image", "tier_800_image_alt",
+            ),
+        }),
+        ("Benefits & Process", {
+            "fields": (
+                "benefits_title", "benefits_text", "benefits_bg_image",
+                "process_title", "process_steps",
+            ),
+        }),
+        ("Short Videos", {
+            "fields": (
+                "short_video_urls",
+                "short_video_url_1", "short_video_url_2", "short_video_url_3",
+                "short_video_url_4", "short_video_url_5",
+            ),
+            "classes": ("collapse",),
+        }),
+        ("Publishing", {
+            "fields": (
+                "is_published",
+                "meta_title",
+                "meta_description",
+                "canonical_url",
+                "og_title",
+                "og_description",
+                "og_image",
+                "focus_keyword",
+                "noindex",
+                "seo_status",
+                "robots_index",
+                "robots_follow",
+            ),
+        }),
+    )
+
+    actions = make_translate_actions(GV_FIELD_PAIRS)
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+FONT_SIZE_CHOICES = [
+    ("12px", "12px"), ("14px", "14px"), ("16px", "16px"), ("18px", "18px"),
+    ("20px", "20px"), ("22px", "22px"), ("24px", "24px"), ("28px", "28px"),
+    ("32px", "32px"), ("36px", "36px"), ("40px", "40px"), ("44px", "44px"),
+    ("48px", "48px"), ("52px", "52px"), ("56px", "56px"), ("60px", "60px"),
+    ("64px", "64px"), ("72px", "72px"), ("80px", "80px"), ("96px", "96px"),
+]
+
+
+class GoldenVisaFaLandingPageForm(forms.ModelForm):
+    hero_title_font_size = forms.ChoiceField(
+        choices=FONT_SIZE_CHOICES,
+        label="سایز فونت تیتر هیرو",
+        widget=forms.Select(attrs={"style": "width:120px;"}),
+    )
+    hero_subtitle_font_size = forms.ChoiceField(
+        choices=FONT_SIZE_CHOICES,
+        label="سایز فونت ساب‌تایتل هیرو",
+        widget=forms.Select(attrs={"style": "width:120px;"}),
+    )
+    hero_title_color = forms.CharField(
+        label="رنگ فونت تیتر هیرو",
+        widget=forms.TextInput(attrs={"type": "color", "style": "width:80px;height:40px;padding:2px;cursor:pointer;border-radius:6px;"}),
+    )
+    hero_subtitle_color = forms.CharField(
+        label="رنگ فونت ساب‌تایتل هیرو",
+        widget=forms.TextInput(attrs={"type": "color", "style": "width:80px;height:40px;padding:2px;cursor:pointer;border-radius:6px;"}),
+    )
+
+    class Meta:
+        model = GoldenVisaFaLandingPage
+        fields = "__all__"
+        widgets = {
+            "intro_text": CKEditor5Widget(config_name="blog", attrs={"class": "django_ckeditor_5"}),
+        }
+
+
+@admin.register(GoldenVisaFaLandingPage)
+class GoldenVisaFaLandingPageAdmin(RoleProtectedAdminMixin, AuditAdminMixin, ModelAdmin):
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_CONTENT_ADMIN]
+    form = GoldenVisaFaLandingPageForm
+    list_display = ["__str__", "is_published", "noindex", "seo_status"]
+    list_editable = ["is_published", "noindex", "seo_status"]
+
+    fieldsets = (
+        ("Hero", {
+            "fields": (
+                "hero_title", "hero_subtitle", "hero_cta_text",
+                "hero_image", "hero_image_alt",
+                "hero_video",
+                "hero_image_opacity",
+                "hero_content_vertical_align", "hero_content_horizontal_align",
+                "hero_title_color", "hero_title_font_size",
+                "hero_subtitle_color", "hero_subtitle_font_size",
+            ),
+        }),
+        ("Intro Section", {
+            "fields": (
+                "intro_title", "intro_text", "intro_image", "intro_image_alt",
+                "intro_bullet_1", "intro_bullet_2", "intro_bullet_3",
+                "intro_feature_1_icon", "intro_feature_1_text",
+                "intro_feature_2_icon", "intro_feature_2_text",
+                "intro_feature_3_icon", "intro_feature_3_text",
+            ),
+        }),
+        ("Investment Tiers", {
+            "fields": (
+                "tiers_title",
+                "tier_1_title", "tier_1_short_desc", "tier_1_long_desc",
+                "tier_1_price_label", "tier_1_price_amount",
+                "tier_1_image", "tier_1_image_alt", "tier_1_cta_text",
+                "tier_2_title", "tier_2_short_desc", "tier_2_long_desc",
+                "tier_2_price_label", "tier_2_price_amount",
+                "tier_2_image", "tier_2_image_alt", "tier_2_cta_text",
+                "tier_3_title", "tier_3_short_desc", "tier_3_long_desc",
+                "tier_3_price_label", "tier_3_price_amount",
+                "tier_3_image", "tier_3_image_alt", "tier_3_cta_text",
+            ),
+        }),
+        ("Projects", {
+            "fields": ("projects_title",),
+        }),
+        ("Benefits", {
+            "fields": (
+                "benefits_title", "benefits_bg_image", "benefits_text",
+            ),
+        }),
+        ("مزایای آدونیس گروپ (سکشن بعد از چرا گلدن ویزا)", {
+            "fields": (
+                "adonis_feat_section_title", "adonis_feat_section_subtitle",
+                "adonis_feat_1_icon", "adonis_feat_1_title", "adonis_feat_1_text",
+                "adonis_feat_2_icon", "adonis_feat_2_title", "adonis_feat_2_text",
+                "adonis_feat_3_icon", "adonis_feat_3_title", "adonis_feat_3_text",
+                "adonis_feat_4_icon", "adonis_feat_4_title", "adonis_feat_4_text",
+                "adonis_feat_5_icon", "adonis_feat_5_title", "adonis_feat_5_text",
+                "adonis_feat_6_icon", "adonis_feat_6_title", "adonis_feat_6_text",
+            ),
+        }),
+        ("مراحل گلدن ویزا", {
+            "fields": (
+                "process_title",
+                "step_1_title", "step_1_subtitle",
+                "step_2_title", "step_2_subtitle",
+                "step_3_title", "step_3_subtitle",
+                "step_4_title", "step_4_subtitle",
+                "step_5_title", "step_5_subtitle",
+                "step_6_title", "step_6_subtitle",
+            ),
+        }),
+        ("Why Adonis Section", {
+            "fields": (
+                "why_adonis_title", "why_adonis_subtitle",
+                "why_item_1_icon", "why_item_1_title", "why_item_1_text",
+                "why_item_2_icon", "why_item_2_title", "why_item_2_text",
+                "why_item_3_icon", "why_item_3_title", "why_item_3_text",
+                "why_item_4_icon", "why_item_4_title", "why_item_4_text",
+                "why_adonis_bg_image", "why_adonis_overlay_opacity",
+            ),
+        }),
+        ("Own Short Videos", {
+            "fields": (
+                "own_shorts_title",
+                "own_short_video_url_1", "own_short_video_url_2",
+                "own_short_video_url_3", "own_short_video_url_4",
+                "own_shorts_more_url",
+            ),
+        }),
+        ("Testimonial Short Videos", {
+            "fields": (
+                "testimonial_shorts_title",
+                "testimonial_short_video_url_1", "testimonial_short_video_url_2",
+                "testimonial_short_video_url_3", "testimonial_short_video_url_4",
+                "testimonial_shorts_more_url",
+            ),
+        }),
+        ("Social Links (FA)", {
+            "fields": (
+                "fa_instagram_url", "fa_linkedin_url", "fa_telegram_url",
+                "fa_whatsapp_number", "fa_whatsapp_number_2",
+                "fa_x_url", "fa_youtube_url",
+            ),
+        }),
+        ("SEO & Publishing", {
+            "fields": (
+                "seo_title",
+                "meta_description",
+                "canonical_url",
+                "og_title",
+                "og_description",
+                "og_image",
+                "focus_keyword",
+                "noindex",
+                "seo_status",
+                "robots_index",
+                "robots_follow",
+                "is_published",
+            ),
+        }),
+    )
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Golden Visa FA Process Steps
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+@admin.register(GoldenVisaFaProcessStep)
+class GoldenVisaFaProcessStepAdmin(RoleProtectedAdminMixin, ModelAdmin):
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_CONTENT_ADMIN]
+    list_display = ['display_order', 'step_number', 'title', 'is_active']
+    list_editable = ['display_order', 'is_active']
+    list_display_links = ['title']
+    ordering = ['display_order', 'step_number']
+    fieldsets = (
+        (None, {
+            'fields': (
+                'step_number', 'title', 'description',
+                'icon', 'image',
+                'display_order', 'is_active',
+            ),
+        }),
+    )
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Page SEO
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@admin.register(PageSEO)
+class PageSEOAdmin(RoleProtectedAdminMixin, AuditAdminMixin, ModelAdmin):
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_CONTENT_ADMIN]
+    list_display = ["page_key", "seo_status", "noindex", "updated_at"]
+    list_filter = ["seo_status", "noindex"]
+    search_fields = ["page_key", "focus_keyword"]
+
+    fieldsets = (
+        ("Page", {
+            "fields": ("page_key",),
+        }),
+        ("English SEO", {
+            "fields": ("meta_title_en", "meta_desc_en", "og_title_en", "og_desc_en"),
+        }),
+        ("Turkish SEO", {
+            "fields": ("meta_title_tr", "meta_desc_tr", "og_title_tr", "og_desc_tr"),
+        }),
+        ("OG Image", {
+            "fields": ("og_image",),
+        }),
+        ("Common SEO", {
+            "fields": ("canonical_url", "focus_keyword", "noindex", "seo_status", "updated_at"),
+        }),
+    )
+
+    readonly_fields = ("updated_at",)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Audit & Error Logs
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@admin.register(AuditLog)
+class AuditLogAdmin(RoleProtectedAdminMixin, ModelAdmin):
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN]
+    list_display = ["action", "actor", "object_ref", "content_type", "ip_address", "created_at"]
+    list_filter = ["action", "content_type"]
+    search_fields = ["object_ref", "actor__username", "ip_address"]
+    readonly_fields = [
+        "actor", "content_type", "object_id", "object_ref",
+        "action", "changes", "ip_address", "created_at",
+    ]
+    date_hierarchy = "created_at"
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(ErrorLog)
+class ErrorLogAdmin(RoleProtectedAdminMixin, ModelAdmin):
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN]
+    list_display = ["error_type", "url", "method", "is_read", "ip_address", "created_at"]
+    list_filter = ["error_type", "method", "is_read"]
+    list_editable = ["is_read"]
+    search_fields = ["error_type", "error_message", "url", "ip_address"]
+    readonly_fields = [
+        "error_type", "error_message", "traceback",
+        "url", "method", "user_agent", "ip_address",
+        "user", "request_data", "created_at",
+    ]
+    date_hierarchy = "created_at"
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Slug History (read-only)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@admin.register(SlugHistory)
+class SlugHistoryAdmin(RoleProtectedAdminMixin, ModelAdmin):
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN]
+    list_display = ["old_slug", "content_type", "object_id", "language", "created_at"]
+    list_filter = ["language", "content_type"]
+    search_fields = ["old_slug"]
+    readonly_fields = ["content_type", "object_id", "old_slug", "language", "created_at"]
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Webinar Landing — Settings & Registrations
+# Isolated admin for the Persian webinar landing page (/webinar/).
+# ═══════════════════════════════════════════════════════════════════════════════
+
+class WebinarLandingSettingsForm(forms.ModelForm):
+    """Wires CKEditor5 to the long-text fields on the webinar landing settings.
+
+    Uses the dedicated ``webinar_full`` config so admins get font-family,
+    font-size, font-colour and background-colour controls on every text block.
+    """
+
+    class Meta:
+        model = WebinarLandingSettings
+        # The intro_title / intro_description / intro_video fields were
+        # part of the now-deleted "Why this webinar" section. They are
+        # excluded from the form so the admin UI stays clean. The columns
+        # remain in the DB (no migration necessary) in case the section
+        # is ever re-introduced in the future.
+        exclude = ("intro_title", "intro_description", "intro_video")
+        widgets = {
+            "hero_subtitle":    CKEditor5Widget(config_name="webinar_full", attrs={"class": "django_ckeditor_5"}),
+            "hero_description": CKEditor5Widget(config_name="webinar_full", attrs={"class": "django_ckeditor_5"}),
+            "success_text":     CKEditor5Widget(config_name="webinar_full", attrs={"class": "django_ckeditor_5"}),
+            "cta_title":        CKEditor5Widget(config_name="webinar_full", attrs={"class": "django_ckeditor_5"}),
+        }
+
+
+@admin.register(WebinarLandingSettings)
+class WebinarLandingSettingsAdmin(RoleProtectedAdminMixin, AuditAdminMixin, ModelAdmin):
+    """Admin for the singleton WebinarLandingSettings row."""
+
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_CONTENT_ADMIN, ROLE_CONTENT]
+    form = WebinarLandingSettingsForm
+    list_display = ["__str__", "active_status", "noindex", "seo_status"]
+    list_editable = ["active_status", "noindex", "seo_status"]
+
+    # Loaded only on this admin page — does NOT affect any other admin model
+    # because the CSS selectors inside webinar-admin.css are scoped to
+    # `.form-row.field-<webinar-only-field>` which only exist on this page.
+    class Media:
+        css = {"all": ("css/webinar-admin.css",)}
+
+    fieldsets = (
+        ("وضعیت صفحه / Page status", {
+            "fields": ("active_status",),
+            "description": (
+                "اگر این گزینه غیرفعال شود، صفحه /webinar/ با خطای 404 نمایش داده می‌شود."
+            ),
+        }),
+        ("Hero", {
+            "fields": (
+                "hero_badge",
+                "hero_title",
+                "hero_subtitle",
+                "hero_description",
+                "hero_background_image",
+                "hero_speaker_photo",
+                "hero_speaker_name",
+                "hero_speaker_title",
+            ),
+        }),
+        ("اطلاعات وبینار / Webinar info bar", {
+            "fields": (
+                "webinar_date_text",
+                "webinar_time_text",
+                "webinar_format_text",
+            ),
+        }),
+        ("مزایا / Benefit cards", {
+            "fields": (
+                "benefit_1_title", "benefit_1_text",
+                "benefit_2_title", "benefit_2_text",
+                "benefit_3_title", "benefit_3_text",
+            ),
+        }),
+        ("فرم ثبت‌نام / Registration form", {
+            "fields": ("form_title", "form_button_text"),
+        }),
+        ("پیام موفقیت / Success modal", {
+            "fields": ("success_title", "success_text", "success_button_text"),
+        }),
+        ("CTA پایانی / Final CTA", {
+            "fields": ("cta_title", "cta_button_text"),
+        }),
+        ("SEO", {
+            "fields": (
+                "meta_title",
+                "meta_description",
+                "canonical_url",
+                "og_title",
+                "og_description",
+                "og_image",
+                "focus_keyword",
+                "noindex",
+                "seo_status",
+            ),
+            "classes": ("collapse",),
+        }),
+    )
+
+    def has_add_permission(self, request):
+        return not WebinarLandingSettings.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def changelist_view(self, request, extra_context=None):
+        from django.shortcuts import redirect
+        from django.urls import reverse
+        obj = WebinarLandingSettings.objects.first()
+        if obj is None:
+            obj = WebinarLandingSettings.get_settings()
+        return redirect(reverse("admin:core_webinarlandingsettings_change", args=[obj.pk]))
+
+
+@admin.register(WebinarRegistration)
+class WebinarRegistrationAdmin(RoleProtectedAdminMixin, AuditAdminMixin, ModelAdmin):
+    """Admin for individual webinar registrations + CSV export."""
+
+    allowed_roles = [ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_SALES, ROLE_SUPPORT, ROLE_CONTENT_ADMIN]
+
+    list_display = ["full_name", "phone", "email", "created_at"]
+    search_fields = ["first_name", "last_name", "phone", "email"]
+    list_filter = ["created_at"]
+    readonly_fields = ["first_name", "last_name", "phone", "email", "created_at"]
+    date_hierarchy = "created_at"
+    ordering = ["-created_at"]
+
+    actions = ["export_registrations_csv"]
+
+    fieldsets = (
+        ("اطلاعات شرکت‌کننده / Participant", {
+            "fields": ("first_name", "last_name", "phone", "email"),
+        }),
+        ("تاریخ / Timestamp", {
+            "fields": ("created_at",),
+        }),
+    )
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
+
+    @admin.display(description="Full Name", ordering="first_name")
+    def full_name(self, obj):
+        return f"{obj.first_name} {obj.last_name}"
+
+    @admin.action(description="📥 خروجی CSV از ثبت‌نام‌های انتخاب‌شده / Export selected as CSV")
+    def export_registrations_csv(self, request, queryset):
+        import csv
+        from django.http import HttpResponse
+        from django.utils import timezone as _tz
+
+        response = HttpResponse(content_type="text/csv; charset=utf-8")
+        ts = _tz.now().strftime("%Y%m%d_%H%M%S")
+        response["Content-Disposition"] = (
+            f'attachment; filename="webinar_registrations_{ts}.csv"'
+        )
+        # UTF-8 BOM so Excel opens Persian text correctly.
+        response.write("\ufeff")
+
+        writer = csv.writer(response)
+        writer.writerow([
+            "First Name", "Last Name", "Phone", "Email", "Registered At",
+        ])
+        for reg in queryset.order_by("-created_at"):
+            writer.writerow([
+                reg.first_name,
+                reg.last_name,
+                reg.phone,
+                reg.email,
+                reg.created_at.strftime("%Y-%m-%d %H:%M:%S") if reg.created_at else "",
+            ])
+        return response
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        # Make the CSV action available regardless of selection mode.
+        return actions
+
+
+# ── /fa-new/ Persian Preview Settings ────────────────────────────────────────
+
+class _ColorInput(forms.TextInput):
+    """<input type="color"> widget — works natively for hex values (#rrggbb)."""
+    input_type = 'color'
+    template_name = 'django/forms/widgets/input.html'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.attrs.setdefault('style', 'width:80px;height:36px;padding:2px;cursor:pointer;')
+
+
+class FaNewSettingsForm(forms.ModelForm):
+    """Custom form for FaNewSettings that applies CKEditor5 and color widgets."""
+
+    class Meta:
+        model = FaNewSettings
+        fields = '__all__'
+        widgets = {
+            # ── Overlay subtitles → CKEditor 5 minimal ────────────────────
+            'o1_subtitle': CKEditor5Widget(
+                config_name='minimal',
+                attrs={'class': 'django_ckeditor_5'},
+            ),
+            'o2_subtitle': CKEditor5Widget(
+                config_name='minimal',
+                attrs={'class': 'django_ckeditor_5'},
+            ),
+            'o3_subtitle': CKEditor5Widget(
+                config_name='minimal',
+                attrs={'class': 'django_ckeditor_5'},
+            ),
+            # ── Color pickers ─────────────────────────────────────────────
+            'hero_text_color':            _ColorInput(),
+            'hero_subtitle_color':        _ColorInput(),
+            'hero_accent_color':          _ColorInput(),
+            'hero_scrim_color':           _ColorInput(),
+            'hero_cta_primary_bg':        _ColorInput(),
+            'hero_cta_primary_text':      _ColorInput(),
+            'hero_cta_secondary_border':  _ColorInput(),
+            'hero_cta_secondary_text':    _ColorInput(),
+        }
+
+
+@admin.register(FaNewSettings)
+class FaNewSettingsAdmin(ModelAdmin):
+    change_form_template = 'admin/core/fanewsettings/change_form.html'
+    form = FaNewSettingsForm
+    list_display = ('__str__', 'has_logo', 'has_video', 'updated_at')
+    readonly_fields = ('updated_at',)
+
+    fieldsets = (
+        # ── 1. Logo ───────────────────────────────────────────────────────
+        ('لوگو هدر', {
+            'description': 'PNG با پس‌زمینه شفاف — ارتفاع ۶۰ تا ۱۲۰ پیکسل.',
+            'fields': ('header_logo',),
+        }),
+
+        # ── 2. Hero Video ─────────────────────────────────────────────────
+        ('ویدیو هیرو', {
+            'description': 'MP4 (H.264) با faststart — حداکثر ۵۰۰ مگابایت.',
+            'fields': ('hero_video', 'hero_video_poster'),
+        }),
+
+        # ── 3. Hero Overlay Texts ─────────────────────────────────────────
+        ('متن‌های هیرو فارسی', {
+            'description': (
+                'متن‌هایی که روی اولین اسلاید ویدیوی هیرو نمایش داده می‌شوند. '
+                'اگر خالی باشند، متن‌های پیش‌فرض نشان داده می‌شود.'
+            ),
+            'fields': (
+                'hero_label',
+                'hero_title',
+                'hero_subtitle',
+                ('hero_cta_text', 'hero_cta_url'),
+            ),
+        }),
+
+        # ── 4. Overlay 1 ──────────────────────────────────────────────────
+        ('🎬 متن اسلاید ۱ — روی ویدیو', {
+            'classes': ('collapse',),
+            'description': (
+                'اولین متنی که هنگام شروع اسکرول نشان داده می‌شود. '
+                'درصد شروع/پایان: ۰ = ابتدای اسکرول، ۱۰۰ = انتهای هیرو.'
+            ),
+            'fields': (
+                ('o1_eyebrow', 'o1_highlight'),
+                'o1_title',
+                'o1_subtitle',
+                ('o1_start', 'o1_end'),
+            ),
+        }),
+
+        # ── 5. Overlay 2 ──────────────────────────────────────────────────
+        ('🎬 متن اسلاید ۲ — روی ویدیو', {
+            'classes': ('collapse',),
+            'fields': (
+                ('o2_eyebrow', 'o2_highlight'),
+                'o2_title',
+                'o2_subtitle',
+                ('o2_start', 'o2_end'),
+            ),
+        }),
+
+        # ── 6. Overlay 3 ──────────────────────────────────────────────────
+        ('🎬 متن اسلاید ۳ — روی ویدیو', {
+            'classes': ('collapse',),
+            'fields': (
+                ('o3_eyebrow', 'o3_highlight'),
+                'o3_title',
+                'o3_subtitle',
+                ('o3_start', 'o3_end'),
+            ),
+        }),
+
+        # ── 7. Overlay 4 (CTA) ────────────────────────────────────────────
+        ('🎬 متن اسلاید ۴ — دکمه‌دار (CTA)', {
+            'classes': ('collapse',),
+            'description': 'آخرین اسلاید — دکمه‌های دریافت مشاوره اینجا تعریف می‌شوند.',
+            'fields': (
+                ('o4_eyebrow', 'o4_highlight'),
+                'o4_title',
+                ('o4_start', 'o4_end'),
+            ),
+        }),
+
+        # ── 8. CTA Buttons ────────────────────────────────────────────────
+        ('دکمه‌های CTA', {
+            'description': 'دکمه‌هایی که در اسلاید ۴ نمایش داده می‌شوند.',
+            'fields': (
+                ('cta_primary_label', 'cta_primary_url'),
+                ('cta_secondary_label', 'cta_secondary_url'),
+            ),
+        }),
+
+        # ── 9. Colors ─────────────────────────────────────────────────────
+        ('رنگ‌های هیرو', {
+            'classes': ('collapse',),
+            'description': (
+                'رنگ‌ها باید به فرمت hex (#rrggbb) وارد شوند تا color picker کار کند. '
+                'برای رنگ‌های شفاف می‌توانید مستقیم rgba() تایپ کنید.'
+            ),
+            'fields': (
+                ('hero_text_color', 'hero_subtitle_color', 'hero_accent_color', 'hero_scrim_color'),
+                ('hero_cta_primary_bg', 'hero_cta_primary_text',
+                 'hero_cta_secondary_border', 'hero_cta_secondary_text'),
+            ),
+        }),
+
+        # ── 10. Advanced / Notes ──────────────────────────────────────────
+        ('یادداشت داخلی / پیشرفته', {
+            'classes': ('collapse',),
+            'fields': ('note', 'updated_at'),
+        }),
+    )
+
+    def has_logo(self, obj):
+        return bool(obj.header_logo)
+    has_logo.boolean = True
+    has_logo.short_description = 'لوگو'
+
+    def has_video(self, obj):
+        return bool(obj.hero_video)
+    has_video.boolean = True
+    has_video.short_description = 'ویدیو'
+
+    def has_add_permission(self, request):
+        return not FaNewSettings.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def changelist_view(self, request, extra_context=None):
+        from django.urls import reverse
+        from django.shortcuts import redirect
+        obj = FaNewSettings.get_settings()
+        return redirect(reverse('admin:core_fanewsettings_change', args=[obj.pk]))
+
+
+# ── /fa-new/ Section builder ──────────────────────────────────────────────────
+
+class FaNewSectionItemInline(TabularInline):
+    model = FaNewSectionItem
+    extra = 0
+    fields = (
+        'order', 'title', 'subtitle', 'description', 'body', 'badge', 'amount',
+        'stat_number', 'is_featured',
+        'author_name', 'author_meta',
+        'location', 'image', 'image_alt', 'accent_color',
+        'cta_label', 'cta_url',
+    )
+    ordering = ('order',)
+    show_change_link = False
+    classes = ('collapse',)
+    tab = True
+
+
+class FaNewGatewayCardInline(StackedInline):
+    model = FaNewGatewayCard
+    extra = 0
+    ordering_field = 'order'
+    hide_ordering_field = True
+    show_change_link = False
+    fields = (
+        'order',
+        'is_active',
+        'badge',
+        'title',
+        'subtitle',
+        'description',
+        'image_preview',
+        'image',
+        'image_alt',
+        'cta_text',
+        'cta_link',
+        'overlay_color',
+        'overlay_opacity',
+        'accent_color',
+        'hover_preset',
+    )
+    ordering = ('order', 'id')
+    classes = ()
+    tab = True
+    readonly_fields = ('image_preview',)
+    verbose_name = 'کارت مسیر سرمایه‌گذاری'
+    verbose_name_plural = 'کارت‌های مسیر سرمایه‌گذاری'
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(section__section_type='gateway')
+
+    def has_add_permission(self, request, obj=None):
+        if obj and obj.section_type != 'gateway':
+            return False
+        return super().has_add_permission(request, obj)
+
+    def image_preview(self, obj):
+        if not obj or not obj.image:
+            return '—'
+        return format_html(
+            '<img src="{}" alt="{}" style="width:88px;height:56px;object-fit:cover;border-radius:8px;border:1px solid rgba(100,116,139,.35)">',
+            obj.image.url,
+            obj.image_alt or obj.title or 'gateway-card',
+        )
+    image_preview.short_description = 'پیش‌نمایش تصویر'
+
+
+@admin.register(FaNewSection)
+class FaNewSectionAdmin(admin.ModelAdmin):
+    change_form_template = 'admin/core/fanewsection/change_form.html'
+    change_list_template = 'admin/core/fanewsection/change_list.html'
+    list_display = (
+        'order',
+        'section_name',
+        'section_type_display',
+        'is_active',
+        'device_visibility',
+        'item_count',
+        'preview_button',
+    )
+    list_display_links = ('order', 'section_name', 'section_type_display')
+    list_editable = ('is_active',)
+    list_filter = ('section_type', 'is_active')
+    search_fields = ('section_name', 'title', 'subtitle', 'anchor_id')
+    ordering = ('order', 'id')
+    readonly_fields = ('admin_small_preview', 'preview_button')
+    fieldsets = (
+        ('۱) تنظیمات عمومی', {
+            'fields': (
+                ('section_name', 'section_type'),
+                ('is_active', 'order'),
+                'anchor_id',
+                ('show_on_desktop', 'show_on_mobile'),
+                'preview_button',
+            ),
+        }),
+        ('۲) متن‌ها', {
+            'fields': (
+                'eyebrow',
+                'title',
+                'subtitle',
+                'description',
+                ('cta_primary_text', 'cta_primary_url'),
+                ('cta_secondary_text', 'cta_secondary_url'),
+            ),
+        }),
+        ('۳) تصاویر و ویدیو', {
+            'fields': (
+                ('background_image', 'background_image_alt'),
+                ('card_image_1', 'card_image_1_alt'),
+                ('card_image_2', 'card_image_2_alt'),
+                'background_video',
+            ),
+        }),
+        ('۴) تنظیمات کارت‌ها (نسخه قدیمی دوکارتی)', {
+            'classes': ('collapse',),
+            'description': (
+                'فیلدهای قدیمی دوکارتی. '
+                'برای مدیریت حرفه‌ای، از «کارت‌های مسیر سرمایه‌گذاری» پایین صفحه استفاده کنید.'
+            ),
+            'fields': (
+                'card_1_label',
+                'card_1_title',
+                'card_1_subtitle',
+                'card_1_description',
+                ('card_1_image', 'card_1_image_alt'),
+                ('card_1_cta_text', 'card_1_cta_link'),
+                'card_1_accent_color',
+                'card_2_label',
+                'card_2_title',
+                'card_2_subtitle',
+                'card_2_description',
+                ('card_2_image', 'card_2_image_alt'),
+                ('card_2_cta_text', 'card_2_cta_link'),
+                'card_2_accent_color',
+            ),
+        }),
+        ('۵) تنظیمات طراحی', {
+            'fields': (
+                ('background_color', 'gradient_color', 'text_color', 'accent_color'),
+                ('card_background', 'border_color'),
+                ('border_radius', 'shadow_intensity', 'blur_intensity'),
+                ('section_padding_top', 'section_padding_bottom', 'card_gap'),
+            ),
+        }),
+        ('۶) تنظیمات تایپوگرافی', {
+            'fields': (
+                ('title_font_size_desktop', 'title_font_size_mobile'),
+                ('subtitle_font_size', 'description_font_size'),
+                ('font_weight', 'line_height', 'text_alignment'),
+            ),
+        }),
+        ('۷) Responsive', {
+            'fields': (
+                ('mobile_layout', 'desktop_layout'),
+                ('max_width_container', 'hide_image_on_mobile'),
+            ),
+        }),
+        ('۸) Decorative transition (Hero → Gateway)', {
+            'classes': ('collapse',),
+            'fields': (
+                'decorative_flowers_enabled',
+                ('decorative_left_image', 'decorative_right_image'),
+                ('decorative_opacity', 'decorative_blur_intensity'),
+                ('decorative_animation_enabled', 'decorative_show_on_mobile'),
+            ),
+        }),
+        ('۹) Preview', {
+            'fields': ('admin_small_preview',),
+        }),
+    )
+
+    def section_type_display(self, obj):
+        return obj.get_section_type_display()
+    section_type_display.short_description = 'نوع بخش'
+    section_type_display.admin_order_field = 'section_type'
+
+    def device_visibility(self, obj):
+        if obj.show_on_desktop and obj.show_on_mobile:
+            return 'Desktop + Mobile'
+        if obj.show_on_desktop:
+            return 'Desktop only'
+        if obj.show_on_mobile:
+            return 'Mobile only'
+        return 'Hidden on both'
+    device_visibility.short_description = 'نمایش'
+
+    def item_count(self, obj):
+        if obj.section_type == 'gateway':
+            count = obj.gateway_cards.filter(is_active=True).count()
+            return f'{count} کارت فعال'
+        count = obj.items.count()
+        return f'{count} آیتم'
+    item_count.short_description = 'تعداد آیتم'
+
+    def preview_button(self, obj):
+        if not obj:
+            return 'بعد از ذخیره، لینک پیش‌نمایش فعال می‌شود.'
+        url = obj.admin_preview_url
+        return format_html(
+            '<a class="button" href="{}" target="_blank" rel="noopener">Preview</a>',
+            url,
+        )
+    preview_button.short_description = 'پیش‌نمایش'
+
+    def admin_small_preview(self, obj):
+        if not obj.pk:
+            return 'بعد از ذخیره، پیش‌نمایش اینجا نمایش داده می‌شود.'
+        title = obj.title or obj.section_name or obj.get_section_type_display()
+        subtitle = obj.subtitle or obj.description or ''
+        style = obj.section_inline_style
+        return format_html(
+            '<div class="fa-section-admin-preview" style="{}">'
+            '<div class="fa-section-admin-preview-eyebrow">{}</div>'
+            '<div class="fa-section-admin-preview-title">{}</div>'
+            '<div class="fa-section-admin-preview-subtitle">{}</div>'
+            '</div>',
+            style,
+            obj.eyebrow or obj.get_section_type_display(),
+            title,
+            subtitle[:180],
+        )
+    admin_small_preview.short_description = 'پیش‌نمایش کوچک'
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('items', 'gateway_cards')
+
+    def get_inlines(self, request, obj):
+        if obj is None:
+            return []
+        if obj.section_type == 'gateway':
+            return [FaNewGatewayCardInline]
+        return [FaNewSectionItemInline]
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                'reorder/',
+                self.admin_site.admin_view(self.reorder_view),
+                name='core_fanewsection_reorder',
+            )
+        ]
+        return custom_urls + urls
+
+    def reorder_view(self, request):
+        if request.method != 'POST':
+            return JsonResponse({'ok': False, 'error': 'Method not allowed'}, status=405)
+        try:
+            payload = json.loads(request.body.decode('utf-8'))
+            ids = payload.get('ids', [])
+            if not isinstance(ids, list):
+                raise ValueError('ids must be list')
+            ids = [int(pk) for pk in ids]
+        except Exception:
+            return JsonResponse({'ok': False, 'error': 'Invalid payload'}, status=400)
+
+        existing = list(
+            FaNewSection.objects.filter(pk__in=ids).values_list('pk', flat=True)
+        )
+        if len(existing) != len(ids):
+            return JsonResponse({'ok': False, 'error': 'Some sections were not found'}, status=400)
+
+        with transaction.atomic():
+            for index, section_id in enumerate(ids, start=1):
+                FaNewSection.objects.filter(pk=section_id).update(order=index)
+
+        return JsonResponse({'ok': True})
+
+    class Media:
+        css = {'all': ('admin/css/fanew_section_admin.css',)}
+        js = ('admin/js/fanew_section_sort.js',)
+
+
+# ── /fa-new/ Navigation Menu ──────────────────────────────────────────────────
+
+class FaNavMenuChildInline(TabularInline):
+    """Inline for submenu items shown inside a parent menu item."""
+    model = FaNavMenuItem
+    fk_name = 'parent'
+    extra = 1
+    fields = ('order', 'label', 'url', 'is_active', 'open_in_new_tab')
+    ordering = ('order',)
+    verbose_name = 'زیرمنو'
+    verbose_name_plural = 'زیرمنوها'
+
+
+@admin.register(FaNavMenuItem)
+class FaNavMenuItemAdmin(admin.ModelAdmin):
+    change_form_template = 'admin/core/fanavmenuitem/change_form.html'
+    change_list_template = 'admin/core/fanavmenuitem/change_list.html'
+    list_display = ('order', 'label', 'url', 'parent', 'is_active', 'open_in_new_tab', 'children_count')
+    list_display_links = ('label',)
+    list_editable = ('order', 'is_active')
+    list_filter = ('is_active', 'parent')
+    ordering = ('parent__order', 'order')
+    inlines = [FaNavMenuChildInline]
+    fieldsets = (
+        ('آیتم منو', {
+            'description': 'اگر این آیتم زیرمنوی یک آیتم دیگر است، فیلد «زیرمنوی» را پر کنید.',
+            'fields': ('parent', 'label', 'url', 'order'),
+        }),
+        ('تنظیمات نمایش', {
+            'fields': ('is_active', 'open_in_new_tab'),
+        }),
+    )
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('parent')
+
+    def children_count(self, obj):
+        count = obj.children.count()
+        return f'{count} زیرمنو' if count else '—'
+    children_count.short_description = 'زیرمنوها'
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context['title'] = 'منوی ناوبری صفحه فارسی'
+        return super().changelist_view(request, extra_context=extra_context)
+
+
+# ── /fa-new/ Footer Settings ──────────────────────────────────────────────────
+
+@admin.register(FaFooterSettings)
+class FaFooterSettingsAdmin(ModelAdmin):
+    list_display = ('__str__', 'brand_name', 'phone', 'email', 'updated_at')
+    readonly_fields = ('updated_at',)
+
+    fieldsets = (
+        ('ستون برند', {
+            'description': 'اطلاعات برند که در سمت راست فوتر نمایش داده می‌شوند.',
+            'fields': ('brand_name', 'brand_tagline', 'footer_logo', 'logo_max_width'),
+        }),
+        ('ستون تماس', {
+            'description': 'اطلاعات تماس که در ستون وسط/چپ فوتر نمایش داده می‌شوند.',
+            'fields': ('contact_title', 'address', 'phone', 'email', 'whatsapp_url'),
+        }),
+        ('ستون لینک‌های سریع', {
+            'description': 'عنوان ستون لینک‌ها. لینک‌ها به‌صورت خودکار از بخش‌های فعال صفحه گرفته می‌شوند.',
+            'fields': ('links_title',),
+        }),
+        ('شبکه‌های اجتماعی', {
+            'fields': ('instagram_url', 'linkedin_url', 'telegram_url'),
+        }),
+        ('نوار پایین', {
+            'fields': ('copyright_text', 'footer_tag'),
+        }),
+        ('سیستم', {
+            'classes': ('collapse',),
+            'fields': ('updated_at',),
+        }),
+    )
+
+    def has_add_permission(self, request):
+        return not FaFooterSettings.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def changelist_view(self, request, extra_context=None):
+        from django.urls import reverse
+        from django.shortcuts import redirect
+        obj = FaFooterSettings.get_settings()
+        return redirect(reverse('admin:core_fafootersettings_change', args=[obj.pk]))

@@ -1,0 +1,251 @@
+/* ═══════════════════════════════════════════════════════════════════════
+ *  Adonis Admin — Estedad Persian Font (self-hosted)
+ *  Loaded globally via UNFOLD["STYLES"] for clean Persian/Arabic text.
+ *
+ *  Typeface: Estedad (Arabic/Latin sans, 9 weights, OFL).
+ *  Files: /static/fonts/admin/estedad-{arabic|latin}-{300..900}.woff2
+ *
+ *  CRITICAL: Never override font-family on icon elements.
+ *  Material Symbols / Material Icons are ligature fonts — if their
+ *  font-family is changed, the icon names ("settings", "article", …)
+ *  render as visible plain text instead of glyphs.
+ * ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Estedad — Arabic subset (Persian text uses these glyphs) ──────────── */
+@font-face {
+    font-family: "Estedad";
+    src: url("/static/fonts/admin/estedad-arabic-300.woff2") format("woff2");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FBB2-FBC1, U+FD3E-FD3F;
+}
+@font-face {
+    font-family: "Estedad";
+    src: url("/static/fonts/admin/estedad-arabic-400.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FBB2-FBC1, U+FD3E-FD3F;
+}
+@font-face {
+    font-family: "Estedad";
+    src: url("/static/fonts/admin/estedad-arabic-500.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FBB2-FBC1, U+FD3E-FD3F;
+}
+@font-face {
+    font-family: "Estedad";
+    src: url("/static/fonts/admin/estedad-arabic-600.woff2") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FBB2-FBC1, U+FD3E-FD3F;
+}
+@font-face {
+    font-family: "Estedad";
+    src: url("/static/fonts/admin/estedad-arabic-700.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FBB2-FBC1, U+FD3E-FD3F;
+}
+@font-face {
+    font-family: "Estedad";
+    src: url("/static/fonts/admin/estedad-arabic-800.woff2") format("woff2");
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FBB2-FBC1, U+FD3E-FD3F;
+}
+@font-face {
+    font-family: "Estedad";
+    src: url("/static/fonts/admin/estedad-arabic-900.woff2") format("woff2");
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FBB2-FBC1, U+FD3E-FD3F;
+}
+
+/* ── Estedad — Latin subset (numbers, English labels) ──────────────────── */
+@font-face {
+    font-family: "Estedad";
+    src: url("/static/fonts/admin/estedad-latin-300.woff2") format("woff2");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+    font-family: "Estedad";
+    src: url("/static/fonts/admin/estedad-latin-400.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+    font-family: "Estedad";
+    src: url("/static/fonts/admin/estedad-latin-500.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+    font-family: "Estedad";
+    src: url("/static/fonts/admin/estedad-latin-600.woff2") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+    font-family: "Estedad";
+    src: url("/static/fonts/admin/estedad-latin-700.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+    font-family: "Estedad";
+    src: url("/static/fonts/admin/estedad-latin-800.woff2") format("woff2");
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+    font-family: "Estedad";
+    src: url("/static/fonts/admin/estedad-latin-900.woff2") format("woff2");
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ── Hard guard: icon fonts must NEVER be overridden ───────────────── */
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp,
+.material-icons,
+.material-icons-outlined,
+[class^="material-"] {
+    font-family: 'Material Symbols Outlined', 'Material Icons', sans-serif !important;
+}
+
+/* ── Global font stack ─────────────────────────────────────────────── */
+body,
+#content,
+#container,
+.module,
+.form-row,
+fieldset,
+input,
+select,
+textarea,
+button,
+.help,
+.helptext,
+.errornote,
+label,
+th,
+td,
+.breadcrumbs,
+#changelist,
+.paginator,
+#header,
+.object-tools a,
+.submit-row input,
+.selector,
+.dashboard .module caption,
+.description,
+p,
+a,
+span,
+div,
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Estedad", "Vazirmatn", "Peyda", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    font-feature-settings: "ss02" on, "cv11" on, "kern" on;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+/* Re-protect icon fonts after the broad override above */
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp,
+.material-icons,
+.material-icons-outlined,
+[class^="material-"],
+[class*=" material-"] {
+    font-family: 'Material Symbols Outlined', 'Material Icons', sans-serif !important;
+    font-feature-settings: normal !important;
+}
+
+/* ── Sidebar nav text ──────────────────────────────────────────────── */
+#nav-sidebar-inner h2,
+#nav-sidebar-inner h3,
+#nav-sidebar-inner ol li a,
+#nav-sidebar-inner ol li a span:not([class^="material-"]),
+#nav-sidebar-inner .font-semibold,
+#nav-sidebar-inner [class*="font-medium"],
+#nav-sidebar-inner [class*="truncate"],
+#nav-sidebar-inner input,
+#nav-sidebar-inner kbd {
+    font-family: "Estedad", "Vazirmatn", "Peyda", "Inter", sans-serif;
+    letter-spacing: 0;
+}
+
+select,
+select option {
+    font-family: "Estedad", "Vazirmatn", "Peyda", "Inter", sans-serif !important;
+}
+
+/* ── Headings — slightly heavier for premium feel ──────────────────── */
+h1, h2, h3, h4, h5, h6,
+.dashboard h2,
+#header h1,
+#header h1 a,
+.module h2,
+fieldset h2 {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+/* ── Readability improvements ──────────────────────────────────────── */
+body,
+#content,
+.form-row,
+label,
+p,
+.help,
+.helptext {
+    line-height: 1.7;
+}
+
+.help,
+.helptext {
+    font-size: 0.82rem;
+    line-height: 1.65;
+    font-weight: 400;
+}
+
+fieldset .description {
+    font-size: 0.84rem;
+    line-height: 1.7;
+}
+
+/* Slight optical adjustment for Persian numerals/Latin digits inline */
+.field-line input[type="text"],
+.field-line input[type="number"],
+.field-line input[type="email"],
+.field-line input[type="url"],
+.field-line textarea,
+.field-line select {
+    font-feature-settings: "ss02" on, "cv11" on, "tnum" on, "kern" on;
+}

@@ -1,0 +1,2892 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    {% if GTM_ID %}
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','{{ GTM_ID }}');</script>
+    {% endif %}
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if meta_title %}{{ meta_title }}{% else %}گلدن ویزای یونان | {{ SITE_NAME }}{% endif %}</title>
+    {% if meta_description %}<meta name="description" content="{{ meta_description }}">{% endif %}
+    <meta name="robots" content="{{ robots_meta|default:'index, follow' }}">
+    {% if canonical_url %}<link rel="canonical" href="{{ canonical_url }}">{% endif %}
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{ SITE_NAME }}">
+    <meta property="og:title" content="{% if og_title %}{{ og_title }}{% elif meta_title %}{{ meta_title }}{% else %}گلدن ویزای یونان{% endif %}">
+    {% if og_description %}<meta property="og:description" content="{{ og_description }}">{% elif meta_description %}<meta property="og:description" content="{{ meta_description }}">{% endif %}
+    {% if og_image %}<meta property="og:image" content="{{ og_image }}">{% endif %}
+    <meta property="og:locale" content="fa_IR">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon/favicon-32x32.png' %}">
+    <link rel="stylesheet" href="{% static 'fonts/fonts.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/fontawesome/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/aos/aos.css' %}">
+    <link rel="stylesheet" href="{% static 'django_ckeditor_5/dist/styles.css' %}">
+
+    {% if GOOGLE_ANALYTICS_ID %}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ GOOGLE_ANALYTICS_ID }}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '{{ GOOGLE_ANALYTICS_ID }}');
+      {% if GOOGLE_ADS_CONVERSION_ID %}gtag('config', '{{ GOOGLE_ADS_CONVERSION_ID }}');{% endif %}
+    </script>
+    {% endif %}
+
+    {% if MICROSOFT_CLARITY_ID %}
+    <script>
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "{{ MICROSOFT_CLARITY_ID }}");
+    </script>
+    {% endif %}
+
+    <style>
+/* ── Consultation Form Modal — Premium Design ── */
+body.fa-consult-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+}
+#faConsultFormModal {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(13, 27, 42, 0.85) 0%, rgba(8, 20, 45, 0.92) 100%);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 2050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+#faConsultFormModal.is-open { opacity: 1; }
+#faConsultFormModal[hidden] { display: none !important; }
+
+#faConsultFormModal .prop-consult-box {
+    position: relative;
+    background: #fff;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 480px;
+    max-height: min(94dvh, 94svh);
+    overflow: hidden;
+    box-shadow:
+        0 30px 90px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(201, 168, 76, 0.08);
+    transform: translateY(30px) scale(0.96);
+    transition: transform 0.4s cubic-bezier(0.22, 0.68, 0, 1.2);
+    display: flex;
+    flex-direction: column;
+}
+#faConsultFormModal.is-open .prop-consult-box {
+    transform: translateY(0) scale(1);
+}
+
+/* ── Modal header with gradient ── */
+#faConsultFormModal .prop-consult-header {
+    background: linear-gradient(135deg, #0b2948 0%, #1e3a5f 50%, #2d4a73 100%);
+    color: #fff;
+    padding: 2rem 2rem 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+#faConsultFormModal .prop-consult-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 60%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(201, 168, 76, 0.18) 0%, transparent 70%);
+    pointer-events: none;
+}
+#faConsultFormModal .prop-consult-header::after {
+    content: '\2728';
+    position: absolute;
+    top: 1rem;
+    right: 1.25rem;
+    font-size: 1.2rem;
+    opacity: 0.6;
+}
+#faConsultFormModal .prop-consult-header h2 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 0 0 0.5rem;
+    position: relative;
+    z-index: 1;
+    letter-spacing: -0.01em;
+}
+#faConsultFormModal .prop-consult-header p {
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 0.92rem;
+    margin: 0;
+    line-height: 1.7;
+    position: relative;
+    z-index: 1;
+}
+
+/* ── Close button ── */
+#faConsultFormModal .prop-consult-close {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    font-size: 0.95rem;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    z-index: 3;
+}
+#faConsultFormModal .prop-consult-close:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: rotate(90deg);
+}
+
+/* ── Form area scroll ── */
+#faConsultFormModal #faConsultForm,
+#faConsultFormModal .pc-success {
+    padding: 1.75rem 2rem 2rem;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+/* ── Form fields — premium look ── */
+.pc-field {
+    margin-bottom: 1.1rem;
+    position: relative;
+}
+.pc-field label {
+    display: block;
+    color: #1e3a5f;
+    font-weight: 600;
+    font-size: 0.86rem;
+    margin-bottom: 0.45rem;
+    padding-right: 0.15rem;
+}
+.pc-field label i {
+    color: #C9A84C;
+    margin-left: 0.4rem;
+    font-size: 0.85rem;
+}
+.pc-field input,
+.pc-field select,
+.pc-field textarea {
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    color: #0b2948;
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    font-size: 0.95rem;
+    font-family: var(--fa-font);
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    transition: all 0.2s;
+    direction: rtl;
+}
+.pc-field input[type="tel"],
+.pc-field input[type="email"] { direction: ltr; text-align: right; }
+.pc-field input:hover,
+.pc-field select:hover,
+.pc-field textarea:hover {
+    border-color: #cbd5e1;
+    background: #fff;
+}
+.pc-field input:focus,
+.pc-field select:focus,
+.pc-field textarea:focus {
+    border-color: #C9A84C;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(201, 168, 76, 0.15);
+}
+.pc-field input::placeholder,
+.pc-field textarea::placeholder { color: #94a3b8; font-size: 0.88rem; }
+.pc-field select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2364748b' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left 1rem center;
+    padding-left: 2.5rem;
+}
+.pc-field select option { color: #0b2948; background: #fff; }
+.pc-field textarea { resize: vertical; min-height: 90px; }
+
+/* ── Premium submit button ── */
+.pc-submit {
+    width: 100%;
+    margin-top: 0.5rem;
+    background: linear-gradient(135deg, #C9A84C 0%, #d4b057 50%, #b8963e 100%);
+    background-size: 200% 200%;
+    background-position: 0% 50%;
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: var(--fa-font);
+    letter-spacing: 0.01em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    box-shadow:
+        0 8px 24px rgba(201, 168, 76, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.pc-submit::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+    transform: translateX(100%);
+    transition: transform 0.6s;
+}
+.pc-submit:hover {
+    background-position: 100% 50%;
+    transform: translateY(-2px);
+    box-shadow:
+        0 12px 32px rgba(201, 168, 76, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+.pc-submit:hover::before {
+    transform: translateX(-100%);
+}
+.pc-submit:active {
+    transform: translateY(0);
+}
+.pc-submit:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+    background-position: 0% 50%;
+}
+.pc-submit i { font-size: 0.95rem; }
+
+/* ── Trust line below button ── */
+.pc-trust {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.78rem;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+.pc-trust i { color: #16a34a; }
+
+/* ── Success state ── */
+.pc-success {
+    text-align: center;
+    padding: 2.5rem 2rem !important;
+}
+.pc-success-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.25rem;
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.25);
+}
+.pc-success-icon i {
+    font-size: 2.2rem;
+    color: #059669;
+}
+.pc-success h3 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #0b2948;
+    margin: 0 0 0.5rem;
+}
+.pc-success p {
+    color: #5a7aa0;
+    font-size: 0.95rem;
+    margin: 0 0 1.5rem;
+    line-height: 1.8;
+}
+.pc-success .btn {
+    background: #0b2948;
+    color: #fff;
+    padding: 0.7rem 2rem;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-family: var(--fa-font);
+    font-weight: 600;
+    font-size: 0.92rem;
+    transition: background 0.2s;
+}
+.pc-success .btn:hover { background: #1e3a5f; }
+
+/* ── Mobile ── */
+@media (max-width: 540px) {
+    #faConsultFormModal { align-items: flex-end; padding: 0; }
+    #faConsultFormModal .prop-consult-box {
+        border-radius: 24px 24px 0 0;
+        max-width: 100%;
+        max-height: 92dvh;
+        transform: translateY(100%);
+    }
+    #faConsultFormModal.is-open .prop-consult-box { transform: translateY(0); }
+    #faConsultFormModal .prop-consult-header { padding: 1.75rem 1.5rem 1.25rem; }
+    #faConsultFormModal .prop-consult-header h2 { font-size: 1.35rem; }
+    #faConsultFormModal #faConsultForm,
+    #faConsultFormModal .pc-success { padding: 1.5rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom, 0px)); }
+    .pc-field input,
+    .pc-field select,
+    .pc-field textarea { font-size: 16px; padding: 0.85rem 0.95rem; }
+}
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+        --fa-font: 'Vazirmatn', sans-serif;
+        --dark: #0D1B2A;
+        --mid: #1e3a5f;
+        --gold: #C9A84C;
+        --gold-light: #e8d48b;
+        --green-wa: #25D366;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+        font-family: var(--fa-font);
+        direction: rtl;
+        line-height: 1.7;
+        color: #1e293b;
+        background: #fff;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.25rem;
+    }
+
+    img { max-width: 100%; height: auto; }
+
+    /* ── Top Bar ─────────────────────────────────── */
+    .fa-topbar {
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        z-index: 100;
+        padding: 1rem 0;
+    }
+    .fa-topbar__inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .fa-topbar__logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        color: #fff;
+    }
+    .fa-topbar__logo img {
+        height: 54px;
+        width: auto;
+        filter: brightness(0) invert(1);
+    }
+    .fa-topbar__logo-text {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: -0.02em;
+    }
+    .fa-topbar__en-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        background: rgba(255,255,255,0.12);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255,255,255,0.25);
+        color: #fff;
+        padding: 0.3rem 0.7rem;
+        border-radius: 50px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-decoration: none;
+        transition: all 0.3s;
+        font-family: 'Inter', var(--fa-font);
+    }
+    .fa-topbar__en-btn:hover {
+        background: rgba(255,255,255,0.22);
+        border-color: rgba(255,255,255,0.4);
+    }
+    .fa-topbar__en-flag {
+        display: inline-block;
+        width: 15px; height: 11px;
+        border-radius: 2px;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    /* ── Hero ────────────────────────────────────── */
+    .fa-hero {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        overflow: hidden;
+    }
+    .fa-hero__bg {
+        position: absolute; inset: 0;
+    }
+    .fa-hero__bg img,
+    .fa-hero__bg video {
+        width: 100%; height: 100%; object-fit: cover;
+    }
+    .fa-hero__overlay {
+        position: absolute; inset: 0;
+        background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(13,27,42,0.75) 100%);
+        pointer-events: none;
+    }
+    .fa-hero__inner {
+        position: relative; z-index: 2;
+        width: 100%; display: flex;
+        padding: 7rem 0 4rem;
+    }
+    .fa-hero__inner--top    { align-items: flex-start; padding-top: 9rem; }
+    .fa-hero__inner--center { align-items: center; }
+    .fa-hero__inner--bottom { align-items: flex-end; padding-bottom: 5rem; }
+
+    .fa-hero__content { max-width: 700px; }
+    .fa-hero__content--right  { margin-left: auto; text-align: right; }
+    .fa-hero__content--center { margin: 0 auto; text-align: center; }
+    .fa-hero__content--left   { margin-right: auto; text-align: left; }
+
+    .fa-hero__badge {
+        display: inline-block;
+        background: rgba(201,168,76,0.2);
+        color: var(--gold-light);
+        font-size: 0.85rem; font-weight: 600;
+        padding: 0.4rem 1.1rem; border-radius: 50px;
+        margin-bottom: 1.25rem;
+        border: 1px solid rgba(201,168,76,0.35);
+    }
+    .fa-hero__title {
+        font-size: clamp(2rem, 5vw, 3.2rem);
+        font-weight: 800; line-height: 1.35;
+        margin-bottom: 1rem;
+    }
+    .fa-hero__subtitle {
+        font-size: clamp(1rem, 2.2vw, 1.2rem);
+        line-height: 1.9;
+        margin-bottom: 2rem;
+        opacity: 0.92;
+    }
+    .fa-hero__buttons {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    .fa-hero__content--center .fa-hero__buttons { justify-content: center; }
+    .fa-hero__content--right  .fa-hero__buttons { justify-content: flex-start; }
+
+    .fa-btn {
+        display: inline-flex;
+        align-items: center; gap: 0.6rem;
+        padding: 0.85rem 2rem;
+        border-radius: 12px;
+        font-weight: 700; font-size: 1rem;
+        text-decoration: none; border: none; cursor: pointer;
+        transition: all 0.3s;
+        font-family: var(--fa-font);
+        line-height: 1.4;
+    }
+    .fa-btn--gold {
+        background: var(--gold); color: var(--dark);
+        box-shadow: 0 4px 20px rgba(201,168,76,0.35);
+    }
+    .fa-btn--gold:hover {
+        background: var(--gold-light);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(201,168,76,0.45);
+    }
+    .fa-btn--whatsapp {
+        background: var(--green-wa); color: #fff;
+        box-shadow: 0 4px 20px rgba(37,211,102,0.35);
+    }
+    .fa-btn--whatsapp:hover {
+        background: #1fb855;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(37,211,102,0.45);
+    }
+
+    /* ── CKEditor5 content override for FA page ──── */
+    .fa-intro__text.ck-content {
+        --ck-content-font-family: 'Vazirmatn', sans-serif;
+        --ck-content-font-size: 0.97rem;
+        --ck-content-font-color: #475569;
+        --ck-content-line-height: 2;
+    }
+    .fa-intro__text.ck-content ul,
+    .fa-intro__text.ck-content ol { padding-right: 1.5rem; padding-left: 0; margin-bottom: 1rem; }
+    .fa-intro__text.ck-content li { margin-bottom: 0.4rem; }
+    .fa-intro__text.ck-content h1,
+    .fa-intro__text.ck-content h2,
+    .fa-intro__text.ck-content h3,
+    .fa-intro__text.ck-content h4 {
+        color: var(--dark); font-weight: 600; margin-bottom: 0.5rem;
+        line-height: 1.6; font-family: 'Vazirmatn', sans-serif;
+        font-size: 1rem;
+    }
+    .fa-intro__text.ck-content p { margin-bottom: 0.75rem; }
+    .fa-intro__text.ck-content strong { color: var(--dark); }
+
+    /* ── Intro ───────────────────────────────────── */
+    .fa-intro { padding: 5rem 0; background: #f8fafc; }
+    .fa-intro__grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        align-items: stretch;
+    }
+    .fa-intro__title {
+        font-size: 1.8rem; font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 1.25rem;
+    }
+    .fa-intro__text {
+        color: #475569; line-height: 2;
+        margin-bottom: 1.5rem;
+    }
+    .fa-intro__text p { margin-bottom: 0.75rem; }
+    .fa-intro__bullets {
+        list-style: none; padding: 0; margin: 0 0 1.5rem;
+    }
+    .fa-intro__bullets li {
+        display: flex; align-items: flex-start; gap: 0.6rem;
+        padding: 0.5rem 0;
+        color: #334155; font-size: 1rem; line-height: 1.7;
+    }
+    .fa-intro__bullets li::before {
+        content: '\f00c';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        color: var(--gold);
+        flex-shrink: 0;
+        margin-top: 0.3rem;
+    }
+    .fa-intro__features {
+        display: flex; gap: 0.75rem; flex-wrap: wrap;
+        margin-top: 1.5rem;
+    }
+    .fa-intro__feat {
+        display: flex; align-items: center; gap: 0.5rem;
+        background: #fff;
+        padding: 0.65rem 1.1rem; border-radius: 12px;
+        font-size: 0.95rem; font-weight: 500;
+        color: var(--dark);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        border: 1px solid #e2e8f0;
+    }
+    .fa-intro__feat-icon { font-size: 1.3rem; }
+    .fa-intro__image {
+        border-radius: 18px; overflow: hidden;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+    }
+    .fa-intro__image img {
+        width: 100%;
+        flex: 1;
+        min-height: 0;
+        object-fit: cover;
+        object-position: center center;
+        display: block;
+    }
+
+    /* ── Section Header ──────────────────────────── */
+    .fa-section-header { text-align: center; margin-bottom: 3rem; }
+    .fa-section-badge {
+        display: inline-block;
+        background: rgba(13,94,175,0.08);
+        color: #0D5EAF;
+        font-size: 0.85rem; font-weight: 600;
+        padding: 0.4rem 1rem; border-radius: 50px;
+        margin-bottom: 0.75rem;
+    }
+    .fa-section-title {
+        font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+        font-weight: 700; color: var(--dark);
+        margin-bottom: 0.5rem;
+    }
+
+    /* ── Tiers ───────────────────────────────────── */
+    .fa-tiers { padding: 5rem 0; background: #fff; }
+    .fa-tiers__grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+    .fa-tier-card {
+        position: relative; border-radius: 18px;
+        overflow: hidden; min-height: 520px;
+        display: flex; flex-direction: column; justify-content: flex-end;
+        text-decoration: none; color: #fff;
+        transition: transform 0.35s, box-shadow 0.35s;
+        cursor: default;
+    }
+    .fa-tier-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 56px rgba(0,0,0,0.22);
+    }
+    .fa-tier-card__bg {
+        position: absolute; inset: 0; overflow: hidden;
+    }
+    .fa-tier-card__bg img {
+        width: 100%; height: 100%; object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    .fa-tier-card:hover .fa-tier-card__bg img {
+        transform: scale(1.04);
+    }
+    .fa-tier-card__overlay {
+        position: absolute; inset: 0;
+        background: linear-gradient(180deg, rgba(13,27,42,0.15) 0%, rgba(13,27,42,0.55) 50%, rgba(13,27,42,0.92) 100%);
+    }
+    .fa-tier-card__price {
+        position: absolute; top: 1rem; right: 1rem;
+        background: rgba(201,168,76,0.92);
+        color: var(--dark);
+        padding: 0.5rem 1rem; border-radius: 10px;
+        z-index: 2; text-align: center;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    }
+    .fa-tier-card__price-label { display: block; font-size: 0.7rem; font-weight: 500; }
+    .fa-tier-card__price-amount { display: block; font-size: 1.1rem; font-weight: 800; }
+    .fa-tier-card__body {
+        position: relative; z-index: 2; padding: 1.25rem 1.5rem 1.5rem;
+    }
+    .fa-tier-card__title {
+        font-size: 1.2rem; font-weight: 700;
+        margin-bottom: 0.4rem; color: #fff;
+        text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+    .fa-tier-card__desc {
+        font-size: 0.88rem; opacity: 0.9;
+        line-height: 1.65; margin-bottom: 0.85rem;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+    .fa-tier-card__cta {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        color: var(--gold-light); font-weight: 600; font-size: 0.88rem;
+        margin-bottom: 0.85rem; display: block;
+    }
+    /* More button */
+    .fa-tier-card__more-btn {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        background: rgba(255,255,255,0.15);
+        color: #fff; border: 1px solid rgba(255,255,255,0.3);
+        border-radius: 8px; padding: 0.45rem 1rem;
+        font-size: 0.85rem; font-weight: 600;
+        cursor: pointer; transition: background 0.2s;
+        backdrop-filter: blur(6px);
+        font-family: var(--fa-font);
+    }
+    .fa-tier-card__more-btn:hover {
+        background: rgba(255,255,255,0.25);
+    }
+    /* Tier expand — full-screen modal */
+    .fa-tier-card__expand {
+        display: none;
+        position: fixed; inset: 0; z-index: 3000;
+        background: rgba(0,0,0,0.72);
+        backdrop-filter: blur(4px);
+        align-items: flex-start; justify-content: center;
+        padding: 1rem;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .fa-tier-card__expand.is-open {
+        display: flex;
+    }
+    .fa-tier-expand-box {
+        background: linear-gradient(160deg, #0d1b2a, #1a3155);
+        border: 1px solid rgba(201,168,76,0.25);
+        border-radius: 20px; padding: 2rem;
+        max-width: 560px; width: 100%;
+        max-height: none; overflow-y: visible;
+        position: relative; color: #fff;
+        animation: tierExpandIn 0.28s ease;
+        margin: auto;
+        flex-shrink: 0;
+    }
+    @keyframes tierExpandIn {
+        from { opacity: 0; transform: scale(0.95) translateY(10px); }
+        to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .fa-tier-card__expand-close {
+        position: absolute; top: 1rem; left: 1rem;
+        background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+        color: #fff; width: 32px; height: 32px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; font-size: 1rem; transition: background 0.2s;
+        font-family: var(--fa-font);
+    }
+    .fa-tier-card__expand-close:hover { background: rgba(255,255,255,0.25); }
+    .fa-tier-card__expand-title {
+        font-size: 1.25rem; font-weight: 700;
+        color: var(--gold-light);
+        margin: 0 0 0.85rem; padding-left: 2.5rem;
+        line-height: 1.4;
+    }
+    .fa-tier-card__expand-price {
+        background: rgba(201,168,76,0.15);
+        border: 1px solid rgba(201,168,76,0.4);
+        border-radius: 8px; padding: 0.4rem 1rem;
+        display: inline-block; font-size: 0.92rem;
+        font-weight: 700; color: var(--gold-light);
+        margin-bottom: 1.25rem;
+    }
+    .fa-tier-card__expand-text {
+        font-size: 0.95rem; line-height: 1.9;
+        color: rgba(255,255,255,0.88);
+    }
+    .fa-tier-card__expand-text p,
+    .fa-tier-card__expand-text br + br { margin-bottom: 0.65rem; }
+
+    /* ── Why Adonis ──────────────────────────────── */
+    .fa-why {
+        position: relative;
+        padding: 7rem 0;
+        overflow: hidden;
+    }
+    .fa-why__bg {
+        position: absolute; inset: 0;
+    }
+    .fa-why__bg img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        object-position: center 30%;
+    }
+    .fa-why__overlay {
+        position: absolute; inset: 0; pointer-events: none;
+    }
+    .fa-why__inner { position: relative; z-index: 2; }
+    .fa-why .fa-section-title { color: #fff; }
+    .fa-why .fa-section-badge {
+        background: rgba(201,168,76,0.2); color: var(--gold-light);
+    }
+    .fa-why__subtitle {
+        text-align: center; color: rgba(255,255,255,0.85);
+        font-size: 1.05rem; line-height: 1.8;
+        max-width: 600px; margin: 0 auto 2rem;
+    }
+    .fa-why__grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        max-width: 880px;
+        margin: 0 auto;
+    }
+    .fa-why__card {
+        background: rgba(255,255,255,0.06);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        border: 1px solid rgba(255,255,255,0.18);
+        border-radius: 18px;
+        padding: 1.75rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.10);
+        transition: all 0.3s;
+    }
+    .fa-why__card:hover {
+        background: rgba(255,255,255,0.10);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 28px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.16);
+    }
+    .fa-why__card-icon { font-size: 2.2rem; margin-bottom: 0.85rem; }
+    .fa-why__card-title {
+        font-size: 1.1rem; font-weight: 700;
+        color: #fff; margin-bottom: 0.5rem;
+    }
+    .fa-why__card-text {
+        color: rgba(255,255,255,0.8);
+        font-size: 0.93rem; line-height: 1.8;
+    }
+
+    /* ── CTA Strip ───────────────────────────────── */
+    .fa-cta-strip {
+        background: linear-gradient(135deg, #0d1b2a 0%, #1a3155 100%);
+        border-top: 2px solid rgba(201,168,76,0.3);
+        border-bottom: 2px solid rgba(201,168,76,0.3);
+        padding: 3rem 2rem;
+        width: 100%;
+    }
+    .fa-cta-strip__inner {
+        max-width: 1200px; margin: 0 auto;
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 2rem; flex-wrap: wrap;
+    }
+    .fa-cta-strip__text {
+        font-size: 1.25rem; font-weight: 700;
+        color: #fff; margin: 0;
+        flex: 1; min-width: 240px;
+        line-height: 1.5;
+    }
+    .fa-cta-strip__text span {
+        display: block;
+        font-size: 0.95rem; font-weight: 400;
+        color: rgba(255,255,255,0.7);
+        margin-top: 0.3rem;
+    }
+    .fa-cta-strip__btns {
+        display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;
+    }
+    .fa-cta-strip__btn {
+        display: inline-flex; align-items: center; gap: 0.55rem;
+        padding: 0.9rem 2rem; border-radius: 12px;
+        font-size: 1rem; font-weight: 700; cursor: pointer;
+        text-decoration: none; transition: transform 0.2s, box-shadow 0.2s;
+        font-family: var(--fa-font); white-space: nowrap; border: none;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+    .fa-cta-strip__btn i { font-size: 1.1rem; }
+    .fa-cta-strip__btn:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+    .fa-cta-strip__btn--consult {
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: var(--dark);
+    }
+    .fa-cta-strip__btn--consult:hover { filter: brightness(1.08); }
+    .fa-cta-strip__btn--wa {
+        background: linear-gradient(135deg, #25d366, #1ebe5d);
+        color: #fff;
+    }
+    .fa-cta-strip__btn--wa:hover { filter: brightness(1.08); }
+    @media (max-width: 768px) {
+        .fa-cta-strip { padding: 2rem 1.5rem; }
+        .fa-cta-strip__inner { flex-direction: column; text-align: center; gap: 1.5rem; }
+        .fa-cta-strip__text { min-width: unset; }
+        .fa-cta-strip__btns { justify-content: center; width: 100%; }
+        .fa-cta-strip__btn { flex: 1; justify-content: center; min-width: 180px; }
+    }
+    @media (max-width: 400px) {
+        .fa-cta-strip__btns { flex-direction: column; }
+        .fa-cta-strip__btn { width: 100%; }
+    }
+
+    /* ── Benefits ────────────────────────────────── */
+    .fa-benefits {
+        position: relative; padding: 5rem 0; overflow: hidden;
+    }
+    .fa-benefits__bg {
+        position: absolute; inset: 0;
+    }
+    .fa-benefits__bg img {
+        width: 100%; height: 100%; object-fit: cover;
+    }
+    .fa-benefits__overlay {
+        position: absolute; inset: 0;
+        background: linear-gradient(135deg, rgba(13,27,42,0.88), rgba(30,58,95,0.85));
+        pointer-events: none;
+    }
+    .fa-benefits__inner { position: relative; z-index: 2; }
+    .fa-benefits .fa-section-title { color: #fff; }
+    .fa-benefits .fa-section-badge {
+        background: rgba(201,168,76,0.2); color: var(--gold-light);
+    }
+    .fa-benefits__grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.85rem;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    .fa-benefit-item {
+        display: flex; align-items: center; gap: 1rem;
+        background: rgba(255,255,255,0.07);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 14px;
+        padding: 1rem 1.25rem;
+        transition: background 0.2s, transform 0.2s;
+    }
+    .fa-benefit-item:hover {
+        background: rgba(255,255,255,0.11);
+        transform: translateY(-2px);
+    }
+    .fa-benefit-item__icon {
+        flex-shrink: 0;
+        width: 44px; height: 44px;
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 10px;
+        font-size: 1.15rem;
+    }
+    .fa-benefit-item:nth-child(1) .fa-benefit-item__icon { background: rgba(59,130,246,0.2);  color: #93c5fd; }
+    .fa-benefit-item:nth-child(2) .fa-benefit-item__icon { background: rgba(16,185,129,0.2);  color: #6ee7b7; }
+    .fa-benefit-item:nth-child(3) .fa-benefit-item__icon { background: rgba(139,92,246,0.2);  color: #c4b5fd; }
+    .fa-benefit-item:nth-child(4) .fa-benefit-item__icon { background: rgba(6,182,212,0.2);   color: #67e8f9; }
+    .fa-benefit-item:nth-child(5) .fa-benefit-item__icon { background: rgba(245,158,11,0.2);  color: #fcd34d; }
+    .fa-benefit-item:nth-child(6) .fa-benefit-item__icon { background: rgba(244,63,94,0.2);   color: #fda4af; }
+    .fa-benefit-item:nth-child(7) .fa-benefit-item__icon { background: rgba(52,211,153,0.2);  color: #6ee7b7; }
+    .fa-benefit-item:nth-child(8) .fa-benefit-item__icon { background: rgba(251,191,36,0.2);  color: #fde68a; }
+    .fa-benefit-item__text {
+        color: rgba(255,255,255,0.9);
+        font-size: 0.94rem; line-height: 1.75;
+        text-align: right;
+    }
+
+    /* ── Process Timeline ────────────────────────── */
+    .fa-process {
+        padding: 6rem 0;
+        background: linear-gradient(160deg, #0d1b2a 0%, #122040 55%, #0d1b2a 100%);
+        position: relative;
+    }
+    .fa-process .fa-section-title { color: #fff; }
+    .fa-process .fa-section-badge {
+        background: rgba(201,168,76,0.15);
+        color: var(--gold-light);
+        border: 1px solid rgba(201,168,76,0.25);
+    }
+
+    /* Timeline container */
+    .steps-timeline {
+        position: relative;
+        max-width: 800px;
+        margin: 3rem auto 0;
+        padding-right: 56px;
+    }
+    /* Vertical line */
+    .steps-timeline::before {
+        content: '';
+        position: absolute;
+        right: 15px;
+        top: 28px;
+        bottom: 28px;
+        width: 3px;
+        background: linear-gradient(
+            to bottom,
+            transparent 0%,
+            rgba(201,168,76,0.2) 8%,
+            rgba(201,168,76,0.55) 25%,
+            rgba(201,168,76,0.55) 75%,
+            rgba(201,168,76,0.2) 92%,
+            transparent 100%
+        );
+        border-radius: 3px;
+    }
+
+    /* Step card */
+    .step-card {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 20px 22px;
+        margin-bottom: 20px;
+        background: rgba(255,255,255,0.06);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 16px;
+        direction: rtl;
+        text-align: right;
+        /* Entrance animation */
+        opacity: 0;
+        transform: translateX(24px);
+        transition: opacity 0.5s ease, transform 0.5s ease,
+                    background 0.3s ease, box-shadow 0.3s ease;
+    }
+    .step-card.is-visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    .step-card:hover {
+        background: rgba(255,255,255,0.1);
+        box-shadow: 0 8px 36px rgba(0,0,0,0.25);
+    }
+    .step-card.is-visible:hover { transform: translateX(-4px); }
+
+    /* Horizontal connector to timeline */
+    .step-card::after {
+        content: '';
+        position: absolute;
+        right: -40px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 40px;
+        height: 2px;
+        background: linear-gradient(to right, rgba(201,168,76,0.08), rgba(201,168,76,0.5));
+    }
+
+    /* Number badge sitting on the timeline line */
+    .step-num {
+        position: absolute;
+        right: -56px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 32px; height: 32px;
+        background: linear-gradient(135deg, #c9a84c, #e6c97a);
+        color: #0d1b2a;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 800; font-size: 0.85rem;
+        z-index: 3;
+        box-shadow: 0 0 0 4px #122040, 0 0 0 6px rgba(201,168,76,0.3);
+        font-family: var(--fa-font);
+    }
+
+    /* Step icon */
+    .step-icon {
+        flex-shrink: 0;
+        width: 54px; height: 54px;
+        background: rgba(201,168,76,0.1);
+        border: 1px solid rgba(201,168,76,0.2);
+        border-radius: 14px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.4rem;
+        color: var(--gold-light);
+        transition: background 0.3s;
+    }
+    .step-card:hover .step-icon {
+        background: rgba(201,168,76,0.18);
+    }
+
+    /* Text */
+    .step-body { flex: 1; min-width: 0; }
+    .step-title {
+        font-size: 1.05rem; font-weight: 700;
+        color: #fff; margin: 0 0 0.3rem;
+        line-height: 1.45;
+    }
+    .step-subtitle {
+        font-size: 0.9rem;
+        color: rgba(255,255,255,0.65);
+        line-height: 1.75; margin: 0;
+    }
+
+    /* Mobile */
+    @media (max-width: 767px) {
+        .fa-process { padding: 4rem 0; }
+        .steps-timeline { padding-right: 46px; }
+        .steps-timeline::before { right: 11px; }
+        .step-card { padding: 16px 16px; gap: 12px; margin-bottom: 16px; }
+        .step-card::after { right: -34px; width: 34px; }
+        .step-num { right: -46px; width: 28px; height: 28px; font-size: 0.78rem;
+                    box-shadow: 0 0 0 3px #122040, 0 0 0 5px rgba(201,168,76,0.25); }
+        .step-icon { width: 44px; height: 44px; font-size: 1.1rem; border-radius: 11px; }
+        .step-title { font-size: 0.97rem; }
+        .step-subtitle { font-size: 0.85rem; }
+    }
+
+    /* ── Shorts ──────────────────────────────────── */
+    .fa-shorts { padding: 5rem 0; background: #fff; }
+    .fa-shorts--alt { background: #f8fafc; }
+    .fa-shorts__grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+    }
+    .fa-shorts__item {
+        border-radius: 14px; overflow: hidden;
+        aspect-ratio: 9/16; background: var(--dark);
+    }
+    .fa-shorts__item iframe {
+        width: 100%; height: 100%; border: 0;
+    }
+    .fa-shorts__more { text-align: center; margin-top: 2rem; }
+    .fa-shorts__more a {
+        display: inline-flex; align-items: center; gap: 0.5rem;
+        color: var(--dark); font-weight: 600;
+        text-decoration: none; font-size: 1rem;
+    }
+    .fa-shorts__more a:hover { color: var(--gold); }
+
+    /* ── Adonis Features ─────────────────────────── */
+    .fa-adonis-feat {
+        padding: 6rem 0;
+        background: #fff;
+        position: relative;
+        overflow: hidden;
+    }
+    .fa-adonis-feat::before {
+        content: '';
+        position: absolute;
+        top: -80px; left: -80px;
+        width: 320px; height: 320px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(201,168,76,0.07) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    .fa-adonis-feat__subtitle {
+        text-align: center;
+        color: #64748b;
+        font-size: 1.05rem;
+        line-height: 1.75;
+        max-width: 640px;
+        margin: 0 auto 3rem;
+    }
+    .fa-adonis-feat__grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    .fa-adonis-feat__card {
+        background: #fff;
+        border: 1px solid #e8ecf0;
+        border-radius: 20px;
+        padding: 2rem 1.75rem;
+        text-align: right;
+        direction: rtl;
+        position: relative;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        overflow: hidden;
+    }
+    .fa-adonis-feat__card::after {
+        content: '';
+        position: absolute;
+        bottom: 0; right: 0; left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, rgba(201,168,76,0.6), transparent);
+        transform: scaleX(0);
+        transition: transform 0.35s ease;
+        transform-origin: center;
+    }
+    .fa-adonis-feat__card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 48px rgba(0,0,0,0.09);
+        border-color: rgba(201,168,76,0.35);
+    }
+    .fa-adonis-feat__card:hover::after { transform: scaleX(1); }
+    .fa-adonis-feat__icon-wrap {
+        width: 64px; height: 64px;
+        border-radius: 18px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.85rem;
+        margin-bottom: 1.25rem;
+        margin-right: auto;
+    }
+    .fa-adonis-feat__card:nth-child(1) .fa-adonis-feat__icon-wrap { background: rgba(201,168,76,0.12); }
+    .fa-adonis-feat__card:nth-child(2) .fa-adonis-feat__icon-wrap { background: rgba(59,130,246,0.1); }
+    .fa-adonis-feat__card:nth-child(3) .fa-adonis-feat__icon-wrap { background: rgba(16,185,129,0.1); }
+    .fa-adonis-feat__card:nth-child(4) .fa-adonis-feat__icon-wrap { background: rgba(139,92,246,0.1); }
+    .fa-adonis-feat__card:nth-child(5) .fa-adonis-feat__icon-wrap { background: rgba(245,158,11,0.1); }
+    .fa-adonis-feat__card:nth-child(6) .fa-adonis-feat__icon-wrap { background: rgba(244,63,94,0.1); }
+    .fa-adonis-feat__card-title {
+        font-size: 1.05rem; font-weight: 700;
+        color: var(--dark); margin: 0 0 0.6rem;
+    }
+    .fa-adonis-feat__card-text {
+        font-size: 0.91rem; color: #64748b;
+        line-height: 1.8; margin: 0;
+    }
+    @media (max-width: 991px) {
+        .fa-adonis-feat__grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 576px) {
+        .fa-adonis-feat { padding: 4rem 0; }
+        .fa-adonis-feat__grid { grid-template-columns: 1fr; gap: 1rem; }
+        .fa-adonis-feat__card { padding: 1.5rem 1.25rem; }
+    }
+
+    /* ── CTA ─────────────────────────────────────── */
+    .fa-cta {
+        background: linear-gradient(135deg, var(--dark), var(--mid));
+        padding: 5rem 0; text-align: center;
+    }
+    .fa-cta__title {
+        font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+        font-weight: 700; color: #fff; margin-bottom: 1rem;
+    }
+    .fa-cta__text {
+        color: rgba(255,255,255,0.85);
+        font-size: 1.05rem; line-height: 1.8;
+        max-width: 600px; margin: 0 auto 2rem;
+    }
+    .fa-cta__buttons {
+        display: flex; gap: 1rem;
+        justify-content: center; flex-wrap: wrap;
+    }
+
+    /* ── Footer (minimal) ────────────────────────── */
+    .fa-footer {
+        background: var(--dark);
+        padding: 2rem 0;
+        text-align: center;
+    }
+    .fa-footer__socials {
+        display: flex; gap: 1rem;
+        justify-content: center; margin-bottom: 1rem;
+    }
+    .fa-footer__socials a {
+        width: 40px; height: 40px;
+        display: flex; align-items: center; justify-content: center;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 50%;
+        color: rgba(255,255,255,0.7);
+        font-size: 1rem;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+    .fa-footer__socials a:hover {
+        background: rgba(255,255,255,0.15);
+        color: #fff;
+    }
+    .fa-footer__copy {
+        color: rgba(255,255,255,0.45);
+        font-size: 0.8rem;
+    }
+
+    /* ── Consultation Float Button ───────────────── */
+    .fa-consult-float {
+        position: fixed;
+        bottom: 1.5rem; left: 1.5rem;
+        z-index: 800;
+        display: flex; align-items: center; gap: 0.6rem;
+        background: linear-gradient(135deg, #1a3a6e 0%, #1d4ed8 100%);
+        color: #fff;
+        padding: 0.8rem 1.4rem;
+        border-radius: 50px;
+        font-weight: 700; font-size: 0.92rem;
+        border: none; cursor: pointer;
+        font-family: var(--fa-font);
+        box-shadow: 0 4px 20px rgba(29,78,216,0.38);
+        transition: transform 0.25s, box-shadow 0.25s, background 0.25s;
+        white-space: nowrap;
+        text-decoration: none;
+    }
+    .fa-consult-float:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(29,78,216,0.5);
+        background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+    }
+    .fa-consult-float i { font-size: 1.1rem; }
+    /* pulse ring */
+    .fa-consult-float::before {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: 50px;
+        border: 2px solid rgba(29,78,216,0.35);
+        animation: fa-consult-pulse 2.4s ease-out infinite;
+        pointer-events: none;
+    }
+    @keyframes fa-consult-pulse {
+        0%   { transform: scale(1);   opacity: 0.8; }
+        70%  { transform: scale(1.1); opacity: 0; }
+        100% { transform: scale(1.1); opacity: 0; }
+    }
+
+    /* ── Responsive ──────────────────────────────── */
+    @media (max-width: 991px) {
+        .fa-intro__grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        .fa-intro__image {
+            max-height: 320px;
+            order: 2;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .fa-intro__grid > div:first-child { order: 1; }
+        .fa-tiers__grid { grid-template-columns: 1fr 1fr; }
+        .fa-shorts__grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 767px) {
+        .fa-intro { padding: 3rem 0; }
+        .fa-intro__grid { gap: 1.5rem; }
+        .fa-intro__title { font-size: 1.4rem; margin-bottom: 1rem; }
+        .fa-intro__text { font-size: 0.95rem; line-height: 1.85; margin-bottom: 1rem; }
+        .fa-intro__bullets li { font-size: 0.95rem; }
+        .fa-intro__feat { font-size: 0.85rem; padding: 0.5rem 0.85rem; }
+        .fa-intro__image { max-height: 250px; border-radius: 12px; margin: 0 auto; width: 100%; }
+
+        .fa-hero { min-height: 85vh; }
+        .fa-hero__inner { padding: 6rem 0 3rem; }
+        /* Override CMS-injected inline font-size on hero title/subtitle */
+        .fa-hero__title  { font-size: clamp(1.6rem, 6.5vw, 2.1rem) !important; line-height: 1.3 !important; }
+        .fa-hero__subtitle { font-size: clamp(0.9rem, 3.5vw, 1.05rem) !important; line-height: 1.8 !important; }
+        .fa-hero__content { max-width: 100%; }
+        .fa-hero__buttons { flex-direction: column; }
+        .fa-btn { width: 100%; justify-content: center; text-align: center; }
+        .fa-tiers__grid { grid-template-columns: 1fr; }
+        .fa-tier-card { min-height: 380px; }
+        .fa-why { padding: 4rem 0; }
+        .fa-why__grid { grid-template-columns: 1fr; gap: 1rem; }
+        .fa-why__card { padding: 1.5rem 1.25rem; }
+        .fa-benefits__grid { grid-template-columns: repeat(2, 1fr); }
+        .fa-benefit-item { padding: 0.85rem 1rem; gap: 0.85rem; }
+        .fa-benefit-item__icon { width: 38px; height: 38px; font-size: 1rem; }
+        .fa-shorts__grid { grid-template-columns: repeat(2, 1fr); }
+        .fa-cta__buttons { flex-direction: column; align-items: center; }
+        /* Consult float: prevent long text overflowing on small screens */
+        .fa-consult-float { bottom: 1rem; left: 1rem; padding: 0.65rem 1rem; font-size: 0.82rem; max-width: calc(100vw - 2rem); }
+        .fa-consult-float::before { display: none; }
+        /* Process: clip absolutely-positioned badges within section */
+        .fa-process { overflow-x: hidden; }
+        /* Properties section: adjust spacing and card image height */
+        .fa-properties-section { padding: 50px 0; }
+        .fa-properties-card__img-wrap { height: 260px; }
+    }
+    @media (max-width: 480px) {
+        .fa-benefits__grid { grid-template-columns: 1fr; }
+        .fa-intro__features { gap: 0.5rem; }
+        .fa-intro__feat { font-size: 0.8rem; padding: 0.45rem 0.75rem; }
+        .fa-shorts__grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+        .fa-hero__title  { font-size: clamp(1.4rem, 7vw, 1.7rem) !important; }
+        .fa-hero__subtitle { font-size: 0.9rem !important; }
+        .fa-tier-card { min-height: 340px; }
+        .fa-properties-card__img-wrap { height: 220px; }
+        .fa-properties-section { padding: 36px 0; }
+    }
+
+    /* ── Mobile text fix ─────────────────────────────
+       CKEditor saves <h4 style="margin-left:80px"> which
+       collapses text to a narrow column on small screens.
+       Override inline margins only on mobile, scoped to
+       this page's text containers — nothing else changes.
+    ──────────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+        /* intro rich-text: reset CKEditor inline margins */
+        .fa-intro__text.ck-content *,
+        .fa-intro__text.ck-content h1,
+        .fa-intro__text.ck-content h2,
+        .fa-intro__text.ck-content h3,
+        .fa-intro__text.ck-content h4,
+        .fa-intro__text.ck-content h5,
+        .fa-intro__text.ck-content h6,
+        .fa-intro__text.ck-content p,
+        .fa-intro__text.ck-content li {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            padding-left: 0 !important;
+        }
+        /* h4 used as body text — normalize its size/weight */
+        .fa-intro__text.ck-content h4 {
+            font-size: 1rem !important;
+            font-weight: 400 !important;
+            line-height: 2 !important;
+            color: #475569 !important;
+            margin-bottom: 0.75rem !important;
+        }
+        /* list items containing h4 */
+        .fa-intro__text.ck-content li h4 {
+            font-size: 1rem !important;
+            font-weight: 500 !important;
+            margin-bottom: 0 !important;
+        }
+        /* make the text container truly full-width */
+        .fa-intro__text {
+            width: 100%;
+            max-width: 100%;
+            overflow-wrap: break-word;
+            word-break: normal;
+        }
+        /* list indentation — keep it tight on mobile */
+        .fa-intro__text.ck-content ul,
+        .fa-intro__text.ck-content ol {
+            padding-right: 1.25rem !important;
+            padding-left: 0 !important;
+        }
+    }
+
+    /* ── Very small screens (≤ 360px) ───────────────────────────────────────── */
+    @media (max-width: 360px) {
+        .fa-hero__title  { font-size: 1.3rem !important; }
+        .fa-hero__subtitle { font-size: 0.85rem !important; }
+        .fa-tier-card { min-height: 300px; }
+        /* Single column for shorts on tiny phones */
+        .fa-shorts__grid { grid-template-columns: 1fr !important; }
+        /* Shrink topbar on tiny screens */
+        .fa-topbar__logo img { height: 42px; }
+        .fa-topbar__en-btn { font-size: 0.68rem; padding: 0.25rem 0.55rem; }
+        /* Tighter timeline on tiny screens */
+        .steps-timeline { padding-right: 38px; }
+        .steps-timeline::before { right: 7px; }
+        .step-card::after { right: -28px; width: 28px; }
+        .step-num { right: -38px; width: 24px; height: 24px; font-size: 0.7rem; }
+        /* Properties */
+        .fa-properties-card__img-wrap { height: 200px; }
+        .fa-properties-grid { gap: 16px; }
+        /* Consult float: icon-only on tiny screens */
+        .fa-consult-float { padding: 0.75rem; border-radius: 50%; gap: 0; }
+        .fa-consult-float__label { display: none; }
+    }
+    </style>
+</head>
+
+<body>
+
+{% if GTM_ID %}
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ GTM_ID }}"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+{% endif %}
+
+{# ── HERO ──────────────────────────────────────────────────────────────────── #}
+<section class="fa-hero">
+    <div class="fa-hero__bg">
+        {% if page.hero_video %}
+        <video autoplay muted loop playsinline
+               {% if page.hero_image %}poster="{{ page.hero_image.url }}"{% endif %}
+               style="opacity:{{ hero_image_opacity|default:70 }}%;">
+            <source src="{{ page.hero_video.url }}" type="video/mp4">
+        </video>
+        {% elif page.hero_image %}
+        <img src="{{ page.hero_image.url }}" alt="{{ page.hero_image_alt }}"
+             style="opacity:{{ hero_image_opacity|default:70 }}%;">
+        {% endif %}
+    </div>
+    <div class="fa-hero__overlay"></div>
+
+    {# ── Top bar: logo + English button ── #}
+    <div class="fa-topbar">
+        <div class="container">
+            <div class="fa-topbar__inner">
+                <a href="{% url 'home' %}" class="fa-topbar__logo">
+                    {% if header_settings and header_settings.logo %}
+                    <img src="{{ header_settings.logo.url }}" alt="{{ SITE_NAME }}">
+                    {% else %}
+                    <span class="fa-topbar__logo-text">{{ SITE_NAME }}</span>
+                    {% endif %}
+                </a>
+                <a href="{% url 'greece_golden_visa' %}" class="fa-topbar__en-btn">
+                    <span class="fa-topbar__en-flag">
+                        <svg viewBox="0 0 20 15" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:100%;">
+                            <rect width="20" height="15" fill="#012169"/>
+                            <path d="M0 0l20 15M20 0L0 15" stroke="#fff" stroke-width="3"/>
+                            <path d="M0 0l20 15M20 0L0 15" stroke="#C8102E" stroke-width="2"/>
+                            <path d="M10 0v15M0 7.5h20" stroke="#fff" stroke-width="5"/>
+                            <path d="M10 0v15M0 7.5h20" stroke="#C8102E" stroke-width="3"/>
+                        </svg>
+                    </span>
+                    ENG
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="fa-hero__inner fa-hero__inner--{{ hero_content_vertical_align|default:'bottom' }}">
+        <div class="container">
+            <div class="fa-hero__content fa-hero__content--{{ hero_content_horizontal_align|default:'right' }}" data-aos="fade-up">
+                <span class="fa-hero__badge"><i class="fas fa-passport" aria-hidden="true"></i> گلدن ویزای یونان</span>
+                <h1 class="fa-hero__title" style="color:{{ page.hero_title_color|default:'#ffffff' }};font-size:{{ page.hero_title_font_size|default:'48px' }};">{{ page.hero_title }}</h1>
+                {% if page.hero_subtitle %}
+                <p class="fa-hero__subtitle" style="color:{{ page.hero_subtitle_color|default:'#ffffff' }};font-size:{{ page.hero_subtitle_font_size|default:'20px' }};">{{ page.hero_subtitle }}</p>
+                {% endif %}
+                <div class="fa-hero__buttons">
+                    <button type="button" class="fa-btn fa-btn--gold" onclick="openFaConsultFormModal()">
+                        <i class="fas fa-calendar-check" aria-hidden="true"></i>
+                        {{ page.hero_cta_text|default:"بررسی شرایط در کمتر از ۲۴ ساعت" }}
+                    </button>
+                    {% if page.fa_whatsapp_number %}
+                    <a href="{{ page.fa_whatsapp_number }}" class="fa-btn fa-btn--whatsapp" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                        تماس فوری در واتساپ
+                    </a>
+                    {% elif WHATSAPP_URL %}
+                    <a href="{{ WHATSAPP_URL }}" class="fa-btn fa-btn--whatsapp" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                        تماس فوری در واتساپ
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# ── INTRO ─────────────────────────────────────────────────────────────────── #}
+{% if intro_text or intro_bullets or page.intro_title %}
+<section class="fa-intro">
+    <div class="container">
+        <div class="fa-intro__grid" data-aos="fade-up">
+            <div>
+                {% if page.intro_title %}
+                <h2 class="fa-intro__title">{{ page.intro_title }}</h2>
+                {% endif %}
+                {% if intro_text %}
+                <div class="fa-intro__text ck-content">{{ intro_text|safe }}</div>
+                {% endif %}
+                {% if intro_bullets %}
+                <ul class="fa-intro__bullets">
+                    {% for bullet in intro_bullets %}
+                    <li>{{ bullet }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% if intro_features %}
+                <div class="fa-intro__features">
+                    {% for feat in intro_features %}
+                    <div class="fa-intro__feat">
+                        <span class="fa-intro__feat-icon">{{ feat.icon }}</span>
+                        <span>{{ feat.text }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% if page.intro_image %}
+            <div class="fa-intro__image">
+                <img src="{{ page.intro_image.url }}" alt="{{ page.intro_image_alt|default:page.intro_title }}" loading="lazy" decoding="async">
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{# ── WHY ADONIS ────────────────────────────────────────────────────────────── #}
+{% if why_items %}
+<section class="fa-why">
+    {% if page.why_adonis_bg_image %}
+    <div class="fa-why__bg">
+        <img src="{{ page.why_adonis_bg_image.url }}" alt="" loading="lazy" decoding="async">
+    </div>
+    <div class="fa-why__overlay" style="background:rgba(13,27,42,{{ page.why_adonis_overlay_opacity|default:40 }}%);"></div>
+    {% else %}
+    <div class="fa-why__overlay" style="background:linear-gradient(135deg, #0D1B2A, #1e3a5f);"></div>
+    {% endif %}
+    <div class="fa-why__inner">
+        <div class="container">
+            <div class="fa-section-header" data-aos="fade-up">
+                <span class="fa-section-badge"><i class="fas fa-award" aria-hidden="true"></i> مزایای آدونیس</span>
+                <h2 class="fa-section-title">{{ page.why_adonis_title|default:"چرا آدونیس؟" }}</h2>
+            </div>
+            {% if page.why_adonis_subtitle %}
+            <p class="fa-why__subtitle" data-aos="fade-up">{{ page.why_adonis_subtitle }}</p>
+            {% endif %}
+            <div class="fa-why__grid" data-aos="fade-up">
+                {% for item in why_items %}
+                <div class="fa-why__card">
+                    <div class="fa-why__card-icon">{{ item.icon }}</div>
+                    <h3 class="fa-why__card-title">{{ item.title }}</h3>
+                    {% if item.text %}<p class="fa-why__card-text">{{ item.text }}</p>{% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{# ── TIERS ─────────────────────────────────────────────────────────────────── #}
+{% if tiers %}
+<section class="fa-tiers" id="investment-tiers">
+    <div class="container">
+        {% if page.tiers_title %}
+        <div class="fa-section-header" data-aos="fade-up">
+            <span class="fa-section-badge"><i class="fas fa-coins" aria-hidden="true"></i> گزینه‌های سرمایه‌گذاری</span>
+            <h2 class="fa-section-title">{{ page.tiers_title }}</h2>
+        </div>
+        {% endif %}
+        <div class="fa-tiers__grid">
+            {% for tier in tiers %}
+            {% if tier.title %}
+            <div class="fa-tier-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                <div class="fa-tier-card__bg">
+                    {% if tier.image %}
+                    <img src="{{ tier.image.url }}" alt="{{ tier.image_alt|default:tier.title }}" loading="lazy" decoding="async">
+                    {% endif %}
+                </div>
+                <div class="fa-tier-card__overlay"></div>
+                {% if tier.price_amount %}
+                <div class="fa-tier-card__price">
+                    {% if tier.price_label %}<span class="fa-tier-card__price-label">{{ tier.price_label }}</span>{% endif %}
+                    <span class="fa-tier-card__price-amount">{{ tier.price_amount }}</span>
+                </div>
+                {% endif %}
+                <div class="fa-tier-card__body">
+                    <h3 class="fa-tier-card__title">{{ tier.title }}</h3>
+                    {% if tier.short_desc %}<p class="fa-tier-card__desc">{{ tier.short_desc }}</p>{% endif %}
+                    {% if tier.cta_text %}
+                    <span class="fa-tier-card__cta">{{ tier.cta_text }} <i class="fas fa-arrow-left" aria-hidden="true"></i></span>
+                    {% endif %}
+                    {% if tier.long_desc %}
+                    <button type="button" class="fa-tier-card__more-btn" onclick="openTierExpand(this)">
+                        <i class="fas fa-plus-circle" aria-hidden="true"></i> توضیحات بیشتر
+                    </button>
+                    {% endif %}
+                </div>
+                {% if tier.long_desc %}
+                <div class="fa-tier-card__expand" role="dialog" aria-modal="true" onclick="if(event.target===this)closeTierExpand(this)">
+                    <div class="fa-tier-expand-box">
+                        <button type="button" class="fa-tier-card__expand-close" onclick="closeTierExpand(this)" aria-label="بستن">×</button>
+                        <h4 class="fa-tier-card__expand-title">{{ tier.title }}</h4>
+                        {% if tier.price_amount %}
+                        <span class="fa-tier-card__expand-price">{{ tier.price_label }} {{ tier.price_amount }}</span>
+                        {% endif %}
+                        <div class="fa-tier-card__expand-text">{{ tier.long_desc|linebreaksbr }}</div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{# ── CTA STRIP ─────────────────────────────────────────────────────────────── #}
+<section class="fa-cta-strip" dir="rtl">
+    <div class="fa-cta-strip__inner">
+        <p class="fa-cta-strip__text">
+            آماده شروع مسیر اقامت یونان هستید؟
+            <span>همین حالا با متخصصان آدونیس مشورت رایگان بگیرید</span>
+        </p>
+        <div class="fa-cta-strip__btns">
+            <button type="button" class="fa-cta-strip__btn fa-cta-strip__btn--consult" onclick="openFaConsultFormModal()">
+                <i class="fas fa-calendar-check" aria-hidden="true"></i>
+                تکمیل فرم مشاوره
+            </button>
+            {% if page.fa_whatsapp_number %}
+            <a href="{{ page.fa_whatsapp_number }}" class="fa-cta-strip__btn fa-cta-strip__btn--wa" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                تماس فوری در واتساپ
+            </a>
+            {% else %}
+            <a href="{{ WHATSAPP_URL }}" class="fa-cta-strip__btn fa-cta-strip__btn--wa" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                تماس فوری در واتساپ
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+{# ── BENEFITS ──────────────────────────────────────────────────────────────── #}
+{% if benefits %}
+<section class="fa-benefits">
+    {% if page.benefits_bg_image %}
+    <div class="fa-benefits__bg">
+        <img src="{{ page.benefits_bg_image.url }}" alt="" loading="lazy" decoding="async">
+    </div>
+    {% endif %}
+    <div class="fa-benefits__overlay"></div>
+    <div class="fa-benefits__inner">
+        <div class="container">
+            <div class="fa-section-header" data-aos="fade-up">
+                <span class="fa-section-badge"><i class="fas fa-check-circle" aria-hidden="true"></i> مزایای کلیدی</span>
+                {% if page.benefits_title %}
+                <h2 class="fa-section-title">{{ page.benefits_title }}</h2>
+                {% endif %}
+            </div>
+            <div class="fa-benefits__grid" data-aos="fade-up">
+                {% for b in benefits %}
+                <div class="fa-benefit-item">
+                    <div class="fa-benefit-item__icon">
+                        {% if forloop.counter == 1 %}<i class="fas fa-passport" aria-hidden="true"></i>
+                        {% elif forloop.counter == 2 %}<i class="fas fa-house-user" aria-hidden="true"></i>
+                        {% elif forloop.counter == 3 %}<i class="fas fa-calendar-check" aria-hidden="true"></i>
+                        {% elif forloop.counter == 4 %}<i class="fas fa-building-columns" aria-hidden="true"></i>
+                        {% elif forloop.counter == 5 %}<i class="fas fa-coins" aria-hidden="true"></i>
+                        {% elif forloop.counter == 6 %}<i class="fas fa-key" aria-hidden="true"></i>
+                        {% elif forloop.counter == 7 %}<i class="fas fa-chart-line" aria-hidden="true"></i>
+                        {% else %}<i class="fas fa-star" aria-hidden="true"></i>
+                        {% endif %}
+                    </div>
+                    <p class="fa-benefit-item__text">{{ b.text }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+{# ── FEATURED PROPERTIES (FA) ─────────────────────────────────────────────── #}
+<style>
+.fa-properties-section {
+    padding: 80px 0;
+    background: #f8f9fb;
+    direction: rtl;
+}
+.fa-properties-section .fa-properties-header {
+    text-align: center;
+    margin-bottom: 48px;
+}
+.fa-properties-section .fa-properties-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #b8972a 0%, #d4af37 100%);
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 6px 18px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+}
+.fa-properties-section .fa-properties-title {
+    font-size: clamp(1.5rem, 3.5vw, 2.1rem);
+    font-weight: 800;
+    color: #1a2340;
+    margin: 0 0 10px;
+    line-height: 1.3;
+}
+.fa-properties-section .fa-properties-subtitle {
+    font-size: 1rem;
+    color: #5a6478;
+    margin: 0;
+}
+.fa-properties-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+.fa-properties-card {
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+    display: block;
+    color: inherit;
+}
+.fa-properties-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 10px 36px rgba(0,0,0,0.14);
+}
+.fa-properties-card__img-wrap {
+    position: relative;
+    height: 380px;
+    overflow: hidden;
+}
+.fa-properties-card__img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+}
+.fa-properties-card:hover .fa-properties-card__img-wrap img {
+    transform: scale(1.06);
+}
+.fa-properties-card__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(10,18,40,0.78) 0%, rgba(10,18,40,0.15) 55%, transparent 100%);
+}
+.fa-properties-card__price {
+    position: absolute;
+    bottom: 14px;
+    right: 16px;
+    color: #fff;
+    font-size: 1.15rem;
+    font-weight: 800;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+    direction: ltr;
+}
+.fa-properties-card__body {
+    padding: 18px 20px 20px;
+}
+.fa-properties-card__name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a2340;
+    margin: 0 0 4px;
+}
+.fa-properties-card__name-fa {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #1a2340;
+    margin: 0 0 4px;
+    font-family: 'Vazirmatn', sans-serif;
+}
+.fa-properties-card__tagline-fa {
+    font-size: 0.82rem;
+    color: #5a6478;
+    margin: 0 0 8px;
+    line-height: 1.5;
+    font-family: 'Vazirmatn', sans-serif;
+}
+.fa-properties-card__location {
+    font-size: 0.82rem;
+    color: #7a8499;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 6px;
+    padding-top: 8px;
+    border-top: 1px solid #f0f2f5;
+}
+.fa-properties-card__location i {
+    color: #d4af37;
+    font-size: 0.78rem;
+}
+.fa-properties-cta-wrap {
+    text-align: center;
+    margin-top: 44px;
+}
+.fa-properties-cta-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #1c6e3d 0%, #28a054 100%);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 16px 42px;
+    border-radius: 30px;
+    text-decoration: none;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 16px rgba(28,110,61,0.28);
+    letter-spacing: 0.02em;
+}
+.fa-properties-cta-btn:hover {
+    background: linear-gradient(135deg, #28a054 0%, #1c6e3d 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 26px rgba(28,110,61,0.38);
+    color: #fff;
+}
+@media (max-width: 900px) {
+    .fa-properties-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 580px) {
+    .fa-properties-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<section class="fa-properties-section featured-properties-fa" dir="rtl">
+    <div class="container">
+        <div class="fa-properties-header" data-aos="fade-up">
+            <span class="fa-properties-badge"><i class="fas fa-building" aria-hidden="true"></i> نمونه ملک</span>
+            <h2 class="fa-properties-title">نمونه‌ای از املاک پیشنهادی در یونان</h2>
+            <p class="fa-properties-subtitle">چند فرصت سرمایه‌گذاری منتخب از پروژه‌های آدونیس</p>
+        </div>
+
+        <div class="fa-properties-grid" data-aos="fade-up">
+
+            {% if featured_properties_fa %}
+
+                {% for prop in featured_properties_fa %}
+                <a href="https://adonisgroup.gr/properties/" class="fa-properties-card" target="_blank" rel="noopener noreferrer">
+                    <div class="fa-properties-card__img-wrap">
+                        {% with prop.cover_media as cm %}
+                            {% if cm and cm.image %}
+                                <img src="{{ cm.image.url }}" alt="{{ prop.name }}" loading="lazy" decoding="async">
+                                {% elif prop.image_1 %}
+                                <img src="{{ prop.image_1.url }}" alt="{{ prop.name }}" loading="lazy" decoding="async">
+                                {% else %}
+                                <img src="{% static 'img/placeholder.jpg' %}" alt="{{ prop.name }}" loading="lazy" decoding="async">
+                            {% endif %}
+                        {% endwith %}
+                        <div class="fa-properties-card__overlay"></div>
+                        <span class="fa-properties-card__price">€{{ prop.price|floatformat:0 }}</span>
+                    </div>
+                    <div class="fa-properties-card__body">
+                        {% if prop.name_fa %}
+                        <h3 class="fa-properties-card__name-fa">{{ prop.name_fa }}</h3>
+                        {% else %}
+                        <h3 class="fa-properties-card__name">{{ prop.name }}</h3>
+                        {% endif %}
+                        {% if prop.tagline_fa %}
+                        <p class="fa-properties-card__tagline-fa">{{ prop.tagline_fa }}</p>
+                        {% endif %}
+                        <p class="fa-properties-card__location">
+                            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                            {{ prop.location }}{% if prop.area %}, {{ prop.area }}{% endif %}
+                        </p>
+                    </div>
+                </a>
+                {% endfor %}
+
+            {% else %}
+
+                {# --- Static mock data (fallback when DB has no properties) --- #}
+                <a href="https://adonisgroup.gr/properties/" class="fa-properties-card" target="_blank" rel="noopener noreferrer">
+                    <div class="fa-properties-card__img-wrap">
+                        <img src="{% static 'img/placeholder.jpg' %}" alt="مسکونی لاکچری الیت" loading="lazy" decoding="async">
+                        <div class="fa-properties-card__overlay"></div>
+                        <span class="fa-properties-card__price">€250,000</span>
+                    </div>
+                    <div class="fa-properties-card__body">
+                        <h3 class="fa-properties-card__name-fa">مسکونی لاکچری الیت</h3>
+                        <p class="fa-properties-card__tagline-fa">خانه مدرن با دسترسی ویژه به گلدن ویزا — آلیموس</p>
+                        <p class="fa-properties-card__location">
+                            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                            Alimos, South Athens
+                        </p>
+                    </div>
+                </a>
+
+                <a href="https://adonisgroup.gr/properties/" class="fa-properties-card" target="_blank" rel="noopener noreferrer">
+                    <div class="fa-properties-card__img-wrap">
+                        <img src="{% static 'img/placeholder.jpg' %}" alt="پروژه مسکونی نوبل" loading="lazy" decoding="async">
+                        <div class="fa-properties-card__overlay"></div>
+                        <span class="fa-properties-card__price">€250,000</span>
+                    </div>
+                    <div class="fa-properties-card__body">
+                        <h3 class="fa-properties-card__name-fa">پروژه مسکونی نوبل</h3>
+                        <p class="fa-properties-card__tagline-fa">زندگی لاکچری و سرمایه‌گذاری هوشمند در جنوب آتن</p>
+                        <p class="fa-properties-card__location">
+                            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                            Alimos, South Athens
+                        </p>
+                    </div>
+                </a>
+
+                <a href="https://adonisgroup.gr/properties/" class="fa-properties-card" target="_blank" rel="noopener noreferrer">
+                    <div class="fa-properties-card__img-wrap">
+                        <img src="{% static 'img/placeholder.jpg' %}" alt="پروژه لوتوس" loading="lazy" decoding="async">
+                        <div class="fa-properties-card__overlay"></div>
+                        <span class="fa-properties-card__price">€800,000</span>
+                    </div>
+                    <div class="fa-properties-card__body">
+                        <h3 class="fa-properties-card__name-fa">پروژه لوتوس</h3>
+                        <p class="fa-properties-card__tagline-fa">زندگی لاکچری با چشم‌انداز دریای اژه — ووُلا</p>
+                        <p class="fa-properties-card__location">
+                            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                            Voula Panorama, South Athens
+                        </p>
+                    </div>
+                </a>
+
+            {% endif %}
+
+        </div>
+
+        <div class="fa-properties-cta-wrap" data-aos="fade-up">
+            <a href="https://adonisgroup.gr/properties/" class="fa-properties-cta-btn" target="_blank" rel="noopener noreferrer">
+                مشاهده همه املاک
+                <i class="fas fa-arrow-left" aria-hidden="true" style="margin-right:8px;"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+
+{# ── PROCESS ───────────────────────────────────────────────────────────────── #}
+{% if page.process_title %}
+<section class="fa-process">
+    <div class="container">
+        <div class="fa-section-header" data-aos="fade-up">
+            <span class="fa-section-badge"><i class="fas fa-route" aria-hidden="true"></i> مراحل دریافت</span>
+            <h2 class="fa-section-title">{{ page.process_title }}</h2>
+        </div>
+
+        <div class="steps-timeline">
+
+            {% if page.step_1_title %}
+            <div class="step-card">
+                <span class="step-num">۱</span>
+                <div class="step-icon"><i class="fas fa-comments" aria-hidden="true"></i></div>
+                <div class="step-body">
+                    <h3 class="step-title">{{ page.step_1_title }}</h3>
+                    {% if page.step_1_subtitle %}<p class="step-subtitle">{{ page.step_1_subtitle }}</p>{% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if page.step_2_title %}
+            <div class="step-card">
+                <span class="step-num">۲</span>
+                <div class="step-icon"><i class="fas fa-search" aria-hidden="true"></i></div>
+                <div class="step-body">
+                    <h3 class="step-title">{{ page.step_2_title }}</h3>
+                    {% if page.step_2_subtitle %}<p class="step-subtitle">{{ page.step_2_subtitle }}</p>{% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if page.step_3_title %}
+            <div class="step-card">
+                <span class="step-num">۳</span>
+                <div class="step-icon"><i class="fas fa-file-contract" aria-hidden="true"></i></div>
+                <div class="step-body">
+                    <h3 class="step-title">{{ page.step_3_title }}</h3>
+                    {% if page.step_3_subtitle %}<p class="step-subtitle">{{ page.step_3_subtitle }}</p>{% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if page.step_4_title %}
+            <div class="step-card">
+                <span class="step-num">۴</span>
+                <div class="step-icon"><i class="fas fa-landmark" aria-hidden="true"></i></div>
+                <div class="step-body">
+                    <h3 class="step-title">{{ page.step_4_title }}</h3>
+                    {% if page.step_4_subtitle %}<p class="step-subtitle">{{ page.step_4_subtitle }}</p>{% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if page.step_5_title %}
+            <div class="step-card">
+                <span class="step-num">۵</span>
+                <div class="step-icon"><i class="fas fa-paper-plane" aria-hidden="true"></i></div>
+                <div class="step-body">
+                    <h3 class="step-title">{{ page.step_5_title }}</h3>
+                    {% if page.step_5_subtitle %}<p class="step-subtitle">{{ page.step_5_subtitle }}</p>{% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if page.step_6_title %}
+            <div class="step-card">
+                <span class="step-num">۶</span>
+                <div class="step-icon"><i class="fas fa-id-card" aria-hidden="true"></i></div>
+                <div class="step-body">
+                    <h3 class="step-title">{{ page.step_6_title }}</h3>
+                    {% if page.step_6_subtitle %}<p class="step-subtitle">{{ page.step_6_subtitle }}</p>{% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+        </div>{# /.steps-timeline #}
+    </div>
+</section>
+<script>
+(function(){
+    var cards = document.querySelectorAll('.step-card');
+    if (!cards.length) return;
+    if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function(entries){
+            entries.forEach(function(e, i){
+                if (e.isIntersecting) {
+                    setTimeout(function(){ e.target.classList.add('is-visible'); }, i * 100);
+                    io.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        cards.forEach(function(c){ io.observe(c); });
+    } else {
+        cards.forEach(function(c){ c.classList.add('is-visible'); });
+    }
+})();
+</script>
+{% endif %}
+
+{# ── OWN SHORTS ────────────────────────────────────────────────────────────── #}
+{% if own_shorts %}
+<section class="fa-shorts">
+    <div class="container">
+        <div class="fa-section-header" data-aos="fade-up">
+            <span class="fa-section-badge"><i class="fas fa-video" aria-hidden="true"></i> ویدیوها</span>
+            {% if page.own_shorts_title %}
+            <h2 class="fa-section-title">{{ page.own_shorts_title }}</h2>
+            {% endif %}
+        </div>
+        <div class="fa-shorts__grid" data-aos="fade-up">
+            {% for url in own_shorts %}
+            <div class="fa-shorts__item">
+                <iframe src="{{ url }}" allowfullscreen loading="lazy"></iframe>
+            </div>
+            {% endfor %}
+        </div>
+        {% if page.own_shorts_more_url %}
+        <div class="fa-shorts__more" data-aos="fade-up">
+            <a href="{{ page.own_shorts_more_url }}" target="_blank" rel="noopener noreferrer">
+                مشاهده بیشتر <i class="fas fa-arrow-left" aria-hidden="true"></i>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endif %}
+
+{# ── TESTIMONIAL SHORTS ───────────────────────────────────────────────────── #}
+{% if testimonial_shorts %}
+<section class="fa-shorts fa-shorts--alt">
+    <div class="container">
+        <div class="fa-section-header" data-aos="fade-up">
+            <span class="fa-section-badge"><i class="fas fa-users" aria-hidden="true"></i> نظرات مشتریان</span>
+            {% if page.testimonial_shorts_title %}
+            <h2 class="fa-section-title">{{ page.testimonial_shorts_title }}</h2>
+            {% endif %}
+        </div>
+        <div class="fa-shorts__grid" data-aos="fade-up">
+            {% for url in testimonial_shorts %}
+            <div class="fa-shorts__item">
+                <iframe src="{{ url }}" allowfullscreen loading="lazy"></iframe>
+            </div>
+            {% endfor %}
+        </div>
+        {% if page.testimonial_shorts_more_url %}
+        <div class="fa-shorts__more" data-aos="fade-up">
+            <a href="{{ page.testimonial_shorts_more_url }}" target="_blank" rel="noopener noreferrer">
+                مشاهده بیشتر <i class="fas fa-arrow-left" aria-hidden="true"></i>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endif %}
+
+{# ── FINAL CTA ─────────────────────────────────────────────────────────────── #}
+<section class="fa-cta">
+    <div class="container" data-aos="fade-up">
+        <h2 class="fa-cta__title">آماده شروع سفر گلدن ویزای خود هستید؟</h2>
+        <p class="fa-cta__text">همین حالا با کارشناسان ما تماس بگیرید و اولین قدم را به سوی اقامت اروپا بردارید.</p>
+        <div class="fa-cta__buttons">
+            <button type="button" class="fa-btn fa-btn--gold" onclick="openFaConsultFormModal()">
+                <i class="fas fa-calendar-check" aria-hidden="true"></i>
+                {{ page.hero_cta_text|default:"بررسی شرایط در کمتر از ۲۴ ساعت" }}
+            </button>
+            {% if page.fa_whatsapp_number %}
+            <a href="{{ page.fa_whatsapp_number }}" class="fa-btn fa-btn--whatsapp" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                تماس فوری در واتساپ
+            </a>
+            {% elif WHATSAPP_URL %}
+            <a href="{{ WHATSAPP_URL }}" class="fa-btn fa-btn--whatsapp" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                تماس فوری در واتساپ
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+{# ── MINIMAL FOOTER ───────────────────────────────────────────────────────── #}
+<footer class="fa-footer">
+    <div class="container">
+        <div class="fa-footer__socials">
+            {% if page.fa_instagram_url %}
+            <a href="{{ page.fa_instagram_url }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            {% endif %}
+            {% if page.fa_linkedin_url %}
+            <a href="{{ page.fa_linkedin_url }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            {% endif %}
+            {% if page.fa_telegram_url %}
+            <a href="{{ page.fa_telegram_url }}" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
+            {% endif %}
+            {% if page.fa_youtube_url %}
+            <a href="{{ page.fa_youtube_url }}" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            {% endif %}
+            {% if page.fa_x_url %}
+            <a href="{{ page.fa_x_url }}" target="_blank" rel="noopener noreferrer" aria-label="X"><i class="fab fa-x-twitter"></i></a>
+            {% endif %}
+        </div>
+        <p class="fa-footer__copy">&copy; {{ SITE_NAME }} — تمامی حقوق محفوظ است.</p>
+    </div>
+</footer>
+
+{# ── Consultation Float Button ──────────────────────────────────────────────── #}
+<button type="button" class="fa-consult-float" onclick="openFaConsultModal()" aria-label="مشاوره آنلاین رایگان">
+    <i class="fas fa-headset" aria-hidden="true"></i>
+    <span class="fa-consult-float__label">مشاوره آنلاین رایگان</span>
+</button>
+
+{# ── Consultation Form Modal ──────────────────────────────────────────────── #}
+<div id="faConsultFormModal" role="dialog" aria-modal="true" aria-labelledby="faConsultTitle" hidden>
+    <div class="prop-consult-box">
+        <div class="prop-consult-header">
+            <button type="button" class="prop-consult-close" onclick="closeFaConsultFormModal()" aria-label="بستن">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 id="faConsultTitle">رزرو مشاوره رایگان</h2>
+            <p>اطلاعات خود را وارد کنید تا کارشناسان آدونیس ظرف ۲۴ ساعت با شما تماس بگیرند.</p>
+        </div>
+        <form id="faConsultForm" class="unified-site-form" method="POST" action="{% url 'submit_contact' %}">
+            {% csrf_token %}
+            <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
+            <div class="pc-field">
+                <label for="fa_full_name"><i class="fas fa-user"></i> نام و نام خانوادگی *</label>
+                <input type="text" id="fa_full_name" name="full_name" placeholder="مثال: علی رضایی" required>
+            </div>
+            <div class="pc-field">
+                <label for="fa_phone"><i class="fas fa-phone-alt"></i> شماره تماس (با کد کشور) *</label>
+                <input type="tel" id="fa_phone" name="phone" placeholder="+98 912 123 4567" required>
+            </div>
+            <div class="pc-field">
+                <label for="fa_email"><i class="fas fa-envelope"></i> ایمیل *</label>
+                <input type="email" id="fa_email" name="email" placeholder="name@example.com" required>
+            </div>
+            <div class="pc-field">
+                <label for="fa_request_type"><i class="fas fa-list-ul"></i> نوع درخواست</label>
+                <select id="fa_request_type" name="request_type">
+                    <option value="customer">متقاضی گلدن ویزا</option>
+                    <option value="agent">سرمایه‌گذاری در ملک</option>
+                    <option value="partnership">همکاری تجاری</option>
+                    <option value="other">سایر</option>
+                </select>
+            </div>
+            <div class="pc-field">
+                <label for="fa_message"><i class="fas fa-comment-dots"></i> توضیحات (اختیاری)</label>
+                <textarea id="fa_message" name="message" rows="3" placeholder="بودجه، کشور محل سکونت یا هر سوال دیگری..."></textarea>
+            </div>
+            <button type="submit" class="pc-submit" id="faConsultSubmit">
+                <i class="fas fa-paper-plane"></i>
+                <span>ارسال درخواست مشاوره</span>
+            </button>
+            <p class="pc-trust">
+                <i class="fas fa-shield-alt"></i>
+                اطلاعات شما کاملاً محرمانه و امن است
+            </p>
+        </form>
+        <div id="faConsultSuccess" class="pc-success" hidden>
+            <div class="pc-success-icon"><i class="fas fa-check"></i></div>
+            <h3>درخواست شما با موفقیت ثبت شد</h3>
+            <p>تیم آدونیس ظرف ۲۴ ساعت با شما تماس خواهد گرفت.<br>ممنون از اعتماد شما!</p>
+            <button type="button" class="btn" onclick="closeFaConsultFormModal()">بستن</button>
+        </div>
+    </div>
+</div>
+
+{# ── AI CONSULTATION CHAT MODAL ─────────────────────────────────────────────── #}
+
+<div id="faConsultModal" dir="rtl" aria-modal="true" role="dialog" aria-label="مشاوره آنلاین">
+    <div class="fa-chat-box" id="faChatBox">
+        <div class="fa-chat-header">
+            <div class="fa-chat-header__avatar">
+                <i class="fas fa-headset"></i>
+            </div>
+            <div class="fa-chat-header__info">
+                <span class="fa-chat-header__name">مشاور آدونیس</span>
+                <span class="fa-chat-header__status"><span class="fa-chat-status-dot"></span> آنلاین</span>
+            </div>
+            <button class="fa-chat-close-btn" onclick="closeFaConsultModal()" aria-label="بستن">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="fa-chat-messages" id="faChatMessages"></div>
+        <div class="fa-chat-chips" id="faChatChips"></div>
+        <div class="fa-chat-input-bar" id="faChatInputBar">
+            <input type="text" id="faChatInput" class="fa-chat-input"
+                   placeholder="پیام خود را بنویسید..." autocomplete="off" dir="rtl">
+            <button class="fa-chat-send-btn" id="faChatSend" aria-label="ارسال">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+/* ── AI Chat Modal Overlay ── */
+#faConsultModal {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6); z-index: 2000;
+    align-items: flex-end; justify-content: center;
+    backdrop-filter: blur(4px);
+}
+@media (min-width: 520px) {
+    #faConsultModal { align-items: center; padding: 1rem; }
+}
+@keyframes faChatBoxSlideUp {
+    from { opacity: 0; transform: translateY(30px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+/* ── Chat Box ── */
+.fa-chat-box {
+    background: #f1f5f9; width: 100%; max-width: 440px;
+    height: 80vh; max-height: 640px;
+    border-radius: 20px 20px 0 0;
+    display: flex; flex-direction: column;
+    font-family: var(--fa-font); direction: rtl; overflow: hidden;
+    animation: faChatBoxSlideUp 0.3s ease;
+    box-shadow: 0 -8px 40px rgba(0,0,0,0.18);
+}
+@media (min-width: 520px) {
+    .fa-chat-box { border-radius: 20px; height: 600px; box-shadow: 0 24px 80px rgba(0,0,0,0.22); }
+}
+/* ── Header ── */
+.fa-chat-header {
+    background: linear-gradient(135deg, #0b2948, #1565c0);
+    padding: 0.9rem 1.1rem;
+    display: flex; align-items: center; gap: 0.7rem; flex-shrink: 0;
+}
+.fa-chat-header__avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; color: #fff; flex-shrink: 0;
+}
+.fa-chat-header__info { flex: 1; display: flex; flex-direction: column; gap: 0.1rem; }
+.fa-chat-header__name { color: #fff; font-weight: 700; font-size: 0.92rem; }
+.fa-chat-header__status {
+    color: rgba(255,255,255,0.7); font-size: 0.75rem;
+    display: flex; align-items: center; gap: 0.3rem;
+}
+.fa-chat-status-dot {
+    width: 7px; height: 7px; border-radius: 50%; background: #4ade80; display: inline-block;
+    animation: faStatusPulse 2s infinite;
+}
+@keyframes faStatusPulse {
+    0%,100% { opacity: 1; } 50% { opacity: 0.5; }
+}
+.fa-chat-close-btn {
+    background: rgba(255,255,255,0.1); border: none; cursor: pointer;
+    color: rgba(255,255,255,0.8); width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; transition: all 0.2s; flex-shrink: 0;
+}
+.fa-chat-close-btn:hover { background: rgba(255,255,255,0.25); color: #fff; }
+/* ── Messages ── */
+.fa-chat-messages {
+    flex: 1; overflow-y: auto; padding: 1rem;
+    display: flex; flex-direction: column; gap: 0.6rem;
+    scroll-behavior: smooth;
+}
+.fa-chat-msg {
+    display: flex; align-items: flex-end; gap: 0.45rem;
+    max-width: 88%; animation: faMsgAppear 0.22s ease;
+}
+@keyframes faMsgAppear {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.fa-chat-msg--bot  { align-self: flex-start; }
+.fa-chat-msg--user { align-self: flex-end; flex-direction: row-reverse; }
+.fa-chat-msg__av {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; flex-shrink: 0;
+}
+.fa-chat-msg--bot  .fa-chat-msg__av { background: linear-gradient(135deg,#0b2948,#1565c0); color:#fff; }
+.fa-chat-msg--user .fa-chat-msg__av { background: linear-gradient(135deg,#C9A84C,#B8963E); color:#fff; }
+.fa-chat-msg__bbl {
+    padding: 0.6rem 0.85rem; border-radius: 14px;
+    font-size: 0.875rem; line-height: 1.65; word-break: break-word;
+}
+.fa-chat-msg--bot  .fa-chat-msg__bbl {
+    background: #fff; color: #1e293b;
+    border-radius: 4px 14px 14px 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.fa-chat-msg--user .fa-chat-msg__bbl {
+    background: linear-gradient(135deg, #C9A84C, #B8963E);
+    color: #fff; border-radius: 14px 4px 14px 14px;
+}
+/* Typing dots */
+.fa-chat-typing .fa-chat-msg__bbl { display:flex; gap:4px; align-items:center; padding: 0.6rem 1rem; }
+.fa-chat-tdot {
+    width: 6px; height: 6px; border-radius: 50%; background: #94a3b8;
+    animation: faTypeBounce 1s infinite ease-in-out;
+}
+.fa-chat-tdot:nth-child(2) { animation-delay: 0.15s; }
+.fa-chat-tdot:nth-child(3) { animation-delay: 0.3s; }
+@keyframes faTypeBounce {
+    0%,60%,100% { transform: translateY(0); }
+    30%          { transform: translateY(-6px); }
+}
+/* ── Chips ── */
+.fa-chat-chips {
+    padding: 0.5rem 0.7rem; display: flex; flex-wrap: wrap; gap: 0.35rem;
+    background: #f1f5f9; border-top: 1px solid #e2e8f0; flex-shrink: 0; min-height: 0;
+}
+.fa-chat-chips:empty { display: none; padding: 0; border-top: none; }
+.fa-chat-chip {
+    padding: 0.32rem 0.7rem; background: #fff;
+    border: 1.5px solid #1565c0; color: #1565c0;
+    border-radius: 50px; font-size: 0.78rem; font-family: var(--fa-font);
+    font-weight: 600; cursor: pointer; transition: all 0.15s; white-space: nowrap;
+}
+.fa-chat-chip:hover { background: #1565c0; color: #fff; }
+/* ── Input bar ── */
+.fa-chat-input-bar {
+    padding: 0.65rem 0.9rem; background: #fff;
+    border-top: 1px solid #e2e8f0; display: flex; align-items: center;
+    gap: 0.45rem; flex-shrink: 0;
+}
+.fa-chat-input {
+    flex: 1; border: 1.5px solid #e2e8f0; border-radius: 50px;
+    padding: 0.5rem 0.95rem; font-size: 0.875rem; font-family: var(--fa-font);
+    color: #1e293b; outline: none; background: #f8fafc;
+    transition: border-color 0.2s; direction: rtl;
+}
+.fa-chat-input:focus { border-color: #1565c0; background: #fff; }
+.fa-chat-send-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, #C9A84C, #B8963E);
+    color: #fff; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.82rem; flex-shrink: 0; transition: all 0.2s;
+}
+.fa-chat-send-btn:hover { filter: brightness(1.1); transform: scale(1.06); }
+.fa-chat-send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+</style>
+
+{# ── SCRIPTS ───────────────────────────────────────────────────────────────── #}
+<script src="{% static 'vendor/aos/aos.js' %}" defer></script>
+<script>
+window.addEventListener('load', function() {
+    if (window.AOS) AOS.init({ duration: 800, easing: 'ease-out-cubic', once: true, offset: 80 });
+});
+
+function openTierExpand(btn) {
+    var card = btn.closest('.fa-tier-card');
+    if (!card) return;
+    var expand = card.querySelector('.fa-tier-card__expand');
+    if (expand) {
+        expand.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+    }
+}
+function closeTierExpand(el) {
+    var expand = el.closest('.fa-tier-card__expand');
+    if (expand) {
+        expand.classList.remove('is-open');
+        document.body.style.overflow = '';
+    }
+}
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        document.querySelectorAll('.fa-tier-card__expand.is-open').forEach(function(el) {
+            el.classList.remove('is-open');
+        });
+        closeFaConsultModal();
+        closeFaConsultFormModal();
+        document.body.style.overflow = '';
+    }
+});
+
+// ── FA AI Consultation Chat ──────────────────────────────────────────────────
+var _faChatInited  = false;
+var _faChatPhase   = 'greeting';
+var _faChatHistory = [];
+var _faChatBusy    = false;
+
+function _faCsrf() {
+    var m = document.cookie.match(/csrftoken=([^;]+)/);
+    return m ? decodeURIComponent(m[1]) : '';
+}
+
+var _faConsultScrollY = 0;
+
+function openFaConsultFormModal() {
+    var m = document.getElementById('faConsultFormModal');
+    var form = document.getElementById('faConsultForm');
+    var success = document.getElementById('faConsultSuccess');
+    if (!m) return;
+    if (form) form.hidden = false;
+    if (success) success.hidden = true;
+    m.removeAttribute('hidden');
+    _faConsultScrollY = window.scrollY || window.pageYOffset;
+    document.body.style.top = '-' + _faConsultScrollY + 'px';
+    document.body.classList.add('fa-consult-open');
+    requestAnimationFrame(function () {
+        requestAnimationFrame(function () { m.classList.add('is-open'); });
+    });
+}
+function closeFaConsultFormModal() {
+    var m = document.getElementById('faConsultFormModal');
+    if (!m) return;
+    m.classList.remove('is-open');
+    document.body.style.top = '';
+    document.body.classList.remove('fa-consult-open');
+    window.scrollTo(0, _faConsultScrollY);
+    setTimeout(function () { m.setAttribute('hidden', ''); }, 280);
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    var modal = document.getElementById('faConsultFormModal');
+    if (!modal) return;
+
+    modal.addEventListener('click', function (e) {
+        if (e.target === modal) closeFaConsultFormModal();
+    });
+
+    var form = document.getElementById('faConsultForm');
+    var btn = document.getElementById('faConsultSubmit');
+    var success = document.getElementById('faConsultSuccess');
+    if (!form) return;
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var orig = btn ? btn.innerHTML : '';
+        if (btn) {
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال ارسال...';
+            btn.disabled = true;
+        }
+
+        fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            if (data.success) {
+                form.reset();
+                form.hidden = true;
+                if (success) success.hidden = false;
+            } else {
+                alert('لطفاً تمام فیلدهای ضروری را به درستی پر کنید.');
+            }
+        })
+        .catch(function () { alert('خطایی رخ داد. لطفاً دوباره تلاش کنید.'); })
+        .finally(function () {
+            if (btn) { btn.innerHTML = orig; btn.disabled = false; }
+        });
+    });
+});
+
+function openFaConsultModal() {
+    var m = document.getElementById('faConsultModal');
+    if (!m) return;
+    m.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    if (!_faChatInited) {
+        _faChatInited = true;
+        _faChatGreeting();
+    }
+    setTimeout(function() {
+        var inp = document.getElementById('faChatInput');
+        if (inp) inp.focus();
+    }, 380);
+}
+
+function closeFaConsultModal() {
+    var m = document.getElementById('faConsultModal');
+    if (m) { m.style.display = 'none'; document.body.style.overflow = ''; }
+}
+
+document.addEventListener('click', function(e) {
+    if (e.target && e.target.id === 'faConsultModal') closeFaConsultModal();
+});
+
+function _faChatGreeting() {
+    _faChatTypingStart();
+    setTimeout(function() {
+        _faChatTypingStop();
+        _faChatBot(
+            'سلام! 👋 من دستیار مشاوره آدونیس هستم.\n' +
+            'آماده‌ام تا شرایط دریافت <strong>اقامت دائم یونان</strong> رو برای شما بررسی کنم.\n\n' +
+            'هدف اصلی شما از دریافت گلدن ویزا چیه؟'
+        );
+        _faChatChips([
+            { label: '🏛️ اقامت و شهروندی',        value: 'اقامت و شهروندی یونان' },
+            { label: '👨‍👩‍👧 آینده خانواده',         value: 'می‌خواهم برای آینده خانواده‌ام برنامه‌ریزی کنم' },
+            { label: '💰 تنوع سرمایه‌گذاری',      value: 'به دنبال تنوع در سبد سرمایه‌گذاری هستم' },
+            { label: '❓ می‌خوام بیشتر بدونم',    value: 'می‌خواهم بیشتر درباره گلدن ویزا بدانم' },
+        ]);
+    }, 900);
+}
+
+function _faChatBot(html, skipHist) {
+    var msgs = document.getElementById('faChatMessages');
+    if (!msgs) return;
+    var d = document.createElement('div');
+    d.className = 'fa-chat-msg fa-chat-msg--bot';
+    d.innerHTML = '<div class="fa-chat-msg__av"><i class="fas fa-headset"></i></div>' +
+                  '<div class="fa-chat-msg__bbl">' + html.replace(/\n/g,'<br>') + '</div>';
+    msgs.appendChild(d);
+    msgs.scrollTop = msgs.scrollHeight;
+    if (!skipHist) _faChatHistory.push({ role: 'assistant', text: html.replace(/<[^>]*>/g,'') });
+}
+
+function _faChatUser(text) {
+    var msgs = document.getElementById('faChatMessages');
+    if (!msgs) return;
+    var d = document.createElement('div');
+    d.className = 'fa-chat-msg fa-chat-msg--user';
+    d.innerHTML = '<div class="fa-chat-msg__av" style="background:linear-gradient(135deg,#C9A84C,#B8963E)">' +
+                  '<i class="fas fa-user"></i></div>' +
+                  '<div class="fa-chat-msg__bbl">' + _faEsc(text) + '</div>';
+    msgs.appendChild(d);
+    msgs.scrollTop = msgs.scrollHeight;
+    _faChatHistory.push({ role: 'user', text: text });
+}
+
+function _faEsc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function _faChatTypingStart() {
+    var msgs = document.getElementById('faChatMessages');
+    if (!msgs || document.getElementById('faChatTyping')) return;
+    var d = document.createElement('div');
+    d.id = 'faChatTyping';
+    d.className = 'fa-chat-msg fa-chat-msg--bot fa-chat-typing';
+    d.innerHTML = '<div class="fa-chat-msg__av"><i class="fas fa-headset"></i></div>' +
+                  '<div class="fa-chat-msg__bbl">' +
+                  '<span class="fa-chat-tdot"></span><span class="fa-chat-tdot"></span><span class="fa-chat-tdot"></span>' +
+                  '</div>';
+    msgs.appendChild(d);
+    msgs.scrollTop = msgs.scrollHeight;
+}
+
+function _faChatTypingStop() {
+    var el = document.getElementById('faChatTyping');
+    if (el) el.remove();
+}
+
+function _faChatChips(list) {
+    var c = document.getElementById('faChatChips');
+    if (!c) return;
+    c.innerHTML = '';
+    list.forEach(function(item) {
+        var btn = document.createElement('button');
+        btn.className = 'fa-chat-chip';
+        btn.textContent = item.label;
+        btn.addEventListener('click', function() { _faChatSend(item.value); });
+        c.appendChild(btn);
+    });
+}
+
+function _faChatClearChips() {
+    var c = document.getElementById('faChatChips');
+    if (c) c.innerHTML = '';
+}
+
+function _faChatHideInput() {
+    var b = document.getElementById('faChatInputBar');
+    if (b) b.style.display = 'none';
+}
+
+function _faChatSend(text) {
+    if (_faChatBusy || !text.trim()) return;
+    _faChatClearChips();
+    _faChatUser(text);
+    var inp = document.getElementById('faChatInput');
+    if (inp) inp.value = '';
+    _faChatBusy = true;
+
+    if (_faChatPhase === 'lead_capture') {
+        _faChatCapture(text);
+        return;
+    }
+    _faChatAI(text);
+}
+
+function _faChatAI(userText) {
+    _faChatTypingStart();
+    fetch('/chat/ai/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': _faCsrf() },
+        body: JSON.stringify({
+            message:  userText,
+            history:  _faChatHistory.slice(-10),
+            page_url: window.location.href,
+            language: 'fa',
+            mode:     'consultation'
+        })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        _faChatTypingStop();
+        _faChatBusy = false;
+        if (data.fallback || !data.reply) {
+            _faChatScripted(userText);
+            return;
+        }
+        _faChatBot(data.reply);
+        if (data.action === 'lead_saved') {
+            _faChatPhase = 'done';
+            _faChatHideInput();
+        } else if (_faChatHistory.filter(function(m){ return m.role==='assistant'; }).length >= 2) {
+            setTimeout(_faChatAskContact, 700);
+        }
+    })
+    .catch(function() {
+        _faChatTypingStop();
+        _faChatBusy = false;
+        _faChatScripted(userText);
+    });
+}
+
+function _faChatScripted(text) {
+    var t = (text || '').toLowerCase();
+    var reply = '', chips = null;
+
+    if (_faChatPhase === 'greeting' || _faChatPhase === 'qualified') {
+        if (t.includes('اقامت') || t.includes('شهروندی') || t.includes('ویزا') ||
+            t.includes('برنامه') || t.includes('خانواده') || t.includes('فرزند') ||
+            t.includes('سرمایه') || t.includes('تنوع') || t.includes('بازده') || t.includes('ملک')) {
+
+            if (t.includes('خانواده') || t.includes('فرزند') || t.includes('آینده')) {
+                reply = '<strong>👨‍👩‍👧 بسیار عالی!</strong>\n' +
+                        'گلدن ویزای یونان شامل <strong>همسر و فرزندان زیر ۲۱ سال</strong> هم می‌شه.\n' +
+                        'یه سرمایه‌گذاری، اقامت دائمی برای تمام خانواده!\n\n' +
+                        'بودجه تقریبی شما در چه محدوده‌ای هست؟';
+            } else if (t.includes('سرمایه') || t.includes('تنوع') || t.includes('بازده')) {
+                reply = '<strong>💰 انتخاب هوشمندانه!</strong>\n' +
+                        'ملک‌های آتن علاوه بر گلدن ویزا، <strong>۵ تا ۷ درصد</strong> بازده اجاره سالانه دارن.\n' +
+                        'ارزش ملک‌های یونان طی ۵ سال گذشته بیش از ۴۰٪ رشد داشته.\n\n' +
+                        'بودجه تقریبی شما در چه محدوده‌ای هست؟';
+            } else {
+                reply = '<strong>🏛️ انتخاب عالی!</strong>\n' +
+                        'گلدن ویزای یونان با حداقل <strong>۲۵۰,۰۰۰ یورو</strong> سرمایه‌گذاری:\n' +
+                        '• اقامت دائمی برای کل خانواده\n' +
+                        '• بدون نیاز به سکونت در یونان\n' +
+                        '• دسترسی کامل به منطقه شنگن\n' +
+                        '• مسیر شهروندی بعد از ۷ سال\n\n' +
+                        'بودجه تقریبی شما در چه محدوده‌ای هست؟';
+            }
+            _faChatPhase = 'qualified';
+            chips = [
+                { label: '۲۵۰K–۵۰۰K یورو',   value: 'بودجه‌ام بین ۲۵۰ تا ۵۰۰ هزار یورو است' },
+                { label: '۵۰۰K–۸۰۰K یورو',   value: 'بودجه‌ام بین ۵۰۰ تا ۸۰۰ هزار یورو است' },
+                { label: 'بیش از ۸۰۰K یورو',  value: 'بودجه‌ام بیش از ۸۰۰ هزار یورو است' },
+                { label: 'هنوز مشخص نشده',    value: 'هنوز بودجه‌ام را مشخص نکرده‌ام' },
+            ];
+        } else if (t.includes('بیشتر') || t.includes('بدونم') || t.includes('بدانم') || t.includes('اطلاع')) {
+            reply = 'البته! 😊 هر سوالی درباره گلدن ویزای یونان داری بپرس.\n\n' +
+                    'یه نکته: با <strong>۲۵۰,۰۰۰ یورو</strong> سرمایه‌گذاری در ملک یونان، تمام خانواده اقامت دائمی می‌گیرند!\n\n' +
+                    'سوالت چیه؟';
+            _faChatPhase = 'qualified';
+        } else if (t.includes('بودجه') || t.includes('۲۵۰') || t.includes('250') ||
+                   t.includes('۵۰۰') || t.includes('500') || t.includes('۸۰۰') || t.includes('800') ||
+                   t.includes('مشخص') || t.includes('هنوز')) {
+            reply = 'ممنون از اطلاعاتتون! 🙏\n' +
+                    'ما ملک‌های متنوعی داریم که دقیقاً برای این بودجه مناسب هستن.\n\n' +
+                    'برای اینکه یه مشاوره <strong>رایگان و شخصی‌سازی‌شده</strong> داشته باشیم،\n' +
+                    'لطفاً <strong>نام کامل</strong> و <strong>شماره تماستون</strong> رو بفرمایید.\n' +
+                    '<span style="color:#94a3b8;font-size:0.8rem">(مثال: علی رضایی، ۰۹۱۲ ۱۲۳ ۴۵۶۷)</span>';
+            _faChatPhase = 'lead_capture';
+        } else {
+            reply = _faChatGeneric(t);
+        }
+    } else {
+        reply = _faChatGeneric(t);
+    }
+
+    if (reply) {
+        setTimeout(function() {
+            _faChatBot(reply);
+            if (chips) _faChatChips(chips);
+            _faChatBusy = false;
+            if (_faChatPhase === 'qualified' &&
+                _faChatHistory.filter(function(m){ return m.role==='assistant'; }).length >= 3) {
+                setTimeout(_faChatAskContact, 700);
+            }
+        }, 750);
+    } else {
+        _faChatBusy = false;
+    }
+}
+
+function _faChatGeneric(t) {
+    if (t.includes('هزینه') || t.includes('قیمت') || t.includes('چقدر') || t.includes('مبلغ'))
+        return 'حداقل سرمایه‌گذاری <strong>۲۵۰,۰۰۰ یورو</strong> (مناطق ویژه: ۸۰۰,۰۰۰ یورو).\n' +
+               'این سرمایه به عنوان ملک در اختیار شماست و بازده اجاری هم دارد.';
+    if (t.includes('مدت') || t.includes('زمان') || t.includes('طول') || t.includes('کی'))
+        return 'فرآیند معمولاً <strong>۲ تا ۴ ماه</strong> طول می‌کشه.\n' +
+               'تیم آدونیس تمام مراحل قانونی رو برای شما انجام می‌ده.';
+    if (t.includes('خانواده') || t.includes('همسر') || t.includes('فرزند'))
+        return 'بله! گلدن ویزا شامل <strong>همسر و فرزندان زیر ۲۱ سال</strong> می‌شه.';
+    if (t.includes('شنگن') || t.includes('اروپا') || t.includes('سفر'))
+        return '<strong>دسترسی کامل به ۲۹ کشور شنگن</strong> — بدون ویزا به اروپا سفر کنید!';
+    if (t.includes('شهروندی') || t.includes('پاسپورت'))
+        return 'بعد از <strong>۷ سال</strong> اقامت می‌توانید شهروندی یونان بگیرید.\n' +
+               'پاسپورت یونان دسترسی ویزا‌فری به ۱۸۵+ کشور می‌دهد.';
+    if (t.includes('اجاره') || t.includes('بازده') || t.includes('درآمد'))
+        return 'ملک‌های آتن به طور میانگین <strong>۵ تا ۷ درصد</strong> بازده اجاره سالانه دارن.';
+    return 'سوال خوبیه! 😊\n' +
+           'برای پاسخ دقیق‌تر، لطفاً نام و شماره تماستون رو بفرمایید تا یه کارشناس آدونیس باهاتون تماس بگیره:';
+}
+
+function _faChatAskContact() {
+    if (_faChatPhase === 'lead_capture' || _faChatPhase === 'done') return;
+    _faChatBot(
+        'برای دریافت <strong>مشاوره رایگان</strong> اختصاصی،\n' +
+        'لطفاً <strong>نام کامل</strong> و <strong>شماره تماستون</strong> رو بفرمایید. 🙏\n' +
+        '<span style="color:#94a3b8;font-size:0.8rem">(مثال: علی رضایی، ۰۹۱۲ ۱۲۳ ۴۵۶۷)</span>'
+    );
+    _faChatPhase = 'lead_capture';
+    _faChatClearChips();
+}
+
+function _faChatCapture(text) {
+    var phoneMatch = text.match(/[\d\s\-\+\(\)]{7,}/);
+    if (!phoneMatch) {
+        _faChatBusy = false;
+        setTimeout(function() {
+            _faChatBot(
+                'ممنون! 🙏 لطفاً <strong>شماره تماستون</strong> رو هم بفرمایید.\n' +
+                '<span style="color:#94a3b8;font-size:0.8rem">(مثال: ۰۹۱۲ ۱۲۳ ۴۵۶۷)</span>'
+            );
+        }, 600);
+        return;
+    }
+    var phone = phoneMatch[0].replace(/\s/g,'').trim();
+    var beforePhone = text.substring(0, text.indexOf(phoneMatch[0])).replace(/[,،\-]/g,'').trim();
+    var name  = beforePhone || 'مشتری';
+
+    _faChatTypingStart();
+    fetch('/submit-chat-lead/', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': _faCsrf() },
+        body: JSON.stringify({
+            name:         name,
+            phone:        phone,
+            topic:        'Golden Visa FA Consultation',
+            page_url:     window.location.href,
+            language:     'FA',
+            conversation: _faChatHistory.slice(-12)
+        })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        _faChatTypingStop();
+        _faChatBusy = false;
+        if (data.success) {
+            _faChatBot(
+                '✅ <strong>' + _faEsc(name !== 'مشتری' ? name : 'دوست عزیز') + '</strong>، اطلاعاتتون ثبت شد!\n\n' +
+                'یه کارشناس آدونیس به زودی با <strong>' + _faEsc(phone) + '</strong> تماس خواهد گرفت. 🌟\n\n' +
+                'ممنون از اعتمادتون!'
+            );
+            _faChatPhase = 'done';
+            _faChatHideInput();
+            _faChatClearChips();
+        } else {
+            _faChatBot('متأسفانه خطایی رخ داد. لطفاً دوباره تلاش کنید.');
+        }
+    })
+    .catch(function() {
+        _faChatTypingStop();
+        _faChatBusy = false;
+        _faChatBot('خطای اتصال. لطفاً دوباره تلاش کنید.');
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    var sendBtn = document.getElementById('faChatSend');
+    var inp     = document.getElementById('faChatInput');
+    if (sendBtn && inp) {
+        sendBtn.addEventListener('click', function() { _faChatSend(inp.value.trim()); });
+        inp.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') _faChatSend(inp.value.trim());
+        });
+    }
+});
+
+// ── end FA chat ──────────────────────────────────────────────────────────────
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,159 @@
+{% extends "admin/change_form.html" %}
+
+{% block extrahead %}
+{{ block.super }}
+<script>window.CKEDITOR_GLOBAL_LICENSE_KEY = "GPL";</script>
+{% endblock %}
+
+{% block after_related_objects %}
+{{ block.super }}
+{% include "admin/seo_panel.html" %}
+
+<script>
+(function() {
+  "use strict";
+  window.CKEDITOR_GLOBAL_LICENSE_KEY = "GPL";
+
+  var log = [];
+  function addLog(msg) {
+    log.push("[" + new Date().toISOString().substr(11,12) + "] " + msg);
+  }
+
+  function getCSRF() {
+    var el = document.querySelector("input[name=csrfmiddlewaretoken]");
+    return el ? el.value : "";
+  }
+
+  function forceInitAll() {
+    var textareas = document.querySelectorAll("textarea.django_ckeditor_5");
+    var eds = window.editors || {};
+
+    textareas.forEach(function(ta) {
+      if (ta.id.indexOf("__prefix__") !== -1) return;
+
+      // Skip if already has an editor
+      if (eds[ta.id]) {
+        addLog(ta.id + ": already initialized");
+        return;
+      }
+
+      // Skip if CKEditor created an editor div
+      var container = ta.closest(".ck-editor-container");
+      if (container && container.querySelector(".ck.ck-editor")) {
+        addLog(ta.id + ": ck-editor div found, skipping");
+        return;
+      }
+
+      addLog(ta.id + ": attempting init...");
+
+      // Read config
+      var scriptId = ta.id + "_script";
+      var configEl = document.getElementById(scriptId);
+      if (!configEl) {
+        var span = document.getElementById(scriptId + "-span");
+        if (span) configEl = span.querySelector('script[type="application/json"]');
+      }
+
+      if (!configEl) {
+        addLog(ta.id + ": ERROR - no config script found");
+        return;
+      }
+
+      var config;
+      try {
+        config = JSON.parse(configEl.textContent);
+      } catch(e) {
+        addLog(ta.id + ": ERROR parsing config - " + e.message);
+        return;
+      }
+
+      config.licenseKey = "GPL";
+
+      var uploadInput = document.getElementById(scriptId + "-ck-editor-5-upload-url");
+      if (uploadInput) {
+        config.simpleUpload = {
+          uploadUrl: uploadInput.getAttribute("data-upload-url") || "/ckeditor5/image_upload/",
+          headers: { "X-CSRFToken": getCSRF() }
+        };
+      }
+
+      // Remove data-processed flag if set
+      ta.removeAttribute("data-processed");
+
+      // Ensure textarea is visible
+      ta.style.display = "block";
+
+      if (!window.ClassicEditor) {
+        addLog(ta.id + ": ERROR - ClassicEditor not available");
+        return;
+      }
+
+      window.ClassicEditor.create(ta, config)
+        .then(function(editor) {
+          addLog(ta.id + ": SUCCESS");
+          editor.model.document.on("change:data", function() {
+            var t = document.getElementById(ta.id);
+            if (t) t.value = editor.getData();
+          });
+          if (!window.editors) window.editors = {};
+          window.editors[ta.id] = editor;
+
+          setTimeout(function() {
+            try { editor.editing.view.forceRender(); } catch(e) {}
+            var editable = editor.editing.view.getDomRoot();
+            if (editable) {
+              editable.style.minHeight = "560px";
+              editable.style.height = "auto";
+            }
+          }, 200);
+        })
+        .catch(function(err) {
+          addLog(ta.id + ": FAILED - " + err.message);
+          ta.removeAttribute("data-processed");
+          // Make textarea usable even if CKEditor fails
+          ta.style.display = "block";
+          ta.style.width = "100%";
+          ta.style.minHeight = "500px";
+          ta.style.fontSize = "14px";
+          ta.style.padding = "16px";
+          ta.style.borderRadius = "8px";
+          ta.style.border = "2px solid #fbbf24";
+          ta.style.background = "#fffbeb";
+        });
+    });
+  }
+
+  function showDebug() {
+    if (log.length === 0) return;
+    console.log("[CKEditor Debug]\n" + log.join("\n"));
+  }
+
+  // Run at multiple timing points
+  function schedule() {
+    var delays = [300, 800, 1500, 3000, 5000, 8000];
+    delays.forEach(function(d) {
+      setTimeout(function() {
+        forceInitAll();
+        showDebug();
+      }, d);
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", schedule);
+  } else {
+    schedule();
+  }
+
+  window.addEventListener("load", function() {
+    setTimeout(forceInitAll, 500);
+    setTimeout(forceInitAll, 2000);
+  });
+
+  document.addEventListener("alpine:initialized", function() {
+    setTimeout(forceInitAll, 300);
+    setTimeout(forceInitAll, 1500);
+  });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,145 @@
+{# Shared delete confirmation modal — include in any admin changelist that needs it #}
+<style>
+.pl-delete-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+}
+.pl-delete-overlay.open { display: flex; }
+.pl-delete-modal {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.22);
+    padding: 2rem 2.2rem 1.6rem;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    animation: plModalIn 0.22s cubic-bezier(.4,1.4,.6,1) both;
+}
+@keyframes plModalIn {
+    from { transform: scale(0.88) translateY(16px); opacity: 0; }
+    to   { transform: scale(1) translateY(0); opacity: 1; }
+}
+.pl-delete-icon {
+    width: 60px; height: 60px;
+    background: #fee2e2;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.1rem;
+    font-size: 1.7rem;
+}
+.pl-delete-modal h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+.pl-delete-modal p {
+    margin: 0 0 1.5rem;
+    font-size: 0.9rem;
+    color: #64748b;
+    line-height: 1.5;
+}
+.pl-delete-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+}
+.pl-btn-cancel {
+    padding: 0.55rem 1.4rem;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    color: #475569;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.pl-btn-cancel:hover { background: #f1f5f9; }
+.pl-btn-confirm {
+    padding: 0.55rem 1.4rem;
+    border-radius: 8px;
+    border: none;
+    background: #dc2626;
+    color: #fff;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.pl-btn-confirm:hover { background: #b91c1c; }
+.pl-btn-confirm:disabled { opacity: 0.65; cursor: not-allowed; }
+</style>
+
+<div class="pl-delete-overlay" id="plDeleteOverlay">
+    <div class="pl-delete-modal" role="dialog" aria-modal="true">
+        <div class="pl-delete-icon">🗑️</div>
+        <h3>حذف رکورد</h3>
+        <p>آیا مطمئن هستید که می‌خواهید این رکورد را حذف کنید؟<br>این عمل قابل بازگشت نیست.</p>
+        <div class="pl-delete-actions">
+            <button class="pl-btn-cancel" id="plCancelBtn" type="button">انصراف</button>
+            <button class="pl-btn-confirm" id="plConfirmBtn" type="button">
+                <span>🗑</span> بله، حذف شود
+            </button>
+        </div>
+    </div>
+</div>
+
+<form id="plDeleteForm" method="post" action="#" style="display:none;">
+    {% csrf_token %}
+</form>
+
+<script>
+(function () {
+    var overlay    = document.getElementById('plDeleteOverlay');
+    var confirmBtn = document.getElementById('plConfirmBtn');
+    var cancelBtn  = document.getElementById('plCancelBtn');
+    var deleteForm = document.getElementById('plDeleteForm');
+
+    function openModal(url) {
+        deleteForm.action = url;
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+        deleteForm.action = '#';
+        confirmBtn.disabled = false;
+        confirmBtn.innerHTML = '<span>🗑</span> بله، حذف شود';
+    }
+
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.pl-delete-trigger');
+        if (!btn) return;
+        e.preventDefault();
+        openModal(btn.dataset.url);
+    });
+
+    confirmBtn.addEventListener('click', function () {
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<span style="font-size:0.9rem;">⏳</span> در حال حذف...';
+        deleteForm.submit();
+    });
+
+    cancelBtn.addEventListener('click', closeModal);
+
+    overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeModal();
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeModal();
+    });
+}());
+</script>

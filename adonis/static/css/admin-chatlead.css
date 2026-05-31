@@ -1,0 +1,57 @@
+/* ============================================================
+   Chat Lead Admin – Enhanced List View Styles
+   ============================================================ */
+
+/* Unread rows: left blue border + faint background highlight */
+.change-list table tbody tr:has(td .field-is_read input[type=checkbox]:not(:checked)) {
+    border-left: 4px solid #1a56db;
+    background-color: #f0f7ff !important;
+}
+
+/* Fallback via row class added by Django admin (works without :has) */
+.chatlead-unread {
+    border-left: 4px solid #1a56db !important;
+    background-color: #f0f7ff !important;
+}
+
+/* Status badge column – don't wrap */
+.field-status_badge,
+.field-score_badge {
+    white-space: nowrap;
+}
+
+/* Name column bold for unread */
+.field-lead_name span[style*="font-weight:700"] {
+    color: #111827;
+}
+
+/* Follow-up date – highlight overdue in red */
+.field-follow_up_date .overdue {
+    color: #dc2626;
+    font-weight: 700;
+}
+
+/* Compact phone column */
+.field-phone_display {
+    white-space: nowrap;
+    font-family: monospace;
+    font-size: 12px;
+}
+
+/* Make assigned_to dropdown narrower in list */
+.field-assigned_to select {
+    min-width: 120px;
+}
+
+/* Status select in list */
+.field-status select {
+    min-width: 110px;
+    border-radius: 6px;
+    padding: 3px 6px;
+    font-size: 12px;
+}
+
+/* Transcript preview container inside change form */
+.field-conversation_preview > div {
+    max-width: 700px;
+}

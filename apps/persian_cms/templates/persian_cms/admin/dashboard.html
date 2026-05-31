@@ -1,0 +1,20 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/persian-admin.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="fa-admin-shell fa-admin-content">
+    <h1 class="fa-admin-title">داشبورد فارسی</h1>
+    <div class="fa-admin-cards">
+        <div class="fa-admin-card static">صفحات: {{ stats.pages }}</div>
+        <div class="fa-admin-card static">بخش‌ها: {{ stats.sections }}</div>
+        <div class="fa-admin-card static">بلاگ‌ها: {{ stats.blogs }}</div>
+        <div class="fa-admin-card static">سوالات متداول: {{ stats.faqs }}</div>
+    </div>
+    <p class="fa-admin-subtitle">آخرین بروزرسانی: {{ updated_at }}</p>
+</div>
+{% endblock %}

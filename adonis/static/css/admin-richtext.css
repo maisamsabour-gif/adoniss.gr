@@ -1,0 +1,70 @@
+.rt-wrapper {
+    border: 1px solid #d2d6de;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #fff;
+}
+.rt-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-bottom: 1px solid #d2d6de;
+}
+.rt-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background: #fff;
+    color: #495057;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+}
+.rt-btn:hover {
+    background: #e9ecef;
+    border-color: #adb5bd;
+}
+.rt-sep {
+    width: 1px;
+    height: 24px;
+    background: #ced4da;
+    margin: 0 4px;
+}
+.rt-size {
+    padding: 4px 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background: #fff;
+    font-size: 13px;
+    cursor: pointer;
+}
+.rt-wrapper textarea {
+    width: 100% !important;
+    border: none !important;
+    border-bottom: 1px dashed #e2e8f0 !important;
+    padding: 10px 12px !important;
+    font-family: 'Courier New', monospace !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    resize: vertical !important;
+    box-sizing: border-box !important;
+    outline: none !important;
+    background: #fff !important;
+}
+.rt-wrapper textarea:focus {
+    background: #fefefe !important;
+}
+.rt-preview {
+    padding: 10px 12px;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 28px;
+    background: #f8fafc;
+    color: #334155;
+    border-top: none;
+}

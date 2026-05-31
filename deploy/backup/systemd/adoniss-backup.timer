@@ -1,0 +1,12 @@
+[Unit]
+Description=Run Adoniss daily backup at 03:30 (server time)
+
+[Timer]
+# Daily at 03:30. Persistent=true runs a missed backup after downtime.
+OnCalendar=*-*-* 03:30:00
+Persistent=true
+RandomizedDelaySec=300
+Unit=adoniss-backup.service
+
+[Install]
+WantedBy=timers.target

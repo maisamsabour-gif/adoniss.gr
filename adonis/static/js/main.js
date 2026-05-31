@@ -1,0 +1,632 @@
+/**
+ * Adonis Group - Main JavaScript
+ * Luxury Real Estate Website
+ */
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize AOS (Animate on Scroll)
+    AOS.init({
+        duration: 800,
+        easing: 'ease-out-cubic',
+        once: true,
+        offset: 100,
+    });
+
+    // Navbar Scroll Effect
+    const navbar = document.getElementById('navbar');
+    let lastScrollTop = 0;
+
+    window.addEventListener('scroll', function() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        if (scrollTop > 100) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+        
+        lastScrollTop = scrollTop;
+    });
+
+    // Mobile Navigation Toggle
+    const navToggle = document.getElementById('navToggle');
+    const navMenu = document.getElementById('navMenu');
+
+    function closeMenu() {
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navToggle.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('nav-open');
+        document.body.classList.remove('menu-open');
+        document.body.style.overflow = '';
+    }
+
+    function openMenu() {
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navToggle.setAttribute('aria-expanded', 'true');
+        document.body.classList.add('nav-open');
+        document.body.classList.add('menu-open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (navMenu.classList.contains('active')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking on a link
+        navMenu.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                closeMenu();
+            });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (navMenu.classList.contains('active') && !navMenu.contains(e.target) && !navToggle.contains(e.target)) {
+                closeMenu();
+            }
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+                closeMenu();
+            }
+        });
+
+        // Close menu on window resize to desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768 && navMenu.classList.contains('active')) {
+                closeMenu();
+            }
+        });
+    }
+
+    // Smooth Scroll for Anchor Links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href === '#') return;
+            
+            e.preventDefault();
+            const target = document.querySelector(href);
+            
+            if (target) {
+                const headerHeight = navbar.offsetHeight;
+                const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Property Card Hover Effects
+    document.querySelectorAll('.property-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-10px)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+
+    // Form Validation Enhancement
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+        const inputs = form.querySelectorAll('input, select, textarea');
+        
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                validateField(this);
+            });
+            
+            input.addEventListener('input', function() {
+                if (this.classList.contains('error')) {
+                    validateField(this);
+                }
+            });
+        });
+    });
+
+    function validateField(field) {
+        const value = field.value.trim();
+        
+        if (field.required && !value) {
+            field.classList.add('error');
+            return false;
+        }
+        
+        if (field.type === 'email' && value) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) {
+                field.classList.add('error');
+                return false;
+            }
+        }
+        
+        field.classList.remove('error');
+        return true;
+    }
+
+    // Lazy Loading Images
+    if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    if (img.dataset.src) {
+                        img.src = img.dataset.src;
+                        img.removeAttribute('data-src');
+                    }
+                    observer.unobserve(img);
+                }
+            });
+        });
+
+        document.querySelectorAll('img[data-src]').forEach(img => {
+            imageObserver.observe(img);
+        });
+    }
+
+    // Counter Animation for Stats
+    const animateCounter = (element, target, duration = 2000) => {
+        let start = 0;
+        const increment = target / (duration / 16);
+        
+        const updateCounter = () => {
+            start += increment;
+            if (start < target) {
+                element.textContent = Math.floor(start);
+                requestAnimationFrame(updateCounter);
+            } else {
+                element.textContent = target;
+            }
+        };
+        
+        updateCounter();
+    };
+
+    // Observe stat numbers for animation
+    const statObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const statNumber = entry.target;
+                const value = statNumber.dataset.value;
+                
+                if (value && !isNaN(value)) {
+                    animateCounter(statNumber, parseInt(value));
+                }
+                
+                statObserver.unobserve(statNumber);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.stat-number[data-value]').forEach(stat => {
+        statObserver.observe(stat);
+    });
+
+    // Intro Video Play Button
+    const introPlayBtn = document.getElementById('introPlayBtn');
+    if (introPlayBtn) {
+        const videoContainer = introPlayBtn.closest('.intro-video-container');
+        const video = videoContainer ? videoContainer.querySelector('video') : null;
+        
+        if (video) {
+            introPlayBtn.addEventListener('click', function() {
+                videoContainer.classList.add('playing');
+                video.play();
+                video.controls = true;
+            });
+            
+            video.addEventListener('pause', function() {
+                if (video.currentTime === 0 || video.ended) {
+                    videoContainer.classList.remove('playing');
+                }
+            });
+            
+            video.addEventListener('ended', function() {
+                videoContainer.classList.remove('playing');
+            });
+        }
+    }
+
+    // Defer chat widget setup until the page is idle (after 2.5 s at most).
+    // This removes ~300 lines of eager JS execution from the critical path.
+    function _scheduleChatInit() {
+        if (window.requestIdleCallback) {
+            requestIdleCallback(initChatWidget, { timeout: 2500 });
+        } else {
+            setTimeout(initChatWidget, 2500);
+        }
+    }
+    if (document.readyState === 'complete') {
+        _scheduleChatInit();
+    } else {
+        window.addEventListener('load', _scheduleChatInit, { once: true });
+    }
+
+    // ===== BENTO GRID SCROLL REVEAL =====
+    var bentoRevealElements = document.querySelectorAll('.bento-reveal');
+    
+    if (bentoRevealElements.length > 0) {
+        document.body.classList.add('bento-reveal-ready');
+        
+        var revealObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        bentoRevealElements.forEach(function(el) {
+            revealObserver.observe(el);
+        });
+    }
+});
+
+// =============================================================================
+// AI Chat Widget — lazy-initialised after the page is idle.
+// Runs OUTSIDE DOMContentLoaded so it does not block first paint.
+// =============================================================================
+function initChatWidget() {
+    var chatWidget  = document.getElementById('chatWidget');
+    var chatToggle  = document.getElementById('chatToggle');
+    var chatClose   = document.getElementById('chatClose');
+    var chatMessages= document.getElementById('chatMessages');
+    var chatInput   = document.getElementById('chatInput');
+    var chatSend    = document.getElementById('chatSend');
+    var chatWindow  = document.getElementById('chatWindow');
+
+    if (!chatToggle || !chatWidget) return;
+
+    chatToggle.addEventListener('click', function () {
+        chatWidget.classList.toggle('open');
+        if (chatWidget.classList.contains('open')) {
+            chatWindow.style.display = 'flex';
+            setTimeout(function () { chatInput.focus(); }, 50);
+        } else {
+            setTimeout(function () { chatWindow.style.display = 'none'; }, 350);
+        }
+    });
+
+    chatClose.addEventListener('click', function () {
+        chatWidget.classList.remove('open');
+        setTimeout(function () { chatWindow.style.display = 'none'; }, 350);
+    });
+
+    chatInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') sendMessage();
+    });
+    chatSend.addEventListener('click', sendMessage);
+
+    chatMessages.addEventListener('click', function (e) {
+        var suggestion = e.target.closest('[data-question]');
+        if (suggestion) {
+            var question = suggestion.getAttribute('data-question');
+            appendMessage('user', question);
+            generateBotReply(question);
+        }
+    });
+
+    var chatHistory = [];
+    var _aiInFlight = false;   // prevent double-send while waiting for AI
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+
+    function nowISO() { return new Date().toISOString(); }
+
+    function getCookie(name) {
+        var match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+        return match ? decodeURIComponent(match[1]) : null;
+    }
+
+    /** Current site language from the <html lang="…"> or data-lang on chatWidget. */
+    function getSiteLang() {
+        var lang = chatWidget.dataset.lang ||
+                   document.documentElement.lang ||
+                   (navigator.language || '').slice(0, 2);
+        return (lang || 'en').toLowerCase().slice(0, 2);
+    }
+
+    function buildConversationPayload() {
+        return chatHistory.map(function (m) {
+            return {
+                role: m.role === 'bot' ? 'assistant' : m.role,
+                text: (m.text || '').replace(/<[^>]*>/g, '').substring(0, 300),
+                ts:   m.ts || ''
+            };
+        });
+    }
+
+    // ── Send a message ────────────────────────────────────────────────────────
+
+    function sendMessage() {
+        var text = chatInput.value.trim();
+        if (!text || _aiInFlight) return;
+        appendMessage('user', text);
+        chatHistory.push({ role: 'user', text: text, ts: nowISO() });
+        chatInput.value = '';
+        generateBotReply(text);
+    }
+
+    // ── AI reply (primary path) ───────────────────────────────────────────────
+
+    function generateBotReply(userText) {
+        _aiInFlight = true;
+        showTyping();
+
+        var payload = {
+            message:  userText,
+            history:  buildConversationPayload(),
+            page_url: window.location.href,
+            language: getSiteLang(),
+        };
+
+        fetch('/chat/ai/', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+            body:    JSON.stringify(payload),
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            removeTyping();
+            _aiInFlight = false;
+
+            if (data.fallback || !data.reply) {
+                // API not configured or error — use built-in scripted reply
+                var scripted = getScriptedReply(userText);
+                if (scripted !== null) {
+                    appendMessage('bot', scripted);
+                    chatHistory.push({ role: 'bot', text: scripted.replace(/<[^>]*>/g, ''), ts: nowISO() });
+                }
+                return;
+            }
+
+            appendMessage('bot', data.reply);
+            chatHistory.push({ role: 'bot', text: data.reply.replace(/<[^>]*>/g, ''), ts: nowISO() });
+
+            // Lead saved by AI — show confirmation
+            if (data.action === 'lead_saved') {
+                setTimeout(function () {
+                    var lang = getSiteLang();
+                    var thankMsg = lang === 'tr'
+                        ? '✅ <strong>Teşekkürler!</strong> Bilgileriniz alındı. Ekibimiz kısa süre içinde sizi arayacaktır. 📞'
+                        : '✅ <strong>Thank you!</strong> Our team has received your details and will call you back shortly. 📞';
+                    appendMessage('bot', thankMsg);
+                }, 600);
+            }
+        })
+        .catch(function () {
+            removeTyping();
+            _aiInFlight = false;
+            // Network error — fall back to scripted
+            var scripted = getScriptedReply(userText);
+            if (scripted !== null) {
+                appendMessage('bot', scripted);
+                chatHistory.push({ role: 'bot', text: scripted.replace(/<[^>]*>/g, ''), ts: nowISO() });
+            }
+        });
+    }
+
+    // ── Scripted fallback (used when OpenAI API is unavailable) ──────────────
+
+    function getScriptedReply(text) {
+        var t    = text.toLowerCase();
+        var lang = getSiteLang();
+
+        // Turkish scripted responses
+        if (lang === 'tr') {
+            if (t.includes('danış') || t.includes('aray') || t.includes('iletişim') || t.includes('consult')) {
+                askForPhoneScripted('Danışmanlık Talebi'); return null;
+            }
+            if (t === 'evet' || t === 'tamam' || t === 'tabi' || t === 'yes' || t === 'ok') {
+                askForPhoneScripted('Danışmanlık'); return null;
+            }
+            if (t.includes('altın vize') || t.includes('golden visa') || t.includes('oturum') || t.includes('ikamet'))
+                return 'Yunanistan Altın Vizesi, <strong>€250.000</strong> gayrimenkul yatırımıyla kalıcı oturma izni sağlar. Tüm aile dahil, ikamet zorunluluğu yok, Schengen erişimi, 7 yıl sonra vatandaşlık yolu.<br><br><b>Adınızı ve telefon numaranızı</b> paylaşın, sizi arayalım!';
+            if (t.includes('mülk') || t.includes('daire') || t.includes('gayrimenkul') || t.includes('satın'))
+                return 'Atina\'da Altın Vize\'ye uygun lüks mülkler sunuyoruz. <a href="/properties/" style="color:#c9a227">Mülklere göz atın →</a><br><br><b>Adınız ve telefon numaranız</b> için bizimle paylaşın!';
+            if (t.includes('fiyat') || t.includes('maliyet') || t.includes('250') || t.includes('800'))
+                return 'Minimum yatırım: <strong>€250.000</strong> (seçkin bölgeler: €800.000). Tam mülk sahipliği + aile oturma izni + yıllık %5–7 kira getirisi.<br><br>Kişiselleştirilmiş tavsiye için <b>adınızı ve numaranızı</b> paylaşın!';
+            if (t.includes('süreç') || t.includes('nasıl') || t.includes('adım'))
+                return '1️⃣ Ücretsiz Danışmanlık → 2️⃣ Mülk Seçimi → 3️⃣ Satın Alma &amp; Belgeler → 4️⃣ Oturma İzni. <strong>2–4 ay</strong> sürer. Başlamak ister misiniz?';
+            if (t.includes('vatandaş') || t.includes('pasaport'))
+                return '<strong>7 yıl</strong> yasal ikamet sonrası Yunan vatandaşlığı — küresel top 5 pasaport, 185+ ülkeye vizesiz.';
+            if (t.includes('merhaba') || t.includes('selam') || t.includes('hello') || t.includes('hi'))
+                return 'Merhaba! 👋 Yunanistan Altın Vizesi veya gayrimenkul yatırımı konusunda nasıl yardımcı olabilirim?';
+            if (t.includes('teşekkür'))
+                return 'Rica ederim! 😊 Başka sorularınız için buradayım.';
+            return 'Size <strong>Altın Vize</strong>, <strong>mülkler</strong>, <strong>yatırım</strong> ve <strong>ikamet süreci</strong> konularında yardımcı olabilirim.<br><br>Veya <b>adınızı ve telefon numaranızı</b> paylaşın, sizi arayalım!';
+        }
+
+        // English scripted responses (default)
+        if (t.includes('call me')||t.includes('callback')||t.includes('schedule')||t.includes('consultation')||t.includes('consult')||t.includes('zang')||t.includes('tamas')||t.includes('moshavere')) {
+            askForPhoneScripted('Callback Request'); return null;
+        }
+        if (t==='yes'||t==='sure'||t==='ok'||t==='yeah'||t==='bale') { askForPhoneScripted('Consultation'); return null; }
+        if (t.includes('golden visa')||t.includes('visa')||t.includes('residency')) return "The Greek Golden Visa grants permanent residency through real estate investment from <strong>€250,000</strong>. Includes your whole family, no stay requirement, Schengen access, path to citizenship after 7 years.<br><br>Want a <strong>free consultation</strong>? Share your name and phone number!";
+        if (t.includes('property')||t.includes('apartment')||t.includes('real estate')||t.includes('buy')) return "We offer luxury properties in Athens all eligible for the Golden Visa. <a href='/properties/' style='color:#c9a227'>Browse properties →</a><br><br>Share your <b>name and phone number</b> and our team will call you!";
+        if (t.includes('invest')||t.includes('price')||t.includes('cost')||t.includes('250')||t.includes('800')) return "Minimum investment: <strong>€250,000</strong> (€800,000 in prime areas). Includes full ownership + family residency + 5–7% annual rental yield.<br><br>Share your <b>name and number</b> for personalized advice!";
+        if (t.includes('contact')||t.includes('phone')||t.includes('call')||t.includes('reach')) { askForPhoneScripted('Contact Request'); return null; }
+        if (t.includes('process')||t.includes('step')||t.includes('how')) return "1️⃣ Free Consultation → 2️⃣ Property Selection → 3️⃣ Purchase &amp; Docs → 4️⃣ Residence Permit. Takes <strong>2–4 months</strong>. Ready to start?";
+        if (t.includes('citizen')||t.includes('passport')) return "Greek citizenship after <strong>7 years</strong> of legal residency — top 5 passport globally, visa-free to 180+ countries.";
+        if (t.includes('hello')||t.includes('hi')||t.includes('hey')||t.includes('salam')) return "Hello! 👋 How can I help you with the Greek Golden Visa or property investment?";
+        if (t.includes('thank')) return "You're welcome! 😊 Feel free to ask anything else.";
+        return "I can help with <strong>Golden Visa</strong>, <strong>properties</strong>, <strong>investment</strong>, and the <strong>residency process</strong>. What would you like to know?<br><br>Or share your <b>name and phone number</b> and our team will call you!";
+    }
+
+    var _scriptedWaitingForPhone = false;
+    var _scriptedLeadTopic = '';
+    var _scriptedCapturedName = '';
+
+    function askForPhoneScripted(topic) {
+        _scriptedLeadTopic = topic || '';
+        _scriptedWaitingForPhone = true;
+        var lang = getSiteLang();
+        var msg;
+        if (lang === 'tr') {
+            msg = '📞 <b>Adınızı ve telefon numaranızı</b> paylaşın, sizi arayalım:\n<span style="color:#94a3b8;font-size:0.82em">(Ör: Ahmet Yılmaz, +90 532 123 4567)</span>';
+        } else {
+            msg = '📞 Please share your <b>full name and phone number</b> so our team can call you:\n<span style="color:#94a3b8;font-size:0.82em">(e.g. John Smith, +1 555 123 4567)</span>';
+        }
+        showTyping();
+        setTimeout(function () {
+            removeTyping();
+            appendMessage('bot', msg);
+            chatHistory.push({ role: 'bot', text: 'Asked for name and phone', ts: nowISO() });
+        }, 800);
+    }
+
+    // ── Append / UI helpers ───────────────────────────────────────────────────
+
+    function appendMessage(sender, text) {
+        var msg    = document.createElement('div');
+        msg.className = 'chat-message ' + sender;
+        var avatar = document.createElement('div');
+        avatar.className = 'chat-message-avatar';
+        avatar.innerHTML = sender === 'bot' ? '<i class="fas fa-headset"></i>' : '<i class="fas fa-user"></i>';
+        var bubble = document.createElement('div');
+        bubble.className = 'chat-message-bubble';
+        bubble.innerHTML = text;
+        msg.appendChild(avatar);
+        msg.appendChild(bubble);
+        chatMessages.appendChild(msg);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        return msg;
+    }
+
+    function showTyping() {
+        if (document.getElementById('typingIndicator')) return;
+        var msg = document.createElement('div');
+        msg.className = 'chat-message bot chat-typing';
+        msg.id = 'typingIndicator';
+        msg.innerHTML = '<div class="chat-message-avatar"><i class="fas fa-headset"></i></div>' +
+                        '<div class="chat-message-bubble"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>';
+        chatMessages.appendChild(msg);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function removeTyping() {
+        var el = document.getElementById('typingIndicator');
+        if (el) el.remove();
+    }
+
+    // Handle scripted-fallback phone/name capture inside sendMessage
+    var _origSendMessage = sendMessage;
+    sendMessage = function () {
+        if (_scriptedWaitingForPhone) {
+            var text = chatInput.value.trim();
+            if (!text) return;
+            var phoneMatch = text.match(/[\d\s\-\+\(\)]{7,}/);
+            if (phoneMatch) {
+                appendMessage('user', text);
+                chatHistory.push({ role: 'user', text: text, ts: nowISO() });
+                chatInput.value = '';
+                _scriptedWaitingForPhone = false;
+                var phone = phoneMatch[0].replace(/\s/g, '').trim();
+                var beforePhone = text.substring(0, text.indexOf(phoneMatch[0])).replace(/[,\-]/g,'').trim();
+                _scriptedCapturedName = beforePhone || '';
+                submitChatLeadScripted(phone, _scriptedLeadTopic, _scriptedCapturedName);
+                return;
+            }
+        }
+        _origSendMessage();
+    };
+
+    function submitChatLeadScripted(phone, topic, name) {
+        var lang = getSiteLang();
+        showTyping();
+        fetch('/submit-chat-lead/', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+            body:    JSON.stringify({
+                phone:        phone,
+                name:         name || '',
+                topic:        topic || '',
+                page_url:     window.location.href,
+                language:     lang.toUpperCase(),
+                conversation: buildConversationPayload(),
+            }),
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            removeTyping();
+            var successMsg;
+            if (lang === 'tr') {
+                successMsg = '✅ <b>Bilgileriniz alındı!</b><br>Ekibimiz en kısa sürede <b>' + phone + '</b> numarasından sizi arayacaktır. 📞';
+            } else {
+                successMsg = '✅ <b>Details received!</b><br>Our team will call you back shortly at <b>' + phone + '</b>. 📞';
+            }
+            appendMessage('bot', data.success
+                ? successMsg
+                : (data.error || (lang === 'tr' ? 'Bir hata oluştu. Lütfen tekrar deneyin.' : 'An error occurred. Please try again.')));
+        })
+        .catch(function () {
+            removeTyping();
+            var lang2 = getSiteLang();
+            appendMessage('bot', lang2 === 'tr' ? 'Bağlantı hatası. Lütfen tekrar deneyin.' : 'Connection error. Please try again.');
+        });
+    }
+
+    // ── Open chat programmatically (used by openConsultationModal) ────────────
+
+    window.openChatWidget = function (mode) {
+        if (!chatWidget || !chatToggle) return;
+        if (!chatWidget.classList.contains('open')) {
+            chatWidget.classList.add('open');
+            chatWindow.style.display = 'flex';
+            chatToggle.setAttribute('aria-expanded', 'true');
+            chatToggle.classList.remove('chat-pulse');
+            sessionStorage.setItem('chatOpened', '1');
+        }
+        setTimeout(function () { chatInput.focus(); }, 80);
+
+        // Consultation mode: auto-send a trigger message so the AI starts
+        if (mode === 'consultation' && chatHistory.length === 0) {
+            setTimeout(function () {
+                var trigger = chatWidget.dataset.consultTrigger || "I'd like a free consultation";
+                appendMessage('user', trigger);
+                chatHistory.push({ role: 'user', text: trigger, ts: nowISO() });
+                generateBotReply(trigger);
+            }, 350);
+        }
+    };
+
+    // ── Suggestion chips ──────────────────────────────────────────────────────
+
+    chatMessages.addEventListener('click', function (e) {
+        var suggestion = e.target.closest('[data-question]');
+        if (suggestion && !_aiInFlight) {
+            var question = suggestion.getAttribute('data-question');
+            appendMessage('user', question);
+            chatHistory.push({ role: 'user', text: question, ts: nowISO() });
+            generateBotReply(question);
+        }
+    });
+
+    // ── Pulse after 5 s on first visit ───────────────────────────────────────
+
+    if (!sessionStorage.getItem('chatOpened')) {
+        setTimeout(function () {
+            if (!chatWidget.classList.contains('open')) {
+                chatToggle.classList.add('chat-pulse');
+            }
+        }, 5000);
+    }
+}

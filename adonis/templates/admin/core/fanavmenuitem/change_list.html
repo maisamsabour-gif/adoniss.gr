@@ -1,0 +1,98 @@
+{% extends "admin/change_list.html" %}
+
+{% block object-tools-items %}
+<li>
+    <a href="/fa-admin/core/fanavmenuitem/add/" class="addlink" style="background:linear-gradient(135deg,#2563eb,#3b82f6);color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(37,99,235,0.3);">
+        ➕ افزودن آیتم منو
+    </a>
+</li>
+{{ block.super }}
+{% endblock %}
+
+{% block content %}
+<div class="fa-admin-content" style="direction:rtl;">
+    <!-- Quick Add Button at Top -->
+    <div style="margin-bottom:20px;padding:20px;background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border-radius:12px;border:1px solid #bae6fd;">
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+            <a href="/fa-admin/core/fanavmenuitem/add/" style="background:linear-gradient(135deg,#2563eb,#3b82f6);color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 12px rgba(37,99,235,0.3);transition:all 0.2s;">
+                ➕ افزودن منوی جدید
+            </a>
+            <a href="/fa-admin/persian_cms/persianpage/add/" style="background:linear-gradient(135deg,#059669,#10b981);color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 12px rgba(5,150,105,0.3);transition:all 0.2s;">
+                📄 ساخت صفحه جدید
+            </a>
+        </div>
+        <p style="margin:12px 0 0;color:#0369a1;font-size:13px;">
+            💡 <strong>راهنما:</strong> اول صفحه بسازید، بعد آیتم منو اضافه کنید و لینک صفحه رو بذارید.
+        </p>
+    </div>
+    
+    {{ block.super }}
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:9999;backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:16px;padding:32px;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);animation:modalIn 0.3s ease;">
+        <div style="width:70px;height:70px;background:linear-gradient(135deg,#fee2e2,#fecaca);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px;">
+            ⚠️
+        </div>
+        <h3 style="margin:0 0 12px;color:#1f2937;font-size:20px;font-weight:700;">حذف آیتم منو</h3>
+        <p style="margin:0 0 8px;color:#6b7280;font-size:15px;">آیا مطمئن هستید می‌خواهید این آیتم را حذف کنید؟</p>
+        <p id="deleteItemName" style="margin:0 0 24px;color:#ef4444;font-weight:700;font-size:16px;background:#fef2f2;padding:10px;border-radius:8px;"></p>
+        <p style="margin:0 0 24px;color:#9ca3af;font-size:13px;">⚠️ این عمل قابل بازگشت نیست!</p>
+        <div style="display:flex;gap:12px;justify-content:center;">
+            <button onclick="closeDeleteModal()" style="background:#f3f4f6;color:#374151;padding:12px 28px;border-radius:8px;border:none;font-weight:600;font-size:14px;cursor:pointer;transition:all 0.2s;">
+                انصراف
+            </button>
+            <button id="confirmDeleteBtn" style="background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;padding:12px 28px;border-radius:8px;border:none;font-weight:600;font-size:14px;cursor:pointer;box-shadow:0 4px 12px rgba(239,68,68,0.3);transition:all 0.2s;">
+                🗑️ بله، حذف کن
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+@keyframes modalIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+</style>
+
+<script>
+let deleteItemId = null;
+
+function confirmDelete(id, name) {
+    {% if request.user.is_superuser %}
+    deleteItemId = id;
+    document.getElementById('deleteItemName').textContent = name;
+    document.getElementById('deleteModal').style.display = 'flex';
+    {% else %}
+    alert('⛔ فقط سوپرادمین می‌تواند آیتم‌های منو را حذف کند.');
+    {% endif %}
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+    deleteItemId = null;
+}
+
+document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+    if (deleteItemId) {
+        window.location.href = '/fa-admin/core/fanavmenuitem/' + deleteItemId + '/delete/';
+    }
+});
+
+// Close modal on outside click
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeDeleteModal();
+    }
+});
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeDeleteModal();
+    }
+});
+</script>
+{% endblock %}

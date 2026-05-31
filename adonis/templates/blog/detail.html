@@ -1,0 +1,620 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+
+{% block title %}{{ post.get_meta_title }} | {{ SITE_NAME }}{% endblock %}
+{% block canonical_url %}{% if post.canonical_url %}{{ post.canonical_url }}{% else %}{{ request.build_absolute_uri }}{% endif %}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ post.get_og_title }}{% endblock %}
+{% block og_description %}{{ post.get_og_description }}{% endblock %}
+{% block twitter_title %}{{ post.get_og_title }}{% endblock %}
+{% block twitter_desc %}{{ post.get_og_description }}{% endblock %}
+
+{% block extra_css %}
+<!-- SEO Meta Tags -->
+<meta name="description" content="{{ post.get_meta_description }}">
+{% if post.meta_keywords %}<meta name="keywords" content="{{ post.meta_keywords }}">{% endif %}
+
+<!-- Open Graph — article-specific overrides -->
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="{{ post.published_date|date:'c' }}">
+<meta property="article:modified_time" content="{{ post.updated_at|date:'c' }}">
+<meta property="article:author" content="{{ post.author|default:'Adonis Group' }}">
+<meta property="article:section" content="{% if post.category %}{{ post.category.name }}{% else %}Blog{% endif %}">
+{% with og_src=post.og_image|default:post.featured_image %}
+{% if og_src %}
+<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ og_src.url }}" class="seo-og-override">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ og_src.url }}">
+{% endif %}
+{% endwith %}
+
+<!-- JSON-LD Schema.org BlogPosting -->
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "{{ post.title|escapejs }}",
+    "description": "{{ post.get_meta_description|escapejs }}",
+    "datePublished": "{{ post.published_date|date:'c' }}",
+    "dateModified": "{{ post.updated_at|date:'c' }}",
+    "author": {
+        "@type": "Person",
+        "name": "{{ post.author|default:'Adonis Group'|escapejs }}"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "{{ SITE_NAME|default:'Adonis Group' }}",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo.png' %}"
+        }
+    },
+    {% if post.featured_image %}
+    "image": {
+        "@type": "ImageObject",
+        "url": "{{ request.scheme }}://{{ request.get_host }}{{ post.featured_image.url }}",
+        "width": 1200,
+        "height": 630
+    },
+    {% endif %}
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "{{ request.build_absolute_uri }}"
+    },
+    "url": "{{ request.build_absolute_uri }}",
+    "articleSection": "{% if post.category %}{{ post.category.name|escapejs }}{% else %}Blog{% endif %}",
+    "wordCount": "{{ post.content|striptags|wordcount }}"
+}
+</script>
+
+<style>
+/* Blog Detail Hero */
+.blog-detail-hero {
+    position: relative;
+    padding: 12rem 0 4rem;
+    overflow: hidden;
+}
+.blog-detail-hero-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #0D5EAF 0%, #08407a 40%, #0b2948 100%);
+}
+.blog-detail-hero-overlay {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.3) 100%);
+}
+.blog-detail-hero-content {
+    position: relative; z-index: 1;
+    max-width: 800px;
+}
+.blog-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 1.5rem;
+}
+.blog-breadcrumb a {
+    color: rgba(255,255,255,0.7);
+    transition: color 0.2s;
+}
+.blog-breadcrumb a:hover {
+    color: #ffffff;
+}
+.blog-breadcrumb i {
+    font-size: 0.7rem;
+}
+.blog-detail-category {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50px;
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+.blog-detail-hero h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: #ffffff !important;
+    line-height: 1.3;
+    margin-bottom: 1.25rem;
+}
+.blog-detail-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    color: rgba(255,255,255,0.8);
+    font-size: 0.9rem;
+}
+.blog-detail-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.blog-detail-meta i {
+    color: rgba(255,255,255,0.6);
+}
+
+/* Blog Content */
+.blog-detail-section {
+    background: #0b4a8a;
+    padding: 4rem 0 5rem;
+}
+.blog-detail-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    align-items: start;
+    max-width: 900px;
+    margin: 0 auto;
+}
+.blog-detail-main {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 20px;
+    overflow: hidden;
+}
+.blog-detail-image {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 */
+    overflow: hidden;
+    background: rgba(255,255,255,0.05);
+}
+.blog-detail-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.blog-detail-body {
+    padding: 2.5rem;
+}
+.blog-content {
+    color: rgba(255,255,255,0.9);
+    font-size: 1.05rem;
+    line-height: 1.9;
+}
+.blog-content h2,
+.blog-content h3,
+.blog-content h4 {
+    color: #ffffff !important;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+.blog-content h2 { font-size: 1.75rem; }
+.blog-content h3 { font-size: 1.4rem; }
+.blog-content h4 { font-size: 1.2rem; }
+.blog-content p {
+    margin-bottom: 1.25rem;
+    color: rgba(255,255,255,0.9) !important;
+}
+.blog-content ul,
+.blog-content ol {
+    margin-bottom: 1.25rem;
+    padding-left: 1.5rem;
+}
+.blog-content li {
+    margin-bottom: 0.5rem;
+    color: rgba(255,255,255,0.85);
+}
+.blog-content a {
+    color: #60a5fa;
+    text-decoration: underline;
+}
+.blog-content a:hover {
+    color: #93c5fd;
+}
+.blog-content blockquote {
+    margin: 1.5rem 0;
+    padding: 1.25rem 1.5rem;
+    background: rgba(255,255,255,0.05);
+    border-left: 4px solid #0D5EAF;
+    border-radius: 0 10px 10px 0;
+    font-style: italic;
+    color: rgba(255,255,255,0.8);
+}
+.blog-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin: 1.5rem 0;
+    display: block;
+}
+.blog-content figure {
+    margin: 2rem 0;
+    text-align: center;
+}
+.blog-content figure img {
+    margin: 0 auto 0.75rem;
+}
+.blog-content figcaption {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.6);
+    font-style: italic;
+}
+
+/* Table of Contents */
+.blog-toc {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+.blog-toc-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.blog-toc-title i {
+    color: #60a5fa;
+}
+.blog-toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.blog-toc-list li {
+    margin-bottom: 0.5rem;
+}
+.blog-toc-list a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.blog-toc-list a:hover {
+    color: #60a5fa;
+}
+.blog-toc-list a::before {
+    content: '→';
+    color: rgba(255,255,255,0.4);
+    font-size: 0.8rem;
+}
+.blog-toc-list .toc-h3 {
+    padding-left: 1rem;
+    font-size: 0.9rem;
+}
+
+/* Share & Tags */
+.blog-footer {
+    padding: 2rem 2.5rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.blog-share {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.blog-share-label {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.9rem;
+}
+.blog-share-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+.blog-share-btn:hover {
+    background: #0D5EAF;
+    transform: translateY(-2px);
+}
+.blog-views {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.9rem;
+}
+
+/* Related Posts */
+.blog-related {
+    background: #08407a;
+    padding: 4rem 0;
+}
+.blog-related-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+.blog-related-header h2 {
+    font-size: 2rem;
+    color: #ffffff !important;
+    margin-bottom: 0.5rem;
+}
+.blog-related-header p {
+    color: rgba(255,255,255,0.7);
+}
+.blog-related-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+/* Blog Card (related) */
+.blog-card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+.blog-card:hover {
+    border-color: rgba(255,255,255,0.25);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+}
+.blog-card-img-wrap {
+    display: block;
+    position: relative;
+    width: 100%;
+    padding-top: 60%;
+    overflow: hidden;
+    background: rgba(255,255,255,0.05);
+}
+.blog-card-img-wrap img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.blog-card-img-wrap .card-placeholder {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: rgba(255,255,255,0.2);
+}
+.blog-card-body {
+    padding: 1.5rem;
+}
+.blog-card-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 0.75rem;
+}
+.blog-card-meta i { margin-right: 0.3rem; }
+.blog-card h3 {
+    font-size: 1.15rem;
+    margin-bottom: 0.6rem;
+    line-height: 1.4;
+}
+.blog-card h3 a {
+    color: #ffffff;
+    text-decoration: none;
+}
+.blog-card h3 a:hover { color: #60a5fa; }
+.blog-card-body > p {
+    color: rgba(255,255,255,0.75);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+.blog-card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #60a5fa;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .blog-detail-layout {
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 768px) {
+    .blog-detail-hero { padding: 10rem 0 3rem; }
+    .blog-detail-body { padding: 1.5rem; }
+    .blog-footer { padding: 1.5rem; }
+    .blog-related-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="blog-detail-hero">
+    <div class="blog-detail-hero-bg"></div>
+    <div class="blog-detail-hero-overlay"></div>
+    <div class="container">
+        <div class="blog-detail-hero-content" data-aos="fade-up">
+            <nav class="blog-breadcrumb">
+                <a href="{% url 'home' %}">Home</a>
+                <i class="fas fa-chevron-right"></i>
+                <a href="{% url 'blog_list' %}">Blog</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>{{ post.title|truncatewords:5 }}</span>
+            </nav>
+            {% if post.category %}
+            <span class="blog-detail-category">{{ post.category.name }}</span>
+            {% endif %}
+            <h1>{{ post.title }}</h1>
+            <div class="blog-detail-meta">
+                <span><i class="fas fa-calendar-alt"></i> {{ post.published_date|date:"F d, Y" }}</span>
+                <span><i class="fas fa-user"></i> {{ post.author }}</span>
+                <span><i class="fas fa-eye"></i> {{ post.views }} views</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Content -->
+<section class="blog-detail-section">
+    <div class="container">
+        <div class="blog-detail-layout">
+            <!-- Main Content -->
+            <article class="blog-detail-main" data-aos="fade-up">
+                {% if post.featured_image %}
+                <div class="blog-detail-image">
+                    <img src="{{ post.featured_image.url }}" 
+                         alt="{{ post.featured_image_alt|default:post.title }}"
+                         loading="lazy"
+                         decoding="async"
+                         width="1200"
+                         height="630">
+                </div>
+                {% endif %}
+                
+                <div class="blog-detail-body">
+                    <!-- Table of Contents (auto-generated via JS) -->
+                    <nav class="blog-toc" id="blogToc" style="display: none;">
+                        <div class="blog-toc-title">
+                            <i class="fas fa-list"></i> Table of Contents
+                        </div>
+                        <ul class="blog-toc-list" id="tocList"></ul>
+                    </nav>
+                    
+                    <div class="blog-content" id="blogContent">
+                        {{ post.content|safe }}
+                    </div>
+
+                    <div style="margin-top: 40px; padding: 20px; border-top: 2px solid #c9a84c; text-align: center; font-family: inherit;">
+                      <p style="color: #888; font-size: 14px; margin: 0;">
+                        محتوای تولید شده توسط تیم آدونیس
+                      </p>
+                    </div>
+                </div>
+                
+                <div class="blog-footer">
+                    <div class="blog-share">
+                        <span class="blog-share-label">{% trans "Share:" %}</span>
+                        <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri|urlencode }}&text={{ post.title|urlencode }}" target="_blank" class="blog-share-btn" title="Share on Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}" target="_blank" class="blog-share-btn" title="Share on Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri|urlencode }}&title={{ post.title|urlencode }}" target="_blank" class="blog-share-btn" title="Share on LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://wa.me/?text={{ post.title|urlencode }}%20{{ request.build_absolute_uri|urlencode }}" target="_blank" class="blog-share-btn" title="Share on WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                    <div class="blog-views">
+                        <i class="fas fa-eye"></i> {{ post.views }} views
+                    </div>
+                </div>
+            </article>
+            
+        </div>
+    </div>
+</section>
+
+<!-- Related Posts -->
+{% if related_posts %}
+<section class="blog-related">
+    <div class="container">
+        <div class="blog-related-header" data-aos="fade-up">
+            <h2>{% trans "Related Articles" %}</h2>
+            <p>{% trans "More insights you might find interesting" %}</p>
+        </div>
+        <div class="blog-related-grid">
+            {% for rpost in related_posts %}
+            <article class="blog-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                <a href="{{ rpost.get_absolute_url }}" class="blog-card-img-wrap">
+                    {% if rpost.featured_image %}
+                    <img src="{{ rpost.featured_image.url }}" alt="{{ rpost.featured_image_alt|default:rpost.title }}" loading="lazy" decoding="async">
+                    {% else %}
+                    <div class="card-placeholder"><i class="fas fa-newspaper"></i></div>
+                    {% endif %}
+                </a>
+                <div class="blog-card-body">
+                    <div class="blog-card-meta">
+                        <span><i class="fas fa-calendar-alt"></i> {{ rpost.published_date|date:"M d, Y" }}</span>
+                    </div>
+                    <h3><a href="{{ rpost.get_absolute_url }}">{{ rpost.title }}</a></h3>
+                    <p>{{ rpost.excerpt|truncatewords:15 }}</p>
+                    <a href="{{ rpost.get_absolute_url }}" class="blog-card-link">
+                        Read More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- TOC Generation Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var content = document.getElementById('blogContent');
+    var tocList = document.getElementById('tocList');
+    var tocNav = document.getElementById('blogToc');
+    
+    if (!content || !tocList) return;
+    
+    var headings = content.querySelectorAll('h2, h3');
+    
+    if (headings.length >= 2) {
+        tocNav.style.display = 'block';
+        
+        headings.forEach(function(heading, index) {
+            // Add ID to heading for anchor links
+            var id = 'heading-' + index;
+            heading.id = id;
+            
+            // Create TOC item
+            var li = document.createElement('li');
+            var a = document.createElement('a');
+            a.href = '#' + id;
+            a.textContent = heading.textContent;
+            
+            if (heading.tagName === 'H3') {
+                a.classList.add('toc-h3');
+            }
+            
+            li.appendChild(a);
+            tocList.appendChild(li);
+        });
+    }
+    
+    // Add lazy loading to all images in content
+    var images = content.querySelectorAll('img');
+    images.forEach(function(img) {
+        if (!img.getAttribute('loading')) {
+            img.setAttribute('loading', 'lazy');
+        }
+        if (!img.getAttribute('alt')) {
+            img.setAttribute('alt', '{{ post.title|escapejs }}');
+        }
+    });
+});
+</script>
+{% endblock %}

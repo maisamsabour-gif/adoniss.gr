@@ -1,0 +1,3779 @@
+# Turkish translations for Adonis Real Estate
+# Copyright (C) 2026 Adonis Group
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: adonis 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-28 11:07+0200\n"
+"PO-Revision-Date: 2026-02-27 23:39+0200\n"
+"Last-Translator: Adonis Group\n"
+"Language-Team: Turkish\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: adonis/settings.py:455 adonis/templates/base.html:135
+#: adonis/templates/base.html:175 adonis/templates/base.html:261
+msgid "Properties"
+msgstr "Mülkler"
+
+# ── Django Admin sidebar (settings.py UNFOLD navigation) ─────────────────────
+#: adonis/settings.py:462 adonis/templates/properties/detail.html:10
+msgid "All Properties"
+msgstr "Tüm Mülkler"
+
+#: adonis/settings.py:469
+msgid "Add Property"
+msgstr "Mülk Ekle"
+
+#: adonis/settings.py:476
+msgid "Property Units"
+msgstr "Mülk Birimleri"
+
+#: adonis/settings.py:483
+msgid "Categories"
+msgstr "Kategoriler"
+
+#: adonis/settings.py:490
+msgid "Interest Requests"
+msgstr "İlgi Talepleri"
+
+#: adonis/settings.py:497
+msgid "Unit Bookings"
+msgstr "Birim Rezervasyonları"
+
+#: adonis/settings.py:508
+msgid "Leads & Contacts"
+msgstr "Müşteri Adayları ve İletişimler"
+
+#: adonis/settings.py:515
+msgid "Chat Leads"
+msgstr "Sohbet Müşteri Adayları"
+
+#: adonis/settings.py:523
+msgid "Contact Submissions"
+msgstr "İletişim Formları"
+
+#: adonis/settings.py:531
+msgid "Partner Leads"
+msgstr "Ortaklık Talepleri"
+
+#: adonis/settings.py:543
+msgid "Blog & Content"
+msgstr "Blog ve İçerik"
+
+#: adonis/settings.py:550 adonis/templates/brochures/viewer.html:24
+msgid "Brochures"
+msgstr "Broşürler"
+
+#: adonis/settings.py:557
+msgid "Blog Posts"
+msgstr "Blog Yazıları"
+
+#: adonis/settings.py:564
+msgid "Blog Categories"
+msgstr "Blog Kategorileri"
+
+#: adonis/settings.py:571 adonis/templates/base.html:177
+#: adonis/templates/base.html:263
+msgid "Events"
+msgstr "Etkinlikler"
+
+#: adonis/settings.py:578
+msgid "Testimonials"
+msgstr "Referanslar"
+
+#: adonis/settings.py:585
+msgid "Team Members"
+msgstr "Ekip Üyeleri"
+
+#: adonis/settings.py:592
+msgid "Golden Visa Cards"
+msgstr "Altın Vize Kartları"
+
+#: adonis/settings.py:599
+msgid "Services"
+msgstr "Hizmetler"
+
+#: adonis/settings.py:606
+msgid "FAQs"
+msgstr "Sık Sorulan Sorular"
+
+#: adonis/settings.py:613
+msgid "Process Steps"
+msgstr "Süreç Adımları"
+
+#: adonis/settings.py:624 adonis/settings.py:723
+msgid "Site Settings"
+msgstr "Site Ayarları"
+
+#: adonis/settings.py:631
+msgid "Home Page"
+msgstr "Ana Sayfa Ayarları"
+
+#: adonis/settings.py:638
+msgid "Header / Hero"
+msgstr "Başlık / Hero"
+
+#: adonis/settings.py:645
+msgid "Properties Page"
+msgstr "Mülkler Sayfası"
+
+#: adonis/settings.py:652
+msgid "About Page"
+msgstr "Hakkımızda Sayfası"
+
+#: adonis/settings.py:659
+msgid "Partnerships Page"
+msgstr "Ortaklıklar Sayfası"
+
+#: adonis/settings.py:666
+msgid "Footer"
+msgstr "Alt Bilgi"
+
+#: adonis/settings.py:673
+msgid "Offices"
+msgstr "Ofisler"
+
+#: adonis/settings.py:684
+msgid "Users & Access"
+msgstr "Kullanıcılar ve Erişim"
+
+#: adonis/settings.py:691
+msgid "Staff Users"
+msgstr "Personel Kullanıcıları"
+
+#: adonis/settings.py:698
+msgid "Roles / Groups"
+msgstr "Roller / Gruplar"
+
+#: adonis/settings.py:705
+msgid "Customers"
+msgstr "Müşteriler"
+
+#: adonis/settings.py:716
+msgid "Advanced"
+msgstr "Gelişmiş"
+
+#: adonis/settings.py:730
+msgid "Audit Log"
+msgstr "Denetim Günlüğü"
+
+#: adonis/settings.py:737
+msgid "Error Log"
+msgstr "Hata Günlüğü"
+
+#: adonis/settings.py:744
+msgid "Chat Messages"
+msgstr "Sohbet Mesajları"
+
+#: adonis/templates/about.html:13 adonis/templates/base.html:264
+#: adonis/templates/index.html:79
+msgid "About Us"
+msgstr "Hakkımızda"
+
+#: adonis/templates/about.html:64
+#, fuzzy
+#| msgid "Golden Visa"
+msgid "Golden Visa Eligibility"
+msgstr "Altın Vize"
+
+#: adonis/templates/about.html:64
+msgid "Starting from €250,000"
+msgstr "€250.000'dan itibaren"
+
+#: adonis/templates/about.html:65
+msgid "Secure & Transparent"
+msgstr "Güvenli ve Şeffaf"
+
+#: adonis/templates/about.html:65
+msgid "Purchase process guaranteed"
+msgstr "Satın alma süreci garantili"
+
+#: adonis/templates/about.html:66
+msgid "Modern Architecture"
+msgstr "Modern Mimari"
+
+#: adonis/templates/about.html:66
+msgid "Luxury design standards"
+msgstr "Lüks tasarım standartları"
+
+#: adonis/templates/about.html:67
+msgid "Flexible Plans"
+msgstr "Esnek Planlar"
+
+#: adonis/templates/about.html:67
+msgid "6-8 months installments"
+msgstr "6-8 aylık taksitler"
+
+#: adonis/templates/about.html:68
+msgid "No Presence Required"
+msgstr "Fiziksel Katılım Gerekmiyor"
+
+#: adonis/templates/about.html:68
+msgid "Complete process remotely"
+msgstr "Süreci uzaktan tamamlayın"
+
+#: adonis/templates/about.html:69
+#, fuzzy
+#| msgid "Investment"
+msgid "Investment Potential"
+msgstr "Yatırım"
+
+#: adonis/templates/about.html:69
+msgid "Growing real estate market"
+msgstr "Büyüyen gayrimenkul piyasası"
+
+#: adonis/templates/about.html:79
+msgid "Successful Projects"
+msgstr "Başarılı Projeler"
+
+#: adonis/templates/about.html:80
+msgid "Happy Families"
+msgstr "Mutlu Aileler"
+
+#: adonis/templates/about.html:81
+msgid "Years Experience"
+msgstr "Yıl Deneyim"
+
+#: adonis/templates/about.html:82 adonis/templates/index.html:43
+#: adonis/templates/index.html:260
+msgid "Success Rate"
+msgstr "Başarı Oranı"
+
+#: adonis/templates/about.html:115
+msgid "Team members coming soon."
+msgstr "Ekip üyeleri yakında eklenecek."
+
+#: adonis/templates/about.html:125 adonis/templates/testimonial_detail.html:94
+msgid "Ready to Start Your Journey?"
+msgstr "Yolculuğunuza Başlamaya Hazır mısınız?"
+
+#: adonis/templates/about.html:126
+msgid ""
+"Contact us today for a free consultation and take the first step toward your "
+"new life in Europe."
+msgstr ""
+
+#: adonis/templates/about.html:127
+#: adonis/templates/golden_visa_card_detail.html:91
+#: adonis/templates/golden_visa_card_detail.html:179
+#: adonis/templates/testimonial_detail.html:96
+msgid "Book Free Consultation"
+msgstr "Ücretsiz Danışmanlık Alın"
+
+# ── Django built-in admin strings ─────────────────────────────────────────────
+#: adonis/templates/admin/index.html:4
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/app_index.html:5
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/base_site.html:3
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/index.html:5
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/login.html:15
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/layouts/base.html:7
+msgid "Django site admin"
+msgstr "Site Yönetimi"
+
+#: adonis/templates/admin/login.html:30
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/login.html:26
+#, python-format
+msgid ""
+"You are authenticated as %(username)s, but are not authorized to access this "
+"page. Would you like to login to a different account?"
+msgstr ""
+
+#: adonis/templates/admin/login.html:68
+msgid "Show password"
+msgstr "Şifreyi göster"
+
+#: adonis/templates/admin/login.html:78
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/login.html:55
+msgid "Forgotten your password or username?"
+msgstr "Şifrenizi veya kullanıcı adınızı mı unuttunuz?"
+
+#: adonis/templates/admin/login.html:86
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/login.html:47
+msgid "Log in"
+msgstr "Giriş yap"
+
+#: adonis/templates/admin/soft_delete_confirmation.html:19
+msgid "Selected objects"
+msgstr "Seçili nesneler"
+
+#: adonis/templates/admin/soft_delete_confirmation.html:28
+msgid "Cancel"
+msgstr "İptal"
+
+#: adonis/templates/base.html:120
+msgid "Online Support"
+msgstr "Online Destek"
+
+#: adonis/templates/base.html:121
+msgid "Online"
+msgstr "Çevrimiçi"
+
+#: adonis/templates/base.html:124
+msgid "Close chat"
+msgstr "Sohbeti kapat"
+
+#: adonis/templates/base.html:132
+msgid "Welcome to Adonis Group. How may I assist you today?"
+msgstr "Adonis Group'a hoş geldiniz. Bugün size nasıl yardımcı olabilirim?"
+
+#: adonis/templates/base.html:134
+msgid "Tell me about Golden Visa"
+msgstr "Altın Vize hakkında bilgi ver"
+
+#: adonis/templates/base.html:134
+msgid "Golden Visa"
+msgstr "Altın Vize"
+
+#: adonis/templates/base.html:135
+msgid "What properties do you have?"
+msgstr "Hangi mülkleriniz var?"
+
+#: adonis/templates/base.html:136
+msgid "What is the investment amount?"
+msgstr "Yatırım miktarı nedir?"
+
+#: adonis/templates/base.html:136
+msgid "Investment"
+msgstr "Yatırım"
+
+#: adonis/templates/base.html:137
+msgid "How can I contact you?"
+msgstr "Size nasıl ulaşabilirim?"
+
+#: adonis/templates/base.html:137 adonis/templates/base.html:180
+#: adonis/templates/base.html:265
+msgid "Contact"
+msgstr "İletişim"
+
+#: adonis/templates/base.html:143
+msgid "Ask me anything..."
+msgstr "Her şeyi sorabilirsiniz..."
+
+#: adonis/templates/base.html:144
+msgid "Send message"
+msgstr "Mesaj gönder"
+
+#: adonis/templates/base.html:149
+msgid "Open chat"
+msgstr "Sohbeti aç"
+
+# ── Navigation (base.html) ────────────────────────────────────────────────────
+#: adonis/templates/base.html:174 adonis/templates/base.html:260
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/site_icon.html:7
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/site_icon.html:9
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/site_icon.html:11
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/site_logo.html:5
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/site_logo.html:7
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/site_logo.html:9
+msgid "Home"
+msgstr "Ana Sayfa"
+
+#: adonis/templates/base.html:176 adonis/templates/base.html:262
+msgid "Partnerships"
+msgstr "Ortaklıklar"
+
+#: adonis/templates/base.html:178
+msgid "Blog"
+msgstr "Blog"
+
+#: adonis/templates/base.html:179
+msgid "About"
+msgstr "Hakkımızda"
+
+#: adonis/templates/base.html:218
+msgid "Dashboard"
+msgstr "Kontrol Paneli"
+
+#: adonis/templates/base.html:223 adonis/templates/login.html:4
+#: adonis/templates/login.html:11 adonis/templates/login.html:35
+msgid "Log In"
+msgstr "Giriş Yap"
+
+#: adonis/templates/base.html:258
+msgid "Quick Links"
+msgstr "Hızlı Bağlantılar"
+
+#: adonis/templates/base.html:270 adonis/templates/index.html:101
+#: adonis/templates/partnerships.html:21
+msgid "Contact Us"
+msgstr "Bize Ulaşın"
+
+#: adonis/templates/base.html:295
+msgid "Connect with us instantly on WhatsApp for quick consultation."
+msgstr "Hızlı danışmanlık için WhatsApp üzerinden bize anında ulaşın."
+
+#: adonis/templates/base.html:306
+msgid "All rights reserved."
+msgstr "Tüm hakları saklıdır."
+
+#: adonis/templates/blog/detail.html:511
+msgid "Share:"
+msgstr "Paylaş:"
+
+#: adonis/templates/blog/detail.html:540
+msgid "Related Articles"
+msgstr "İlgili Makaleler"
+
+#: adonis/templates/blog/detail.html:541
+msgid "More insights you might find interesting"
+msgstr "İlginizi çekebilecek daha fazla içerik"
+
+#: adonis/templates/blog/list.html:364
+#, fuzzy
+#| msgid "Blog"
+msgid "Our Blog"
+msgstr "Blog"
+
+#: adonis/templates/blog/list.html:365
+msgid "Insights & Updates"
+msgstr "Görüşler ve Güncellemeler"
+
+#: adonis/templates/blog/list.html:366
+msgid ""
+"Expert advice on Greek Golden Visa, property investment, lifestyle, and "
+"immigration news"
+msgstr ""
+
+#: adonis/templates/blog/list.html:376
+#, fuzzy
+#| msgid "Blog Posts"
+msgid "All Posts"
+msgstr "Blog Yazıları"
+
+#: adonis/templates/blog/list.html:417
+msgid "Read Article"
+msgstr "Makaleyi Oku"
+
+#: adonis/templates/blog/list.html:424
+msgid "No posts yet"
+msgstr "Henüz yazı yok"
+
+#: adonis/templates/blog/list.html:425
+msgid "Check back soon for updates!"
+msgstr "Güncellemeler için yakında tekrar kontrol edin!"
+
+#: adonis/templates/blog/list.html:435
+#: adonis/templates/properties/list.html:186
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/pagination_infinite.html:5
+msgid "Previous"
+msgstr "Önceki"
+
+#: adonis/templates/blog/list.html:449
+#: adonis/templates/properties/list.html:192
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/pagination_infinite.html:9
+msgid "Next"
+msgstr "Sonraki"
+
+#: adonis/templates/brochures/list.html:4
+#: adonis/templates/brochures/list.html:14
+msgid "Brochures & Catalogues"
+msgstr "Broşürler ve Kataloglar"
+
+#: adonis/templates/brochures/list.html:13
+#, fuzzy
+#| msgid "Brochures"
+msgid "Digital Brochures"
+msgstr "Broşürler"
+
+#: adonis/templates/brochures/list.html:15
+msgid ""
+"Browse our interactive brochures. Click any cover to open the flipbook "
+"reader."
+msgstr ""
+
+#: adonis/templates/brochures/list.html:37
+msgid "Open Flipbook"
+msgstr "Flipbook'u Aç"
+
+#: adonis/templates/brochures/list.html:40
+#, fuzzy
+#| msgid "Chat Messages"
+msgid "pages"
+msgstr "Sohbet Mesajları"
+
+#: adonis/templates/brochures/list.html:56
+msgid "No brochures available yet"
+msgstr "Henüz broşür mevcut değil"
+
+#: adonis/templates/brochures/list.html:57
+msgid "Check back soon — our latest catalogues will appear here."
+msgstr "Yakında tekrar kontrol edin — son kataloglarımız burada görünecek."
+
+#: adonis/templates/brochures/list.html:58
+#: adonis/templates/golden_visa_card_detail.html:21
+msgid "Back to Home"
+msgstr "Ana Sayfaya Dön"
+
+#: adonis/templates/contact.html:13
+msgid "Get in Touch"
+msgstr "İletişime Geçin"
+
+#: adonis/templates/contact.html:14
+msgid ""
+"We're here to help you navigate your Greek investment journey. Reach out to "
+"our expert team today."
+msgstr ""
+
+#: adonis/templates/contact.html:30
+msgid "Book a Free Consultation"
+msgstr "Ücretsiz Danışmanlık Rezervasyonu Yapın"
+
+#: adonis/templates/contact.html:31
+msgid "Our experts will contact you within 24 hours"
+msgstr "Uzmanlarımız 24 saat içinde sizinle iletişime geçecek"
+
+#: adonis/templates/contact.html:51 adonis/templates/index.html:573
+#: adonis/templates/properties/detail.html:391
+#: adonis/templates/properties/detail.html:415
+#: adonis/templates/properties/list.html:211
+msgid "Full Name"
+msgstr "Ad Soyad"
+
+#: adonis/templates/contact.html:55 adonis/templates/index.html:583
+msgid "Email Address"
+msgstr "E-posta Adresi"
+
+#: adonis/templates/contact.html:61 adonis/templates/index.html:578
+msgid "Phone Number"
+msgstr "Telefon Numarası"
+
+#: adonis/templates/contact.html:65
+msgid "I'm interested in"
+msgstr "İlgilendiğim konu"
+
+#: adonis/templates/contact.html:67
+#: adonis/templates/golden_visa_card_detail.html:4
+#: adonis/templates/golden_visa_card_detail.html:24
+#: adonis/templates/index.html:114
+#, fuzzy
+#| msgid "Golden Visa"
+msgid "Greek Golden Visa"
+msgstr "Altın Vize"
+
+#: adonis/templates/contact.html:68
+#, fuzzy
+#| msgid "Investment"
+msgid "Property Investment"
+msgstr "Yatırım"
+
+#: adonis/templates/contact.html:69
+#, fuzzy
+#| msgid "Partnerships"
+msgid "Business Partnership"
+msgstr "Ortaklıklar"
+
+#: adonis/templates/contact.html:70
+msgid "Other Inquiry"
+msgstr "Diğer Sorular"
+
+#: adonis/templates/contact.html:75
+#, fuzzy
+#| msgid "Chat Messages"
+msgid "Your Message"
+msgstr "Sohbet Mesajları"
+
+#: adonis/templates/contact.html:76
+msgid "Tell us about your goals and how we can help..."
+msgstr "Hedeflerinizi ve size nasıl yardımcı olabileceğimizi anlatın..."
+
+#: adonis/templates/contact.html:80
+#, fuzzy
+#| msgid "Send message"
+msgid "Send Message"
+msgstr "Mesaj gönder"
+
+#: adonis/templates/contact.html:83 adonis/templates/partnerships.html:233
+msgid "Sending..."
+msgstr "Gönderiliyor..."
+
+#: adonis/templates/contact.html:86
+msgid "Your information is secure and will never be shared."
+msgstr "Bilgileriniz güvendedir ve asla paylaşılmayacaktır."
+
+#: adonis/templates/contact.html:94
+#, fuzzy
+#| msgid "Contact"
+msgid "Quick Contact"
+msgstr "İletişim"
+
+#: adonis/templates/contact.html:101
+msgid "Chat on WhatsApp"
+msgstr "WhatsApp'tan Yazın"
+
+#: adonis/templates/contact.html:113 adonis/templates/contact.html:171
+#, fuzzy
+#| msgid "Offices"
+msgid "Office"
+msgstr "Ofisler"
+
+#: adonis/templates/contact.html:134 adonis/templates/index.html:85
+msgid "Licensed Immigration Consultants"
+msgstr "Lisanslı Göçmenlik Danışmanları"
+
+#: adonis/templates/contact.html:138
+msgid "500+ Successful Applications"
+msgstr "500'den Fazla Başarılı Başvuru"
+
+#: adonis/templates/contact.html:142 adonis/templates/index.html:93
+msgid "Multilingual Support Team"
+msgstr "Çok Dilli Destek Ekibi"
+
+#: adonis/templates/contact.html:154
+#, fuzzy
+#| msgid "Offices"
+msgid "Our Offices"
+msgstr "Ofisler"
+
+#: adonis/templates/contact.html:155
+msgid "Visit us at our offices in Athens and Tehran"
+msgstr "Atina ve Tahran'daki ofislerimizi ziyaret edin"
+
+#: adonis/templates/events/detail.html:439
+#, fuzzy
+#| msgid "Events"
+msgid "Back to Events"
+msgstr "Etkinlikler"
+
+#: adonis/templates/events/detail.html:441
+#, fuzzy
+#| msgid "Events"
+msgid "Event"
+msgstr "Etkinlikler"
+
+#: adonis/templates/events/detail.html:450
+msgid "Photos"
+msgstr "Fotoğraflar"
+
+#: adonis/templates/events/detail.html:493
+msgid "Photo Gallery"
+msgstr "Fotoğraf Galerisi"
+
+#: adonis/templates/events/detail.html:494
+msgid "Click any photo to view in full size"
+msgstr "Tam boyutta görüntülemek için herhangi bir fotoğrafa tıklayın"
+
+#: adonis/templates/events/detail.html:518
+#, fuzzy
+#| msgid "Events"
+msgid "More Events"
+msgstr "Etkinlikler"
+
+#: adonis/templates/events/list.html:307
+#, fuzzy
+#| msgid "Events"
+msgid "Our Events"
+msgstr "Etkinlikler"
+
+#: adonis/templates/events/list.html:308
+msgid "Events & Gatherings"
+msgstr "Etkinlikler ve Buluşmalar"
+
+#: adonis/templates/events/list.html:309
+msgid ""
+"Explore our exclusive events, property showcases, and community gatherings"
+msgstr ""
+
+#: adonis/templates/events/list.html:332
+msgid "photos"
+msgstr "fotoğraf"
+
+#: adonis/templates/events/list.html:350 adonis/templates/index.html:152
+#: adonis/templates/index.html:200 adonis/templates/index.html:218
+msgid "More"
+msgstr "Devamı"
+
+#: adonis/templates/events/list.html:357
+#, fuzzy
+#| msgid "Events"
+msgid "No Events Yet"
+msgstr "Etkinlikler"
+
+#: adonis/templates/events/list.html:358
+msgid "Check back soon for upcoming events and gatherings."
+msgstr "Yaklaşan etkinlikler ve buluşmalar için yakında tekrar kontrol edin."
+
+#: adonis/templates/golden_visa_card_detail.html:43
+#, fuzzy
+#| msgid "About Us"
+msgid "About This Tier"
+msgstr "Hakkımızda"
+
+#: adonis/templates/golden_visa_card_detail.html:49
+msgid "Key Benefits"
+msgstr "Temel Avantajlar"
+
+#: adonis/templates/golden_visa_card_detail.html:53
+msgid "Full permanent residency in Greece and the EU"
+msgstr "Yunanistan ve AB'de tam kalıcı oturma izni"
+
+#: adonis/templates/golden_visa_card_detail.html:57
+msgid "Family members included in the same application"
+msgstr "Aile üyeleri aynı başvuruya dahil"
+
+#: adonis/templates/golden_visa_card_detail.html:61
+msgid "No minimum stay requirement"
+msgstr "Minimum kalış şartı yok"
+
+#: adonis/templates/golden_visa_card_detail.html:65
+msgid "Freedom to travel across 29 Schengen countries"
+msgstr "29 Schengen ülkesinde seyahat özgürlüğü"
+
+#: adonis/templates/golden_visa_card_detail.html:69
+#: adonis/templates/index.html:285
+msgid "Pathway to Greek citizenship and EU passport"
+msgstr "Yunan vatandaşlığı ve AB pasaportunun yolu"
+
+#: adonis/templates/golden_visa_card_detail.html:73
+msgid "Access to European banking and financial services"
+msgstr "Avrupa bankacılık ve finansal hizmetlerine erişim"
+
+#: adonis/templates/golden_visa_card_detail.html:85
+#, fuzzy
+#| msgid "Investment"
+msgid "Investment Threshold"
+msgstr "Yatırım"
+
+#: adonis/templates/golden_visa_card_detail.html:95
+msgid "No commitment. Free expert advice."
+msgstr "Bağlayıcı değil. Ücretsiz uzman tavsiyesi."
+
+#: adonis/templates/golden_visa_card_detail.html:104
+#, fuzzy
+#| msgid "Process Steps"
+msgid "Processing Time"
+msgstr "Süreç Adımları"
+
+#: adonis/templates/golden_visa_card_detail.html:105
+msgid "6–12 months"
+msgstr "6–12 ay"
+
+#: adonis/templates/golden_visa_card_detail.html:111
+msgid "Permit Validity"
+msgstr "İzin Geçerlilik Süresi"
+
+#: adonis/templates/golden_visa_card_detail.html:112
+msgid "5 years (renewable)"
+msgstr "5 yıl (yenilenebilir)"
+
+#: adonis/templates/golden_visa_card_detail.html:118
+#, fuzzy
+#| msgid "Team Members"
+msgid "Family Members"
+msgstr "Ekip Üyeleri"
+
+#: adonis/templates/golden_visa_card_detail.html:119
+msgid "Included (spouse + children + parents)"
+msgstr "Dahil (eş + çocuklar + ebeveynler)"
+
+#: adonis/templates/golden_visa_card_detail.html:125
+msgid "Passport Eligibility"
+msgstr "Pasaport Uygunluğu"
+
+#: adonis/templates/golden_visa_card_detail.html:126
+msgid "After 7 years residency"
+msgstr "7 yıl ikametten sonra"
+
+#: adonis/templates/golden_visa_card_detail.html:141
+msgid "Explore More"
+msgstr "Daha Fazla Keşfet"
+
+#: adonis/templates/golden_visa_card_detail.html:142
+#, fuzzy
+#| msgid "Investment"
+msgid "Other Investment Tiers"
+msgstr "Yatırım"
+
+#: adonis/templates/golden_visa_card_detail.html:143
+msgid "Compare all available Golden Visa investment categories"
+msgstr "Mevcut tüm Altın Vize yatırım kategorilerini karşılaştırın"
+
+#: adonis/templates/golden_visa_card_detail.html:160
+msgid "Learn More"
+msgstr "Daha Fazla Bilgi"
+
+#: adonis/templates/golden_visa_card_detail.html:174
+msgid "Ready to Start Your Greek Residency Journey?"
+msgstr "Yunan İkametinize Başlamaya Hazır mısınız?"
+
+#: adonis/templates/golden_visa_card_detail.html:175
+msgid ""
+"Our expert team will guide you through every step — from property selection "
+"to residence permit issuance."
+msgstr ""
+
+#: adonis/templates/index.html:21
+#, fuzzy
+#| msgid "Golden Visa"
+msgid "Golden Visa Program"
+msgstr "Altın Vize"
+
+#: adonis/templates/index.html:26 adonis/templates/index.html:329
+#: adonis/templates/properties/list.html:24
+msgid "Free Consultation"
+msgstr "Ücretsiz Danışmanlık"
+
+#: adonis/templates/index.html:29
+msgid "Our Projects"
+msgstr "Projelerimiz"
+
+#: adonis/templates/index.html:35 adonis/templates/index.html:252
+#, fuzzy
+#| msgid "Investment"
+msgid "Starting Investment"
+msgstr "Yatırım"
+
+#: adonis/templates/index.html:39
+msgid "Worldwide Passport Rank"
+msgstr "Dünya Çapında Pasaport Sıralaması"
+
+#: adonis/templates/index.html:63
+msgid "Your browser does not support the video tag."
+msgstr "Tarayıcınız video etiketini desteklemiyor."
+
+#: adonis/templates/index.html:72 adonis/templates/partnerships.html:58
+msgid "Video Coming Soon"
+msgstr "Video Yakında Gelecek"
+
+#: adonis/templates/index.html:89
+msgid "Offices in Athens & Tehran"
+msgstr "Atina ve Tahran'da Ofisler"
+
+#: adonis/templates/index.html:98
+msgid "Learn More About Us"
+msgstr "Hakkımızda Daha Fazla Bilgi Edinin"
+
+#: adonis/templates/index.html:115
+msgid "Greek Golden Visa Investment Tiers"
+msgstr "Yunan Altın Vize Yatırım Kategorileri"
+
+#: adonis/templates/index.html:116
+msgid ""
+"Choose the investment category that fits your goals and unlock European "
+"residency"
+msgstr ""
+
+#: adonis/templates/index.html:166
+#, fuzzy
+#| msgid "Golden Visa Cards"
+msgid "Golden Visa Properties"
+msgstr "Altın Vize Kartları"
+
+#: adonis/templates/index.html:167
+msgid "Featured Investment Properties"
+msgstr "Öne Çıkan Yatırım Mülkleri"
+
+#: adonis/templates/index.html:168
+msgid "Handpicked properties qualifying for the Greek Golden Visa program"
+msgstr "Yunan Altın Vize programına uygun özenle seçilmiş mülkler"
+
+#: adonis/templates/index.html:191
+msgid "Selling Fast"
+msgstr "Hızlı Satış"
+
+#: adonis/templates/index.html:193 adonis/templates/properties/list.html:107
+msgid "Sold Out"
+msgstr "Tükendi"
+
+# ── Django Admin sidebar (settings.py UNFOLD navigation) ─────────────────────
+#: adonis/templates/index.html:227
+#, fuzzy
+#| msgid "All Properties"
+msgid "View All Properties"
+msgstr "Tüm Mülkler"
+
+#: adonis/templates/index.html:256
+msgid "Passport Rank Worldwide"
+msgstr "Dünya Pasaport Sıralaması"
+
+#: adonis/templates/index.html:264
+msgid "Schengen Countries"
+msgstr "Schengen Ülkeleri"
+
+#: adonis/templates/index.html:272
+msgid "No Physical Presence"
+msgstr "Fiziksel Varlık Gerekmez"
+
+#: adonis/templates/index.html:273
+msgid "Complete the entire process remotely without visiting Greece"
+msgstr "Yunanistan'ı ziyaret etmeden tüm süreci uzaktan tamamlayın"
+
+#: adonis/templates/index.html:278
+msgid "Family Residency"
+msgstr "Aile İkameti"
+
+#: adonis/templates/index.html:279
+msgid "Include spouse, children, and parents in your application"
+msgstr "Eşinizi, çocuklarınızı ve ebeveynlerinizi başvurunuza dahil edin"
+
+#: adonis/templates/index.html:284
+msgid "EU Passport Path"
+msgstr "AB Pasaport Yolu"
+
+#: adonis/templates/index.html:290
+msgid "Schengen Access"
+msgstr "Schengen Erişimi"
+
+#: adonis/templates/index.html:291
+msgid "Travel freely across 29 Schengen countries"
+msgstr "29 Schengen ülkesinde özgürce seyahat edin"
+
+#: adonis/templates/index.html:296
+msgid "European Bank Account"
+msgstr "Avrupa Banka Hesabı"
+
+#: adonis/templates/index.html:297
+msgid "Open and manage EU bank accounts with full access"
+msgstr "AB banka hesaplarını tam erişimle açın ve yönetin"
+
+#: adonis/templates/index.html:302
+#, fuzzy
+#| msgid "Investment"
+msgid "Secure Investment"
+msgstr "Yatırım"
+
+#: adonis/templates/index.html:303
+msgid "Stable European real estate market investment"
+msgstr "İstikrarlı Avrupa gayrimenkul piyasası yatırımı"
+
+#: adonis/templates/index.html:330
+msgid ""
+"Begin with a free consultation where all your questions are answered by our "
+"expert team."
+msgstr ""
+
+#: adonis/templates/index.html:332
+msgid "No commitment"
+msgstr "Bağlayıcı değil"
+
+#: adonis/templates/index.html:333
+msgid "Expert guidance"
+msgstr "Uzman rehberliği"
+
+#: adonis/templates/index.html:347
+#, fuzzy
+#| msgid "Properties Page"
+msgid "Property Purchase"
+msgstr "Mülkler Sayfası"
+
+#: adonis/templates/index.html:348
+msgid ""
+"Select and purchase your property in person or remotely via power of "
+"attorney."
+msgstr ""
+
+#: adonis/templates/index.html:350
+msgid "Remote purchase"
+msgstr "Uzaktan satın alma"
+
+#: adonis/templates/index.html:351
+msgid "Legal support"
+msgstr "Hukuki destek"
+
+#: adonis/templates/index.html:365
+msgid "Residence Permit"
+msgstr "Oturma İzni"
+
+#: adonis/templates/index.html:366
+msgid ""
+"We secure your residence permit from the Greek Immigration Office with "
+"biometrics."
+msgstr ""
+
+#: adonis/templates/index.html:368
+msgid "Athens appointment"
+msgstr "Atina randevusu"
+
+#: adonis/templates/index.html:369
+msgid "Full assistance"
+msgstr "Tam destek"
+
+#: adonis/templates/index.html:379
+msgid "Final Step"
+msgstr "Son Adım"
+
+#: adonis/templates/index.html:384
+msgid "Residence Card Issued"
+msgstr "Oturma Kartı Verildi"
+
+#: adonis/templates/index.html:385
+msgid ""
+"Your Greek permanent residence card grants full legal rights in Greece and "
+"the EU."
+msgstr ""
+
+#: adonis/templates/index.html:387
+msgid "5-year validity"
+msgstr "5 yıl geçerlilik"
+
+#: adonis/templates/index.html:388
+msgid "EU freedom"
+msgstr "AB özgürlüğü"
+
+#: adonis/templates/index.html:396
+msgid "Start Your Journey"
+msgstr "Yolculuğunuza Başlayın"
+
+#: adonis/templates/index.html:440
+msgid "Interactive Flipbook"
+msgstr "İnteraktif Flipbook"
+
+#: adonis/templates/index.html:441
+#, fuzzy
+#| msgid "Online"
+msgid "Browse Online"
+msgstr "Çevrimiçi"
+
+#: adonis/templates/index.html:456
+msgid "Client Reviews"
+msgstr "Müşteri Yorumları"
+
+#: adonis/templates/index.html:457 adonis/templates/testimonial_detail.html:16
+msgid "What Our Clients Say"
+msgstr "Müşterilerimiz Ne Diyor"
+
+#: adonis/templates/index.html:458
+msgid "Real stories from investors who achieved their European residency dream"
+msgstr "Avrupa ikameti hayalini gerçekleştiren yatırımcıların gerçek hikayeleri"
+
+#: adonis/templates/index.html:479
+msgid "Read More"
+msgstr "Devamını Oku"
+
+#: adonis/templates/index.html:536
+#, fuzzy
+#| msgid "Contact Us"
+msgid "Contact on WhatsApp"
+msgstr "Bize Ulaşın"
+
+#: adonis/templates/index.html:537
+msgid "You can contact us via WhatsApp right now."
+msgstr "Şu anda WhatsApp üzerinden bizimle iletişime geçebilirsiniz."
+
+#: adonis/templates/index.html:539
+msgid "Call on WhatsApp"
+msgstr "WhatsApp'tan Ara"
+
+#: adonis/templates/index.html:547
+msgid "Address"
+msgstr "Adres"
+
+#: adonis/templates/index.html:554 adonis/templates/partnerships.html:181
+#: adonis/templates/properties/detail.html:393
+#: adonis/templates/properties/detail.html:417
+#: adonis/templates/properties/list.html:219
+msgid "Phone"
+msgstr "Telefon"
+
+#: adonis/templates/index.html:561 adonis/templates/partnerships.html:176
+#: adonis/templates/properties/detail.html:392
+#: adonis/templates/properties/detail.html:416
+#: adonis/templates/properties/list.html:215
+msgid "Email"
+msgstr "E-posta"
+
+#: adonis/templates/index.html:574 adonis/templates/properties/detail.html:391
+#: adonis/templates/properties/detail.html:415
+#: adonis/templates/properties/list.html:212
+msgid "Your full name"
+msgstr "Ad soyadınız"
+
+#: adonis/templates/index.html:579 adonis/templates/properties/list.html:220
+msgid "Your phone number"
+msgstr "Telefon numaranız"
+
+#: adonis/templates/index.html:584
+msgid "Your email address"
+msgstr "E-posta adresiniz"
+
+#: adonis/templates/index.html:588
+msgid "Request Type"
+msgstr "İstek Türü"
+
+#: adonis/templates/index.html:590
+msgid "Customer (Individual)"
+msgstr "Müşteri (Bireysel)"
+
+#: adonis/templates/index.html:591
+msgid "Agent (Partner / Representative)"
+msgstr "Acente (Ortak / Temsilci)"
+
+#: adonis/templates/index.html:596
+msgid "Message (Optional)"
+msgstr "Mesaj (İsteğe Bağlı)"
+
+#: adonis/templates/index.html:597
+msgid "Tell us about your requirements..."
+msgstr "Gereksinimlerinizi bize anlatın..."
+
+#: adonis/templates/index.html:601
+msgid "Book Consultation"
+msgstr "Danışmanlık Rezervasyonu Yap"
+
+#: adonis/templates/login.html:12
+msgid "Enter your credentials to access your account"
+msgstr "Hesabınıza erişmek için giriş bilgilerinizi girin"
+
+#: adonis/templates/login.html:18
+msgid "Invalid username or password. Please try again."
+msgstr "Geçersiz kullanıcı adı veya şifre. Lütfen tekrar deneyin."
+
+#: adonis/templates/login.html:25
+msgid "Username"
+msgstr "Kullanıcı Adı"
+
+#: adonis/templates/login.html:26
+msgid "Your username"
+msgstr "Kullanıcı adınız"
+
+#: adonis/templates/login.html:30
+#, fuzzy
+#| msgid "Show password"
+msgid "Password"
+msgstr "Şifreyi göster"
+
+#: adonis/templates/login.html:31
+#, fuzzy
+#| msgid "Show password"
+msgid "Your password"
+msgstr "Şifreyi göster"
+
+#: adonis/templates/partnerships.html:15
+#, fuzzy
+#| msgid "Partnerships Page"
+msgid "Partnership Program"
+msgstr "Ortaklıklar Sayfası"
+
+#: adonis/templates/partnerships.html:19 adonis/templates/partnerships.html:150
+msgid "Become a Partner"
+msgstr "Ortak Olun"
+
+#: adonis/templates/partnerships.html:20
+msgid "Watch Video"
+msgstr "Videoyu İzle"
+
+#: adonis/templates/partnerships.html:51
+msgid "Watch Our Story"
+msgstr "Hikayemizi İzleyin"
+
+#: adonis/templates/partnerships.html:71
+msgid "Why Choose Us"
+msgstr "Neden Bizi Seçmelisiniz"
+
+#: adonis/templates/partnerships.html:79
+#, fuzzy
+#| msgid "Properties"
+msgid "Properties Sold"
+msgstr "Mülkler"
+
+#: adonis/templates/partnerships.html:83
+msgid "Active Partners"
+msgstr "Aktif Ortaklar"
+
+#: adonis/templates/partnerships.html:87
+#, fuzzy
+#| msgid "Categories"
+msgid "Countries"
+msgstr "Kategoriler"
+
+#: adonis/templates/partnerships.html:107
+msgid "Benefits"
+msgstr "Avantajlar"
+
+#: adonis/templates/partnerships.html:108
+#, fuzzy
+#| msgid "Partnerships"
+msgid "Partnership Benefits"
+msgstr "Ortaklıklar"
+
+#: adonis/templates/partnerships.html:109
+msgid "Everything you need to succeed in the Greek real estate market"
+msgstr "Yunan gayrimenkul piyasasında başarılı olmak için ihtiyacınız olan her şey"
+
+#: adonis/templates/partnerships.html:151
+msgid "Fill in the form below and our team will contact you shortly."
+msgstr "Aşağıdaki formu doldurun, ekibimiz kısa süre içinde sizinle iletişime geçecek."
+
+#: adonis/templates/partnerships.html:163
+msgid "First Name"
+msgstr "Ad"
+
+#: adonis/templates/partnerships.html:168
+msgid "Last Name"
+msgstr "Soyad"
+
+#: adonis/templates/partnerships.html:188
+#, fuzzy
+#| msgid "Partner Leads"
+msgid "Partner Type"
+msgstr "Ortaklık Talepleri"
+
+#: adonis/templates/partnerships.html:190
+msgid "— Select type —"
+msgstr "— Tür seçin —"
+
+#: adonis/templates/partnerships.html:191
+msgid "Broker"
+msgstr "Broker"
+
+#: adonis/templates/partnerships.html:192
+msgid "Agent"
+msgstr "Acente"
+
+#: adonis/templates/partnerships.html:193
+msgid "Lawyer"
+msgstr "Avukat"
+
+#: adonis/templates/partnerships.html:194
+msgid "Client"
+msgstr "Müşteri"
+
+#: adonis/templates/partnerships.html:195
+msgid "Other"
+msgstr "Diğer"
+
+#: adonis/templates/partnerships.html:201
+msgid "Your Title"
+msgstr "Unvanınız"
+
+#: adonis/templates/partnerships.html:208
+msgid "Country"
+msgstr "Ülke"
+
+#: adonis/templates/partnerships.html:208
+#: adonis/templates/partnerships.html:212
+#: adonis/templates/partnerships.html:218
+msgid "optional"
+msgstr "isteğe bağlı"
+
+#: adonis/templates/partnerships.html:212
+msgid "Company / Organization"
+msgstr "Şirket / Organizasyon"
+
+#: adonis/templates/partnerships.html:218
+#, fuzzy
+#| msgid "Chat Messages"
+msgid "Message / Notes"
+msgstr "Sohbet Mesajları"
+
+#: adonis/templates/partnerships.html:226
+msgid "I agree to be contacted by ADONIS."
+msgstr "ADONIS tarafından iletişime geçilmesini kabul ediyorum."
+
+#: adonis/templates/partnerships.html:232
+#: venv/lib/python3.12/site-packages/unfold/contrib/import_export/templates/admin/import_export/export.html:77
+#: venv/lib/python3.12/site-packages/unfold/contrib/import_export/templates/admin/import_export/import_form.html:21
+msgid "Submit"
+msgstr "Gönder"
+
+#: adonis/templates/partnerships.html:242
+#: adonis/templates/properties/detail.html:399
+#: adonis/templates/properties/list.html:232
+msgid "Thank you!"
+msgstr "Teşekkür ederiz!"
+
+#: adonis/templates/partnerships.html:243
+msgid "Thanks for completing the form. Our team will contact you shortly."
+msgstr "Formu tamamladığınız için teşekkürler. Ekibimiz kısa süre içinde sizinle iletişime geçecek."
+
+#: adonis/templates/partnerships.html:244
+#: venv/lib/python3.12/site-packages/unfold/contrib/simple_history/templates/simple_history/submit_line.html:19
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/submit_line.html:53
+msgid "Close"
+msgstr "Kapat"
+
+#: adonis/templates/properties/detail.html:33
+msgid "No Image"
+msgstr "Resim Yok"
+
+#: adonis/templates/properties/detail.html:52
+#, fuzzy
+#| msgid "Properties"
+msgid "Property Video"
+msgstr "Mülkler"
+
+#: adonis/templates/properties/detail.html:82
+msgid "Highlights"
+msgstr "Öne Çıkanlar"
+
+#: adonis/templates/properties/detail.html:92
+msgid "Project Status"
+msgstr "Proje Durumu"
+
+#: adonis/templates/properties/detail.html:100
+msgid "Ready to Start"
+msgstr "Başlamaya Hazır"
+
+#: adonis/templates/properties/detail.html:104
+msgid "Under Renovation"
+msgstr "Renovasyon Sürecinde"
+
+#: adonis/templates/properties/detail.html:108
+msgid "Finishing Soon"
+msgstr "Yakında Tamamlanıyor"
+
+#: adonis/templates/properties/detail.html:112
+msgid "Ready to Deliver"
+msgstr "Teslime Hazır"
+
+#: adonis/templates/properties/detail.html:119
+msgid "Available Units"
+msgstr "Mevcut Üniteler"
+
+#: adonis/templates/properties/detail.html:127
+msgid "Unit"
+msgstr "Ünite"
+
+#: adonis/templates/properties/detail.html:128
+#: adonis/templates/properties/detail.html:183
+msgid "Size"
+msgstr "Büyüklük"
+
+#: adonis/templates/properties/detail.html:129
+#: adonis/templates/properties/detail.html:188
+msgid "Bed"
+msgstr "Yatak"
+
+#: adonis/templates/properties/detail.html:130
+#: adonis/templates/properties/detail.html:193
+msgid "Bath"
+msgstr "Banyo"
+
+#: adonis/templates/properties/detail.html:131
+#: adonis/templates/properties/detail.html:198
+msgid "Parking"
+msgstr "Otopark"
+
+#: adonis/templates/properties/detail.html:132
+msgid "Price"
+msgstr "Fiyat"
+
+#: adonis/templates/properties/detail.html:133
+msgid "Status"
+msgstr "Durum"
+
+#: adonis/templates/properties/detail.html:148
+#: adonis/templates/properties/detail.html:174
+msgid "Available"
+msgstr "Mevcut"
+
+#: adonis/templates/properties/detail.html:149
+#: adonis/templates/properties/detail.html:175
+msgid "Reserved"
+msgstr "Rezerve"
+
+#: adonis/templates/properties/detail.html:150
+#: adonis/templates/properties/detail.html:176
+msgid "Sold"
+msgstr "Satıldı"
+
+#: adonis/templates/properties/detail.html:155
+msgid "Book"
+msgstr "Rezerve Et"
+
+#: adonis/templates/properties/detail.html:274
+msgid "Beach / Sea"
+msgstr "Plaj / Deniz"
+
+#: adonis/templates/properties/detail.html:294
+msgid "Athens Center"
+msgstr "Atina Merkezi"
+
+#: adonis/templates/properties/detail.html:304
+msgid "Acropolis"
+msgstr "Akropol"
+
+#: adonis/templates/properties/detail.html:314
+msgid "Airport"
+msgstr "Havalimanı"
+
+#: adonis/templates/properties/detail.html:329
+#, fuzzy
+#| msgid "Investment"
+msgid "Investment from"
+msgstr "Yatırım"
+
+#: adonis/templates/properties/detail.html:345
+#, fuzzy
+#| msgid "Property Units"
+msgid "Property Specifications"
+msgstr "Mülk Birimleri"
+
+#: adonis/templates/properties/detail.html:385
+#: adonis/templates/properties/list.html:204
+msgid "I am interested"
+msgstr "İlgileniyorum"
+
+#: adonis/templates/properties/detail.html:393
+#: adonis/templates/properties/detail.html:417
+msgid "Phone number"
+msgstr "Telefon numarası"
+
+#: adonis/templates/properties/detail.html:394
+#: adonis/templates/properties/detail.html:418
+#, fuzzy
+#| msgid "Chat Messages"
+msgid "Message"
+msgstr "Sohbet Mesajları"
+
+#: adonis/templates/properties/detail.html:394
+msgid "Tell us more..."
+msgstr "Bize daha fazla bilgi verin..."
+
+#: adonis/templates/properties/detail.html:395
+#: adonis/templates/properties/list.html:227
+#, fuzzy
+#| msgid "Interest Requests"
+msgid "Send Request"
+msgstr "İlgi Talepleri"
+
+#: adonis/templates/properties/detail.html:400
+msgid "We will contact you soon."
+msgstr "Kısa süre içinde sizinle iletişime geçeceğiz."
+
+#: adonis/templates/properties/detail.html:409
+msgid "Book This Unit"
+msgstr "Bu Üniteyi Rezerve Et"
+
+#: adonis/templates/properties/detail.html:418
+msgid "Any special requests..."
+msgstr "Özel istekler..."
+
+#: adonis/templates/properties/detail.html:419
+#, fuzzy
+#| msgid "Unit Bookings"
+msgid "Submit Booking Request"
+msgstr "Birim Rezervasyonları"
+
+#: adonis/templates/properties/detail.html:423
+msgid "Booking Request Sent."
+msgstr "Rezervasyon İsteği Gönderildi."
+
+#: adonis/templates/properties/detail.html:424
+msgid "We will contact you shortly."
+msgstr "Kısa süre içinde sizinle iletişime geçeceğiz."
+
+#: adonis/templates/properties/detail.html:433
+msgid "You May Also Like"
+msgstr "Bunları da Beğenebilirsiniz"
+
+#: adonis/templates/properties/list.html:33
+msgid "For the whole family"
+msgstr "Tüm aile için"
+
+#: adonis/templates/properties/list.html:34
+msgid "Permanent residency in Greece"
+msgstr "Yunanistan'da kalıcı ikamet"
+
+#: adonis/templates/properties/list.html:35
+msgid "Online property selection"
+msgstr "Çevrimiçi mülk seçimi"
+
+#: adonis/templates/properties/list.html:36
+msgid "No physical presence required"
+msgstr "Fiziksel varlık gerekmez"
+
+#: adonis/templates/properties/list.html:39
+msgid "A Luxury Experience in the Heart of Athens"
+msgstr "Atina'nın Kalbinde Lüks Bir Deneyim"
+
+#: adonis/templates/properties/list.html:40
+msgid ""
+"Adonis carefully selects the finest locations in Athens to design "
+"residential projects that bring you a luxurious lifestyle. By investing in "
+"Adonis Properties, you will secure permanent residency in Greece for you and "
+"your family through the Golden Visa program."
+msgstr ""
+
+#: adonis/templates/properties/list.html:41
+msgid ""
+"Our apartments are built by leading architects, featuring creative designs, "
+"smart layouts, and high-quality materials. Flexible payment terms make it "
+"easy to acquire the property you desire."
+msgstr ""
+
+# ── Django Admin sidebar (settings.py UNFOLD navigation) ─────────────────────
+#: adonis/templates/properties/list.html:50
+#, fuzzy
+#| msgid "All Properties"
+msgid "All Projects"
+msgstr "Tüm Mülkler"
+
+#: adonis/templates/properties/list.html:72
+msgid "STILL AVAILABLE"
+msgstr "HÂLÂ MEVCUT"
+
+#: adonis/templates/properties/list.html:73
+msgid "SOLD OUT SOON"
+msgstr "YAKINDA TÜKENIYOR"
+
+#: adonis/templates/properties/list.html:74
+msgid "SOLD OUT"
+msgstr "TÜKENDİ"
+
+#: adonis/templates/properties/list.html:91
+msgid "Floors"
+msgstr "Katlar"
+
+#: adonis/templates/properties/list.html:92
+msgid "Units"
+msgstr "Üniteler"
+
+#: adonis/templates/properties/list.html:104
+msgid "I'm Interested"
+msgstr "İlgileniyorum"
+
+#: adonis/templates/properties/list.html:110
+msgid "View Details"
+msgstr "Detayları Görüntüle"
+
+#: adonis/templates/properties/list.html:223
+msgid "Message (optional)"
+msgstr "Mesaj (isteğe bağlı)"
+
+#: adonis/templates/properties/list.html:224
+msgid "Any additional details..."
+msgstr "Ek detaylar..."
+
+#: adonis/templates/properties/list.html:233
+msgid "Your request has been received. We will contact you soon."
+msgstr "İsteğiniz alındı. Kısa süre içinde sizinle iletişime geçeceğiz."
+
+#: adonis/templates/testimonial_detail.html:4
+#, fuzzy
+#| msgid "Testimonials"
+msgid "Testimonial"
+msgstr "Referanslar"
+
+#: adonis/templates/testimonial_detail.html:14
+msgid "Client Story"
+msgstr "Müşteri Hikayesi"
+
+#: adonis/templates/testimonial_detail.html:17
+msgid "Real experiences from our valued clients"
+msgstr "Değerli müşterilerimizin gerçek deneyimleri"
+
+#: adonis/templates/testimonial_detail.html:62
+msgid "More Client Stories"
+msgstr "Daha Fazla Müşteri Hikayesi"
+
+#: adonis/templates/testimonial_detail.html:95
+msgid "Join our satisfied clients and secure your future in Greece"
+msgstr "Memnun müşterilerimize katılın ve Yunanistan'daki geleceğinizi güvence altına alın"
+
+#: adonis/templates/unfold/helpers/app_list.html:63
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/app_list.html:60
+msgid "All applications"
+msgstr "Tüm uygulamalar"
+
+# ── Custom archive/restore actions ───────────────────────────────────────────
+#: core/admin_mixins.py:67
+msgid "Confirm archive"
+msgstr "Arşivlemeyi onayla"
+
+#: core/admin_mixins.py:68
+msgid "Archive selected"
+msgstr "Seçilenleri arşivle"
+
+#: core/admin_mixins.py:69
+#, python-format
+msgid "Are you sure you want to archive the selected %(model_name)s?"
+msgstr ""
+"Seçili %(model_name)s öğelerini arşivlemek istediğinizden emin misiniz?"
+
+#: core/admin_mixins.py:71
+msgid "Confirm restore"
+msgstr "Geri yüklemeyi onayla"
+
+#: core/admin_mixins.py:72
+msgid "Restore selected"
+msgstr "Seçilenleri geri yükle"
+
+#: core/admin_mixins.py:73
+#, python-format
+msgid "Are you sure you want to restore the selected %(model_name)s?"
+msgstr ""
+"Seçili %(model_name)s öğelerini geri yüklemek istediğinizden emin misiniz?"
+
+#: core/admin_mixins.py:109
+#, python-brace-format
+msgid "{archived} item(s) archived."
+msgstr "{archived} öğe arşivlendi."
+
+#: core/admin_mixins.py:133
+#, python-brace-format
+msgid "{restored} item(s) restored."
+msgstr "{restored} öğe geri yüklendi."
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/forms.py:6
+msgid "Search files"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:5
+msgid "Select an image to embed"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:27
+msgid "Browse for the image you want, then click 'Embed Image' to continue..."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:29
+msgid ""
+"No images found. Upload images using the 'Image Button' dialog's 'Upload' "
+"tab."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:50
+msgid "Images in: "
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:62
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:80
+msgid "Embed Image"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:146
+msgid "Play Slideshow"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:147
+msgid "Pause Slideshow"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:148
+msgid "&lsaquo; Previous Photo"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:149
+msgid "Next Photo &rsaquo;"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:150
+msgid "Next &rsaquo;"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:151
+msgid "&lsaquo; Prev"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/contrib/messages/apps.py:15
+#, fuzzy
+#| msgid "Chat Messages"
+msgid "Messages"
+msgstr "Sohbet Mesajları"
+
+#: venv/lib/python3.12/site-packages/django/contrib/sitemaps/apps.py:8
+msgid "Site Maps"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/contrib/syndication/apps.py:7
+msgid "Syndication"
+msgstr ""
+
+#. Translators: String used to replace omitted page numbers in elided page
+#. range generated by paginators, e.g. [1, 2, '…', 5, 6, 7, '…', 9, 10].
+#: venv/lib/python3.12/site-packages/django/core/paginator.py:30
+msgid "…"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/paginator.py:50
+msgid "That page number is not an integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/paginator.py:52
+msgid "That page number is less than 1"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/paginator.py:54
+msgid "That page contains no results"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:22
+msgid "Enter a valid value."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:104
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:752
+msgid "Enter a valid URL."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:165
+msgid "Enter a valid integer."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:176
+msgid "Enter a valid email address."
+msgstr ""
+
+#. Translators: "letters" means latin letters: a-z and A-Z.
+#: venv/lib/python3.12/site-packages/django/core/validators.py:259
+msgid ""
+"Enter a valid “slug” consisting of letters, numbers, underscores or hyphens."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:267
+msgid ""
+"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
+"hyphens."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:281
+#: venv/lib/python3.12/site-packages/django/core/validators.py:289
+#: venv/lib/python3.12/site-packages/django/core/validators.py:318
+msgid "Enter a valid IPv4 address."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:298
+#: venv/lib/python3.12/site-packages/django/core/validators.py:319
+msgid "Enter a valid IPv6 address."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:310
+#: venv/lib/python3.12/site-packages/django/core/validators.py:317
+msgid "Enter a valid IPv4 or IPv6 address."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:353
+msgid "Enter only digits separated by commas."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:359
+#, python-format
+msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:394
+#, python-format
+msgid "Ensure this value is less than or equal to %(limit_value)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:403
+#, python-format
+msgid "Ensure this value is greater than or equal to %(limit_value)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:412
+#, python-format
+msgid "Ensure this value is a multiple of step size %(limit_value)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:422
+#, python-format
+msgid ""
+"Ensure this value has at least %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at least %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:440
+#, python-format
+msgid ""
+"Ensure this value has at most %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at most %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:463
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:347
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:386
+msgid "Enter a number."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:465
+#, python-format
+msgid "Ensure that there are no more than %(max)s digit in total."
+msgid_plural "Ensure that there are no more than %(max)s digits in total."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:470
+#, python-format
+msgid "Ensure that there are no more than %(max)s decimal place."
+msgid_plural "Ensure that there are no more than %(max)s decimal places."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:475
+#, python-format
+msgid ""
+"Ensure that there are no more than %(max)s digit before the decimal point."
+msgid_plural ""
+"Ensure that there are no more than %(max)s digits before the decimal point."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:546
+#, python-format
+msgid ""
+"File extension “%(extension)s” is not allowed. Allowed extensions are: "
+"%(allowed_extensions)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:607
+msgid "Null characters are not allowed."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/base.py:1423
+#: venv/lib/python3.12/site-packages/django/forms/models.py:893
+#: venv/lib/python3.12/site-packages/unfold/contrib/inlines/admin.py:111
+msgid "and"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/base.py:1425
+#, python-format
+msgid "%(model_name)s with this %(field_labels)s already exists."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/constraints.py:17
+#, python-format
+msgid "Constraint “%(name)s” is violated."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:128
+#, python-format
+msgid "Value %(value)r is not a valid choice."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:129
+msgid "This field cannot be null."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:130
+msgid "This field cannot be blank."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:131
+#, python-format
+msgid "%(model_name)s with this %(field_label)s already exists."
+msgstr ""
+
+#. Translators: The 'lookup_type' is one of 'date', 'year' or
+#. 'month'. Eg: "Title must be unique for pub_date year"
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:135
+#, python-format
+msgid ""
+"%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:173
+#, python-format
+msgid "Field of type: %(field_type)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1094
+#, python-format
+msgid "“%(value)s” value must be either True or False."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1095
+#, python-format
+msgid "“%(value)s” value must be either True, False, or None."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1097
+msgid "Boolean (Either True or False)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1147
+#, python-format
+msgid "String (up to %(max_length)s)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1149
+msgid "String (unlimited)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1253
+msgid "Comma-separated integers"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1354
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD "
+"format."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1358
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1493
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD) but it is an invalid "
+"date."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1362
+msgid "Date (without time)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1489
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD HH:MM[:ss[."
+"uuuuuu]][TZ] format."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1497
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
+"[TZ]) but it is an invalid date/time."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1502
+msgid "Date (with time)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1626
+#, python-format
+msgid "“%(value)s” value must be a decimal number."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1628
+msgid "Decimal number"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1789
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in [DD] [[HH:]MM:]ss[."
+"uuuuuu] format."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1793
+msgid "Duration"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1845
+msgid "Email address"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1870
+msgid "File path"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1948
+#, python-format
+msgid "“%(value)s” value must be a float."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1950
+msgid "Floating point number"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1990
+#, python-format
+msgid "“%(value)s” value must be an integer."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1992
+msgid "Integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2088
+msgid "Big (8 byte) integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2105
+msgid "Small integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2113
+msgid "IPv4 address"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2144
+msgid "IP address"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2237
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2238
+#, python-format
+msgid "“%(value)s” value must be either None, True or False."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2240
+msgid "Boolean (Either True, False or None)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2291
+msgid "Positive big integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2306
+msgid "Positive integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2321
+msgid "Positive small integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2337
+#, python-format
+msgid "Slug (up to %(max_length)s)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2373
+msgid "Text"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2448
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
+"format."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2452
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
+"invalid time."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2456
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/forms.py:291
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/forms.py:307
+#: venv/lib/python3.12/site-packages/unfold/widgets.py:587
+#: venv/lib/python3.12/site-packages/unfold/widgets.py:632
+msgid "Time"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2564
+msgid "URL"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2588
+msgid "Raw binary data"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2653
+#, python-format
+msgid "“%(value)s” is not a valid UUID."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2655
+msgid "Universally unique identifier"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/files.py:232
+msgid "File"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/files.py:393
+msgid "Image"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/json.py:26
+msgid "A JSON object"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/json.py:28
+msgid "Value must be valid JSON."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:919
+#, python-format
+msgid "%(model)s instance with %(field)s %(value)r does not exist."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:921
+msgid "Foreign Key (type determined by related field)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:1212
+msgid "One-to-one relationship"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:1269
+#, python-format
+msgid "%(from)s-%(to)s relationship"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:1271
+#, python-format
+msgid "%(from)s-%(to)s relationships"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:1319
+msgid "Many-to-many relationship"
+msgstr ""
+
+#. Translators: If found as last label character, these punctuation
+#. characters will prevent the default label_suffix to be appended to the label
+#: venv/lib/python3.12/site-packages/django/forms/boundfield.py:184
+msgid ":?.!"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:91
+msgid "This field is required."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:298
+msgid "Enter a whole number."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:467
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1241
+msgid "Enter a valid date."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:490
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1242
+msgid "Enter a valid time."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:517
+msgid "Enter a valid date/time."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:551
+msgid "Enter a valid duration."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:552
+#, python-brace-format
+msgid "The number of days must be between {min_days} and {max_days}."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:621
+msgid "No file was submitted. Check the encoding type on the form."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:622
+msgid "No file was submitted."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:623
+msgid "The submitted file is empty."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:625
+#, python-format
+msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
+msgid_plural ""
+"Ensure this filename has at most %(max)d characters (it has %(length)d)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:630
+msgid "Please either submit a file or check the clear checkbox, not both."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:694
+msgid ""
+"Upload a valid image. The file you uploaded was either not an image or a "
+"corrupted image."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:857
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:949
+#: venv/lib/python3.12/site-packages/django/forms/models.py:1566
+#, python-format
+msgid "Select a valid choice. %(value)s is not one of the available choices."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:951
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1070
+#: venv/lib/python3.12/site-packages/django/forms/models.py:1564
+msgid "Enter a list of values."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1071
+msgid "Enter a complete value."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1313
+msgid "Enter a valid UUID."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1343
+msgid "Enter a valid JSON."
+msgstr ""
+
+#. Translators: This is the default suffix added to form field labels
+#: venv/lib/python3.12/site-packages/django/forms/forms.py:98
+msgid ":"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/forms.py:244
+#: venv/lib/python3.12/site-packages/django/forms/forms.py:328
+#, python-format
+msgid "(Hidden field %(name)s) %(error)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:63
+#, python-format
+msgid ""
+"ManagementForm data is missing or has been tampered with. Missing fields: "
+"%(field_names)s. You may need to file a bug report if the issue persists."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:67
+#, python-format
+msgid "Please submit at most %(num)d form."
+msgid_plural "Please submit at most %(num)d forms."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:72
+#, python-format
+msgid "Please submit at least %(num)d form."
+msgid_plural "Please submit at least %(num)d forms."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:484
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:491
+msgid "Order"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:499
+#: venv/lib/python3.12/site-packages/unfold/contrib/import_export/templates/admin/import_export/import_preview.html:26
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/submit_line.html:62
+msgid "Delete"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:886
+#, python-format
+msgid "Please correct the duplicate data for %(field)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:891
+#, python-format
+msgid "Please correct the duplicate data for %(field)s, which must be unique."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:898
+#, python-format
+msgid ""
+"Please correct the duplicate data for %(field_name)s which must be unique "
+"for the %(lookup)s in %(date_field)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:907
+msgid "Please correct the duplicate values below."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:1338
+msgid "The inline value did not match the parent instance."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:1429
+msgid "Select a valid choice. That choice is not one of the available choices."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:1568
+#, python-format
+msgid "“%(pk)s” is not a valid value."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/utils.py:226
+#, python-format
+msgid ""
+"%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; it "
+"may be ambiguous or it may not exist."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:463
+msgid "Clear"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:464
+msgid "Currently"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:465
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/edit_inline/stacked.html:57
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/app_list_default.html:42
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/edit_inline/tabular_title.html:23
+msgid "Change"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:794
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/boolean.html:4
+msgid "Unknown"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:795
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/admin/choice_filters.py:103
+msgid "Yes"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:796
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/admin/choice_filters.py:104
+msgid "No"
+msgstr ""
+
+#. Translators: Please do not add spaces around commas.
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:874
+msgid "yes,no,maybe"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:904
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:921
+#, python-format
+msgid "%(size)d byte"
+msgid_plural "%(size)d bytes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:923
+#, python-format
+msgid "%s KB"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:925
+#, python-format
+msgid "%s MB"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:927
+#, python-format
+msgid "%s GB"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:929
+#, python-format
+msgid "%s TB"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:931
+#, python-format
+msgid "%s PB"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:73
+msgid "p.m."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:74
+msgid "a.m."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:79
+msgid "PM"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:80
+msgid "AM"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:152
+msgid "midnight"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:154
+msgid "noon"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:7
+msgid "Monday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:8
+msgid "Tuesday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:9
+msgid "Wednesday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:10
+msgid "Thursday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:11
+msgid "Friday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:12
+msgid "Saturday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:13
+msgid "Sunday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:16
+msgid "Mon"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:17
+msgid "Tue"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:18
+msgid "Wed"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:19
+msgid "Thu"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:20
+msgid "Fri"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:21
+msgid "Sat"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:22
+msgid "Sun"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:25
+msgid "January"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:26
+msgid "February"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:27
+msgid "March"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:28
+msgid "April"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:29
+msgid "May"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:30
+msgid "June"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:31
+msgid "July"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:32
+msgid "August"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:33
+msgid "September"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:34
+msgid "October"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:35
+msgid "November"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:36
+#, fuzzy
+#| msgid "Team Members"
+msgid "December"
+msgstr "Ekip Üyeleri"
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:39
+msgid "jan"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:40
+msgid "feb"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:41
+msgid "mar"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:42
+msgid "apr"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:43
+msgid "may"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:44
+msgid "jun"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:45
+msgid "jul"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:46
+msgid "aug"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:47
+msgid "sep"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:48
+#, fuzzy
+#| msgid "Contact"
+msgid "oct"
+msgstr "İletişim"
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:49
+msgid "nov"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:50
+msgid "dec"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:53
+msgctxt "abbrev. month"
+msgid "Jan."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:54
+msgctxt "abbrev. month"
+msgid "Feb."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:55
+msgctxt "abbrev. month"
+msgid "March"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:56
+msgctxt "abbrev. month"
+msgid "April"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:57
+msgctxt "abbrev. month"
+msgid "May"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:58
+msgctxt "abbrev. month"
+msgid "June"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:59
+msgctxt "abbrev. month"
+msgid "July"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:60
+msgctxt "abbrev. month"
+msgid "Aug."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:61
+msgctxt "abbrev. month"
+msgid "Sept."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:62
+msgctxt "abbrev. month"
+msgid "Oct."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:63
+msgctxt "abbrev. month"
+msgid "Nov."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:64
+msgctxt "abbrev. month"
+msgid "Dec."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:67
+msgctxt "alt. month"
+msgid "January"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:68
+msgctxt "alt. month"
+msgid "February"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:69
+msgctxt "alt. month"
+msgid "March"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:70
+msgctxt "alt. month"
+msgid "April"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:71
+msgctxt "alt. month"
+msgid "May"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:72
+msgctxt "alt. month"
+msgid "June"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:73
+msgctxt "alt. month"
+msgid "July"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:74
+msgctxt "alt. month"
+msgid "August"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:75
+msgctxt "alt. month"
+msgid "September"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:76
+msgctxt "alt. month"
+msgid "October"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:77
+msgctxt "alt. month"
+msgid "November"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:78
+#, fuzzy
+#| msgid "Team Members"
+msgctxt "alt. month"
+msgid "December"
+msgstr "Ekip Üyeleri"
+
+#: venv/lib/python3.12/site-packages/django/utils/ipv6.py:20
+msgid "This is not a valid IPv6 address."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/text.py:138
+#, python-format
+msgctxt "String to return when truncating text"
+msgid "%(truncated_text)s…"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/text.py:319
+msgid "or"
+msgstr ""
+
+#. Translators: This string is used as a separator between list elements
+#: venv/lib/python3.12/site-packages/django/utils/text.py:338
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:135
+msgid ", "
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:8
+#, python-format
+msgid "%(num)d year"
+msgid_plural "%(num)d years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:9
+#, python-format
+msgid "%(num)d month"
+msgid_plural "%(num)d months"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:10
+#, python-format
+msgid "%(num)d week"
+msgid_plural "%(num)d weeks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:11
+#, python-format
+msgid "%(num)d day"
+msgid_plural "%(num)d days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:12
+#, python-format
+msgid "%(num)d hour"
+msgid_plural "%(num)d hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:13
+#, python-format
+msgid "%(num)d minute"
+msgid_plural "%(num)d minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:111
+msgid "Forbidden"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:112
+msgid "CSRF verification failed. Request aborted."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:116
+msgid ""
+"You are seeing this message because this HTTPS site requires a “Referer "
+"header” to be sent by your web browser, but none was sent. This header is "
+"required for security reasons, to ensure that your browser is not being "
+"hijacked by third parties."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:122
+msgid ""
+"If you have configured your browser to disable “Referer” headers, please re-"
+"enable them, at least for this site, or for HTTPS connections, or for “same-"
+"origin” requests."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:127
+msgid ""
+"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
+"including the “Referrer-Policy: no-referrer” header, please remove them. The "
+"CSRF protection requires the “Referer” header to do strict referer checking. "
+"If you’re concerned about privacy, use alternatives like <a "
+"rel=\"noreferrer\" …> for links to third-party sites."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:136
+msgid ""
+"You are seeing this message because this site requires a CSRF cookie when "
+"submitting forms. This cookie is required for security reasons, to ensure "
+"that your browser is not being hijacked by third parties."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:142
+msgid ""
+"If you have configured your browser to disable cookies, please re-enable "
+"them, at least for this site, or for “same-origin” requests."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:148
+msgid "More information is available with DEBUG=True."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:44
+msgid "No year specified"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:64
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:115
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:214
+msgid "Date out of range"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:94
+msgid "No month specified"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:147
+msgid "No day specified"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:194
+msgid "No week specified"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:349
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:380
+#, python-format
+msgid "No %(verbose_name_plural)s available"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:652
+#, python-format
+msgid ""
+"Future %(verbose_name_plural)s not available because %(class_name)s."
+"allow_future is False."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:692
+#, python-format
+msgid "Invalid date string “%(datestr)s” given format “%(format)s”"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/detail.py:56
+#, python-format
+msgid "No %(verbose_name)s found matching the query"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/list.py:70
+msgid "Page is not “last”, nor can it be converted to an int."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/list.py:77
+#, python-format
+msgid "Invalid page (%(page_number)s): %(message)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/list.py:169
+#, python-format
+msgid "Empty list and “%(class_name)s.allow_empty” is False."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/static.py:38
+msgid "Directory indexes are not allowed here."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/static.py:40
+#, python-format
+msgid "“%(path)s” does not exist"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/static.py:79
+#, python-format
+msgid "Index of %(directory)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:7
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:220
+msgid "The install worked successfully! Congratulations!"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:206
+#, python-format
+msgid ""
+"View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
+"target=\"_blank\" rel=\"noopener\">release notes</a> for Django %(version)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:221
+#, python-format
+msgid ""
+"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
+"%(version)s/ref/settings/#debug\" target=\"_blank\" "
+"rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
+"configured any URLs."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:229
+msgid "Django Documentation"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:230
+msgid "Topics, references, &amp; how-to’s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:238
+msgid "Tutorial: A Polling App"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:239
+msgid "Get started with Django"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:247
+msgid "Django Community"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:248
+msgid "Connect, get help, or contribute"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django_ckeditor_5/permissions.py:18
+msgid "You do not have permission to upload files."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django_ckeditor_5/permissions.py:25
+msgid "You must be logged in to upload files."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django_ckeditor_5/validators.py:17
+#, python-format
+msgid "File should be at most %(max_size)s MB."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django_ckeditor_5/views.py:41
+msgid "Invalid form data"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django_ckeditor_5/widgets.py:43
+msgid "Check the correct settings.CKEDITOR_5_CONFIGS "
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/modeltranslation/widgets.py:31
+#: venv/lib/python3.12/site-packages/unfold/contrib/simple_history/templates/simple_history/object_history_list.html:73
+msgid "None"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/admin.py:45
+#: venv/lib/python3.12/site-packages/unfold/templatetags/unfold_list.py:355
+#, fuzzy
+#| msgid "Selected objects"
+msgid "Select record"
+msgstr "Seçili nesneler"
+
+#: venv/lib/python3.12/site-packages/unfold/admin.py:198
+#, fuzzy
+#| msgid "Selected objects"
+msgid "Select action"
+msgstr "Seçili nesneler"
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/constance/templates/admin/constance/change_list.html:44
+#: venv/lib/python3.12/site-packages/unfold/contrib/guardian/templates/admin/guardian/model/obj_perms_manage_group.html:24
+#: venv/lib/python3.12/site-packages/unfold/contrib/guardian/templates/admin/guardian/model/obj_perms_manage_user.html:25
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/pagination.html:19
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/submit_line.html:9
+msgid "Save"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/constance/templates/admin/constance/includes/results_list.html:10
+msgid "Collapse"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/constance/templates/admin/constance/includes/results_list.html:19
+msgid "Name"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/constance/templates/admin/constance/includes/results_list.html:20
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/forms.py:178
+msgid "Value"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/constance/templates/admin/constance/includes/results_list.html:21
+msgid "Default"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/constance/templates/admin/constance/includes/results_list.html:22
+#: venv/lib/python3.12/site-packages/unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:59
+msgid "Code"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/constance/templates/admin/constance/includes/results_list.html:65
+msgid "Reset to default"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/admin/choice_filters.py:22
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/admin/choice_filters.py:72
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/admin/choice_filters.py:85
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/admin/dropdown_filters.py:23
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/admin/mixins.py:47
+msgid "All"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/admin/choice_filters.py:42
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/admin/choice_filters.py:110
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/admin/choice_filters.py:138
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/admin/choice_filters.py:166
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/admin/dropdown_filters.py:39
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/admin/dropdown_filters.py:93
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/admin/dropdown_filters.py:142
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/admin/mixins.py:70
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/admin/mixins.py:171
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/admin/text_filters.py:28
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/admin/text_filters.py:57
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/templates/unfold/filters/filters_date_range.html:5
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/templates/unfold/filters/filters_datetime_range.html:5
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/templates/unfold/filters/filters_numeric_range.html:5
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/templates/unfold/filters/filters_numeric_single.html:5
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/templates/unfold/filters/filters_numeric_slider.html:7
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/filter.html:5
+#, python-format
+msgid " By %(filter_title)s "
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/forms.py:207
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/forms.py:252
+msgid "From"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/forms.py:218
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/forms.py:262
+msgid "To"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/forms.py:286
+msgid "Date from"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/forms.py:302
+msgid "Date to"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/filters/templates/unfold/filters/filters_numeric_slider.html:21
+msgid "Not enough data."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/forms/templates/unfold/forms/array.html:30
+msgid "Add new item"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:7
+msgid "Paragraph"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:11
+msgid "Underlined"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:15
+msgid "Bold"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:19
+msgid "Italic"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:23
+msgid "Strike"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:27
+#: venv/lib/python3.12/site-packages/unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:98
+msgid "Link"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:35
+#: venv/lib/python3.12/site-packages/unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:39
+#: venv/lib/python3.12/site-packages/unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:43
+#: venv/lib/python3.12/site-packages/unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:47
+msgid "Heading"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:55
+msgid "Quote"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:63
+msgid "Unordered list"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:67
+msgid "Ordered list"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:71
+msgid "Indent increase"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:75
+msgid "Indent decrease"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:83
+msgid "Undo"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:87
+msgid "Redo"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:95
+msgid "Enter an URL"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:102
+msgid "Unlink"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/guardian/templates/admin/guardian/model/change_form.html:8
+msgid "Object permissions"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/guardian/templates/admin/guardian/model/obj_perms_manage_group.html:13
+#: venv/lib/python3.12/site-packages/unfold/contrib/guardian/templates/admin/guardian/model/obj_perms_manage_user.html:14
+#: venv/lib/python3.12/site-packages/unfold/contrib/simple_history/templates/simple_history/object_history_list.html:9
+#: venv/lib/python3.12/site-packages/unfold/contrib/simple_history/templates/simple_history/object_history_list.html:43
+msgid "Object"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/guardian/templates/admin/guardian/model/obj_perms_manage_group.html:16
+#: venv/lib/python3.12/site-packages/unfold/contrib/guardian/templates/unfold/guardian/group_form.html:15
+msgid "Group"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/guardian/templates/admin/guardian/model/obj_perms_manage_user.html:17
+#: venv/lib/python3.12/site-packages/unfold/contrib/guardian/templates/unfold/guardian/group_form.html:33
+#: venv/lib/python3.12/site-packages/unfold/contrib/guardian/templates/unfold/guardian/user_form.html:15
+#: venv/lib/python3.12/site-packages/unfold/contrib/guardian/templates/unfold/guardian/user_form.html:33
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/object_history.html:14
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/object_history.html:30
+msgid "User"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/guardian/templates/unfold/guardian/group_form.html:7
+msgid "Group permissions"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/guardian/templates/unfold/guardian/group_form.html:25
+#: venv/lib/python3.12/site-packages/unfold/contrib/guardian/templates/unfold/guardian/group_form.html:49
+#: venv/lib/python3.12/site-packages/unfold/contrib/guardian/templates/unfold/guardian/user_form.html:25
+#: venv/lib/python3.12/site-packages/unfold/contrib/guardian/templates/unfold/guardian/user_form.html:49
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/object_history.html:18
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/object_history.html:34
+msgid "Action"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/guardian/templates/unfold/guardian/group_form.html:51
+#: venv/lib/python3.12/site-packages/unfold/contrib/guardian/templates/unfold/guardian/user_form.html:51
+msgid "Edit"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/guardian/templates/unfold/guardian/group_form.html:68
+msgid "Manage group"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/guardian/templates/unfold/guardian/user_form.html:7
+msgid "User permissions"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/guardian/templates/unfold/guardian/user_form.html:68
+msgid "Manage user"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/import_export/templates/admin/import_export/change_form.html:9
+#: venv/lib/python3.12/site-packages/unfold/contrib/import_export/templates/admin/import_export/change_list_export_item.html:4
+msgid "Export"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/import_export/templates/admin/import_export/change_list_import_item.html:4
+msgid "Import"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/import_export/templates/admin/import_export/export.html:18
+#, python-format
+msgid ""
+"\n"
+"                    Export %(len)s selected item.\n"
+"                "
+msgid_plural ""
+"\n"
+"                    Export %(len)s selected items.\n"
+"                "
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/import_export/templates/admin/import_export/export.html:36
+msgid "This exporter will export the following fields"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/import_export/templates/admin/import_export/import_confirm.html:10
+msgid ""
+"Below is a preview of data to be imported. If you are satisfied with the "
+"results, click 'Confirm import'"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/import_export/templates/admin/import_export/import_confirm.html:15
+#, fuzzy
+#| msgid "Confirm restore"
+msgid "Confirm import"
+msgstr "Geri yüklemeyi onayla"
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/import_export/templates/admin/import_export/import_errors.html:20
+msgid "Line number"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/import_export/templates/admin/import_export/import_preview.html:22
+msgid "New"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/import_export/templates/admin/import_export/import_preview.html:24
+msgid "Skipped"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/import_export/templates/admin/import_export/import_preview.html:28
+msgid "Update"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/import_export/templates/admin/import_export/import_validation.html:6
+msgid "Some rows failed to validate"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/import_export/templates/admin/import_export/import_validation.html:10
+msgid ""
+"Please correct these errors in your data where possible, then reupload it "
+"using the form above."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/import_export/templates/admin/import_export/import_validation.html:22
+#: venv/lib/python3.12/site-packages/unfold/contrib/import_export/templates/admin/import_export/import_validation.html:40
+msgid "Row"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/import_export/templates/admin/import_export/import_validation.html:26
+#: venv/lib/python3.12/site-packages/unfold/contrib/import_export/templates/admin/import_export/import_validation.html:44
+#, fuzzy
+#| msgid "Error Log"
+msgid "Errors"
+msgstr "Hata Günlüğü"
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/import_export/templates/admin/import_export/import_validation.html:70
+msgid "Non field specific"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/import_export/templates/admin/import_export/resource_fields_list.html:6
+msgid "This exporter will export the following fields: "
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/import_export/templates/admin/import_export/resource_fields_list.html:8
+msgid "This importer will import the following fields: "
+msgstr ""
+
+#. Translators: Model verbose name and instance representation,
+#. suitable to be an item in a list.
+#: venv/lib/python3.12/site-packages/unfold/contrib/inlines/admin.py:102
+#, python-format
+msgid "%(class_name)s %(instance)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/inlines/admin.py:114
+#, python-format
+msgid ""
+"Deleting %(class_name)s %(instance)s would require deleting the following "
+"protected related objects: %(related_objects)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/simple_history/templates/simple_history/object_history.html:7
+msgid ""
+"Choose a date from the list below to revert to a previous version of this "
+"object"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/simple_history/templates/simple_history/object_history.html:27
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/object_history.html:57
+msgid "entry"
+msgid_plural "entries"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/simple_history/templates/simple_history/object_history.html:30
+msgid "This object doesn't have a change history."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/simple_history/templates/simple_history/object_history_form.html:16
+msgid ""
+"Press the 'Revert' button below to revert to this version of the object."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/simple_history/templates/simple_history/object_history_form.html:20
+msgid "Press the 'Change History' button below to edit the history."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/simple_history/templates/simple_history/object_history_list.html:19
+#: venv/lib/python3.12/site-packages/unfold/contrib/simple_history/templates/simple_history/object_history_list.html:55
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/object_history.html:10
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/object_history.html:26
+msgid "Date/time"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/simple_history/templates/simple_history/object_history_list.html:23
+#: venv/lib/python3.12/site-packages/unfold/contrib/simple_history/templates/simple_history/object_history_list.html:59
+msgid "Comment"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/simple_history/templates/simple_history/object_history_list.html:27
+#: venv/lib/python3.12/site-packages/unfold/contrib/simple_history/templates/simple_history/object_history_list.html:63
+msgid "Changed by"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/simple_history/templates/simple_history/object_history_list.html:31
+#: venv/lib/python3.12/site-packages/unfold/contrib/simple_history/templates/simple_history/object_history_list.html:77
+msgid "Change reason"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/simple_history/templates/simple_history/object_history_list.html:35
+#: venv/lib/python3.12/site-packages/unfold/contrib/simple_history/templates/simple_history/object_history_list.html:81
+msgid "Changes"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/simple_history/templates/simple_history/submit_line.html:8
+msgid "Revert"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/contrib/simple_history/templates/simple_history/submit_line.html:14
+msgid "Change History"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/forms.py:72
+msgid "Select action to run"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/forms.py:133
+msgid ""
+"Raw passwords are not stored, so there is no way to see this user’s "
+"password, but you can change the password using <a href=\"{}\" class=\"text-"
+"primary-600 dark:text-primary-500\">this form</a>."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/mixins/base_model_admin.py:57
+#: venv/lib/python3.12/site-packages/unfold/mixins/base_model_admin.py:78
+msgid "Select value"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/mixins/dataset_model_admin.py:53
+msgid ""
+"Items must be selected in order to perform actions on them. No items have "
+"been changed."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/mixins/dataset_model_admin.py:66
+msgid "Dataset not found. No action performed."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/actions.html:23
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/dataset_actions.html:46
+#, fuzzy
+#| msgid "Restore selected"
+msgid "Run the selected action"
+msgstr "Seçilenleri geri yükle"
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/actions.html:24
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/dataset_actions.html:49
+msgid "Run"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/actions.html:44
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/dataset_actions.html:17
+msgid "Click here to select the objects across all pages"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/actions.html:45
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/dataset_actions.html:18
+#, python-format
+msgid "Select all %(total_count)s %(module_name)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/actions.html:51
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/dataset_actions.html:24
+msgid "Clear selection"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/app_list.html:12
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/app_list_default.html:9
+#, python-format
+msgid "Models in the %(name)s application"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/app_list.html:48
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/app_list.html:91
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/app_list_default.html:59
+msgid "You don’t have permission to view or edit anything."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/auth/user/add_form.html:5
+msgid "After you've created a user, you’ll be able to edit more user options."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/auth/user/change_password.html:20
+#, python-format
+msgid "Enter a new password for the user <strong>%(username)s</strong>."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/auth/user/change_password.html:30
+#: venv/lib/python3.12/site-packages/unfold/templates/registration/password_change_form.html:32
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/account_links.html:18
+#, fuzzy
+#| msgid "Show password"
+msgid "Change password"
+msgstr "Şifreyi göster"
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/change_form_object_tools.html:6
+msgid "History"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/change_form_object_tools.html:12
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/edit_inline/stacked.html:71
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/edit_inline/tabular_title.html:33
+msgid "View on site"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/change_list.html:65
+msgid "Filters"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/change_list_results.html:33
+msgid "Expand row"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/delete_confirmation.html:16
+#, python-format
+msgid ""
+"Deleting the %(object_name)s '%(escaped_object)s' would result in deleting "
+"related objects, but your account doesn't have permission to delete the "
+"following types of objects:"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/delete_confirmation.html:32
+#, python-format
+msgid ""
+"Deleting the %(object_name)s '%(escaped_object)s' would require deleting the "
+"following protected related objects:"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/delete_confirmation.html:48
+#, python-format
+msgid ""
+"Are you sure you want to delete the %(object_name)s \"%(escaped_object)s\"? "
+"All of the following related items will be deleted:"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/delete_confirmation.html:55
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/delete_selected_confirmation.html:49
+msgid "Objects"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/delete_selected_confirmation.html:15
+#, python-format
+msgid ""
+"Deleting the selected %(objects_name)s would result in deleting related "
+"objects, but your account doesn't have permission to delete the following "
+"types of objects:"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/delete_selected_confirmation.html:28
+#, python-format
+msgid ""
+"Deleting the selected %(objects_name)s would require deleting the following "
+"protected related objects:"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/delete_selected_confirmation.html:42
+#, python-format
+msgid ""
+"Are you sure you want to delete the selected %(objects_name)s? All of the "
+"following objects and their related items will be deleted:"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/edit_inline/stacked.html:59
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/app_list_default.html:38
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/edit_inline/tabular_title.html:25
+msgid "View"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/includes/object_delete_summary.html:5
+msgid "Summary"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/login.html:15
+msgid "Welcome back to"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/object_history.html:60
+msgid ""
+"This object doesn’t have a change history. It probably wasn’t added via this "
+"admin site."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/pagination.html:12
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/welcomemsg.html:25
+msgid "Show all"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/search_form.html:18
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/command.html:24
+msgid "Type to search"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/submit_line.html:28
+msgid "Save and continue editing"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/submit_line.html:30
+msgid "Save and view"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/submit_line.html:37
+msgid "Save and add another"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/admin/submit_line.html:43
+msgid "Save as new"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/registration/logged_out.html:14
+msgid "You have been successfully logged out from the administration"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/registration/logged_out.html:18
+msgid "Thanks for spending some quality time with the web site today."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/registration/logged_out.html:23
+#, fuzzy
+#| msgid "Log in"
+msgid "Log in again"
+msgstr "Giriş yap"
+
+#: venv/lib/python3.12/site-packages/unfold/templates/registration/password_change_done.html:8
+msgid "Your password was changed."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/registration/password_change_form.html:19
+msgid ""
+"Please enter your old password, for security’s sake, and then enter your new "
+"password twice so we can verify you typed it in correctly."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/components/table.html:93
+msgid "No data"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/account_links.html:5
+msgid "View site"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/account_links.html:28
+#, fuzzy
+#| msgid "Log In"
+msgid "Log out"
+msgstr "Giriş Yap"
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/actions_row.html:4
+msgid "More actions"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/add_link.html:5
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/add_link.html:8
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/empty_results.html:4
+#, python-format
+msgid "Add %(name)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/app_list_default.html:31
+msgid "Add"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/boolean.html:4
+msgid "True"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/boolean.html:4
+msgid "False"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/change_list_filter_actions.html:7
+msgid "Apply Filters"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/change_list_filter_actions.html:16
+msgid "Hide counts"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/change_list_filter_actions.html:20
+msgid "Show counts"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/change_list_filter_actions.html:27
+msgid "Clear all filters"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/change_list_headers.html:27
+msgid "Select all rows"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/change_list_headers.html:41
+msgid "Toggle sorting"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/change_list_headers.html:49
+msgid "Remove from sorting"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/change_list_headers.html:55
+#, python-format
+msgid "Sorting priority: %(priority_number)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/command_history.html:7
+msgid "Recent searches"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/command_history.html:49
+msgid "No recent searches"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/command_results.html:44
+msgid "No results matching your query"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/command_results.html:57
+msgid "Loading more results..."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/command_results.html:62
+#, python-format
+msgid ""
+"\n"
+"                Found %(counter)s result in %(time)s seconds\n"
+"            "
+msgid_plural ""
+"\n"
+"                Found %(counter)s results in %(time)s seconds\n"
+"            "
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/delete_submit_line.html:5
+msgid "No, take me back"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/delete_submit_line.html:9
+msgid "Yes, I’m sure"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/display_header.html:10
+msgid "Record picture"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/edit_inline/tabular_delete.html:4
+msgid "Remove"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/edit_inline/tabular_heading.html:21
+msgid "Delete?"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/empty_results.html:14
+msgid "No results found"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/empty_results.html:18
+msgid ""
+"This page yielded into no results. Create a new item or reset your filters."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/empty_results.html:32
+msgid "Reset filters"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/field_readonly_value_file.html:8
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/widgets/clearable_file_input.html:6
+msgid "Image preview"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/field_readonly_value_file.html:13
+msgid "Click to download"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/header_back_button.html:7
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/header_back_button.html:15
+msgid "Go back"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/history.html:9
+msgid "Recent actions"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/history.html:28
+msgid "Unknown content"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/messages/errornote.html:5
+msgid "Please correct the error below."
+msgid_plural "Please correct the errors below."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/search.html:10
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/search.html:40
+msgid "Search apps and models..."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/search.html:41
+msgid "Filter navigation items"
+msgstr ""
+
+# ── Django built-in admin strings ─────────────────────────────────────────────
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/site_branding.html:3
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/site_branding.html:6
+#, fuzzy
+#| msgid "Django site admin"
+msgid "Django administration"
+msgstr "Site Yönetimi"
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/tab_items.html:16
+msgid "General"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/theme_switch.html:9
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/theme_switch_dropdown.html:16
+msgid "Light"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/theme_switch.html:16
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/theme_switch_dropdown.html:23
+msgid "Dark"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/theme_switch.html:23
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/theme_switch_dropdown.html:30
+msgid "System"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/unauthenticated_header.html:6
+msgid "Return to site"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/welcomemsg.html:25
+#, python-format
+msgid "%(counter)s result"
+msgid_plural "%(counter)s results"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/helpers/welcomemsg.html:25
+#, python-format
+msgid "%(full_result_count)s total"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/widgets/clearable_file_input.html:25
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/widgets/clearable_file_input_small.html:18
+msgid "Choose file to upload"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/widgets/password_toggle.html:5
+msgid "Toggle password visibility"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/widgets/related_widget_wrapper.html:16
+#, python-format
+msgid "Change selected %(model)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/widgets/related_widget_wrapper.html:26
+#, python-format
+msgid "Add another %(model)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/widgets/related_widget_wrapper.html:35
+#, python-format
+msgid "View selected %(model)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold/widgets/related_widget_wrapper.html:45
+#, python-format
+msgid "Delete selected %(model)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/templates/unfold_crispy/layout/table_inline_formset.html:65
+#, fuzzy
+#| msgid "Add Property"
+msgid "Add row"
+msgstr "Mülk Ekle"
+
+#: venv/lib/python3.12/site-packages/unfold/templatetags/unfold_list.py:127
+msgid "Select all objects on this page for an action"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/widgets.py:586
+#: venv/lib/python3.12/site-packages/unfold/widgets.py:627
+msgid "Date"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/unfold/widgets.py:983
+msgid "Select currency"
+msgstr ""

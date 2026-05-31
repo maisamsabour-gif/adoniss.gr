@@ -1,0 +1,14 @@
+[Unit]
+Description=Adoniss (Persian site) daily full backup (DB + .env + media sync)
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/root/adonis_site
+ExecStart=/usr/bin/env bash /root/adonis_site/deploy/backup/daily_backup.sh
+# Keep backups from starving the box of IO/CPU.
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=6

@@ -1,0 +1,141 @@
+/* ============================================================================
+   ADONIS GROUP — Design Tokens  v1.0
+   Single source of truth for all brand colors, typography, spacing.
+
+   USAGE RULES:
+   1. Every CSS file in this project MUST import this file (via <link> in <head>
+      before any other stylesheet) or reference these vars with fallbacks.
+   2. Never write hex / rgb directly in any new CSS.
+      Always use var(--color-*) semantic names.
+   3. If you need a new color, add the primitive to the PRIMITIVES section,
+      then add a semantic mapping — never add raw hex in component CSS.
+   4. Gold (#C9A961) is reserved for ≤5 % of any page surface:
+      logo mark, price highlights, CTA accent. Nowhere else.
+
+   Load order in <head>:
+     1. tokens.css          ← this file
+     2. style.css / home.css / page-specific CSS
+   ============================================================================ */
+
+/* ── 1. Primitive color ramp ─────────────────────────────────────────────── */
+:root {
+  /* Navy family */
+  --adonis-navy-900: #0B1B33;     /* darkest — hero/footer bg */
+  --adonis-navy-700: #1A2B4A;     /* medium — card bg, hover states */
+  --adonis-navy-500: #2C4570;     /* lighter — borders, dividers */
+
+  /* Royal blue (interactive accent) */
+  --adonis-blue-600: #1E5AA8;     /* links, active states, CTA */
+  --adonis-blue-300: #5B9BD5;     /* hover tint on dark surfaces */
+  --adonis-blue-100: #EAF2FF;     /* soft tint backgrounds */
+
+  /* Neutrals */
+  --adonis-white:    #FFFFFF;
+  --adonis-gray-50:  #F5F7FA;     /* section alternating bg */
+  --adonis-gray-200: #E2E6ED;     /* borders, form inputs */
+  --adonis-gray-500: #8A93A6;     /* secondary text, placeholder */
+  --adonis-gray-800: #2D3340;     /* primary text on white */
+
+  /* Status */
+  --adonis-success:  #22C55E;
+  --adonis-error:    #EF4444;
+  --adonis-whatsapp: #25D366;
+
+  /* Gold — premium accent only (≤ 5 % surface) */
+  --adonis-gold:     #C9A961;
+  --adonis-gold-light: #E4C97A;
+}
+
+/* ── 2. Semantic mappings (use THESE in all component CSS) ───────────────── */
+:root {
+  /* Backgrounds */
+  --color-bg:            var(--adonis-white);
+  --color-bg-alt:        var(--adonis-gray-50);
+  --color-bg-dark:       var(--adonis-navy-900);
+  --color-bg-card:       var(--adonis-white);
+  --color-bg-card-hover: var(--adonis-blue-100);
+
+  /* Text */
+  --color-text:          var(--adonis-gray-800);   /* body text on white */
+  --color-text-muted:    var(--adonis-gray-500);   /* secondary / meta */
+  --color-text-invert:   var(--adonis-white);      /* text on dark bg */
+  --color-text-heading:  var(--adonis-navy-900);   /* headings on white */
+
+  /* Borders & dividers */
+  --color-border:        var(--adonis-gray-200);
+  --color-border-dark:   rgba(255, 255, 255, 0.10);
+
+  /* Brand primary (navy) */
+  --color-primary:       var(--adonis-navy-900);
+  --color-primary-hover: var(--adonis-navy-700);
+  --color-primary-active:var(--adonis-navy-500);
+
+  /* Interactive (royal blue) */
+  --color-interactive:       var(--adonis-blue-600);
+  --color-interactive-hover: var(--adonis-blue-300);
+  --color-interactive-soft:  var(--adonis-blue-100);
+
+  /* Special */
+  --color-gold:          var(--adonis-gold);
+  --color-success:       var(--adonis-success);
+  --color-error:         var(--adonis-error);
+  --color-whatsapp:      var(--adonis-whatsapp);
+}
+
+/* ── 3. Navbar / Header tokens ───────────────────────────────────────────── */
+:root {
+  --nav-bg:            rgba(11, 27, 51, 0.65);
+  --nav-bg-scrolled:   rgba(11, 27, 51, 0.96);
+  --nav-border:        rgba(255, 255, 255, 0.07);
+  --nav-border-scrolled:rgba(30, 90, 168, 0.20);
+  --nav-link-color:    rgba(255, 255, 255, 0.80);
+  --nav-link-hover-bg: rgba(30, 90, 168, 0.18);
+  --nav-link-active-border: #FFFFFF;
+
+  /* Dropdown / submenu */
+  --dropdown-bg:     var(--adonis-white);
+  --dropdown-text:   var(--adonis-gray-800);
+  --dropdown-hover-bg: var(--adonis-gray-50);
+  --dropdown-hover-text: var(--adonis-navy-900);
+  --dropdown-border: var(--adonis-gray-200);
+  --dropdown-shadow: 0 8px 24px rgba(11, 27, 51, 0.12);
+}
+
+/* ── 4. Button tokens ────────────────────────────────────────────────────── */
+:root {
+  /* .btn-primary — navy bg, white text */
+  --btn-primary-bg:    var(--adonis-navy-900);
+  --btn-primary-text:  var(--adonis-white);
+  --btn-primary-hover: var(--adonis-navy-700);
+
+  /* .btn-outline — transparent, navy border */
+  --btn-outline-bg:    transparent;
+  --btn-outline-border:var(--adonis-navy-900);
+  --btn-outline-text:  var(--adonis-navy-900);
+  --btn-outline-hover-bg:   var(--adonis-navy-900);
+  --btn-outline-hover-text: var(--adonis-white);
+
+  /* .btn-ghost — light on dark surfaces */
+  --btn-ghost-bg:    rgba(255, 255, 255, 0.08);
+  --btn-ghost-border:rgba(255, 255, 255, 0.18);
+  --btn-ghost-text:  var(--adonis-white);
+  --btn-ghost-hover-bg: rgba(255, 255, 255, 0.14);
+}
+
+/* ── 5. Form tokens ──────────────────────────────────────────────────────── */
+:root {
+  --input-bg:           var(--adonis-white);
+  --input-border:       var(--adonis-gray-200);
+  --input-border-focus: var(--adonis-blue-600);
+  --input-text:         var(--adonis-gray-800);
+  --input-placeholder:  var(--adonis-gray-500);
+  --input-shadow-focus: 0 0 0 3px rgba(30, 90, 168, 0.14);
+}
+
+/* ── 6. Global shadows (navy-tinted, replace rgba(0,0,0,...)) ────────────── */
+:root {
+  --shadow-sm: 0 1px 4px rgba(11, 27, 51, 0.08);
+  --shadow-md: 0 4px 16px rgba(11, 27, 51, 0.12);
+  --shadow-lg: 0 10px 40px rgba(11, 27, 51, 0.16);
+  --shadow-xl: 0 20px 60px rgba(11, 27, 51, 0.20);
+}

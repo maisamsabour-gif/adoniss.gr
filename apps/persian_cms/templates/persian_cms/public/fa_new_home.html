@@ -1,0 +1,101 @@
+{% extends "persian_cms/public/base.html" %}
+
+{% block content %}
+<main class="adonis-fa-new-main" id="adonis-fa-new-main">
+    <header class="adonis-fa-new-header">
+        <div class="adonis-fa-new-header-inner">
+            <a class="adonis-fa-new-logo" href="/fa-new/">
+                <span class="adonis-fa-new-logo-mark">A</span>
+                <span class="adonis-fa-new-logo-word">
+                    <span class="adonis-fa-new-logo-word-en">ADONIS</span>
+                    <span class="adonis-fa-new-logo-word-fa">آدونیس</span>
+                </span>
+            </a>
+            <nav class="adonis-fa-new-nav" aria-label="منوی اصلی">
+                <ul class="adonis-fa-new-nav-list">
+                    {% for item in nav_items %}
+                        {% if not item.parent_id %}
+                        <li><a href="{{ item.url }}"{% if item.open_in_new_tab %} target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a></li>
+                        {% endif %}
+                    {% empty %}
+                        <li><a href="/fa-new/">خانه</a></li>
+                        <li><a href="/fa-new/blog/">بلاگ</a></li>
+                        <li><a href="/fa-new/contact/">تماس</a></li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="adonis-fa-new-section adonis-fa-new-why-adonis">
+        <div class="adonis-fa-new-container">
+            <span class="adonis-fa-new-eyebrow">ADONIS Persian CMS</span>
+            <h1 class="adonis-fa-new-section-title">{{ page.title|default:"صفحه اصلی فارسی" }}</h1>
+            <p class="adonis-fa-new-section-lead">
+                {% if page and page.body %}
+                    {{ page.body }}
+                {% else %}
+                    این صفحه اکنون از سیستم مدیریت محتوای مستقل فارسی خوانده می‌شود.
+                {% endif %}
+            </p>
+            {% if cta_items %}
+            <div class="hero-cta-buttons" style="margin-top:24px">
+                {% for item in cta_items %}
+                <a href="{{ item.url }}" class="btn-primary">{{ item.label }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    {% for section in sections %}
+    <section class="adonis-fa-new-section {{ section.section_type }}" id="{{ section.anchor_id|default:'fa-section' }}">
+        <div class="adonis-fa-new-container">
+            {% if section.title %}<h2 class="adonis-fa-new-section-title">{{ section.title }}</h2>{% endif %}
+            {% if section.subtitle %}<p class="adonis-fa-new-section-lead">{{ section.subtitle }}</p>{% endif %}
+            {% if section.body %}<p>{{ section.body }}</p>{% endif %}
+            {% if section.cta_label and section.cta_url %}
+            <a class="adonis-fa-new-btn adonis-fa-new-btn--gold" href="{{ section.cta_url }}">{{ section.cta_label }}</a>
+            {% endif %}
+        </div>
+    </section>
+    {% endfor %}
+
+    {% if faq_items %}
+    <section class="adonis-fa-new-section adonis-fa-new-trust">
+        <div class="adonis-fa-new-container">
+            <h2 class="adonis-fa-new-section-title">سوالات متداول</h2>
+            {% for faq in faq_items %}
+            <article style="margin-bottom:16px;">
+                <h3>{{ faq.question }}</h3>
+                <p>{{ faq.answer }}</p>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <footer class="adonis-fa-new-footer">
+        <div class="adonis-fa-new-container adonis-fa-new-footer-grid">
+            <div class="adonis-fa-new-footer-brand">
+                <span class="adonis-fa-new-footer-brand-text">
+                    <strong>{{ footer.brand_name|default:"آدونیس | ADONIS" }}</strong>
+                    <small>{{ footer.brand_tagline }}</small>
+                </span>
+            </div>
+            <div>
+                <h4 class="adonis-fa-new-footer-title">{{ footer.contact_title|default:"تماس" }}</h4>
+                <ul class="adonis-fa-new-footer-list">
+                    {% if footer.address %}<li>{{ footer.address }}</li>{% endif %}
+                    {% if footer.phone %}<li dir="ltr">{{ footer.phone }}</li>{% endif %}
+                    {% if footer.email %}<li dir="ltr">{{ footer.email }}</li>{% endif %}
+                    {% if footer.whatsapp_url %}<li><a href="{{ footer.whatsapp_url }}">واتس‌اپ</a></li>{% endif %}
+                </ul>
+            </div>
+        </div>
+        <div class="adonis-fa-new-footer-bottom">
+            <span>{{ footer.copyright_text|default:"© آدونیس گروپ — همه حقوق محفوظ است." }}</span>
+        </div>
+    </footer>
+</main>
+{% endblock %}

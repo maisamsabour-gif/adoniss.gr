@@ -1,0 +1,291 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block title %}Live Chat — {{ session.session_key|slice:":12" }}{% endblock %}
+
+{% block extrahead %}
+<style>
+:root {
+  --lc-gold:   #c9a84c;
+  --lc-navy:   #0f1e35;
+  --lc-mid:    #1a2f4a;
+  --lc-text:   #e8edf4;
+  --lc-muted:  #8fa3bb;
+  --lc-user:   rgba(201,168,76,.12);
+  --lc-bot:    rgba(255,255,255,.06);
+  --lc-agent:  rgba(34,197,94,.1);
+  --lc-border: rgba(255,255,255,.08);
+  --lc-radius: 14px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+.lc-wrap { display: flex; flex-direction: column; height: calc(100vh - 80px); padding: 20px 28px; gap: 16px; font-family: "Inter", sans-serif; }
+.lc-top { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.lc-top h2 { font-size: 1.1rem; font-weight: 700; color: var(--lc-text); margin: 0; flex: 1; }
+.lc-phase {
+  font-size: .7rem; font-weight: 700; letter-spacing: .07em;
+  text-transform: uppercase; padding: 3px 10px; border-radius: 999px;
+}
+.lc-phase--pending_agent { background: rgba(251,191,36,.15); color: #fbbf24; border: 1px solid rgba(251,191,36,.3); }
+.lc-phase--human         { background: rgba(34,197,94,.15);  color: #22c55e;  border: 1px solid rgba(34,197,94,.3); }
+.lc-phase--closed        { background: rgba(148,163,184,.1); color: #94a3b8;  border: 1px solid rgba(148,163,184,.2); }
+.lc-phase--bot           { background: rgba(99,179,237,.1);  color: #63b3ed;  border: 1px solid rgba(99,179,237,.2); }
+.lc-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 16px; border-radius: 999px; border: 0; cursor: pointer;
+  font-size: .82rem; font-weight: 600; text-decoration: none; transition: opacity .2s, transform .15s;
+}
+.lc-btn:hover { opacity: .85; transform: translateY(-1px); }
+.lc-btn--gold   { background: var(--lc-gold); color: var(--lc-navy); }
+.lc-btn--red    { background: rgba(239,68,68,.2); color: #f87171; border: 1px solid rgba(239,68,68,.3); }
+.lc-btn--back   { background: transparent; color: var(--lc-muted); border: 1px solid var(--lc-border); }
+.lc-page-url { font-size: .78rem; color: var(--lc-muted); word-break: break-all; }
+
+/* Transcript */
+.lc-transcript {
+  flex: 1; overflow-y: auto;
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--lc-border);
+  border-radius: var(--lc-radius);
+  padding: 20px 18px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.lc-msg { display: flex; gap: 10px; max-width: 78%; }
+.lc-msg--user  { align-self: flex-end; flex-direction: row-reverse; }
+.lc-msg--bot   { align-self: flex-start; }
+.lc-msg--agent { align-self: flex-start; }
+.lc-msg__avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .9rem; flex-shrink: 0;
+}
+.lc-msg--user  .lc-msg__avatar { background: rgba(201,168,76,.2); color: var(--lc-gold); }
+.lc-msg--bot   .lc-msg__avatar { background: rgba(99,179,237,.15); color: #63b3ed; }
+.lc-msg--agent .lc-msg__avatar { background: rgba(34,197,94,.15); color: #22c55e; }
+.lc-msg__body { display: flex; flex-direction: column; gap: 3px; }
+.lc-msg__label { font-size: .68rem; color: var(--lc-muted); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.lc-msg--user .lc-msg__label { text-align: right; }
+.lc-msg__bubble {
+  padding: 10px 14px; border-radius: 12px;
+  font-size: .88rem; line-height: 1.6; color: var(--lc-text);
+}
+.lc-msg--user  .lc-msg__bubble { background: var(--lc-user); border-radius: 12px 4px 12px 12px; }
+.lc-msg--bot   .lc-msg__bubble { background: var(--lc-bot);  border-radius: 4px 12px 12px 12px; }
+.lc-msg--agent .lc-msg__bubble { background: var(--lc-agent); border-radius: 4px 12px 12px 12px; border-left: 2px solid #22c55e; }
+.lc-msg__time { font-size: .65rem; color: var(--lc-muted); }
+.lc-msg--user .lc-msg__time { text-align: right; }
+.lc-system {
+  align-self: center; font-size: .72rem; color: var(--lc-muted);
+  background: rgba(255,255,255,.04); border-radius: 999px;
+  padding: 3px 14px; border: 1px solid var(--lc-border);
+}
+
+/* Reply area */
+.lc-reply-area {
+  display: flex; gap: 10px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--lc-border);
+  border-radius: var(--lc-radius);
+  padding: 12px 14px;
+}
+.lc-reply-area textarea {
+  flex: 1; background: transparent; border: 0; outline: 0; resize: none;
+  color: var(--lc-text); font-size: .9rem; line-height: 1.5; min-height: 44px; max-height: 140px;
+  font-family: inherit;
+}
+.lc-reply-area textarea::placeholder { color: var(--lc-muted); }
+.lc-reply-send {
+  align-self: flex-end; width: 40px; height: 40px; border-radius: 50%;
+  background: var(--lc-gold); color: var(--lc-navy); border: 0; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; font-size: 1rem;
+  transition: opacity .2s, transform .15s; flex-shrink: 0;
+}
+.lc-reply-send:hover { opacity: .85; transform: scale(1.06); }
+.lc-closed-notice { text-align: center; color: var(--lc-muted); font-size: .88rem; padding: 10px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="lc-wrap">
+
+  <!-- Header -->
+  <div class="lc-top">
+    <a href="{% url 'agent_chat_inbox' %}" class="lc-btn lc-btn--back">
+      <i class="fas fa-arrow-left"></i> Inbox
+    </a>
+    <h2><i class="fas fa-comment-dots" style="color:var(--lc-gold)"></i> &nbsp;Session <code>{{ session.session_key|slice:":12" }}…</code></h2>
+    <span class="lc-phase lc-phase--{{ session.phase }}" id="phaseLabel">
+      {% if session.phase == 'pending_agent' %}⏳ Waiting for Agent
+      {% elif session.phase == 'human' %}🟢 Live — {{ session.agent.get_full_name|default:session.agent.username }}
+      {% elif session.phase == 'closed' %}Closed
+      {% else %}Bot{% endif %}
+    </span>
+
+    {% if session.phase == phase_wait %}
+    <button class="lc-btn lc-btn--gold" id="takeoverBtn" onclick="doTakeover()">
+      <i class="fas fa-user-tie"></i> Take Over
+    </button>
+    {% endif %}
+
+    {% if session.phase != 'closed' %}
+    <button class="lc-btn lc-btn--red" onclick="doClose()">
+      <i class="fas fa-times"></i> Close Chat
+    </button>
+    {% endif %}
+  </div>
+
+  <div class="lc-page-url"><i class="fas fa-globe" style="opacity:.5"></i> {{ session.page_url|default:"—" }}</div>
+
+  <!-- Transcript -->
+  <div class="lc-transcript" id="transcript">
+    {% for m in msgs %}
+      {% if m.role == 'user' %}
+        <div class="lc-msg lc-msg--user">
+          <div class="lc-msg__avatar"><i class="fas fa-user"></i></div>
+          <div class="lc-msg__body">
+            <div class="lc-msg__label">Visitor</div>
+            <div class="lc-msg__bubble">{{ m.content }}</div>
+            <div class="lc-msg__time">{{ m.created_at|date:"H:i" }}</div>
+          </div>
+        </div>
+      {% elif m.role == 'bot' %}
+        <div class="lc-msg lc-msg--bot">
+          <div class="lc-msg__avatar"><i class="fas fa-headset"></i></div>
+          <div class="lc-msg__body">
+            <div class="lc-msg__label">AI Bot</div>
+            <div class="lc-msg__bubble">{{ m.content }}</div>
+            <div class="lc-msg__time">{{ m.created_at|date:"H:i" }}</div>
+          </div>
+        </div>
+      {% elif m.role == 'agent' %}
+        <div class="lc-msg lc-msg--agent" id="msg-{{ m.id }}">
+          <div class="lc-msg__avatar"><i class="fas fa-user-tie"></i></div>
+          <div class="lc-msg__body">
+            <div class="lc-msg__label">{{ session.agent.get_full_name|default:session.agent.username|default:"Agent" }}</div>
+            <div class="lc-msg__bubble">{{ m.content }}</div>
+            <div class="lc-msg__time">{{ m.created_at|date:"H:i" }}</div>
+          </div>
+        </div>
+      {% endif %}
+    {% empty %}
+      <div class="lc-system">No messages yet</div>
+    {% endfor %}
+  </div>
+
+  <!-- Reply box -->
+  {% if session.phase != 'closed' %}
+  <div class="lc-reply-area">
+    <textarea id="replyInput" placeholder="Type your reply… (Enter to send)" rows="2"></textarea>
+    <button class="lc-reply-send" onclick="sendReply()" title="Send">
+      <i class="fas fa-paper-plane"></i>
+    </button>
+  </div>
+  {% else %}
+  <div class="lc-closed-notice">This session is closed.</div>
+  {% endif %}
+
+</div>
+
+<script>
+var SESSION_KEY = '{{ session.session_key|escapejs }}';
+var PHASE       = '{{ session.phase|escapejs }}';
+var lastMsgId   = {% if msgs %}{{ msgs.last.id }}{% else %}0{% endif %};
+var agentName   = '{{ request.user.get_full_name|default:request.user.username|escapejs }}';
+
+// Scroll transcript to bottom
+var transcript = document.getElementById('transcript');
+if (transcript) transcript.scrollTop = transcript.scrollHeight;
+
+// Enter key sends
+var replyInput = document.getElementById('replyInput');
+if (replyInput) {
+    replyInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendReply(); }
+    });
+}
+
+function getCookie(name) {
+    var m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+    return m ? decodeURIComponent(m[1]) : null;
+}
+
+function post(url, body) {
+    return fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+        body: JSON.stringify(body),
+    }).then(function (r) { return r.json(); });
+}
+
+function appendMsgDOM(m) {
+    var div = document.createElement('div');
+    div.className = 'lc-msg lc-msg--' + m.role;
+    div.id = 'msg-' + m.id;
+    var icon = m.role === 'user' ? 'fa-user' : m.role === 'agent' ? 'fa-user-tie' : 'fa-headset';
+    var label = m.role === 'user' ? 'Visitor' : m.role === 'agent' ? agentName : 'AI Bot';
+    div.innerHTML =
+        '<div class="lc-msg__avatar"><i class="fas ' + icon + '"></i></div>' +
+        '<div class="lc-msg__body">' +
+            '<div class="lc-msg__label">' + label + '</div>' +
+            '<div class="lc-msg__bubble">' + m.content + '</div>' +
+            '<div class="lc-msg__time">just now</div>' +
+        '</div>';
+    transcript.appendChild(div);
+    transcript.scrollTop = transcript.scrollHeight;
+}
+
+function sendReply() {
+    var text = replyInput.value.trim();
+    if (!text) return;
+    replyInput.value = '';
+    post('/staff/chat/' + SESSION_KEY + '/send/', { content: text })
+        .then(function (data) {
+            if (data.id) {
+                appendMsgDOM({ id: data.id, role: 'agent', content: data.content });
+                lastMsgId = data.id;
+            }
+        });
+}
+
+function doTakeover() {
+    post('/staff/chat/' + SESSION_KEY + '/takeover/', {})
+        .then(function (data) {
+            if (data.ok) {
+                PHASE = 'human';
+                document.getElementById('phaseLabel').textContent = '🟢 Live — ' + data.agent_name;
+                document.getElementById('phaseLabel').className = 'lc-phase lc-phase--human';
+                var btn = document.getElementById('takeoverBtn');
+                if (btn) btn.remove();
+                var sysEl = document.createElement('div');
+                sysEl.className = 'lc-system';
+                sysEl.textContent = 'You have taken over this conversation.';
+                transcript.appendChild(sysEl);
+                transcript.scrollTop = transcript.scrollHeight;
+            }
+        });
+}
+
+function doClose() {
+    if (!confirm('Close this chat session?')) return;
+    post('/staff/chat/' + SESSION_KEY + '/close/', {})
+        .then(function (data) {
+            if (data.ok) location.reload();
+        });
+}
+
+// Poll for new user messages every 4 s
+setInterval(function () {
+    if (PHASE === 'closed') return;
+    fetch('/staff/chat/' + SESSION_KEY + '/poll/?last_id=' + lastMsgId)
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            (data.messages || []).forEach(function (m) {
+                if (m.id > lastMsgId) {
+                    lastMsgId = m.id;
+                    appendMsgDOM(m);
+                }
+            });
+            if (data.phase === 'closed') { PHASE = 'closed'; }
+        }).catch(function () {});
+}, 4000);
+</script>
+{% endblock %}

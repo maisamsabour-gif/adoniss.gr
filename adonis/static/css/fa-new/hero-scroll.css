@@ -1,0 +1,327 @@
+/* ADONIS — /fa-new/ Cinematic Scroll Hero */
+
+/* ── Fix 1: overflow-x:hidden on <body> kills position:sticky on .hero-pin-stage.
+   overflow-x:clip is visually identical but does NOT create a scroll container,
+   so sticky children work correctly. ───────────────────────────────────────── */
+.adonis-fa-new-body {
+    overflow-x: clip !important;
+}
+.adonis-fa-new-main {
+    overflow-x: visible !important;
+}
+
+/* ── Fix 2: ensure no space above hero from body/main/header ───────────────── */
+.adonis-fa-new-body {
+    padding-top: 0 !important;
+    margin-top:  0 !important;
+}
+
+.adonis-fa-new-body main,
+.adonis-fa-new-main {
+    padding-top: 0 !important;
+    margin-top:  0 !important;
+}
+
+/* ── Fix 3: override all home.css rules that break the cinematic layout ──────
+   - overflow:hidden  → kills sticky on hero-pin-stage
+   - display:flex     → can mis-size a sticky child
+   - isolation:isolate→ creates stacking context noise
+   - padding          → adds unwanted offset inside the runway          */
+.adonis-fa-new-hero {
+    height: 450vh !important;
+    min-height: unset !important;
+    position: relative !important;
+    margin-top:  0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    overflow: visible !important;
+    display: block !important;
+    align-items: unset !important;
+    isolation: auto !important;
+    background: transparent !important;
+}
+
+/* Tablet — shorter runway so scroll feels brisk */
+@media (max-width: 1024px) {
+    .adonis-fa-new-hero { height: 360vh !important; }
+}
+
+/* Mobile — even shorter to avoid endless scroll */
+@media (max-width: 768px) {
+    .adonis-fa-new-hero { height: 320vh !important; }
+}
+
+/* Very small phones */
+@media (max-width: 480px) {
+    .adonis-fa-new-hero { height: 300vh !important; }
+}
+
+.hero-pin-stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    width: 100%;
+    overflow: hidden;
+    background: #060814;
+}
+
+.adonis-fa-new-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100svh;
+    object-fit: cover;
+    object-position: center center;
+    will-change: transform;
+}
+
+.hero-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(7, 21, 39, 0.28) 0%,
+        rgba(11, 31, 58, 0.50) 60%,
+        rgba(7, 21, 39, 0.72) 100%
+    );
+    z-index: 1;
+}
+
+/* ── Scenes ─────────────────────────────────────────────────────────── */
+.hero-scene {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+    pointer-events: none;
+    direction: rtl;
+}
+
+.hero-scene.is-active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.hero-eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: rgba(234, 242, 255, 0.80);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    font-family: "Vazirmatn", system-ui, sans-serif;
+}
+
+.hero-scene h1,
+.hero-scene h2 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: #fff;
+    font-weight: 700;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.8);
+    margin-bottom: 1rem;
+    line-height: 1.3;
+    font-family: "Vazirmatn", system-ui, sans-serif;
+}
+
+.hero-sub {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    color: rgba(255,255,255,0.8);
+    text-shadow: 0 1px 8px rgba(0,0,0,0.6);
+    max-width: 600px;
+    font-family: "Vazirmatn", system-ui, sans-serif;
+}
+
+/* Restore spacing between CKEditor-generated <p> tags inside hero subtitles.
+   The global body rule sets p { margin: 0 } which collapses multi-paragraph text. */
+.hero-sub p {
+    margin: 0;
+    line-height: 1.7;
+}
+.hero-sub p + p {
+    margin-top: 0.55em;
+}
+/* Plain-text fallback: honour newlines for any non-HTML content */
+.hero-sub:not(:has(p)) {
+    white-space: pre-line;
+}
+
+.hero-cta-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9rem 1.8rem;
+    background: #D4AF37;
+    color: #0B1F3A;
+    font-weight: 700;
+    font-size: 1rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-family: "Vazirmatn", system-ui, sans-serif;
+    border: 1px solid transparent;
+    box-shadow: 0 8px 28px rgba(212, 175, 55, 0.30);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.2s;
+}
+
+.btn-primary:hover {
+    background: #B8960C;
+    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow: 0 14px 36px rgba(212, 175, 55, 0.40);
+}
+
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9rem 1.8rem;
+    background: transparent;
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    text-decoration: none;
+    font-family: "Vazirmatn", system-ui, sans-serif;
+    transition: border-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+}
+
+.btn-secondary:hover {
+    border-color: rgba(30, 90, 168, 0.60);
+    color: #EAF2FF;
+    background: rgba(30, 90, 168, 0.12);
+    transform: translateY(-2px);
+}
+
+/* ── Scroll hint ─────────────────────────────────────────────────────── */
+.hero-scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.75rem;
+    font-family: "Vazirmatn", system-ui, sans-serif;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+.hero-scroll-line {
+    width: 1px;
+    height: 48px;
+    background: rgba(30, 90, 168, 0.60);
+    animation: scrollPulse 1.5s ease-in-out infinite;
+    display: block;
+}
+
+@keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
+    50%       { opacity: 1;   transform: scaleY(1);   }
+}
+
+/* ── Mobile scene refinements ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .hero-scene {
+        padding: 1.25rem 1.1rem;
+        padding-bottom: clamp(4rem, 16vh, 6rem);
+    }
+    .hero-scene h1,
+    .hero-scene h2 {
+        font-size: clamp(1.6rem, 7.5vw, 2.4rem);
+        line-height: 1.35;
+        margin-bottom: 0.85rem;
+        text-shadow: 0 2px 14px rgba(0,0,0,0.85);
+    }
+    .hero-sub {
+        font-size: clamp(0.92rem, 4vw, 1.05rem);
+        line-height: 1.85;
+        max-width: 92vw;
+    }
+    .hero-eyebrow {
+        font-size: 0.68rem;
+        letter-spacing: 0.16em;
+        margin-bottom: 0.6rem;
+    }
+    .hero-cta-buttons {
+        flex-direction: column;
+        width: 100%;
+        max-width: 320px;
+        margin: 1.4rem auto 0;
+        gap: 0.7rem;
+    }
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+        padding: 0.95rem 1.2rem;
+        font-size: 0.98rem;
+        min-height: 48px;
+    }
+    .hero-scroll-hint {
+        bottom: 1rem;
+        font-size: 0.68rem;
+        gap: 0.35rem;
+    }
+    .hero-scroll-line { height: 32px; }
+}
+
+@media (max-width: 420px) {
+    .hero-scene h1,
+    .hero-scene h2 { font-size: clamp(1.45rem, 8vw, 2rem); }
+    .hero-scene { padding-bottom: clamp(3.5rem, 14vh, 5.5rem); }
+}
+
+/* iOS Safari notch / home-indicator safe area */
+@supports (padding: max(0px)) {
+    .hero-scroll-hint {
+        bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+}
+
+/* ── Reduced-motion fallback ─────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    .adonis-fa-new-hero {
+        height: auto !important;
+        min-height: 100vh !important;
+        min-height: 100svh !important;
+    }
+    .hero-pin-stage {
+        position: relative;
+        height: auto;
+        min-height: 100vh;
+        min-height: 100svh;
+    }
+    .adonis-fa-new-video { display: none; }
+    .hero-scene {
+        opacity: 0;
+        transition: none;
+    }
+    .hero-scene:first-of-type {
+        opacity: 1;
+        transform: none;
+    }
+    .hero-scroll-hint { display: none; }
+}

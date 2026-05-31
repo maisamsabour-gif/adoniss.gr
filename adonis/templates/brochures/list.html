@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Brochures & Catalogues" %} | {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+<section class="bl-hero">
+    <div class="bl-hero-bg"></div>
+    <div class="container">
+        <div class="bl-hero-content" data-aos="fade-up">
+            <span class="section-badge"><i class="fas fa-book-open"></i> {% trans "Digital Brochures" %}</span>
+            <h1 class="bl-hero-title">{% trans "Brochures & Catalogues" %}</h1>
+            <p class="bl-hero-sub">{% trans "Browse our interactive brochures. Click any cover to open the flipbook reader." %}</p>
+        </div>
+    </div>
+</section>
+
+<!-- Brochure Grid -->
+<section class="section bl-section">
+    <div class="container">
+        {% if brochures %}
+        <div class="bl-grid">
+            {% for b in brochures %}
+            <a class="bl-card" href="{{ b.get_absolute_url }}" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                <div class="bl-card-cover">
+                    {% if b.cover_image %}
+                    <img src="{{ b.cover_image.url }}" alt="{{ b.title }}" loading="lazy" decoding="async">
+                    {% else %}
+                    <div class="bl-card-cover-placeholder">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    {% endif %}
+                    <div class="bl-card-overlay">
+                        <span class="bl-card-open-btn">
+                            <i class="fas fa-book-open"></i> {% trans "Open Flipbook" %}
+                        </span>
+                    </div>
+                    <div class="bl-card-pages-badge">{{ b.page_count }} {% trans "pages" %}</div>
+                </div>
+                <div class="bl-card-body">
+                    <h3 class="bl-card-title">{{ b.title }}</h3>
+                    <p class="bl-card-meta">
+                        <i class="fas fa-calendar-alt"></i> {{ b.created_at|date:"M Y" }}
+                        &nbsp;·&nbsp;
+                        <i class="fas fa-file-pdf"></i> PDF
+                    </p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="bl-empty" data-aos="fade-up">
+            <i class="fas fa-book"></i>
+            <h3>{% trans "No brochures available yet" %}</h3>
+            <p>{% trans "Check back soon — our latest catalogues will appear here." %}</p>
+            <a href="/" class="btn btn-gold"><i class="fas fa-home"></i> {% trans "Back to Home" %}</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ── Brochure List Page ──────────────────────────────── */
+.bl-hero {
+    position: relative;
+    padding: 6rem 0 4rem;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0a1628 0%, #0d2847 100%);
+}
+.bl-hero-bg {
+    position: absolute; inset: 0;
+    background-image:
+        radial-gradient(circle at 20% 60%, rgba(201,162,39,.12) 0%, transparent 50%),
+        radial-gradient(circle at 80% 30%, rgba(13,94,175,.15) 0%, transparent 50%);
+}
+.bl-hero-content { position: relative; z-index: 2; text-align: center; }
+.bl-hero-title {
+    font-size: clamp(2rem,5vw,3.25rem);
+    font-weight: 800;
+    color: #fff;
+    margin: 1rem 0 .75rem;
+}
+.bl-hero-sub { color: rgba(255,255,255,.7); font-size: 1.05rem; }
+
+.bl-section { padding: 5rem 0; background: #f4f6fa; }
+
+/* Grid */
+.bl-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 2rem;
+}
+
+/* Card */
+.bl-card {
+    text-decoration: none;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(10,22,40,.09);
+    transition: transform .35s ease, box-shadow .35s ease;
+    display: flex;
+    flex-direction: column;
+}
+.bl-card:hover { transform: translateY(-8px); box-shadow: 0 16px 40px rgba(10,22,40,.16); text-decoration: none; }
+
+/* Cover image */
+.bl-card-cover {
+    position: relative;
+    aspect-ratio: 1 / 1.414;
+    overflow: hidden;
+    background: #e2e8f0;
+}
+.bl-card-cover img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+.bl-card:hover .bl-card-cover img { transform: scale(1.05); }
+
+.bl-card-cover-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #0a1628, #0d2847);
+    color: rgba(201,162,39,.4); font-size: 4rem;
+}
+
+/* Hover overlay */
+.bl-card-overlay {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(10,22,40,.55);
+    opacity: 0; transition: opacity .3s;
+}
+.bl-card:hover .bl-card-overlay { opacity: 1; }
+
+.bl-card-open-btn {
+    padding: 10px 22px;
+    background: linear-gradient(135deg, #c9a227, #e6c44d);
+    border-radius: 50px;
+    color: #0a1628;
+    font-weight: 700;
+    font-size: .88rem;
+    display: flex; align-items: center; gap: 8px;
+    transform: translateY(8px); transition: transform .3s ease;
+}
+.bl-card:hover .bl-card-open-btn { transform: translateY(0); }
+
+/* Pages badge */
+.bl-card-pages-badge {
+    position: absolute; bottom: 10px; right: 10px;
+    background: rgba(10,22,40,.7);
+    backdrop-filter: blur(8px);
+    color: #fff; font-size: .7rem; font-weight: 600;
+    padding: 3px 10px; border-radius: 20px;
+    letter-spacing: .4px;
+}
+
+/* Card body */
+.bl-card-body { padding: 1rem 1.1rem 1.2rem; }
+.bl-card-title {
+    font-size: 1rem; font-weight: 700; color: #0a1628;
+    margin: 0 0 .4rem; line-height: 1.35;
+}
+.bl-card-meta {
+    font-size: .78rem; color: #64748b; margin: 0;
+    display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
+}
+.bl-card-meta i { color: #c9a227; }
+
+/* Empty state */
+.bl-empty {
+    text-align: center; padding: 5rem 0;
+    color: #64748b;
+}
+.bl-empty i { font-size: 4rem; color: #cbd5e1; margin-bottom: 1.5rem; }
+.bl-empty h3 { font-size: 1.5rem; color: #0a1628; margin-bottom: .75rem; }
+.bl-empty p  { max-width: 360px; margin: 0 auto 2rem; }
+
+@media (max-width: 576px) {
+    .bl-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .bl-section { padding: 3rem 0; }
+    .bl-hero { padding: 4rem 0 3rem; }
+}
+</style>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+<div style="max-width:700px;">
+  <h1 style="margin-bottom:20px;">🌍 Auto-Translate to Turkish — Confirm Overwrite</h1>
+
+  <div style="background:#fef3c7;border:1px solid #f59e0b;border-radius:8px;padding:16px 20px;margin-bottom:24px;">
+    <strong>⚠️ Warning:</strong>
+    The following {{ objects_with_tr|length }} object(s) already have Turkish content.
+    Proceeding will <strong>overwrite</strong> the existing Turkish translations.
+  </div>
+
+  <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
+    <thead>
+      <tr style="background:#f1f5f9;">
+        <th style="text-align:left;padding:8px 12px;border-bottom:2px solid #e2e8f0;">Object</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for obj in objects_with_tr %}
+      <tr style="border-bottom:1px solid #e2e8f0;">
+        <td style="padding:8px 12px;">{{ obj }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <form method="post">
+    {% csrf_token %}
+    {% for obj in queryset %}
+    <input type="hidden" name="{{ action_checkbox_name }}" value="{{ obj.pk }}">
+    {% endfor %}
+    <input type="hidden" name="action" value="auto_translate_tr_overwrite">
+    <input type="hidden" name="confirm_overwrite" value="1">
+
+    <div style="display:flex;gap:12px;">
+      <button type="submit"
+              style="background:#dc2626;color:#fff;padding:10px 24px;border:none;
+                     border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;">
+        ✅ Yes, overwrite and translate
+      </button>
+      <a href="{% url 'admin:'|add:opts.app_label|add:'_'|add:opts.model_name|add:'_changelist' %}"
+         style="background:#6b7280;color:#fff;padding:10px 24px;border-radius:6px;
+                text-decoration:none;font-size:14px;font-weight:600;display:inline-block;">
+        ✖ Cancel
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}

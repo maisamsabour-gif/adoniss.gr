@@ -1,0 +1,122 @@
+/* ============================================================
+   Rich-text editor — Event & Blog admin pages
+   Large, full-width CKEditor5 with complete toolbar visibility.
+   ============================================================ */
+
+/* ── Editing area: tall and readable ─────────────────────── */
+.ck-editor__editable,
+.ck.ck-content.ck-editor__editable,
+.ck.ck-editor__editable_inline,
+.ck.ck-editor__main > .ck-editor__editable {
+    min-height: 560px !important;
+    height: auto !important;
+    max-height: none !important;
+    font-size: 15px !important;
+    line-height: 1.85 !important;
+    padding: 1.5rem 2rem !important;
+    overflow-y: auto !important;
+}
+
+/* ── Editor wrapper: full width ──────────────────────────── */
+.ck.ck-editor {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: block !important;
+}
+
+/* ── Toolbar: wrap items, padded, visible background ─────── */
+.ck.ck-toolbar {
+    flex-wrap: wrap !important;
+    padding: 6px 8px !important;
+    border-radius: 6px 6px 0 0 !important;
+    background: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+/* ── Editor main area border ─────────────────────────────── */
+.ck.ck-editor__main {
+    border: 1px solid #cbd5e1 !important;
+    border-top: none !important;
+    border-radius: 0 0 6px 6px !important;
+}
+
+/* ── Toolbar buttons: comfortable spacing ────────────────── */
+.ck.ck-toolbar .ck-toolbar__items > * {
+    margin: 2px 1px !important;
+}
+
+/* ── Dropdown panels (font size, heading, etc.) ──────────── */
+.ck.ck-dropdown .ck-dropdown__panel {
+    max-height: 350px !important;
+    overflow-y: auto !important;
+}
+
+/* ── Source-editing mode: tall too ────────────────────────── */
+.ck-source-editing-area {
+    min-height: 500px !important;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace !important;
+    font-size: 13px !important;
+    line-height: 1.6 !important;
+}
+.ck-source-editing-area textarea {
+    min-height: 500px !important;
+}
+
+/* ── Make field rows full-width for description fields ───── */
+.field-full_description_en .grow,
+.field-full_description_tr .grow,
+.field-content_en .grow,
+.field-content_tr .grow {
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+/* ── Description fieldset: no max-width constraint ───────── */
+.field-full_description_en,
+.field-full_description_tr,
+.field-content_en,
+.field-content_tr {
+    max-width: 100% !important;
+}
+
+/* ── CK editor container: always visible, full size ─────── */
+.field-full_description_en .ck-editor-container,
+.field-full_description_tr .ck-editor-container,
+.field-content_en .ck-editor-container,
+.field-content_tr .ck-editor-container {
+    width: 100% !important;
+    display: block !important;
+}
+
+.field-full_description_en .ck.ck-editor,
+.field-full_description_tr .ck.ck-editor,
+.field-content_en .ck.ck-editor,
+.field-content_tr .ck.ck-editor {
+    min-height: 620px !important;
+}
+
+.field-full_description_en .ck-editor__editable,
+.field-full_description_tr .ck-editor__editable,
+.field-content_en .ck-editor__editable,
+.field-content_tr .ck-editor__editable,
+.field-full_description_en .ck.ck-content.ck-editor__editable,
+.field-full_description_tr .ck.ck-content.ck-editor__editable,
+.field-content_en .ck.ck-content.ck-editor__editable,
+.field-content_tr .ck.ck-content.ck-editor__editable {
+    min-height: 580px !important;
+    height: auto !important;
+    max-height: none !important;
+}
+
+/* ── Dark-mode adjustments (Unfold) ──────────────────────── */
+.dark .ck.ck-toolbar {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+.dark .ck.ck-editor__main {
+    border-color: #334155 !important;
+}
+.dark .ck-editor__editable {
+    background: #0f172a !important;
+    color: #e2e8f0 !important;
+}

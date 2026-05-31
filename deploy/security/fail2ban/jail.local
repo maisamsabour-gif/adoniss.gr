@@ -1,0 +1,25 @@
+[DEFAULT]
+bantime = 1h
+findtime = 10m
+maxretry = 5
+backend = systemd
+destemail = root@localhost
+sender = fail2ban@adoniss.gr
+mta = sendmail
+
+[sshd]
+enabled = true
+port = ssh
+logpath = %(sshd_log)s
+maxretry = 5
+
+[nginx-http-auth]
+enabled = true
+
+[nginx-badbots]
+enabled = true
+
+[nginx-limit-req]
+enabled = true
+logpath = /var/log/nginx/access.log
+maxretry = 10

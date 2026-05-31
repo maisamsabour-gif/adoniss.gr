@@ -1,0 +1,309 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+
+{% block title %}{% if meta_title %}{{ meta_title }} | {{ SITE_NAME }}{% else %}About Us | {{ SITE_NAME }}{% endif %}{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="ab-hero">
+    <div class="ab-hero-bg"></div>
+    <div class="ab-hero-overlay"></div>
+    <div class="container">
+        <div class="ab-hero-content" data-aos="fade-up">
+            <span class="section-badge" style="color:#fff;border-color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.1);">{% trans "About Us" %}</span>
+            <h1>{{ about.hero_title }}</h1>
+            <p>{{ about.hero_subtitle }}</p>
+        </div>
+    </div>
+</section>
+
+<!-- Office Video / Gallery Section -->
+<section class="ab-media">
+    <div class="container">
+        <div class="ab-media-grid" data-aos="fade-up">
+            <!-- Main: Video or Image -->
+            <div class="ab-media-main">
+                {% if about.office_video %}
+                <video controls playsinline {% if about.office_video_poster %}poster="{{ about.office_video_poster.url }}"{% endif %} class="ab-video">
+                    <source src="{{ about.office_video.url }}" type="video/mp4">
+                </video>
+                {% elif about.office_image_1 %}
+                <img src="{{ about.office_image_1.url }}" alt="Adonis Office" class="ab-main-img" loading="lazy" decoding="async">
+                {% else %}
+                <div class="ab-media-placeholder">
+                    <i class="fas fa-building"></i>
+                    <span>Office Preview</span>
+                </div>
+                {% endif %}
+            </div>
+            <!-- Side Images -->
+            <div class="ab-media-side">
+                {% if about.office_image_1 and about.office_video %}
+                <div class="ab-side-img"><img src="{{ about.office_image_1.url }}" alt="Office" loading="lazy" decoding="async"></div>
+                {% endif %}
+                {% if about.office_image_2 %}
+                <div class="ab-side-img"><img src="{{ about.office_image_2.url }}" alt="Office" loading="lazy" decoding="async"></div>
+                {% endif %}
+                {% if about.office_image_3 %}
+                <div class="ab-side-img"><img src="{{ about.office_image_3.url }}" alt="Office" loading="lazy" decoding="async"></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Text Section -->
+<section class="ab-text-section">
+    <div class="container">
+        <div class="ab-text-grid">
+            <div class="ab-text-content" data-aos="fade-right">
+                <h2>{{ about.about_title }}</h2>
+                <div class="ab-text-body">{{ about.about_text|safe }}</div>
+            </div>
+            <div class="ab-features" data-aos="fade-left">
+                <div class="ab-feat"><div class="ab-feat-icon"><i class="fas fa-check-circle"></i></div><div><h4>{% trans "Golden Visa Eligibility" %}</h4><p>{% trans "Starting from €250,000" %}</p></div></div>
+                <div class="ab-feat"><div class="ab-feat-icon"><i class="fas fa-shield-alt"></i></div><div><h4>{% trans "Secure & Transparent" %}</h4><p>{% trans "Purchase process guaranteed" %}</p></div></div>
+                <div class="ab-feat"><div class="ab-feat-icon"><i class="fas fa-home"></i></div><div><h4>{% trans "Modern Architecture" %}</h4><p>{% trans "Luxury design standards" %}</p></div></div>
+                <div class="ab-feat"><div class="ab-feat-icon"><i class="fas fa-calendar-alt"></i></div><div><h4>{% trans "Flexible Plans" %}</h4><p>{% trans "6-8 months installments" %}</p></div></div>
+                <div class="ab-feat"><div class="ab-feat-icon"><i class="fas fa-plane"></i></div><div><h4>{% trans "No Presence Required" %}</h4><p>{% trans "Complete process remotely" %}</p></div></div>
+                <div class="ab-feat"><div class="ab-feat-icon"><i class="fas fa-chart-line"></i></div><div><h4>{% trans "Investment Potential" %}</h4><p>{% trans "Growing real estate market" %}</p></div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats -->
+<section class="ab-stats">
+    <div class="container">
+        <div class="ab-stats-grid">
+            <div class="ab-stat" data-aos="fade-up" data-aos-delay="100"><span class="ab-stat-num">126+</span><span class="ab-stat-label">{% trans "Successful Projects" %}</span></div>
+            <div class="ab-stat" data-aos="fade-up" data-aos-delay="200"><span class="ab-stat-num">385+</span><span class="ab-stat-label">{% trans "Happy Families" %}</span></div>
+            <div class="ab-stat" data-aos="fade-up" data-aos-delay="300"><span class="ab-stat-num">1,450 m²</span><span class="ab-stat-label">{% trans "Construction Area" %}</span></div>
+            <div class="ab-stat" data-aos="fade-up" data-aos-delay="400"><span class="ab-stat-num">100%</span><span class="ab-stat-label">{% trans "Success Rate" %}</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- Our Team -->
+<section class="ab-team">
+    <div class="container">
+        <div class="ab-team-header" data-aos="fade-up">
+            <h2>{{ about.team_title }}</h2>
+            {% if about.team_subtitle %}<p>{{ about.team_subtitle }}</p>{% endif %}
+        </div>
+        <div class="ab-team-grid">
+            {% for member in team_members %}
+            <div class="ab-team-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00">
+                <div class="ab-team-photo">
+                    {% if member.photo %}
+                    <img src="{{ member.photo.url }}" alt="{{ member.name }}" loading="lazy" decoding="async">
+                    {% else %}
+                    <div class="ab-team-ph"><i class="fas fa-user"></i></div>
+                    {% endif %}
+                </div>
+                <div class="ab-team-info">
+                    <h4>{{ member.name }}</h4>
+                    <span class="ab-team-pos">{{ member.position }}</span>
+                    {% if member.bio %}<p class="ab-team-bio">{{ member.bio }}</p>{% endif %}
+                    <div class="ab-team-links">
+                        {% if member.linkedin_url %}<a href="{{ member.linkedin_url }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>{% endif %}
+                        {% if member.email %}<a href="mailto:{{ member.email }}"><i class="fas fa-envelope"></i></a>{% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="ab-team-empty">{% trans "Team members coming soon." %}</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="section section-cta">
+    <div class="container">
+        <div class="cta-content" data-aos="zoom-in">
+            <h2>{% trans "Ready to Start Your Journey?" %}</h2>
+            <p>{% trans "Contact us today for a free consultation and take the first step toward your new life in Europe." %}</p>
+            <button type="button" class="btn btn-white btn-lg" onclick="openConsultationModal()"><i class="fas fa-calendar-check"></i> {% trans "Book Free Consultation" %}</button>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* =====================================================
+   About Page – Elegant Design
+   ===================================================== */
+
+/* Hero */
+.ab-hero { position: relative; padding: 13rem 0 5rem; text-align: center; overflow: hidden; }
+.ab-hero-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #0D5EAF 0%, #08407a 40%, #0b2948 100%); }
+.ab-hero-overlay { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.25) 100%); }
+.ab-hero-content { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; }
+.ab-hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); color: #fff !important; margin-bottom: 1rem; }
+.ab-hero p { font-size: 1.15rem; color: rgba(255,255,255,0.8); line-height: 1.7; }
+
+/* Media Section */
+.ab-media { background: #fff; padding: 4rem 0 2rem; color: #0b2948; }
+.ab-media-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; border-radius: 18px; overflow: hidden; }
+.ab-media-main { border-radius: 14px; overflow: hidden; aspect-ratio: 16/9; background: #f1f5f9; }
+.ab-video, .ab-main-img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 14px; }
+.ab-media-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; color: #94a3b8; font-size: 3rem; background: #f1f5f9; border-radius: 14px; }
+.ab-media-placeholder span { font-size: 1rem; }
+.ab-media-side { display: flex; flex-direction: column; gap: 1rem; }
+.ab-side-img { flex: 1; border-radius: 14px; overflow: hidden; }
+.ab-side-img img { width: 100%; height: 100%; object-fit: cover; }
+
+/* About Text */
+.ab-text-section { background: #f8fafc; padding: 4.5rem 0; }
+.ab-text-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 3.5rem; align-items: start; }
+/* Explicit dark color: global h1–h6 { color: #fff } would make this invisible
+   on the light #f8fafc background without the override below. */
+.ab-text-content h2 { font-size: 2rem; margin-bottom: 1.5rem; color: #0b2948; }
+.ab-text-body { color: #475569; line-height: 1.9; font-size: 0.95rem; }
+.ab-text-body p { margin-bottom: 1rem; }
+
+.ab-features { display: flex; flex-direction: column; gap: 0.85rem; }
+.ab-feat {
+    display: flex; align-items: flex-start; gap: 1rem;
+    padding: 1rem 1.25rem; background: #fff; border: 1px solid #e2e8f0;
+    border-radius: 12px; transition: all 0.25s;
+}
+.ab-feat:hover { border-color: #0D5EAF; box-shadow: 0 4px 15px rgba(13,94,175,0.06); transform: translateY(-2px); }
+.ab-feat-icon {
+    width: 44px; height: 44px; border-radius: 10px; display: flex;
+    align-items: center; justify-content: center; background: #eff6ff;
+    color: #0D5EAF; font-size: 1.1rem; flex-shrink: 0;
+}
+/* Same reason: white-background card needs explicit dark text for h4 */
+.ab-feat h4 { font-size: 0.95rem; margin-bottom: 2px; color: #1e3a5f; }
+.ab-feat p { color: #64748b; font-size: 0.82rem; }
+
+/* Stats */
+.ab-stats { background: linear-gradient(135deg, #0D5EAF 0%, #0b2948 100%); padding: 4rem 0; }
+.ab-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+.ab-stat {
+    text-align: center; padding: 2rem; background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 14px;
+}
+.ab-stat-num { display: block; font-family: var(--font-heading); font-size: 2.5rem; font-weight: 700; color: #fff; margin-bottom: 0.3rem; }
+.ab-stat-label { color: rgba(255,255,255,0.65); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; }
+
+/* Team */
+.ab-team { background: #fff; padding: 5rem 0; }
+.ab-team-header { text-align: center; margin-bottom: 3rem; }
+/* White background → heading must be dark; global h1–h6 { color:#fff } overrides
+   the browser default so the explicit color below is required. */
+.ab-team-header h2 { font-size: 2rem; margin-bottom: 0.5rem; color: #0b2948; }
+.ab-team-header p { color: #64748b; font-size: 1rem; }
+.ab-team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+.ab-team-card {
+    background: #0b2948;
+    border: none;
+    border-radius: 18px;
+    overflow: hidden;
+    text-align: center;
+    transition: all 0.35s ease;
+    position: relative;
+}
+.ab-team-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 45px rgba(11, 41, 72, 0.25);
+}
+.ab-team-photo {
+    width: 100%;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    position: relative;
+}
+.ab-team-photo::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 60%;
+    background: linear-gradient(to top, #0b2948 0%, rgba(11, 41, 72, 0.6) 40%, transparent 100%);
+    z-index: 1;
+    pointer-events: none;
+}
+.ab-team-photo img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    transition: transform 0.5s ease;
+}
+.ab-team-card:hover .ab-team-photo img { transform: scale(1.06); }
+.ab-team-ph {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3.5rem; color: rgba(255,255,255,0.15);
+    background: linear-gradient(135deg, #0b2948, #1a4570);
+}
+.ab-team-info {
+    padding: 1.25rem 1.25rem 1.5rem;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    margin-top: -2.5rem;
+}
+.ab-team-info h4 {
+    font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.3rem;
+    color: #ffffff;
+}
+.ab-team-pos {
+    display: inline-block;
+    font-size: 0.72rem;
+    color: #ffffff;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background: rgba(13, 94, 175, 0.5);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+}
+.ab-team-bio {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.6;
+    margin-bottom: 0.85rem;
+}
+.ab-team-links { display: flex; justify-content: center; gap: 0.5rem; }
+.ab-team-links a {
+    width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);
+    font-size: 0.85rem; transition: all 0.2s; border: 1px solid rgba(255,255,255,0.1);
+}
+.ab-team-links a:hover { background: #0D5EAF; color: #fff; border-color: #0D5EAF; }
+.ab-team-empty { text-align: center; color: #94a3b8; grid-column: 1/-1; padding: 3rem; font-size: 1rem; }
+
+/* Responsive */
+@media (max-width: 992px) {
+    .ab-media-grid { grid-template-columns: 1fr; }
+    .ab-media-side { flex-direction: row; }
+    .ab-text-grid { grid-template-columns: 1fr; }
+    .ab-stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .ab-team-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+    .ab-hero { padding: 9rem 0 3rem; }
+    .ab-hero h1 { font-size: clamp(1.6rem, 6vw, 2.2rem); }
+    .ab-hero p { font-size: 0.95rem; }
+    .ab-text-content h2 { font-size: 1.5rem; }
+    .ab-text-section { padding: 3rem 0; }
+}
+@media (max-width: 576px) {
+    .ab-hero { padding: 8rem 0 2.5rem; }
+    .ab-stats-grid { grid-template-columns: 1fr 1fr; }
+    .ab-team-grid { grid-template-columns: 1fr; max-width: 320px; margin: 0 auto; }
+    .ab-media-side { flex-direction: column; }
+}
+</style>
+{% endblock %}

@@ -1,0 +1,164 @@
+{% extends "admin/change_list.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+  .fa-sec-manager {
+    display: grid;
+    gap: 12px;
+    margin: 12px 0 18px;
+  }
+  .fa-sec-card {
+    border: 1px solid rgba(100, 116, 139, 0.3);
+    border-radius: 12px;
+    padding: 12px 14px;
+    background: var(--body-bg, #fff);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .fa-sec-card__left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+  .fa-sec-handle {
+    cursor: grab;
+    font-weight: 700;
+    color: #64748b;
+    user-select: none;
+    border: 1px solid rgba(100, 116, 139, 0.35);
+    border-radius: 8px;
+    padding: 6px 9px;
+    line-height: 1;
+    background: #fff;
+  }
+  .fa-sec-card.is-dragging { opacity: 0.6; }
+  .fa-sec-title {
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .fa-sec-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    color: #64748b;
+    font-size: 12px;
+  }
+  .fa-sec-mini-preview {
+    margin-top: 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(100, 116, 139, 0.25);
+    padding: 8px 10px;
+    min-width: 260px;
+    max-width: 420px;
+    background: #0b1f3a;
+    color: #ffffff;
+  }
+  .fa-sec-mini-preview__eyebrow {
+    color: #60a5fa;
+    font-size: 11px;
+    margin-bottom: 4px;
+  }
+  .fa-sec-mini-preview__title {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.35;
+    margin-bottom: 4px;
+  }
+  .fa-sec-mini-preview__desc {
+    font-size: 12px;
+    line-height: 1.45;
+    opacity: 0.95;
+  }
+  .fa-chip {
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(100, 116, 139, 0.35);
+    background: #f8fafc;
+  }
+  .fa-chip--active {
+    background: #ecfdf5;
+    border-color: #22c55e;
+    color: #166534;
+  }
+  .fa-chip--inactive {
+    background: #fef2f2;
+    border-color: #ef4444;
+    color: #991b1b;
+  }
+  .fa-sec-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .fa-sec-actions a {
+    text-decoration: none;
+    border: 1px solid rgba(100, 116, 139, 0.35);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 12px;
+    color: inherit;
+  }
+  .fa-sec-actions a:hover {
+    background: #f8fafc;
+  }
+  .fa-sec-save-order {
+    align-self: flex-start;
+    border: 1px solid #1d4ed8;
+    color: #1d4ed8;
+    border-radius: 8px;
+    padding: 6px 12px;
+    background: #eff6ff;
+    cursor: pointer;
+    font-size: 12px;
+  }
+  .fa-sec-save-order[disabled] { opacity: 0.5; cursor: default; }
+</style>
+{% endblock %}
+
+{% block content %}
+  <div class="fa-admin-content">
+    {% if cl.result_list %}
+      <div class="fa-sec-manager" data-fa-section-manager data-reorder-url="{% url 'admin:core_fanewsection_reorder' %}">
+        <button type="button" class="fa-sec-save-order" data-fa-save-order disabled>Save drag & drop order</button>
+        {% for obj in cl.result_list %}
+          <div class="fa-sec-card" draggable="true" data-section-id="{{ obj.pk }}">
+            <div class="fa-sec-card__left">
+              <span class="fa-sec-handle" title="Drag to reorder">⋮⋮</span>
+              <div>
+                <div class="fa-sec-title">{{ obj.section_name|default:obj.title|default:obj.get_section_type_display }}</div>
+                <div class="fa-sec-meta">
+                  <span class="fa-chip">{{ obj.get_section_type_display }}</span>
+                  {% if obj.is_active %}
+                    <span class="fa-chip fa-chip--active">فعال</span>
+                  {% else %}
+                    <span class="fa-chip fa-chip--inactive">غیرفعال</span>
+                  {% endif %}
+                  <span class="fa-chip">ترتیب: {{ obj.order }}</span>
+                </div>
+                <div class="fa-sec-mini-preview">
+                  <div class="fa-sec-mini-preview__eyebrow">{{ obj.eyebrow|default:obj.get_section_type_display }}</div>
+                  <div class="fa-sec-mini-preview__title">{{ obj.title|default:obj.section_name|default:'(بدون عنوان)' }}</div>
+                  <div class="fa-sec-mini-preview__desc">{{ obj.subtitle|default:obj.description|truncatechars:100 }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="fa-sec-actions">
+              <a href="{% url 'admin:core_fanewsection_change' obj.pk %}">Edit</a>
+              <a href="{{ obj.admin_preview_url }}" target="_blank" rel="noopener">Preview</a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {{ block.super }}
+  </div>
+{% endblock %}

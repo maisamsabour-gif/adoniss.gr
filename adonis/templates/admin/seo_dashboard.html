@@ -1,0 +1,237 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block title %}SEO Site Audit{% endblock %}
+
+{% block content %}
+<style>
+.seo-dash{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;max-width:1200px;margin:0 auto}
+.seo-dash h1{font-size:24px;font-weight:700;color:#1d2939;margin-bottom:24px}
+.seo-kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:32px}
+.seo-kpi{background:#fff;border:1px solid #e4e7ec;border-radius:10px;padding:20px;text-align:center}
+.seo-kpi-val{font-size:32px;font-weight:800;line-height:1.2}
+.seo-kpi-label{font-size:13px;color:#667085;margin-top:4px}
+.seo-kpi-green{color:#027a48}
+.seo-kpi-yellow{color:#b54708}
+.seo-kpi-red{color:#b42318}
+.seo-section{background:#fff;border:1px solid #e4e7ec;border-radius:10px;overflow:hidden;margin-bottom:24px}
+.seo-section-header{padding:14px 20px;background:#f8f9fb;border-bottom:1px solid #e4e7ec;font-size:14px;font-weight:700;color:#344054;text-transform:uppercase;letter-spacing:.04em}
+.seo-section-body{padding:0}
+.seo-table{width:100%;border-collapse:collapse;font-size:13px}
+.seo-table th{text-align:left;padding:10px 14px;background:#f8f9fb;color:#667085;font-weight:600;border-bottom:1px solid #e4e7ec;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.seo-table td{padding:10px 14px;border-bottom:1px solid #f2f4f7;color:#344054;vertical-align:top}
+.seo-table tr:last-child td{border-bottom:none}
+.seo-badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:700;color:#fff}
+.seo-badge-green{background:#12b76a}
+.seo-badge-yellow{background:#f79009}
+.seo-badge-red{background:#f04438}
+.seo-list-item{padding:8px 16px;border-bottom:1px solid #f2f4f7;font-size:13px;color:#475467}
+.seo-list-item:last-child{border-bottom:none}
+.seo-list-item a{color:#0d5eaf;text-decoration:none;font-weight:500}
+.seo-list-item a:hover{text-decoration:underline}
+.seo-empty{padding:16px 20px;color:#98a2b3;font-style:italic;text-align:center}
+@media(max-width:768px){.seo-kpi-row{grid-template-columns:repeat(2,1fr)}}
+</style>
+
+<div class="seo-dash">
+<h1>🔍 SEO Site Audit</h1>
+
+<!-- KPIs -->
+<div class="seo-kpi-row">
+  <div class="seo-kpi">
+    <div class="seo-kpi-val">{{ total_pages }}</div>
+    <div class="seo-kpi-label">Published Pages</div>
+  </div>
+  <div class="seo-kpi">
+    <div class="seo-kpi-val {% if seo_ready >= 1 %}seo-kpi-green{% endif %}">{{ seo_ready }}</div>
+    <div class="seo-kpi-label">SEO Ready Pages</div>
+  </div>
+  <div class="seo-kpi">
+    <div class="seo-kpi-val {% if avg_score >= 80 %}seo-kpi-green{% elif avg_score >= 50 %}seo-kpi-yellow{% else %}seo-kpi-red{% endif %}">{{ avg_score }}</div>
+    <div class="seo-kpi-label">Avg SEO Score</div>
+  </div>
+  <div class="seo-kpi">
+    <div class="seo-kpi-val {% if critical_count == 0 %}seo-kpi-green{% else %}seo-kpi-red{% endif %}">{{ critical_count }}</div>
+    <div class="seo-kpi-label">Pages with Critical Issues</div>
+  </div>
+  <div class="seo-kpi">
+    <div class="seo-kpi-val {% if missing_desc|length == 0 %}seo-kpi-green{% else %}seo-kpi-yellow{% endif %}">{{ missing_desc|length }}</div>
+    <div class="seo-kpi-label">Missing Meta Descriptions</div>
+  </div>
+</div>
+
+<!-- All pages table -->
+<div class="seo-section">
+  <div class="seo-section-header">All Published Pages (sorted by score)</div>
+  <div class="seo-section-body">
+    <table class="seo-table">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Page</th>
+          <th>Score</th>
+          <th>Critical</th>
+          <th>Warnings</th>
+          <th>Issues</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+        <tr>
+          <td><code>{{ row.type }}</code></td>
+          <td>
+            {% if row.url %}<a href="{{ row.url }}" target="_blank">{{ row.name }}</a>{% else %}{{ row.name }}{% endif %}
+          </td>
+          <td>
+            <span class="seo-badge {% if row.score >= 80 %}seo-badge-green{% elif row.score >= 50 %}seo-badge-yellow{% else %}seo-badge-red{% endif %}">
+              {{ row.score }}
+            </span>
+          </td>
+          <td>{{ row.critical_count }}</td>
+          <td>{{ row.warning_count }}</td>
+          <td>
+            {% for c in row.critical %}<div style="color:#b42318;font-size:12px;">✕ {{ c }}</div>{% endfor %}
+            {% for w in row.warnings %}<div style="color:#b54708;font-size:12px;">⚠ {{ w }}</div>{% endfor %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Missing ALT -->
+<div class="seo-section">
+  <div class="seo-section-header">Missing Image ALT Text ({{ missing_alt|length }})</div>
+  <div class="seo-section-body">
+    {% if missing_alt %}
+      {% for item in missing_alt %}
+      <div class="seo-list-item">
+        <code>{{ item.type }}</code> &middot;
+        {% if item.url %}<a href="{{ item.url }}" target="_blank">{{ item.name }}</a>{% else %}{{ item.name }}{% endif %}
+        &middot; field: <code>{{ item.field }}</code>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="seo-empty">No missing ALT text found ✓</div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="seo-section">
+  <div class="seo-section-header">Missing Meta Titles ({{ missing_title|length }})</div>
+  <div class="seo-section-body">
+    {% if missing_title %}
+      {% for item in missing_title %}
+      <div class="seo-list-item">
+        <code>{{ item.type }}</code> &middot;
+        {% if item.url %}<a href="{{ item.url }}" target="_blank">{{ item.name }}</a>{% else %}{{ item.name }}{% endif %}
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="seo-empty">No missing title ✓</div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="seo-section">
+  <div class="seo-section-header">Missing H1 ({{ missing_h1|length }})</div>
+  <div class="seo-section-body">
+    {% if missing_h1 %}
+      {% for item in missing_h1 %}
+      <div class="seo-list-item">
+        <code>{{ item.type }}</code> &middot;
+        {% if item.url %}<a href="{{ item.url }}" target="_blank">{{ item.name }}</a>{% else %}{{ item.name }}{% endif %}
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="seo-empty">No missing H1 ✓</div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="seo-section">
+  <div class="seo-section-header">Thin Content (&lt;600 words) ({{ thin_pages|length }})</div>
+  <div class="seo-section-body">
+    {% if thin_pages %}
+      {% for item in thin_pages %}
+      <div class="seo-list-item">
+        <code>{{ item.type }}</code> &middot;
+        {% if item.url %}<a href="{{ item.url }}" target="_blank">{{ item.name }}</a>{% else %}{{ item.name }}{% endif %}
+        &middot; words: {{ item.words }}
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="seo-empty">No thin pages ✓</div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="seo-section">
+  <div class="seo-section-header">Noindex Pages ({{ noindex_pages|length }})</div>
+  <div class="seo-section-body">
+    {% if noindex_pages %}
+      {% for item in noindex_pages %}
+      <div class="seo-list-item">
+        <code>{{ item.type }}</code> &middot;
+        {% if item.url %}<a href="{{ item.url }}" target="_blank">{{ item.name }}</a>{% else %}{{ item.name }}{% endif %}
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="seo-empty">No noindex pages ✓</div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="seo-section">
+  <div class="seo-section-header">Missing From Sitemap ({{ missing_from_sitemap|length }})</div>
+  <div class="seo-section-body">
+    {% if missing_from_sitemap %}
+      {% for item in missing_from_sitemap %}
+      <div class="seo-list-item">
+        <code>{{ item.type }}</code> &middot;
+        {% if item.url %}<a href="{{ item.url }}" target="_blank">{{ item.name }}</a>{% else %}{{ item.name }}{% endif %}
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="seo-empty">All indexed pages are in sitemap ✓</div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Duplicate titles -->
+<div class="seo-section">
+  <div class="seo-section-header">Duplicate SEO Titles ({{ dup_titles|length }} groups)</div>
+  <div class="seo-section-body">
+    {% if dup_titles %}
+      {% for title, pages in dup_titles.items %}
+      <div class="seo-list-item">
+        <strong>"{{ title|truncatechars:60 }}"</strong>
+        — used by {% for p in pages %}{{ p.type }}:{{ p.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="seo-empty">No duplicate titles ✓</div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Duplicate descriptions -->
+<div class="seo-section">
+  <div class="seo-section-header">Duplicate Meta Descriptions ({{ dup_descs|length }} groups)</div>
+  <div class="seo-section-body">
+    {% if dup_descs %}
+      {% for desc, pages in dup_descs.items %}
+      <div class="seo-list-item">
+        <strong>"{{ desc|truncatechars:60 }}"</strong>
+        — used by {% for p in pages %}{{ p.type }}:{{ p.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="seo-empty">No duplicate descriptions ✓</div>
+    {% endif %}
+  </div>
+</div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+<div style="max-width:600px;margin:2rem auto;background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:2rem;box-shadow:0 4px 16px rgba(0,0,0,0.06);">
+
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid #fee2e2;">
+        <div style="width:44px;height:44px;border-radius:50%;background:#fee2e2;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">🗑</div>
+        <div>
+            <h2 style="margin:0;font-size:1.2rem;color:#dc2626;font-weight:700;">تأیید حذف دائمی</h2>
+            <p style="margin:0;font-size:0.85rem;color:#64748b;">این عملیات قابل بازگشت نیست</p>
+        </div>
+    </div>
+
+    <p style="font-size:1rem;color:#1e293b;margin-bottom:0.5rem;">
+        آیا مطمئن هستید که می‌خواهید
+        <strong style="color:#dc2626;">{{ count }} لید</strong>
+        را به‌صورت دائمی حذف کنید؟
+    </p>
+    <p style="font-size:0.88rem;color:#94a3b8;margin-bottom:1.75rem;">
+        پس از تأیید، این رکوردها برای همیشه از پایگاه داده حذف خواهند شد و قابل بازیابی نیستند.
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="bulk_hard_delete_selected">
+        <input type="hidden" name="confirm_bulk_delete" value="yes">
+        {% for pk in selected_pks %}
+        <input type="hidden" name="{{ action_checkbox_name }}" value="{{ pk }}">
+        {% endfor %}
+        <input type="hidden" name="select_across" value="0">
+
+        <div style="display:flex;gap:1rem;justify-content:flex-end;">
+            <a href="../"
+               style="padding:0.6rem 1.5rem;border-radius:8px;background:#f1f5f9;color:#334155;font-weight:600;text-decoration:none;font-size:0.9rem;border:1px solid #e2e8f0;">
+                انصراف
+            </a>
+            <button type="submit"
+                    style="padding:0.6rem 1.5rem;border-radius:8px;background:#dc2626;color:#fff;font-weight:700;border:none;cursor:pointer;font-size:0.9rem;display:inline-flex;align-items:center;gap:6px;">
+                🗑 بله، حذف دائمی شود
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

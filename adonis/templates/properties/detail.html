@@ -1,0 +1,2431 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+
+{% block title %}{{ property.get_seo_title }} | {{ SITE_NAME }}{% endblock %}
+{% block canonical_url %}{% if canonical_url %}{{ canonical_url }}{% else %}{{ request.build_absolute_uri }}{% endif %}{% endblock %}
+{% block og_title %}{{ property.get_og_title }}{% endblock %}
+{% block og_description %}{{ property.get_og_description }}{% endblock %}
+{% block twitter_title %}{{ property.get_og_title }}{% endblock %}
+{% block twitter_desc %}{{ property.get_og_description }}{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb -->
+<section class="pd-breadcrumb">
+    <div class="container">
+        <a href="{% url 'property_list' %}"><i class="fas fa-arrow-left"></i> {% trans "All Properties" %}</a>
+        <span>/</span>
+        <span>{{ property.name }}</span>
+    </div>
+</section>
+
+<!-- Main Layout -->
+<section class="pd-main">
+    <div class="container">
+        
+        <!-- ══ Spitogatos-style Gallery ══════════════════════════════════════════ -->
+        {% with cover=property.gallery_cover all_items=property.all_gallery_items %}
+        {% with total_count=all_items|length %}
+        <div class="property-gallery">
+
+            <!-- Print + Share actions -->
+            <div class="gallery-actions">
+                <button class="gallery-icon-btn" type="button" id="btnPrint" aria-label="{% trans 'Print' %}" title="{% trans 'Print' %}">
+                    <i class="fas fa-print"></i>
+                </button>
+                <button class="gallery-icon-btn" type="button" id="btnShare" aria-label="{% trans 'Share' %}" title="{% trans 'Share' %}">
+                    <i class="fas fa-share-alt"></i>
+                </button>
+                {% if total_count > 1 %}
+                <button class="gallery-icon-btn gallery-icon-btn--view-all" type="button" id="viewAllBtn" aria-label="{% trans 'View all photos' %}" title="{% trans 'View all' %}">
+                    <i class="fas fa-images"></i>
+                    <span class="gallery-view-all-label">{{ total_count }}</span>
+                </button>
+                {% endif %}
+            </div>
+
+            {% if cover %}
+            <div class="gallery-grid {% if total_count < 2 %}gallery-grid--single{% endif %}">
+
+                <!-- Hidden image list — all gallery URLs for lightbox navigation -->
+                <script type="application/json" id="galleryAllImages">[{% for item in all_items %}"{{ item.image.url }}"{% if not forloop.last %},{% endif %}{% endfor %}]</script>
+
+                <!-- Main image -->
+                <div class="gallery-main" id="galleryMain" tabindex="0" role="button" aria-label="{% trans 'Open full gallery' %}">
+                    <img id="mainImage"
+                         src="{{ cover.image.url }}"
+                         alt="{{ cover.get_alt }}"
+                         data-index="0"
+                         loading="eager">
+                </div>
+
+                <!-- Thumbnails (right column, 2×2 grid; hidden if only 1 image) -->
+                {% if total_count > 1 %}
+                <div class="gallery-thumbs" id="galleryThumbs">
+                    {% for item in all_items|slice:":4" %}
+                    <button type="button"
+                            class="thumb {% if forloop.first %}is-active{% endif %}"
+                            data-full="{{ item.image.url }}"
+                            data-index="{{ forloop.counter0 }}"
+                            aria-label="{% trans 'Photo' %} {{ forloop.counter }}">
+                        <img src="{{ item.image.url }}"
+                             alt="{{ item.get_alt }}"
+                             loading="lazy"
+                             decoding="async">
+                        {% if forloop.last and total_count > 4 %}
+                        <span class="thumb-more">+{{ total_count|add:"-4" }}</span>
+                        {% endif %}
+                    </button>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+            </div>
+            {% else %}
+            <!-- No image placeholder -->
+            <div class="gallery-grid gallery-grid--single">
+                <div class="gallery-main gallery-main--placeholder">
+                    <div class="pd-no-image"><i class="fas fa-building"></i><span>{% trans "No Image" %}</span></div>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+        {% endwith %}
+        {% endwith %}
+
+        <!-- Videos Section (direct upload fields on the property) -->
+        {% if property.video_1 or property.video_2 %}
+        <div class="pd-videos-section">
+            <h3 class="pd-video-title"><i class="fas fa-play-circle"></i> {% trans "Property Videos" %}</h3>
+            <div class="pd-videos-grid {% if property.video_1 and property.video_2 %}pd-videos-grid--two{% endif %}">
+                {% if property.video_1 %}
+                <div class="pd-video-wrapper">
+                    <video controls playsinline preload="metadata"
+                           {% if property.video_1_poster %}poster="{{ property.video_1_poster.url }}"{% endif %}
+                           class="pd-video">
+                        <source src="{{ property.video_1.url }}" type="video/mp4">
+                    </video>
+                </div>
+                {% endif %}
+                {% if property.video_2 %}
+                <div class="pd-video-wrapper">
+                    <video controls playsinline preload="metadata"
+                           {% if property.video_2_poster %}poster="{{ property.video_2_poster.url }}"{% endif %}
+                           class="pd-video">
+                        <source src="{{ property.video_2.url }}" type="video/mp4">
+                    </video>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+        {% with video_item=property.video_media %}
+        {% if video_item %}
+        <div class="pd-videos-section">
+            <h3 class="pd-video-title"><i class="fas fa-play-circle"></i> {% trans "Property Video" %}</h3>
+            <div class="pd-videos-grid">
+                <div class="pd-video-wrapper">
+                    <video controls playsinline preload="metadata"
+                           {% if video_item.poster %}poster="{{ video_item.poster.url }}"{% endif %}
+                           class="pd-video">
+                        <source src="{{ video_item.video.url }}" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endwith %}
+        {% endif %}
+
+        <!-- Content Grid -->
+        <div class="pd-content-grid">
+            <!-- Left: Info -->
+            <div class="pd-info">
+                <div class="pd-badges">
+                    {% if property.golden_visa_eligible %}<span class="pd-badge pd-badge-blue">€{{ property.price_tier }}K Golden Visa</span>{% endif %}
+                    <span class="pd-badge pd-badge-{% if property.status == 'sold_out' %}gray{% elif property.status == 'pre_sale' %}purple{% else %}green{% endif %}">{{ property.get_status_display }}</span>
+                </div>
+
+                <h1 class="pd-title">{{ property.name }}</h1>
+                <p class="pd-tagline">{{ property.tagline }}</p>
+                {# Show only public location labels — never the exact street address #}
+                <p class="pd-location">
+                    {% if property.neighborhood_public %}{{ property.neighborhood_public }}{% if property.city %}, {{ property.city }}{% endif %}
+                    {% elif property.location %}{{ property.location }}{% if property.city %} &mdash; {{ property.city }}{% endif %}
+                    {% endif %}
+                </p>
+
+                <div class="pd-desc">
+                    {{ property.description|safe }}
+                </div>
+
+                {% if property.get_features_list %}
+                <div class="pd-divider"></div>
+                <h3 class="pd-subtitle">{% trans "Highlights" %}</h3>
+                <div class="pd-highlights">
+                    {% for feature in property.get_features_list %}
+                    <div class="pd-highlight">{{ feature }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- ══ Amenities ══════════════════════════════════════════════ -->
+                {% if amenity_groups %}
+                <div class="pd-divider"></div>
+                <h3 class="pd-subtitle"><i class="fas fa-check-circle"></i> {% trans "Amenities" %}</h3>
+                <div class="pd-amenities">
+                    {% for group in amenity_groups %}
+                    <div class="pd-amenity-group">
+                        <h4 class="pd-amenity-cat">{{ group.category.name }}</h4>
+                        <ul class="pd-amenity-list">
+                            {% for amenity in group.amenities %}
+                            <li class="pd-amenity-item">
+                                <span class="pd-amenity-check">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                         stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                         stroke-linejoin="round" width="14" height="14" aria-hidden="true">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </span>
+                                {{ amenity.name }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Project Status Timeline -->
+                <div class="pd-divider"></div>
+                <h3 class="pd-subtitle"><i class="fas fa-hard-hat"></i> {% trans "Project Status" %}</h3>
+                <div class="pd-timeline">
+                    <div class="pd-timeline-track">
+                        <div class="pd-timeline-progress" data-stage="{{ property.timeline_stage }}"></div>
+                    </div>
+                    <div class="pd-timeline-stages">
+                        <div class="pd-timeline-stage {% if property.timeline_stage == 'ready_to_start' or property.timeline_stage == 'under_renovation' or property.timeline_stage == 'finishing_soon' or property.timeline_stage == 'ready' %}completed{% endif %} {% if property.timeline_stage == 'ready_to_start' %}current{% endif %}">
+                            <div class="pd-stage-dot"><i class="fas fa-wrench"></i></div>
+                            <span class="pd-stage-label">{% trans "Ready to Start" %}</span>
+                        </div>
+                        <div class="pd-timeline-stage {% if property.timeline_stage == 'under_renovation' or property.timeline_stage == 'finishing_soon' or property.timeline_stage == 'ready' %}completed{% endif %} {% if property.timeline_stage == 'under_renovation' %}current{% endif %}">
+                            <div class="pd-stage-dot"><i class="fas fa-hard-hat"></i></div>
+                            <span class="pd-stage-label">{% trans "Under Renovation" %}</span>
+                        </div>
+                        <div class="pd-timeline-stage {% if property.timeline_stage == 'finishing_soon' or property.timeline_stage == 'ready' %}completed{% endif %} {% if property.timeline_stage == 'finishing_soon' %}current{% endif %}">
+                            <div class="pd-stage-dot"><i class="fas fa-hourglass-half"></i></div>
+                            <span class="pd-stage-label">{% trans "Finishing Soon" %}</span>
+                        </div>
+                        <div class="pd-timeline-stage {% if property.timeline_stage == 'ready' %}completed current{% endif %}">
+                            <div class="pd-stage-dot"><i class="fas fa-key"></i></div>
+                            <span class="pd-stage-label">{% trans "Ready to Deliver" %}</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Units Table -->
+                {% if property.property_units.all %}
+                <div class="pd-divider"></div>
+                <h3 class="pd-subtitle"><i class="fas fa-th-list"></i> {% trans "Available Units" %}</h3>
+
+                <!-- Desktop/Tablet: Table View -->
+                <div class="pd-units-wrapper pd-units-desktop">
+                    <table class="pd-units-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>{% trans "Unit" %}</th>
+                                <th>{% trans "Size" %}</th>
+                                <th>{% trans "Bed" %}</th>
+                                <th>{% trans "Bath" %}</th>
+                                <th>{% trans "Parking" %}</th>
+                                <th>{% trans "Price" %}</th>
+                                <th>{% trans "Status" %}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for unit in property.property_units.all %}
+                            <tr class="{% if unit.availability == 'sold' %}unit-sold{% elif unit.availability == 'reserved' %}unit-reserved{% endif %}">
+                                <td class="unit-num">{{ forloop.counter }}</td>
+                                <td class="unit-label">{{ unit.unit_label }}</td>
+                                <td>{{ unit.size_sqm }} m²</td>
+                                <td><i class="fas fa-bed"></i> {{ unit.bedrooms }}</td>
+                                <td><i class="fas fa-bath"></i> {{ unit.bathrooms }}</td>
+                                <td>{% if unit.parking %}<i class="fas fa-check-circle" style="color:#16a34a"></i>{% else %}<i class="fas fa-minus-circle" style="color:#cbd5e1"></i>{% endif %}</td>
+                                <td class="unit-price">€{{ unit.price|floatformat:0 }}</td>
+                                <td>
+                                    {% if unit.availability == 'available' %}<span class="unit-status unit-status-available">{% trans "Available" %}</span>
+                                    {% elif unit.availability == 'reserved' %}<span class="unit-status unit-status-reserved">{% trans "Reserved" %}</span>
+                                    {% else %}<span class="unit-status unit-status-sold">{% trans "Sold" %}</span>{% endif %}
+                                </td>
+                                <td>
+                                    {% if unit.availability == 'available' %}
+                                    <button class="unit-book-btn" onclick="openBookingModal({{ unit.pk }}, '{{ unit.unit_label|escapejs }}', '{{ property.name|escapejs }}', '€{{ unit.price|floatformat:0 }}')">
+                                        <i class="fas fa-bookmark"></i> {% trans "Book" %}
+                                    </button>
+                                    {% else %}
+                                    <span class="unit-na">—</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Mobile: Card View -->
+                <div class="pd-units-mobile">
+                    {% for unit in property.property_units.all %}
+                    <div class="unit-card {% if unit.availability == 'sold' %}unit-card-sold{% elif unit.availability == 'reserved' %}unit-card-reserved{% endif %}">
+                        <div class="unit-card-header">
+                            <div class="unit-card-name">
+                                <span class="unit-card-label">{{ unit.unit_label }}</span>
+                                {% if unit.availability == 'available' %}<span class="unit-status unit-status-available">{% trans "Available" %}</span>
+                                {% elif unit.availability == 'reserved' %}<span class="unit-status unit-status-reserved">{% trans "Reserved" %}</span>
+                                {% else %}<span class="unit-status unit-status-sold">{% trans "Sold" %}</span>{% endif %}
+                            </div>
+                            <div class="unit-card-price">€{{ unit.price|floatformat:0 }}</div>
+                        </div>
+                        <div class="unit-card-specs">
+                            <div class="unit-card-spec">
+                                <i class="fas fa-ruler-combined"></i>
+                                <span class="spec-label">{% trans "Size" %}</span>
+                                <span class="spec-value">{{ unit.size_sqm }} m²</span>
+                            </div>
+                            <div class="unit-card-spec">
+                                <i class="fas fa-bed"></i>
+                                <span class="spec-label">{% trans "Bed" %}</span>
+                                <span class="spec-value">{{ unit.bedrooms }}</span>
+                            </div>
+                            <div class="unit-card-spec">
+                                <i class="fas fa-bath"></i>
+                                <span class="spec-label">{% trans "Bath" %}</span>
+                                <span class="spec-value">{{ unit.bathrooms }}</span>
+                            </div>
+                            <div class="unit-card-spec">
+                                <i class="fas fa-car"></i>
+                                <span class="spec-label">{% trans "Parking" %}</span>
+                                <span class="spec-value">{% if unit.parking %}<i class="fas fa-check" style="color:#16a34a"></i>{% else %}<i class="fas fa-times" style="color:#94a3b8"></i>{% endif %}</span>
+                            </div>
+                        </div>
+                        {% if unit.availability == 'available' %}
+                        <button class="unit-card-cta" onclick="openBookingModal({{ unit.pk }}, '{{ unit.unit_label|escapejs }}', '{{ property.name|escapejs }}', '€{{ unit.price|floatformat:0 }}')">
+                            <i class="fas fa-bookmark"></i> Reserve This Unit
+                        </button>
+                        {% else %}
+                        <div class="unit-card-unavailable">
+                            {% if unit.availability == 'sold' %}This unit has been sold{% else %}This unit is reserved{% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Location & Neighborhood Section -->
+                {% if property.neighborhood_description or property.distance_to_sea or property.distance_to_metro %}
+                <div class="pd-divider"></div>
+                <div class="pd-neighborhood-section">
+                    <h3 class="pd-subtitle"><i class="fas fa-map-marker-alt"></i> Location & Neighborhood</h3>
+                    
+                    <div class="pd-neighborhood-grid">
+                        <!-- Left: Image & Description -->
+                        <div class="pd-neighborhood-info">
+                            {% if property.neighborhood_image %}
+                            <div class="pd-neighborhood-img-wrap">
+                                <img src="{{ property.neighborhood_image.url }}" alt="{{ property.area }} neighborhood" class="pd-neighborhood-img" loading="lazy" decoding="async">
+                                <div class="pd-neighborhood-badge">
+                                    <i class="fas fa-map-pin"></i> {{ property.area }}
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if property.neighborhood_description %}
+                            <div class="pd-neighborhood-desc">
+                                {{ property.neighborhood_description|safe|linebreaksbr }}
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Area Highlights -->
+                            {% if property.area_highlight_1 or property.area_highlight_2 or property.area_highlight_3 %}
+                            <div class="pd-area-highlights">
+                                <h4 class="pd-highlights-title"><i class="fas fa-star"></i> Area Highlights</h4>
+                                <div class="pd-highlights-grid">
+                                    {% if property.area_highlight_1 %}
+                                    <div class="pd-highlight-item"><i class="fas fa-check-circle"></i> {{ property.area_highlight_1 }}</div>
+                                    {% endif %}
+                                    {% if property.area_highlight_2 %}
+                                    <div class="pd-highlight-item"><i class="fas fa-check-circle"></i> {{ property.area_highlight_2 }}</div>
+                                    {% endif %}
+                                    {% if property.area_highlight_3 %}
+                                    <div class="pd-highlight-item"><i class="fas fa-check-circle"></i> {{ property.area_highlight_3 }}</div>
+                                    {% endif %}
+                                    {% if property.area_highlight_4 %}
+                                    <div class="pd-highlight-item"><i class="fas fa-check-circle"></i> {{ property.area_highlight_4 }}</div>
+                                    {% endif %}
+                                    {% if property.area_highlight_5 %}
+                                    <div class="pd-highlight-item"><i class="fas fa-check-circle"></i> {{ property.area_highlight_5 }}</div>
+                                    {% endif %}
+                                    {% if property.area_highlight_6 %}
+                                    <div class="pd-highlight-item"><i class="fas fa-check-circle"></i> {{ property.area_highlight_6 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Right: Distance Cards -->
+                        <div class="pd-distances">
+                            {% if property.distance_to_sea %}
+                            <div class="pd-distance-card pd-distance-sea">
+                                <div class="pd-distance-icon"><i class="fas fa-umbrella-beach"></i></div>
+                                <div class="pd-distance-info">
+                                    <span class="pd-distance-label">{% trans "Beach / Sea" %}</span>
+                                    <span class="pd-distance-value">{{ property.distance_to_sea }}</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if property.distance_to_metro %}
+                            <div class="pd-distance-card pd-distance-metro">
+                                <div class="pd-distance-icon"><i class="fas fa-subway"></i></div>
+                                <div class="pd-distance-info">
+                                    <span class="pd-distance-label">Metro{% if property.nearest_metro_station %} ({{ property.nearest_metro_station }}){% endif %}</span>
+                                    <span class="pd-distance-value">{{ property.distance_to_metro }}</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if property.distance_to_center %}
+                            <div class="pd-distance-card pd-distance-center">
+                                <div class="pd-distance-icon"><i class="fas fa-city"></i></div>
+                                <div class="pd-distance-info">
+                                    <span class="pd-distance-label">{% trans "Athens Center" %}</span>
+                                    <span class="pd-distance-value">{{ property.distance_to_center }}</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if property.distance_to_acropolis %}
+                            <div class="pd-distance-card pd-distance-acropolis">
+                                <div class="pd-distance-icon"><i class="fas fa-landmark"></i></div>
+                                <div class="pd-distance-info">
+                                    <span class="pd-distance-label">{% trans "Acropolis" %}</span>
+                                    <span class="pd-distance-value">{{ property.distance_to_acropolis }}</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if property.distance_to_airport %}
+                            <div class="pd-distance-card pd-distance-airport">
+                                <div class="pd-distance-icon"><i class="fas fa-plane"></i></div>
+                                <div class="pd-distance-info">
+                                    <span class="pd-distance-label">{% trans "Airport" %}</span>
+                                    <span class="pd-distance-value">{{ property.distance_to_airport }}</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ══ Privacy-Safe Location Map ════════════════════════════ -->
+                {% if property.lat_public and property.lng_public %}
+                <div class="pd-divider"></div>
+                <h3 class="pd-subtitle"><i class="fas fa-map-marked-alt"></i> {% trans "Location" %}</h3>
+                <div class="pd-map-wrapper">
+                    <div class="pd-map-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        {% trans "Approximate area" %}
+                        {# Show public neighborhood OR general location label — never the private address #}
+                        {% if property.location_privacy_mode == 'circle_plus_area' %}
+                            {% if property.neighborhood_public %}
+                            &mdash; {{ property.neighborhood_public }}{% if property.city %}, {{ property.city }}{% endif %}
+                            {% elif property.location %}
+                            &mdash; {{ property.location }}{% if property.city %}, {{ property.city }}{% endif %}
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div id="propertyMap" class="pd-map-container"
+                         data-lat="{{ property.lat_public }}"
+                         data-lng="{{ property.lng_public }}"
+                         data-radius="{{ property.public_radius_m }}"
+                         aria-label="{% trans 'Approximate property location on map' %}">
+                    </div>
+                    <p class="pd-map-note">
+                        <i class="fas fa-info-circle"></i>
+                        {% trans "The exact address is disclosed only upon confirmed interest." %}
+                    </p>
+                </div>
+                {% else %}
+                <div class="pd-map-placeholder">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>{% trans "Location available on request" %}</span>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Right: Specs + Actions -->
+            <div class="pd-sidebar">
+                <!-- Price Card -->
+                <div class="pd-price-card">
+                    <div class="pd-price-label">{% trans "Investment from" %}</div>
+                    <div class="pd-price">{{ property.price_label }}</div>
+                    {% if property.status != 'sold_out' %}
+                    <button class="pd-btn-interest" id="btnInterest" data-pid="{{ property.pk }}" data-pname="{{ property.name }}">
+                        <i class="fas fa-heart"></i> I am interested in this property
+                    </button>
+                    <a href="{{ property.get_whatsapp_url }}" class="pd-btn-whatsapp" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Talk on WhatsApp
+                    </a>
+                    {% else %}
+                    <div class="pd-sold-out"><i class="fas fa-ban"></i> This property is sold out</div>
+                    {% endif %}
+                </div>
+
+                <!-- Specs Card -->
+                <div class="pd-specs-card">
+                    <h4>{% trans "Property Specifications" %}</h4>
+                    <div class="pd-specs-list">
+                        {% if property.floors %}
+                        <div class="pd-spec-row"><span class="pd-spec-icon"><i class="fas fa-layer-group"></i></span><span class="pd-spec-key">Floors</span><span class="pd-spec-val">{{ property.floors }}</span></div>
+                        {% endif %}
+                        {% if property.units %}
+                        <div class="pd-spec-row"><span class="pd-spec-icon"><i class="fas fa-door-open"></i></span><span class="pd-spec-key">Units</span><span class="pd-spec-val">{{ property.units }}</span></div>
+                        {% endif %}
+                        {% if property.bedrooms %}
+                        <div class="pd-spec-row"><span class="pd-spec-icon"><i class="fas fa-bed"></i></span><span class="pd-spec-key">Bedrooms</span><span class="pd-spec-val">{{ property.bedrooms }}</span></div>
+                        {% endif %}
+                        {% if property.size_sqm %}
+                        <div class="pd-spec-row"><span class="pd-spec-icon"><i class="fas fa-ruler-combined"></i></span><span class="pd-spec-key">Size</span><span class="pd-spec-val">{{ property.size_sqm }} m²</span></div>
+                        {% endif %}
+                        {% if property.delivery_date %}
+                        <div class="pd-spec-row"><span class="pd-spec-icon"><i class="fas fa-calendar-check"></i></span><span class="pd-spec-key">Delivery</span><span class="pd-spec-val">{{ property.delivery_date }}</span></div>
+                        {% endif %}
+                        {% if property.golden_visa_eligible %}
+                        <div class="pd-spec-row"><span class="pd-spec-icon"><i class="fas fa-passport"></i></span><span class="pd-spec-key">Golden Visa</span><span class="pd-spec-val">€{{ property.price_tier }}K</span></div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Lightbox -->
+<div class="pd-lightbox" id="pdLightbox">
+    <button class="pd-lb-close" id="pdLbClose"><i class="fas fa-times"></i></button>
+    <button class="pd-lb-prev" id="pdLbPrev"><i class="fas fa-chevron-left"></i></button>
+    <button class="pd-lb-next" id="pdLbNext"><i class="fas fa-chevron-right"></i></button>
+    <div class="pd-lb-counter" id="pdLbCounter"></div>
+    <img src="" alt="" id="pdLbImg" class="pd-lb-img" role="presentation" aria-hidden="true">
+</div>
+
+<!-- Interest Modal -->
+<div class="pd-modal-bg" id="pdModal">
+    <div class="pd-modal">
+        <button class="pd-modal-x" id="pdModalClose"><i class="fas fa-times"></i></button>
+        <h3><i class="fas fa-heart" style="color:#dc2626"></i> {% trans "I am interested" %}</h3>
+        <p class="pd-modal-name" id="pdModalName"></p>
+        <form id="pdForm" class="unified-site-form">
+            {% csrf_token %}
+            <input type="hidden" id="pdFormPid">
+            <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
+            <div class="pd-field"><label>{% trans "Full Name" %} *</label><input type="text" name="full_name" required placeholder="{% trans 'Your full name' %}"></div>
+            <div class="pd-field"><label>{% trans "Email" %} *</label><input type="email" name="email" required placeholder="your@email.com"></div>
+            <div class="pd-field"><label>{% trans "Phone" %}</label><input type="tel" name="phone" placeholder="{% trans 'Phone number' %}"></div>
+            <div class="pd-field"><label>{% trans "Message" %}</label><textarea name="message" rows="3" placeholder="{% trans 'Tell us more...' %}"></textarea></div>
+            <button type="submit" class="pd-form-submit"><i class="fas fa-paper-plane"></i> {% trans "Send Request" %}</button>
+        </form>
+        <div class="pd-form-ok" id="pdFormOk" style="display:none">
+            <i class="fas fa-check-circle"></i>
+            <strong>{% trans "Thank you!" %}</strong>
+            <p>{% trans "We will contact you soon." %}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Unit Booking Modal -->
+<div class="pd-modal-bg" id="bookingModal">
+    <div class="pd-modal">
+        <button class="pd-modal-x" id="bookingModalClose"><i class="fas fa-times"></i></button>
+        <h3><i class="fas fa-bookmark" style="color:#0D5EAF"></i> {% trans "Book This Unit" %}</h3>
+        <p class="pd-modal-name" id="bookingUnitInfo"></p>
+        <form id="bookingForm" class="unified-site-form">
+            {% csrf_token %}
+            <input type="hidden" id="bookingUnitId">
+            <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
+            <div class="pd-field"><label>{% trans "Full Name" %} *</label><input type="text" name="full_name" required placeholder="{% trans 'Your full name' %}"></div>
+            <div class="pd-field"><label>{% trans "Email" %} *</label><input type="email" name="email" required placeholder="your@email.com"></div>
+            <div class="pd-field"><label>{% trans "Phone" %} *</label><input type="tel" name="phone" required placeholder="{% trans 'Phone number' %}"></div>
+            <div class="pd-field"><label>{% trans "Message" %}</label><textarea name="message" rows="3" placeholder="{% trans 'Any special requests...' %}"></textarea></div>
+            <button type="submit" class="pd-form-submit"><i class="fas fa-paper-plane"></i> {% trans "Submit Booking Request" %}</button>
+        </form>
+        <div class="pd-form-ok" id="bookingFormOk" style="display:none">
+            <i class="fas fa-check-circle"></i>
+            <strong>{% trans "Booking Request Sent." %}</strong>
+            <p>{% trans "We will contact you shortly." %}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Related Properties -->
+{% if related_properties %}
+<section class="pd-related">
+    <div class="container">
+        <h2 class="pd-related-title">{% trans "You May Also Like" %}</h2>
+        <div class="pd-related-grid">
+            {% for rp in related_properties %}
+            <a href="{{ rp.get_absolute_url }}" class="pd-rel-card">
+                <!-- Image with Overlay -->
+                <div class="pd-rel-img">
+                    {% if rp.main_image %}
+                    <img src="{{ rp.main_image.url }}" alt="{{ rp.name }}" loading="lazy" decoding="async">
+                    {% else %}
+                    <div class="pd-rel-ph"><i class="fas fa-building"></i></div>
+                    {% endif %}
+                    <!-- Badges on Image -->
+                    <div class="pd-rel-badges">
+                        {% if rp.golden_visa_eligible %}
+                        <span class="pd-rel-badge pd-rel-price">€{{ rp.price_tier }}K</span>
+                        {% endif %}
+                        {% if rp.status == 'available' %}<span class="pd-rel-badge pd-rel-available">Available</span>{% endif %}
+                        {% if rp.status == 'sold_out_soon' %}<span class="pd-rel-badge pd-rel-soon">Sold Soon</span>{% endif %}
+                        {% if rp.status == 'sold_out' %}<span class="pd-rel-badge pd-rel-sold">Sold Out</span>{% endif %}
+                    </div>
+                    <!-- Info Overlay -->
+                    <div class="pd-rel-overlay">
+                        <h4>{{ rp.name }}</h4>
+                        <span class="pd-rel-location">{{ rp.neighborhood_public|default:rp.location }}</span>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_css %}
+<!-- Property page: RealEstateListing structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "RealEstateListing",
+  "name": "{{ property.name|escapejs }}",
+  "description": "{{ property.get_meta_description|escapejs }}",
+  "url": "{{ request.build_absolute_uri }}",
+  {% with cover=property.gallery_cover %}{% if cover %}"image": "{{ request.scheme }}://{{ request.get_host }}{{ cover.image.url }}",{% endif %}{% endwith %}
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "EUR",
+    "price": "{{ property.price }}",
+    "availability": "https://schema.org/{% if property.status == 'available' %}InStock{% else %}OutOfStock{% endif %}"
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "{{ property.neighborhood_public|default:property.location|escapejs }}",
+    "addressRegion": "{{ property.city|escapejs }}",
+    "addressCountry": "GR"
+  },
+  "provider": {
+    "@type": "Organization",
+    "name": "Adonis Group",
+    "url": "{{ request.scheme }}://{{ request.get_host }}"
+  }
+}
+</script>
+
+<style>
+/* =====================================================
+   Property Detail – Luxury & Elegant Design
+   ===================================================== */
+
+/* Breadcrumb */
+.pd-breadcrumb {
+    padding: 7rem 0 1.5rem;
+    background: #fff;
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+.pd-breadcrumb a { color: #0D5EAF; transition: opacity 0.2s; }
+.pd-breadcrumb a:hover { opacity: 0.7; }
+.pd-breadcrumb span { margin: 0 0.4rem; }
+.pd-breadcrumb span:last-child { color: #334155; font-weight: 500; }
+
+/* Main */
+.pd-main { background: #fff; padding: 0 0 3rem; }
+
+/* ===== Spitogatos-style Gallery ===== */
+.property-gallery {
+    position: relative;
+    margin-bottom: 1.5rem;
+    max-width: 100%;
+}
+
+/* ── Action buttons (top-right overlay) ── */
+.gallery-actions {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+.gallery-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 40px;
+    min-width: 40px;
+    padding: 0 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(0,0,0,0.42);
+    color: #fff;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: background 0.18s;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+.gallery-icon-btn:hover { background: rgba(0,0,0,0.65); }
+.gallery-view-all-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+/* ── Grid: main (1.6fr) + thumbs (1fr) ── */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 10px;
+    align-items: stretch;
+}
+.gallery-grid--single {
+    grid-template-columns: 1fr;
+}
+
+/* ── Main image ── */
+.gallery-main {
+    display: block;
+    border-radius: 16px;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    background: #0a1628;
+    cursor: zoom-in;
+    position: relative;
+    min-height: 220px;
+}
+.gallery-main img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.45s ease;
+}
+.gallery-main:hover img { transform: scale(1.03); }
+.gallery-main--placeholder { cursor: default; }
+
+/* ── Thumbnail grid (2×2) ── */
+.gallery-thumbs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+}
+.thumb {
+    position: relative;
+    border: none;
+    padding: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    background: #0a1628;
+    aspect-ratio: 4 / 3;
+    transition: outline 0.15s;
+    outline: 3px solid transparent;
+    outline-offset: 0;
+}
+.thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.35s ease;
+}
+.thumb:hover img { transform: scale(1.06); }
+.thumb.is-active {
+    outline-color: #0D5EAF;
+}
+.thumb-more {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.55);
+    color: #fff;
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    border-radius: 12px;
+}
+
+/* Videos Section */
+.pd-videos-section {
+    margin-bottom: 0;
+}
+.pd-video-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #0a1628;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.pd-video-title i {
+    color: #0D5EAF;
+}
+/* Single video: full width */
+.pd-videos-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+/* Two videos: side-by-side on desktop */
+.pd-videos-grid--two {
+    grid-template-columns: 1fr 1fr;
+}
+.pd-video-wrapper {
+    border-radius: 16px;
+    overflow: hidden;
+    background: #0a1628;
+}
+.pd-video {
+    width: 100%;
+    max-height: 500px;
+    display: block;
+}
+
+/* .pd-zoom removed — replaced by .gallery-actions */
+.pd-no-image {
+    width: 100%; height: 100%; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 1rem;
+    color: #94a3b8; font-size: 4rem;
+}
+.pd-no-image span { font-size: 1rem; }
+
+/* legacy .pd-thumb removed — replaced by .thumb above */
+
+/* ===== Content Grid ===== */
+.pd-content-grid {
+    display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 1rem; align-items: start;
+    margin-top: 0;
+}
+
+/* Left Info */
+.pd-info { margin-top: 0; padding-top: 0; }
+.pd-badges { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.4rem; position: relative; z-index: 1; }
+.pd-badge {
+    padding: 0.35rem 0.85rem; border-radius: 999px; font-size: 0.7rem;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+}
+.pd-badge-blue { background: #eff6ff; color: #0D5EAF; border: 1px solid #bfdbfe; }
+.pd-badge-green { background: #ecfdf5; color: #16a34a; border: 1px solid #a7f3d0; }
+.pd-badge-gray { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
+.pd-badge-purple { background: #faf5ff; color: #7c3aed; border: 1px solid #c4b5fd; }
+
+.pd-title { 
+    font-size: 1.6rem; 
+    line-height: 1.25; 
+    margin: 0 0 0.35rem;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+.pd-tagline { font-size: 0.95rem; color: #0D5EAF; font-weight: 500; margin: 0 0 0.35rem; }
+.pd-location { color: #64748b; font-size: 0.85rem; margin: 0 0 1rem; }
+
+.pd-divider { height: 1px; background: #e8ecf1; margin: 1.25rem 0; }
+
+.pd-desc { 
+    color: #475569; 
+    line-height: 1.5; 
+    font-size: 0.88rem;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+}
+.pd-desc img {
+    max-width: 100% !important;
+    height: auto !important;
+}
+.pd-desc iframe {
+    max-width: 100% !important;
+}
+.pd-desc p { margin-top: 0; margin-bottom: 0.6rem; }
+.pd-desc p:last-child { margin-bottom: 0; }
+.pd-desc br { display: block; content: ""; margin-top: 0; }
+.pd-desc ul, .pd-desc ol { margin-bottom: 0.6rem; padding-left: 1.2rem; }
+.pd-desc li { margin-bottom: 0.2rem; }
+.pd-desc strong { color: #334155; }
+
+.pd-subtitle { font-size: 1rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.35rem; color: #0b2948 !important; }
+.pd-subtitle i { color: #0D5EAF; }
+
+/* ===== Privacy-Safe Map ===== */
+.pd-map-wrapper {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    margin-top: 0.5rem;
+}
+.pd-map-container {
+    width: 100%;
+    height: 320px;
+    background: #e8ecf1;
+}
+.pd-map-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 800;
+    background: rgba(255, 255, 255, 0.93);
+    color: #0b2948;
+    font-size: 0.76rem;
+    font-weight: 600;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    box-shadow: 0 1px 6px rgba(0,0,0,.15);
+    pointer-events: none;
+}
+.pd-map-badge i { color: #0D5EAF; }
+.pd-map-note {
+    font-size: 0.74rem;
+    color: #64748b;
+    padding: 0.6rem 1rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+}
+.pd-map-note i { color: #94a3b8; }
+.pd-map-placeholder {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 0;
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+.pd-map-placeholder i { color: #cbd5e1; }
+
+/* ===== Amenities ===== */
+.pd-amenities {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem 1.5rem;
+    margin-top: 0.25rem;
+}
+.pd-amenity-group {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+}
+.pd-amenity-cat {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #0D5EAF;
+    margin: 0 0 0.6rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1.5px solid #e2e8f0;
+}
+.pd-amenity-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+.pd-amenity-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+    color: #334155;
+    line-height: 1.35;
+}
+.pd-amenity-check {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #dcfce7;
+    color: #16a34a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pd-highlights { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.pd-highlight {
+    padding: 0.45rem 0.9rem; background: #f8fafc; border: 1px solid #e2e8f0;
+    border-radius: 8px; font-size: 0.8rem; color: #334155; font-weight: 500;
+    transition: all 0.2s;
+}
+.pd-highlight:hover { border-color: #0D5EAF; background: #eff6ff; }
+
+/* ===== Construction Timeline ===== */
+.pd-timeline {
+    margin-top: 0.8rem;
+    padding: 0.95rem 1.1rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+.pd-timeline-track {
+    position: relative;
+    height: 4px;
+    background: #e2e8f0;
+    border-radius: 3px;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+}
+.pd-timeline-progress {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #0D5EAF, #16a34a);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+}
+.pd-timeline-progress[data-stage="ready_to_start"] { width: 12%; }
+.pd-timeline-progress[data-stage="under_renovation"] { width: 40%; }
+.pd-timeline-progress[data-stage="finishing_soon"] { width: 72%; }
+.pd-timeline-progress[data-stage="ready"] { width: 100%; }
+
+.pd-timeline-stages {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.3rem;
+    position: relative;
+}
+.pd-timeline-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+}
+.pd-stage-dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    border: 2px solid #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+    color: #94a3b8;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    z-index: 1;
+}
+.pd-timeline-stage.completed .pd-stage-dot {
+    background: #0D5EAF;
+    color: #fff;
+}
+.pd-timeline-stage.current .pd-stage-dot {
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+    color: #fff;
+    transform: scale(1.15);
+    box-shadow: 0 4px 15px rgba(22, 163, 74, 0.4);
+    animation: pulse-timeline 2s infinite;
+}
+@keyframes pulse-timeline {
+    0%, 100% { box-shadow: 0 4px 15px rgba(22, 163, 74, 0.4); }
+    50% { box-shadow: 0 4px 25px rgba(22, 163, 74, 0.6); }
+}
+.pd-stage-label {
+    margin-top: 0.35rem;
+    font-size: 0.62rem;
+    color: #64748b;
+    text-align: center;
+    line-height: 1.2;
+    font-weight: 500;
+}
+.pd-timeline-stage.current .pd-stage-label {
+    color: #16a34a;
+    font-weight: 700;
+}
+.pd-timeline-stage.completed .pd-stage-label {
+    color: #0D5EAF;
+}
+
+/* Timeline Responsive */
+@media (max-width: 576px) {
+    .pd-stage-dot { width: 27px; height: 27px; font-size: 0.68rem; }
+    .pd-stage-label { font-size: 0.56rem; }
+    .pd-timeline { padding: 0.72rem 0.78rem; }
+}
+
+/* ===== Units Table ===== */
+.pd-units-wrapper {
+    overflow-x: auto;
+    margin-top: 0.9rem;
+    width: 100%;
+    margin-right: 0;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    background: #fff;
+}
+/* ===== Units Table - Premium Design ===== */
+.pd-units-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.82rem;
+    min-width: 100%;
+}
+.pd-units-table thead {
+    background: linear-gradient(135deg, #0b2948 0%, #143d6b 50%, #0D5EAF 100%);
+    position: relative;
+}
+.pd-units-table thead::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #c9a227, transparent);
+}
+.pd-units-table thead th {
+    padding: 0.72rem 0.72rem;
+    color: #fff;
+    font-weight: 600;
+    text-align: left;
+    font-size: 0.67rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+}
+.pd-units-table thead th:first-child {
+    border-radius: 12px 0 0 0;
+}
+.pd-units-table thead th:last-child {
+    border-radius: 0 12px 0 0;
+    text-align: center;
+    min-width: 132px;
+    width: 132px;
+}
+.pd-units-table tbody tr {
+    border-bottom: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+.pd-units-table tbody tr:nth-child(even) {
+    background: #f8fafc;
+}
+.pd-units-table tbody tr:hover {
+    background: linear-gradient(90deg, #f0f7ff, #e8f4ff);
+    transform: scale(1.005);
+    box-shadow: 0 4px 15px rgba(13,94,175,0.08);
+}
+.pd-units-table tbody tr.unit-sold {
+    opacity: 0.55;
+    background: linear-gradient(90deg, #fef2f2, #fff5f5);
+}
+.pd-units-table tbody tr.unit-sold:hover {
+    transform: none;
+    box-shadow: none;
+}
+.pd-units-table tbody tr.unit-reserved {
+    background: linear-gradient(90deg, #fffbeb, #fef9e7);
+}
+.pd-units-table td {
+    padding: 0.62rem 0.72rem;
+    color: #334155;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.pd-units-table tbody td:last-child {
+    min-width: 132px;
+    width: 132px;
+    text-align: center;
+    padding-right: 0.9rem;
+}
+.pd-units-table td i {
+    margin-right: 5px;
+    font-size: 0.8rem;
+    color: #64748b;
+}
+.unit-num {
+    font-weight: 800;
+    color: #0D5EAF;
+    width: 34px;
+    text-align: center;
+    font-size: 0.82rem;
+}
+.unit-label {
+    font-weight: 700;
+    color: #0b2948;
+    font-size: 0.84rem;
+}
+.unit-price {
+    font-weight: 800;
+    color: #0b2948;
+    font-size: 0.88rem;
+    background: linear-gradient(135deg, #0b2948, #0D5EAF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.unit-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0.3rem 0.68rem;
+    border-radius: 999px;
+    font-size: 0.64rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.unit-status-available {
+    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+    color: #16a34a;
+    border: 1px solid #86efac;
+    box-shadow: 0 2px 8px rgba(22,163,74,0.15);
+}
+.unit-status-reserved {
+    background: linear-gradient(135deg, #fffbeb, #fef3c7);
+    color: #d97706;
+    border: 1px solid #fcd34d;
+    box-shadow: 0 2px 8px rgba(217,119,6,0.15);
+}
+.unit-status-sold {
+    background: linear-gradient(135deg, #fef2f2, #fee2e2);
+    color: #dc2626;
+    border: 1px solid #fca5a5;
+    box-shadow: 0 2px 8px rgba(220,38,38,0.15);
+}
+
+/* ===== Mobile Units Card View ===== */
+.pd-units-mobile {
+    display: none;
+    flex-direction: column;
+    gap: 0.9rem;
+    margin-top: 0.9rem;
+}
+
+.unit-card {
+    background: #fff;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    overflow: hidden;
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.unit-card:active {
+    transform: scale(0.99);
+}
+
+.unit-card-header {
+    background: linear-gradient(135deg, #0b2948 0%, #143d6b 100%);
+    padding: 0.9rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.unit-card-name {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.unit-card-label {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.02em;
+}
+
+.unit-card-header .unit-status {
+    font-size: 0.58rem;
+    padding: 0.22rem 0.5rem;
+}
+
+.unit-card-price {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #c9a227;
+    white-space: nowrap;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.unit-card-specs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.unit-card-spec {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7rem 0.4rem;
+    text-align: center;
+    border-right: 1px solid #f1f5f9;
+}
+.unit-card-spec:last-child {
+    border-right: none;
+}
+
+.unit-card-spec i {
+    font-size: 0.9rem;
+    color: #0D5EAF;
+    margin-bottom: 0.3rem;
+}
+
+.unit-card-spec .spec-label {
+    font-size: 0.62rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+    margin-bottom: 0.15rem;
+}
+
+.unit-card-spec .spec-value {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #0b2948;
+}
+
+.unit-card-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background: linear-gradient(135deg, #c9a227 0%, #dbb84a 50%, #c9a227 100%);
+    background-size: 200% 100%;
+    color: #0b2948;
+    border: none;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: background-position 0.4s ease, box-shadow 0.3s ease;
+}
+.unit-card-cta:hover,
+.unit-card-cta:active {
+    background-position: 100% 0;
+    box-shadow: inset 0 0 20px rgba(255,255,255,0.2);
+}
+.unit-card-cta i {
+    font-size: 0.85rem;
+}
+
+.unit-card-unavailable {
+    padding: 0.7rem 1rem;
+    text-align: center;
+    font-size: 0.78rem;
+    color: #64748b;
+    background: #f8fafc;
+    font-weight: 500;
+}
+
+/* Sold / Reserved card states */
+.unit-card-sold {
+    opacity: 0.65;
+}
+.unit-card-sold .unit-card-header {
+    background: linear-gradient(135deg, #4b5563 0%, #6b7280 100%);
+}
+.unit-card-reserved .unit-card-header {
+    background: linear-gradient(135deg, #92400e 0%, #b45309 100%);
+}
+
+/* Show/hide based on viewport */
+@media (max-width: 767px) {
+    .pd-units-desktop { display: none !important; }
+    .pd-units-mobile { display: flex !important; }
+}
+
+/* Book Now Button - Premium Stretched */
+.unit-book-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    min-width: 112px;
+    width: 100%;
+    max-width: 124px;
+    background: linear-gradient(135deg, #c9a227 0%, #dbb84a 50%, #c9a227 100%);
+    background-size: 200% 100%;
+    color: #0b2948;
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(201,162,39,0.3);
+    position: relative;
+    overflow: hidden;
+}
+.unit-book-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s ease;
+}
+.unit-book-btn:hover {
+    background-position: 100% 0;
+    box-shadow: 0 6px 25px rgba(201,162,39,0.45);
+    transform: translateY(-2px) scale(1.02);
+}
+.unit-book-btn:hover::before {
+    left: 100%;
+}
+.unit-book-btn i {
+    font-size: 0.85rem;
+    color: #0b2948;
+    margin-right: 0;
+}
+.unit-na {
+    color: #cbd5e1;
+    font-size: 1rem;
+    text-align: center;
+    display: block;
+}
+
+/* ===== Location & Neighborhood Section ===== */
+.pd-neighborhood-section {
+    margin-top: 2rem;
+}
+.pd-neighborhood-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 2rem;
+    margin-top: 1.25rem;
+}
+.pd-neighborhood-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+.pd-neighborhood-img-wrap {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+.pd-neighborhood-img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    display: block;
+}
+.pd-neighborhood-badge {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    color: #0b2948;
+    font-size: 0.85rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.pd-neighborhood-badge i {
+    color: #dc2626;
+    margin-right: 5px;
+}
+.pd-neighborhood-desc {
+    color: #475569;
+    line-height: 1.8;
+    font-size: 0.95rem;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+.pd-neighborhood-desc img {
+    max-width: 100% !important;
+    height: auto !important;
+}
+.pd-area-highlights {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 1.5rem;
+}
+.pd-highlights-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0b2948;
+    margin-bottom: 1rem;
+}
+.pd-highlights-title i {
+    color: #c9a227;
+    margin-right: 6px;
+}
+.pd-highlights-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+.pd-highlight-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+    color: #334155;
+}
+.pd-highlight-item i {
+    color: #16a34a;
+    font-size: 0.8rem;
+}
+
+/* Distance Cards */
+.pd-distances {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+.pd-distance-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+}
+.pd-distance-card:hover {
+    transform: translateX(5px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+.pd-distance-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 1.2rem;
+}
+.pd-distance-sea .pd-distance-icon {
+    background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+    color: #0284c7;
+}
+.pd-distance-metro .pd-distance-icon {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    color: #d97706;
+}
+.pd-distance-center .pd-distance-icon {
+    background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+    color: #7c3aed;
+}
+.pd-distance-acropolis .pd-distance-icon {
+    background: linear-gradient(135deg, #fce7f3, #fbcfe8);
+    color: #db2777;
+}
+.pd-distance-airport .pd-distance-icon {
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    color: #059669;
+}
+.pd-distance-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.pd-distance-label {
+    font-size: 0.78rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.pd-distance-value {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0b2948;
+}
+
+/* Responsive Neighborhood */
+@media (max-width: 992px) {
+    .pd-neighborhood-grid {
+        grid-template-columns: 1fr;
+    }
+    .pd-distances {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 576px) {
+    .pd-distances {
+        grid-template-columns: 1fr;
+    }
+    .pd-highlights-grid {
+        grid-template-columns: 1fr;
+    }
+    .pd-neighborhood-img {
+        height: 200px;
+    }
+}
+
+/* ===== Right Sidebar ===== */
+.pd-price-card {
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 16px;
+    padding: 2rem; margin-bottom: 1.25rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+}
+.pd-price-label { font-size: 0.78rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.25rem; }
+.pd-price { font-size: 1.75rem; font-weight: 700; color: #0b2948; margin-bottom: 1.5rem; font-family: 'Playfair Display', serif; }
+
+.pd-btn-interest {
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    width: 100%; padding: 0.85rem; border: none; border-radius: 10px;
+    background: linear-gradient(135deg, #0D5EAF, #08407a); color: #fff;
+    font-family: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer;
+    transition: all 0.25s; margin-bottom: 0.75rem;
+}
+.pd-btn-interest:hover { box-shadow: 0 6px 25px rgba(13,94,175,0.3); transform: translateY(-1px); }
+
+.pd-btn-whatsapp {
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    width: 100%; padding: 0.85rem; border-radius: 10px;
+    background: #25D366; color: #fff; font-size: 0.9rem; font-weight: 600;
+    transition: all 0.25s;
+}
+.pd-btn-whatsapp:hover { background: #1ebe5d; transform: translateY(-1px); }
+
+.pd-sold-out {
+    text-align: center; padding: 1rem; background: #f1f5f9; border-radius: 10px;
+    color: #64748b; font-weight: 500;
+}
+
+.pd-specs-card {
+    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px;
+    padding: 1.75rem;
+}
+.pd-specs-card h4 { font-size: 1rem; margin-bottom: 1.25rem; color: #0b2948; font-weight: 700; }
+.pd-specs-list { display: flex; flex-direction: column; gap: 0; }
+.pd-spec-row {
+    display: flex; align-items: center; padding: 0.7rem 0;
+    border-bottom: 1px solid #e8ecf1;
+}
+.pd-spec-row:last-child { border-bottom: none; }
+.pd-spec-icon { width: 32px; color: #0D5EAF; font-size: 0.85rem; }
+.pd-spec-key { flex: 1; color: #64748b; font-size: 0.88rem; }
+.pd-spec-val { font-weight: 600; color: #0b2948; font-size: 0.95rem; }
+
+/* ===== Lightbox - Full Screen Gallery ===== */
+.pd-lightbox {
+    position: fixed; 
+    inset: 0; 
+    background: rgba(0,0,0,0.97); 
+    z-index: 3000;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    opacity: 0; 
+    visibility: hidden; 
+    transition: all 0.3s;
+    /* Prevent any scrollbars or overflow artifacts */
+    overflow: hidden;
+    -webkit-overflow-scrolling: auto;
+}
+.pd-lightbox.open { opacity: 1; visibility: visible; }
+
+/* Remove any pseudo-elements that might cause overlay artifacts */
+.pd-lightbox::before,
+.pd-lightbox::after {
+    content: none !important;
+    display: none !important;
+}
+
+.pd-lb-img {
+    max-width: 94vw; 
+    max-height: 90vh; 
+    object-fit: contain;
+    border-radius: 8px; 
+    box-shadow: 0 20px 80px rgba(0,0,0,0.6);
+    animation: lbFadeIn 0.3s ease;
+    /* Prevent image from causing scroll */
+    display: block;
+    margin: auto;
+}
+@keyframes lbFadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+.pd-lb-close, .pd-lb-prev, .pd-lb-next {
+    position: absolute; 
+    background: rgba(255,255,255,0.1); 
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff; 
+    border-radius: 50%; 
+    cursor: pointer; 
+    transition: all 0.25s;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    /* Prevent any transform artifacts on iOS */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+.pd-lb-close { top: 1.5rem; right: 1.5rem; width: 50px; height: 50px; font-size: 1.3rem; }
+.pd-lb-prev { left: 2rem; top: 50%; transform: translateY(-50%) translateZ(0); width: 56px; height: 56px; font-size: 1.4rem; }
+.pd-lb-next { right: 2rem; top: 50%; transform: translateY(-50%) translateZ(0); width: 56px; height: 56px; font-size: 1.4rem; }
+.pd-lb-close:hover, .pd-lb-prev:hover, .pd-lb-next:hover { 
+    background: rgba(255,255,255,0.25); 
+    transform: translateY(-50%) scale(1.1) translateZ(0);
+}
+.pd-lb-close:hover { transform: scale(1.1) translateZ(0); }
+.pd-lb-counter { 
+    position: absolute; 
+    bottom: 2rem; 
+    left: 50%; 
+    transform: translateX(-50%) translateZ(0); 
+    color: rgba(255,255,255,0.7); 
+    font-size: 0.9rem; 
+    letter-spacing: 0.15em;
+    background: rgba(0,0,0,0.4); 
+    padding: 0.5rem 1.25rem; 
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* ===== Mobile Lightbox Fixes (iOS Safari) ===== */
+@media (max-width: 767px) {
+    .pd-lightbox {
+        /* Solid background on mobile to avoid backdrop-filter issues */
+        background: #000;
+        /* Ensure no horizontal overflow */
+        width: 100%;
+        max-width: 100vw;
+    }
+    
+    /* Disable backdrop-filter on mobile to prevent rendering artifacts */
+    .pd-lb-close, .pd-lb-prev, .pd-lb-next, .pd-lb-counter {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+    
+    .pd-lb-close {
+        background: rgba(255,255,255,0.2);
+    }
+    
+    .pd-lb-prev, .pd-lb-next {
+        background: rgba(255,255,255,0.15);
+        /* Use top/margin instead of transform for positioning on mobile */
+        top: auto;
+        bottom: 50%;
+        transform: translateY(50%) translateZ(0);
+    }
+    
+    .pd-lb-counter {
+        background: rgba(0,0,0,0.6);
+    }
+    
+    .pd-lb-img {
+        max-width: 100%;
+        max-height: 80vh;
+        border-radius: 0;
+        box-shadow: none;
+    }
+}
+
+/* .pd-gallery-view-all removed — replaced by .gallery-icon-btn--view-all */
+
+/* ===== Modal ===== */
+.pd-modal-bg {
+    position: fixed; inset: 0; background: rgba(11,41,72,0.55); backdrop-filter: blur(5px);
+    z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 1.5rem;
+    opacity: 0; visibility: hidden; transition: all 0.3s;
+}
+.pd-modal-bg.open { opacity: 1; visibility: visible; }
+.pd-modal {
+    background: #fff; border-radius: 18px; padding: 2.5rem; max-width: 440px; width: 100%;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.2); position: relative;
+    transform: translateY(20px); transition: transform 0.3s;
+}
+.pd-modal-bg.open .pd-modal { transform: translateY(0); }
+.pd-modal-x { position: absolute; top: 1rem; right: 1rem; background: #f1f5f9; border: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 0.85rem; color: #475569; display: flex; align-items: center; justify-content: center; }
+.pd-modal h3 { font-size: 1.25rem; margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.5rem; }
+.pd-modal-name { color: #0D5EAF; font-weight: 600; font-size: 0.92rem; margin-bottom: 1.5rem; }
+.pd-field { margin-bottom: 1rem; }
+.pd-field label { display: block; font-size: 0.8rem; font-weight: 500; color: #334155; margin-bottom: 0.3rem; }
+.pd-field input, .pd-field textarea { width: 100%; padding: 0.7rem 0.9rem; border: 1.5px solid #e2e8f0; border-radius: 10px; font-family: inherit; font-size: 0.9rem; color: #1e293b; background: #f8fafc; outline: none; }
+.pd-field input:focus, .pd-field textarea:focus { border-color: #0D5EAF; background: #fff; box-shadow: 0 0 0 3px rgba(13,94,175,0.08); }
+.pd-form-submit { width: 100%; padding: 0.85rem; background: linear-gradient(135deg, #0D5EAF, #08407a); color: #fff; border: none; border-radius: 10px; font-family: inherit; font-size: 0.92rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.2s; }
+.pd-form-submit:hover { box-shadow: 0 4px 20px rgba(13,94,175,0.3); }
+.pd-form-ok { text-align: center; padding: 2rem 1rem; }
+.pd-form-ok i { font-size: 3rem; color: #16a34a; margin-bottom: 1rem; display: block; }
+.pd-form-ok strong { font-size: 1.15rem; color: #0b2948; display: block; margin-bottom: 0.4rem; }
+.pd-form-ok p { color: #64748b; }
+
+/* ===== Related Properties - Vertical Cards ===== */
+.pd-related { 
+    background: linear-gradient(180deg, #0b2948 0%, #0D5EAF 100%); 
+    padding: 3.5rem 0; 
+}
+.pd-related-title { 
+    font-size: 1.5rem; 
+    text-align: center; 
+    margin-bottom: 2rem; 
+    color: #fff !important;
+}
+.pd-related-grid { 
+    display: grid; 
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 1.25rem; 
+}
+.pd-rel-card { 
+    display: block;
+    border-radius: 16px; 
+    overflow: hidden; 
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+.pd-rel-card:hover { 
+    transform: translateY(-8px); 
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+.pd-rel-img { 
+    position: relative;
+    aspect-ratio: 3/4; 
+    overflow: hidden; 
+}
+.pd-rel-img img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    transition: transform 0.5s ease; 
+}
+.pd-rel-card:hover .pd-rel-img img { 
+    transform: scale(1.08); 
+}
+/* Gradient Overlay */
+.pd-rel-img::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 70%;
+    background: linear-gradient(to top, rgba(11, 41, 72, 0.95) 0%, rgba(11, 41, 72, 0.6) 40%, transparent 100%);
+    pointer-events: none;
+}
+/* Badges */
+.pd-rel-badges {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    right: 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    z-index: 2;
+}
+.pd-rel-badge {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    border-radius: 6px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+}
+.pd-rel-price {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.9), rgba(184, 134, 11, 0.95));
+}
+.pd-rel-available {
+    background: linear-gradient(135deg, rgba(22, 163, 74, 0.85), rgba(21, 128, 61, 0.9));
+}
+.pd-rel-soon {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.85), rgba(217, 119, 6, 0.9));
+}
+.pd-rel-sold {
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.85), rgba(185, 28, 28, 0.9));
+}
+/* Info Overlay */
+.pd-rel-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.25rem;
+    z-index: 2;
+    color: #fff;
+}
+.pd-rel-overlay h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    color: #fff !important;
+}
+.pd-rel-location {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.8);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.pd-rel-ph { 
+    width: 100%; height: 100%; 
+    background: linear-gradient(135deg, #0b2948 0%, #0D5EAF 100%); 
+    display: flex; align-items: center; justify-content: center; 
+    font-size: 2.5rem; color: rgba(255,255,255,0.3); 
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1200px) {
+    .pd-related-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 992px) {
+    .pd-content-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+    .pd-units-wrapper { width: 100%; margin-right: 0; }
+    .pd-related-grid { grid-template-columns: repeat(2, 1fr); }
+    .pd-sidebar { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .pd-price-card { margin-bottom: 0; }
+    .pd-amenities { grid-template-columns: repeat(2, 1fr); }
+
+    /* Gallery: stack main above scrollable thumb strip */
+    .gallery-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    .gallery-main {
+        aspect-ratio: 16 / 9;
+        border-radius: 12px;
+        min-height: 0;
+    }
+    .gallery-thumbs {
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        scrollbar-color: #cbd5e1 transparent;
+        padding-bottom: 4px;
+        /* reset the 2×2 grid */
+        grid-template-columns: unset;
+        grid-template-rows: unset;
+    }
+    .thumb {
+        flex: 0 0 120px;
+        width: 120px;
+        aspect-ratio: 4 / 3;
+        border-radius: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .pd-breadcrumb { padding: 6rem 0 1rem; font-size: 0.8rem; }
+    .pd-main { padding: 0 0 2rem; }
+    .gallery-main { border-radius: 10px; }
+    .thumb { flex: 0 0 100px; width: 100px; border-radius: 8px; }
+    .pd-amenities { grid-template-columns: 1fr; }
+    .pd-videos-grid--two { grid-template-columns: 1fr; }
+    .pd-video { max-height: 350px; }
+    .pd-video-wrapper { border-radius: 12px; }
+    .pd-title { font-size: 1.35rem; }
+    .pd-tagline { font-size: 0.88rem; }
+    .pd-desc { font-size: 0.84rem; line-height: 1.55; }
+    .pd-desc p { margin-bottom: 0.65rem; }
+    .pd-subtitle { font-size: 0.92rem; }
+    .pd-highlight { padding: 0.38rem 0.75rem; font-size: 0.75rem; }
+    .pd-divider { margin: 1rem 0; }
+    .pd-timeline { padding: 0.8rem 0.9rem; }
+    .pd-stage-dot { width: 28px; height: 28px; font-size: 0.72rem; }
+    .pd-stage-label { font-size: 0.58rem; }
+    .pd-units-table thead th { padding: 0.6rem 0.55rem; font-size: 0.62rem; }
+    .pd-units-table td { padding: 0.5rem 0.55rem; font-size: 0.78rem; }
+    .pd-units-table thead th:last-child,
+    .pd-units-table tbody td:last-child { min-width: 100px; width: 100px; }
+    .unit-book-btn { padding: 0.4rem 0.7rem; min-width: 90px; font-size: 0.62rem; }
+    .unit-num { font-size: 0.78rem; width: 28px; }
+    .unit-label { font-size: 0.78rem; }
+    .unit-price { font-size: 0.82rem; }
+    .unit-status { padding: 0.25rem 0.55rem; font-size: 0.58rem; }
+    .pd-sidebar { grid-template-columns: 1fr; }
+    .pd-price-card { padding: 1.5rem; margin-bottom: 1rem; }
+    .pd-price { font-size: 1.5rem; margin-bottom: 1rem; }
+    .pd-btn-interest, .pd-btn-whatsapp { padding: 0.75rem; font-size: 0.85rem; }
+    .pd-specs-card { padding: 1.25rem; }
+    .pd-specs-card h4 { font-size: 0.92rem; margin-bottom: 1rem; }
+    .pd-spec-row { padding: 0.6rem 0; }
+    .pd-spec-val { font-size: 0.88rem; }
+    .pd-neighborhood-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+    .pd-neighborhood-img { height: 220px; }
+    .pd-distance-card { padding: 0.85rem 1rem; }
+    .pd-distance-icon { width: 40px; height: 40px; font-size: 1rem; border-radius: 10px; }
+    .pd-distance-label { font-size: 0.72rem; }
+    .pd-distance-value { font-size: 0.95rem; }
+    .pd-related { padding: 2rem 0; }
+    .pd-related-title { font-size: 1.3rem; }
+}
+
+@media (max-width: 576px) {
+    .pd-breadcrumb { padding: 5.5rem 0 0.75rem; font-size: 0.75rem; }
+    .gallery-main { border-radius: 8px; }
+    .thumb { flex: 0 0 86px; width: 86px; border-radius: 6px; }
+    .gallery-icon-btn { height: 34px; min-width: 34px; font-size: 0.78rem; }
+    .pd-videos-grid--two { grid-template-columns: 1fr; gap: 8px; }
+    .pd-video { max-height: 260px; }
+    .pd-video-wrapper { border-radius: 8px; }
+    .pd-video-title { font-size: 0.95rem; margin-bottom: 0.6rem; }
+    .pd-badges { gap: 0.3rem; margin-bottom: 0.3rem; }
+    .pd-badge { padding: 0.28rem 0.65rem; font-size: 0.62rem; }
+    .pd-title { font-size: 1.15rem; line-height: 1.3; }
+    .pd-tagline { font-size: 0.82rem; }
+    .pd-location { font-size: 0.78rem; margin: 0 0 0.75rem; }
+    .pd-desc { font-size: 0.8rem; line-height: 1.5; }
+    .pd-desc p { margin-bottom: 0.6rem; }
+    .pd-subtitle { font-size: 0.88rem; margin-bottom: 0.6rem; }
+    .pd-highlight { padding: 0.32rem 0.6rem; font-size: 0.7rem; border-radius: 6px; }
+    .pd-highlights { gap: 0.35rem; }
+    .pd-divider { margin: 0.85rem 0; }
+    .pd-timeline { padding: 0.65rem 0.7rem; border-radius: 10px; }
+    .pd-timeline-track { height: 3px; margin-bottom: 0.6rem; }
+    .pd-stage-dot { width: 25px; height: 25px; font-size: 0.65rem; }
+    .pd-stage-label { font-size: 0.52rem; margin-top: 0.25rem; }
+    /* Mobile card view is shown via media query in main CSS */
+    .pd-price-card { padding: 1.25rem; border-radius: 12px; }
+    .pd-price-label { font-size: 0.72rem; }
+    .pd-price { font-size: 1.35rem; margin-bottom: 0.85rem; }
+    .pd-btn-interest, .pd-btn-whatsapp { padding: 0.7rem; font-size: 0.82rem; border-radius: 8px; }
+    .pd-btn-interest { margin-bottom: 0.6rem; }
+    .pd-sold-out { padding: 0.75rem; font-size: 0.82rem; border-radius: 8px; }
+    .pd-specs-card { padding: 1rem; border-radius: 12px; }
+    .pd-specs-card h4 { font-size: 0.88rem; margin-bottom: 0.85rem; }
+    .pd-spec-row { padding: 0.5rem 0; }
+    .pd-spec-icon { width: 28px; font-size: 0.78rem; }
+    .pd-spec-key { font-size: 0.82rem; }
+    .pd-spec-val { font-size: 0.88rem; }
+    .pd-neighborhood-section { margin-top: 1.25rem; }
+    .pd-neighborhood-img { height: 180px; border-radius: 12px; }
+    .pd-neighborhood-badge { padding: 0.4rem 0.75rem; font-size: 0.78rem; bottom: 0.6rem; left: 0.6rem; }
+    .pd-neighborhood-desc { font-size: 0.85rem; line-height: 1.7; }
+    .pd-area-highlights { padding: 1rem; border-radius: 12px; }
+    .pd-highlights-title { font-size: 0.88rem; margin-bottom: 0.7rem; }
+    .pd-highlight-item { font-size: 0.82rem; gap: 6px; }
+    .pd-distances { grid-template-columns: 1fr; gap: 0.65rem; }
+    .pd-distance-card { padding: 0.75rem 0.85rem; border-radius: 10px; gap: 0.75rem; }
+    .pd-distance-icon { width: 36px; height: 36px; font-size: 0.9rem; border-radius: 8px; }
+    .pd-distance-label { font-size: 0.68rem; }
+    .pd-distance-value { font-size: 0.9rem; }
+    .pd-related { padding: 1.75rem 0; }
+    .pd-related-title { font-size: 1.15rem; margin-bottom: 1rem; }
+    .pd-related-grid { grid-template-columns: repeat(2, 1fr); gap: 0.65rem; }
+    .pd-rel-img { aspect-ratio: 2/3; border-radius: 10px; }
+    .pd-rel-overlay { padding: 0.75rem; }
+    .pd-rel-overlay h4 { font-size: 0.78rem; }
+    .pd-rel-location { font-size: 0.7rem; }
+    .pd-rel-badge { padding: 0.3rem 0.55rem; font-size: 0.58rem; }
+    /* Modal responsive */
+    .pd-modal { padding: 1.75rem; max-width: 95vw; }
+    .pd-modal h3 { font-size: 1.05rem; }
+    .pd-field label { font-size: 0.82rem; }
+    .pd-field input, .pd-field textarea { font-size: 0.85rem; padding: 0.6rem 0.75rem; }
+    .pd-form-submit { font-size: 0.85rem; padding: 0.7rem; }
+    /* Lightbox responsive - see dedicated mobile lightbox fixes above */
+    .pd-lb-img { max-width: 100%; max-height: 80vh; border-radius: 0; }
+    .pd-lb-close { top: 0.5rem; right: 0.5rem; width: 40px; height: 40px; font-size: 1rem; }
+    .pd-lb-prev { left: 0.5rem; width: 40px; height: 40px; font-size: 0.95rem; }
+    .pd-lb-next { right: 0.5rem; width: 40px; height: 40px; font-size: 0.95rem; }
+    .pd-lb-counter { bottom: 1rem; font-size: 0.75rem; padding: 0.4rem 1rem; }
+}
+
+@media (max-width: 400px) {
+    .pd-title { font-size: 1.05rem; }
+    .pd-price { font-size: 1.2rem; }
+    .pd-related-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+    .pd-rel-img { aspect-ratio: 16/10; }
+    /* Mobile card adjustments for very small screens */
+    .unit-card-specs { grid-template-columns: repeat(2, 1fr); }
+    .unit-card-spec { padding: 0.6rem 0.3rem; border-bottom: 1px solid #f1f5f9; }
+    .unit-card-spec:nth-child(2) { border-right: none; }
+    .unit-card-label { font-size: 0.92rem; }
+    .unit-card-price { font-size: 1.05rem; }
+}
+
+/* ===== Print styles ===== */
+@media print {
+    header, footer, nav,
+    .whatsapp-float, .online-support,
+    .gallery-actions, .gallery-thumbs,
+    .pd-lightbox, .pd-modal-bg,
+    .pd-related, .pd-breadcrumb { display: none !important; }
+
+    .gallery-grid { grid-template-columns: 1fr !important; }
+    .gallery-main { aspect-ratio: 16 / 9; border-radius: 0 !important; }
+    .property-gallery { margin: 0 0 1rem !important; }
+    .pd-main { padding: 0 !important; }
+    .pd-content-grid { grid-template-columns: 1fr !important; }
+    .pd-sidebar { display: none !important; }
+    body { background: #fff !important; color: #000 !important; }
+    h1, h2, h3, h4 { color: #000 !important; }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    // Wait for DOM
+    document.addEventListener('DOMContentLoaded', function() {
+        // ===== Collect ALL images (full list for lightbox navigation) =====
+        var imgs = [];
+        var idx = 0;
+        var allImagesEl = document.getElementById('galleryAllImages');
+        if (allImagesEl) {
+            try { imgs = JSON.parse(allImagesEl.textContent); } catch(e) {}
+        }
+        // Fallback: collect from visible thumb buttons
+        if (imgs.length === 0) {
+            document.querySelectorAll('.thumb[data-full]').forEach(function(t) {
+                var url = t.getAttribute('data-full');
+                if (url) imgs.push(url);
+            });
+        }
+        // Final fallback: main image
+        if (imgs.length === 0) {
+            var m = document.getElementById('mainImage');
+            if (m && m.src) imgs.push(m.src);
+        }
+        var thumbEls = document.querySelectorAll('.thumb[data-full]');
+
+        // ===== Thumbnail click → update main image =====
+        var galleryThumbs = document.getElementById('galleryThumbs');
+        if (galleryThumbs) {
+            galleryThumbs.addEventListener('click', function(e) {
+                var btn = e.target.closest('.thumb');
+                if (!btn) return;
+                var url = btn.getAttribute('data-full');
+                var i = parseInt(btn.getAttribute('data-index')) || 0;
+                if (!url) return;
+
+                var mi = document.getElementById('mainImage');
+                if (mi) { mi.src = url; mi.setAttribute('data-index', i); }
+
+                thumbEls.forEach(function(x) { x.classList.remove('is-active'); });
+                btn.classList.add('is-active');
+                idx = i;
+            });
+        }
+
+        // ===== Print button =====
+        var btnPrint = document.getElementById('btnPrint');
+        if (btnPrint) { btnPrint.addEventListener('click', function() { window.print(); }); }
+
+        // ===== Share button =====
+        var btnShare = document.getElementById('btnShare');
+        if (btnShare) {
+            btnShare.addEventListener('click', function() {
+                var shareData = { title: document.title, url: window.location.href };
+                if (navigator.share) {
+                    navigator.share(shareData).catch(function() {});
+                } else if (navigator.clipboard) {
+                    navigator.clipboard.writeText(window.location.href).then(function() {
+                        var orig = btnShare.innerHTML;
+                        btnShare.innerHTML = '<i class="fas fa-check"></i>';
+                        setTimeout(function() { btnShare.innerHTML = orig; }, 1800);
+                    });
+                } else {
+                    prompt('{% trans "Copy link:" %}', window.location.href);
+                }
+            });
+        }
+
+        // ===== Lightbox Elements =====
+        var lb = document.getElementById('pdLightbox');
+        var lbImg = document.getElementById('pdLbImg');
+        var lbCtr = document.getElementById('pdLbCounter');
+        var lbClose = document.getElementById('pdLbClose');
+        var lbPrev = document.getElementById('pdLbPrev');
+        var lbNext = document.getElementById('pdLbNext');
+
+        if (!lb || !lbImg) {
+            console.log('Lightbox elements not found');
+            return;
+        }
+
+        function openLightbox(i) {
+            if (!imgs.length) return;
+            idx = i;
+            if (idx < 0) idx = 0;
+            if (idx >= imgs.length) idx = imgs.length - 1;
+            lbImg.src = imgs[idx];
+            lbCtr.textContent = (idx + 1) + ' / ' + imgs.length;
+            lb.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeLightbox() { 
+            lb.classList.remove('open'); 
+            document.body.style.overflow = ''; 
+        }
+        
+        function navLightbox(dir) {
+            idx = (idx + dir + imgs.length) % imgs.length;
+            lbImg.src = imgs[idx];
+            lbCtr.textContent = (idx + 1) + ' / ' + imgs.length;
+        }
+
+        // ===== Gallery Main Click → open lightbox at current index =====
+        var gm = document.getElementById('galleryMain');
+        if (gm) {
+            gm.addEventListener('click', function(e) {
+                var mi = document.getElementById('mainImage');
+                var currentIdx = mi ? (parseInt(mi.getAttribute('data-index')) || 0) : 0;
+                openLightbox(currentIdx);
+            });
+        }
+
+        // ===== View All Button → open lightbox at 0 =====
+        var viewAllBtn = document.getElementById('viewAllBtn');
+        if (viewAllBtn) {
+            viewAllBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                openLightbox(0);
+            });
+        }
+        
+        // ===== Lightbox Controls =====
+        if (lbClose) {
+            lbClose.addEventListener('click', function(e) { 
+                e.stopPropagation(); 
+                closeLightbox(); 
+            });
+        }
+        
+        if (lbPrev) {
+            lbPrev.addEventListener('click', function(e) { 
+                e.stopPropagation(); 
+                navLightbox(-1); 
+            });
+        }
+        
+        if (lbNext) {
+            lbNext.addEventListener('click', function(e) { 
+                e.stopPropagation(); 
+                navLightbox(1); 
+            });
+        }
+        
+        // Click outside to close
+        lb.addEventListener('click', function(e) { 
+            if (e.target === lb) closeLightbox(); 
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (!lb.classList.contains('open')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') navLightbox(-1);
+            if (e.key === 'ArrowRight') navLightbox(1);
+        });
+        
+        // Swipe support for mobile
+        var touchStartX = 0;
+        lb.addEventListener('touchstart', function(e) { 
+            touchStartX = e.changedTouches[0].screenX; 
+        }, {passive: true});
+        
+        lb.addEventListener('touchend', function(e) {
+            var touchEndX = e.changedTouches[0].screenX;
+            var diff = touchStartX - touchEndX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) navLightbox(1);
+                else navLightbox(-1);
+            }
+        }, {passive: true});
+        
+        // ===== Interest Modal =====
+        var modal = document.getElementById('pdModal');
+        var form = document.getElementById('pdForm');
+        var okMsg = document.getElementById('pdFormOk');
+        var mName = document.getElementById('pdModalName');
+        var mPid = document.getElementById('pdFormPid');
+
+        var intBtn = document.getElementById('btnInterest');
+        if (intBtn) {
+            intBtn.onclick = function() {
+            mPid.value = this.getAttribute('data-pid');
+                mName.textContent = this.getAttribute('data-pname');
+                form.style.display = 'block'; okMsg.style.display = 'none';
+                form.reset(); modal.classList.add('open');
+            };
+        }
+        
+        var pdModalClose = document.getElementById('pdModalClose');
+        if (pdModalClose) {
+            pdModalClose.onclick = function() { modal.classList.remove('open'); };
+        }
+        if (modal) {
+            modal.onclick = function(e) { if (e.target === modal) modal.classList.remove('open'); };
+        }
+
+        if (form) {
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                var pid = mPid.value;
+                var fd = new FormData(form);
+                var btn = form.querySelector('.pd-form-submit');
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...'; btn.disabled = true;
+                fetch('/properties/interest/' + pid + '/', { method: 'POST', body: fd, headers: {'X-Requested-With':'XMLHttpRequest'} })
+                .then(function(r) { return r.json(); })
+                .then(function(d) { if (d.success) { modal.classList.remove('open'); form.reset(); if(typeof showSuccessPopup==='function')showSuccessPopup(d.message); } else { alert(d.error||'Please fill in required fields.'); } })
+                .catch(function() { alert('Error occurred.'); })
+                .finally(function() { btn.innerHTML='<i class="fas fa-paper-plane"></i> Send Request'; btn.disabled=false; });
+            };
+        }
+        // ===== Unit Booking Modal =====
+        var bookingModal = document.getElementById('bookingModal');
+        var bookingForm = document.getElementById('bookingForm');
+        var bookingOk = document.getElementById('bookingFormOk');
+        var bookingUnitId = document.getElementById('bookingUnitId');
+        var bookingUnitInfo = document.getElementById('bookingUnitInfo');
+        var bookingClose = document.getElementById('bookingModalClose');
+
+        window.openBookingModal = function(unitId, unitLabel, propertyName, price) {
+            bookingUnitId.value = unitId;
+            bookingUnitInfo.textContent = unitLabel + ' — ' + propertyName + ' (' + price + ')';
+            bookingForm.style.display = 'block';
+            bookingOk.style.display = 'none';
+            bookingForm.reset();
+            bookingModal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        };
+
+        if (bookingClose) {
+            bookingClose.onclick = function() { bookingModal.classList.remove('open'); document.body.style.overflow = ''; };
+        }
+        if (bookingModal) {
+            bookingModal.onclick = function(e) { if (e.target === bookingModal) { bookingModal.classList.remove('open'); document.body.style.overflow = ''; } };
+        }
+
+        if (bookingForm) {
+            bookingForm.onsubmit = function(e) {
+                e.preventDefault();
+                var uid = bookingUnitId.value;
+                var fd = new FormData(bookingForm);
+                var btn = bookingForm.querySelector('.pd-form-submit');
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...'; btn.disabled = true;
+                fetch('/properties/book-unit/' + uid + '/', { method: 'POST', body: fd, headers: {'X-Requested-With':'XMLHttpRequest'} })
+                .then(function(r) { return r.json(); })
+                .then(function(d) { if (d.success) { bookingModal.classList.remove('open'); document.body.style.overflow=''; bookingForm.reset(); if(typeof showSuccessPopup==='function')showSuccessPopup(d.message); } else { alert(d.error||'Please fill in all required fields.'); } })
+                .catch(function() { alert('Error occurred.'); })
+                .finally(function() { btn.innerHTML='<i class="fas fa-paper-plane"></i> Submit Booking Request'; btn.disabled=false; });
+            };
+        }
+
+    }); // End DOMContentLoaded
+})(); // End IIFE
+</script>
+
+<!-- ── Privacy-Safe Leaflet Map ──────────────────────────────────────── -->
+{% if property.lat_public and property.lng_public %}
+<link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet.css' %}"/>
+<script src="{% static 'vendor/leaflet/leaflet.js' %}" defer></script>
+<script>
+(function() {
+    var mapEl = document.getElementById('propertyMap');
+    if (!mapEl) return;
+
+    var lat    = parseFloat(mapEl.dataset.lat);
+    var lng    = parseFloat(mapEl.dataset.lng);
+    var radius = parseInt(mapEl.dataset.radius, 10) || 400;
+
+    if (isNaN(lat) || isNaN(lng)) return;
+
+    function initMap() {
+        if (typeof L === 'undefined') return;
+
+        var map = L.map('propertyMap', {
+            center: [lat, lng],
+            zoom: 14,
+            zoomControl: true,
+            scrollWheelZoom: false,
+        });
+
+        // NOTE: map tiles still load from OpenStreetMap (international). For full
+        // offline/national-network resilience, switch this to a domestic tile
+        // provider (Neshan / map.ir) — pending provider decision.
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            maxZoom: 18,
+        }).addTo(map);
+
+        L.circle([lat, lng], {
+            radius: radius,
+            color: '#0D5EAF',
+            fillColor: '#0D5EAF',
+            fillOpacity: 0.12,
+            weight: 2,
+            dashArray: '6 4',
+        }).addTo(map);
+
+        map.on('click', function(e) { e.originalEvent.preventDefault(); });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initMap);
+    } else {
+        initMap();
+    }
+})();
+</script>
+{% endif %}
+{% endblock %}

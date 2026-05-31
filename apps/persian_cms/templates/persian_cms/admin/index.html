@@ -1,0 +1,255 @@
+{% extends "unfold/layouts/base_simple.html" %}
+{% load static i18n unfold %}
+
+{% block title %}{{ site_title }} - داشبورد{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/persian-admin.css' %}">
+<style>
+/* ── Dashboard shell ──────────────────────────────────────────────────── */
+.fa-dash {
+    direction: rtl;
+    font-family: Vazirmatn, Peyda, system-ui, sans-serif;
+    padding: 24px;
+}
+
+.fa-dash-header {
+    margin-bottom: 28px;
+}
+
+.fa-dash-header h1 {
+    font-size: 22px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 6px;
+}
+
+.fa-dash-header p {
+    color: #64748b;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* ── Quick-action grid ────────────────────────────────────────────────── */
+.fa-dash-group {
+    margin-bottom: 32px;
+}
+
+.fa-dash-group-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #94a3b8;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding-right: 4px;
+}
+
+.fa-dash-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+}
+
+.fa-dash-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid rgba(100, 116, 139, 0.2);
+    border-radius: 14px;
+    padding: 14px 16px;
+    background: #fff;
+    color: #1e293b;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+}
+
+.fa-dash-card:hover {
+    border-color: rgba(37, 99, 235, 0.5);
+    box-shadow: 0 4px 18px rgba(37, 99, 235, 0.09);
+    background: #f0f6ff;
+    color: #1d4ed8;
+}
+
+.fa-dash-card .fa-dash-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+    width: 36px;
+    text-align: center;
+}
+
+.fa-dash-card.fa-dash-card--primary {
+    background: linear-gradient(135deg, #c9a227 0%, #e8d48a 100%);
+    color: #1a1a2e;
+    border-color: transparent;
+}
+
+.fa-dash-card.fa-dash-card--primary:hover {
+    background: linear-gradient(135deg, #e8d48a 0%, #c9a227 100%);
+    box-shadow: 0 6px 24px rgba(201, 162, 39, 0.3);
+    color: #1a1a2e;
+}
+
+/* ── Preview banner ───────────────────────────────────────────────────── */
+.fa-dash-preview-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: linear-gradient(135deg, #0b1f3a 0%, #1e3a5f 100%);
+    border-radius: 14px;
+    color: #fff;
+    text-decoration: none;
+    margin-bottom: 28px;
+    transition: opacity 0.18s;
+}
+
+.fa-dash-preview-banner:hover { opacity: 0.92; color: #fff; }
+
+.fa-dash-preview-banner span:first-child {
+    font-size: 28px;
+    flex-shrink: 0;
+}
+
+.fa-dash-preview-banner-text strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.fa-dash-preview-banner-text small {
+    font-size: 12px;
+    opacity: 0.75;
+}
+
+@media (max-width: 600px) {
+    .fa-dash-grid { grid-template-columns: 1fr; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="fa-dash">
+    <div class="fa-dash-header">
+        <h1>🇮🇷 پنل مدیریت محتوای فارسی</h1>
+        <p>مدیریت کامل صفحه فارسی سایت ADONIS — بدون نیاز به کد، مستقیم روی سایت اعمال می‌شود.</p>
+    </div>
+
+    {# ── Live preview banner ── #}
+    <a class="fa-dash-preview-banner" href="/fa-new/" target="_blank" rel="noopener">
+        <span>👁</span>
+        <div class="fa-dash-preview-banner-text">
+            <strong>پیش‌نمایش زنده صفحه فارسی</strong>
+            <small>adonisgroup.gr/fa-new/ — تغییرات بعد از ذخیره فوری نمایش داده می‌شوند</small>
+        </div>
+    </a>
+
+    {# ── Properties ── #}
+    <div class="fa-dash-group">
+        <div class="fa-dash-group-title">🏠 پروژه‌های ملکی</div>
+        <div class="fa-dash-grid">
+            <a class="fa-dash-card fa-dash-card--primary" href="/fa-admin/persian_cms/faproperty/">
+                <span class="fa-dash-icon">🏢</span>
+                <div>
+                    <div>همه پروژه‌های ملکی</div>
+                    <small style="font-weight:400;opacity:.8;font-size:12px">مدیریت املاک فارسی سایت</small>
+                </div>
+            </a>
+            <a class="fa-dash-card" href="/fa-admin/persian_cms/faproperty/add/">
+                <span class="fa-dash-icon">➕</span>
+                <div>افزودن پروژه جدید</div>
+            </a>
+            <a class="fa-dash-card" href="/fa-admin/persian_cms/fapropertymedia/">
+                <span class="fa-dash-icon">🖼️</span>
+                <div>رسانه‌های املاک</div>
+            </a>
+        </div>
+    </div>
+
+    {# ── Menus & Pages ── #}
+    <div class="fa-dash-group">
+        <div class="fa-dash-group-title">🧭 منوها و صفحات</div>
+        <div class="fa-dash-grid">
+            <a class="fa-dash-card fa-dash-card--primary" href="/fa-admin/core/fanavmenuitem/">
+                <span class="fa-dash-icon">📋</span>
+                <div>
+                    <div>مدیریت منوها</div>
+                    <small style="font-weight:400;opacity:.8;font-size:12px">منو و زیرمنوهای سایت</small>
+                </div>
+            </a>
+            <a class="fa-dash-card" href="/fa-admin/core/fanavmenuitem/add/">
+                <span class="fa-dash-icon">➕</span>
+                <div>افزودن آیتم منو</div>
+            </a>
+            <a class="fa-dash-card" href="/fa-admin/persian_cms/persianpage/">
+                <span class="fa-dash-icon">📄</span>
+                <div>همه صفحات</div>
+            </a>
+            <a class="fa-dash-card" href="/fa-admin/persian_cms/persianpage/add/">
+                <span class="fa-dash-icon">📝</span>
+                <div>ساخت صفحه جدید</div>
+            </a>
+        </div>
+    </div>
+
+    {# ── Homepage Settings ── #}
+    <div class="fa-dash-group">
+        <div class="fa-dash-group-title">📐 تنظیمات صفحه اصلی</div>
+        <div class="fa-dash-grid">
+            <a class="fa-dash-card" href="/fa-admin/core/fanewsection/">
+                <span class="fa-dash-icon">📐</span>
+                <div>سکشن‌های صفحه اصلی</div>
+            </a>
+            <a class="fa-dash-card" href="/fa-admin/core/fanewsettings/">
+                <span class="fa-dash-icon">⚙️</span>
+                <div>تنظیمات هیرو</div>
+            </a>
+            <a class="fa-dash-card" href="/fa-admin/core/fafootersettings/">
+                <span class="fa-dash-icon">🦶</span>
+                <div>تنظیمات فوتر</div>
+            </a>
+        </div>
+    </div>
+
+    {# ── Content / Blog ── #}
+    <div class="fa-dash-group">
+        <div class="fa-dash-group-title">📝 محتوا و بلاگ</div>
+        <div class="fa-dash-grid">
+            <a class="fa-dash-card" href="/fa-admin/persian_cms/persianblogpost/">
+                <span class="fa-dash-icon">📝</span>
+                <div>پست‌های بلاگ فارسی</div>
+            </a>
+            <a class="fa-dash-card" href="/fa-admin/persian_cms/persianblogpost/add/">
+                <span class="fa-dash-icon">✍️</span>
+                <div>نوشتن پست جدید</div>
+            </a>
+            <a class="fa-dash-card" href="/fa-admin/persian_cms/persianfaq/">
+                <span class="fa-dash-icon">❓</span>
+                <div>سوالات متداول</div>
+            </a>
+            <a class="fa-dash-card" href="/fa-admin/persian_cms/persianmediaasset/">
+                <span class="fa-dash-icon">🖼️</span>
+                <div>رسانه‌ها</div>
+            </a>
+        </div>
+    </div>
+
+    {# ── SEO ── #}
+    <div class="fa-dash-group">
+        <div class="fa-dash-group-title">🔍 سئو و بهینه‌سازی</div>
+        <div class="fa-dash-grid">
+            <a class="fa-dash-card" href="/fa-admin/persian_cms/persianseosettings/">
+                <span class="fa-dash-icon">🔍</span>
+                <div>تنظیمات SEO</div>
+            </a>
+            <a class="fa-dash-card" href="/fa-admin/persian_cms/persianredirectmap/">
+                <span class="fa-dash-icon">↩️</span>
+                <div>ریدایرکت‌ها</div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

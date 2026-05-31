@@ -1,0 +1,195 @@
+{% load i18n %}
+
+{% comment %}
+── Contact Submissions action bar override ─────────────────────────────────
+Scoped only to admin/core/contactsubmission/ — nothing else is affected.
+Logic/form fields are identical to unfold's default actions.html;
+only the visual presentation changes.
+────────────────────────────────────────────────────────────────────────────
+{% endcomment %}
+
+<style>
+/* Scoped to #cs-action-bar — does not affect any other admin page */
+#cs-action-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    background: #fff;
+    border-top: 2px solid #e2e8f0;
+    padding: 12px 20px;
+    position: sticky;
+    bottom: 0;
+    z-index: 100;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
+    border-radius: 0 0 10px 10px;
+}
+
+/* Counter — left side */
+#cs-action-bar .cs-counter {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #334155;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+#cs-action-bar .cs-counter::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #3b82f6;
+    flex-shrink: 0;
+}
+#cs-action-bar .cs-counter .action-counter {
+    color: #1e40af;
+    font-weight: 700;
+}
+#cs-action-bar .cs-counter .all,
+#cs-action-bar .cs-counter .question,
+#cs-action-bar .cs-counter .clear {
+    font-size: 0.82rem;
+    color: #64748b;
+}
+#cs-action-bar .cs-counter a {
+    color: #2563eb;
+    font-weight: 600;
+    text-decoration: none;
+}
+#cs-action-bar .cs-counter a:hover {
+    text-decoration: underline;
+}
+
+/* Controls — right side */
+#cs-action-bar .cs-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Action select dropdown */
+#cs-action-bar select[name="action"] {
+    padding: 8px 14px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    color: #1e293b;
+    background: #f8fafc;
+    outline: none;
+    cursor: pointer;
+    min-width: 220px;
+    transition: border-color 0.2s;
+    font-family: inherit;
+}
+#cs-action-bar select[name="action"]:focus {
+    border-color: #3b82f6;
+    background: #fff;
+}
+
+/* Run / اجرای عملیات button */
+#cs-action-bar .cs-run-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 20px;
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+    transition: filter 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 2px 10px rgba(37,99,235,0.3);
+}
+#cs-action-bar .cs-run-btn:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(37,99,235,0.4);
+}
+#cs-action-bar .cs-run-btn:active {
+    transform: translateY(0);
+}
+
+/* Select-all / clear links */
+#cs-action-bar .cs-select-all {
+    margin-right: 8px;
+}
+#cs-action-bar .cs-select-all a {
+    font-size: 0.8rem;
+    color: #2563eb;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    transition: background 0.2s;
+}
+#cs-action-bar .cs-select-all a:hover {
+    background: #dbeafe;
+}
+</style>
+
+<div id="changelist-actions" class="actions mx-1 {% if not cl.model_admin.list_fullwidth %}mx-auto{% endif %}" x-bind:style="'width: ' + changeListWidth + 'px'">
+    <div id="cs-action-bar">
+        {% block actions %}
+
+            {# ── Counter (left) ───────────────────────────────────────────── #}
+            {% block actions-counter %}
+            {% if actions_selection_counter %}
+            <div class="cs-counter">
+                <span class="action-counter" data-actions-icnt="{{ cl.result_list|length }}">
+                    {{ selection_note }}
+                </span>
+
+                {% if cl.result_count != cl.result_list|length %}
+                <span class="all hidden"> {{ selection_note_all }}</span>
+                {% if not cl.model_admin.list_disable_select_all %}
+                <span class="cs-select-all">
+                    <span class="question hidden">
+                        <a href="#" title="{% translate 'Click here to select the objects across all pages' %}">
+                            {% blocktranslate with cl.result_count as total_count %}Select all {{ total_count }} {{ module_name }}{% endblocktranslate %}
+                        </a>
+                    </span>
+                    <span class="clear hidden">
+                        <a href="#">{% translate "Clear selection" %}</a>
+                    </span>
+                </span>
+                {% endif %}
+                {% endif %}
+            </div>
+            {% endif %}
+            {% endblock %}
+
+            {# ── Controls (right) ─────────────────────────────────────────── #}
+            <div class="cs-controls" x-data="{action: '', selectAcross: 0}">
+                {% block actions-form %}
+                {% for field in action_form %}
+                    {% if field.label %}<label style="display:none;">{{ field.label }}</label>{% endif %}
+                    {{ field }}
+                {% endfor %}
+                {% endblock %}
+
+                {% block actions-submit %}
+                <button type="submit"
+                        x-show="action"
+                        class="cs-run-btn"
+                        title="{% translate 'Run the selected action' %}"
+                        name="index"
+                        value="{{ action_index|default:0 }}">
+                    ▶ اجرای عملیات
+                </button>
+                {% endblock %}
+            </div>
+
+        {% endblock %}
+    </div>
+</div>

@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+
+{% block title %}Events | {{ SITE_NAME }}{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ===== EVENTS PAGE — FOLDER GRID ===== */
+
+.ev-hero {
+    position: relative;
+    padding: 9rem 0 4.5rem;
+    text-align: center;
+    overflow: hidden;
+    background: #0b2948;
+}
+.ev-hero-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #0b2948 0%, #10365f 50%, #0D5EAF 100%);
+}
+.ev-hero-bg::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 0%, rgba(201,162,39,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 100%, rgba(13,94,175,0.15) 0%, transparent 50%);
+}
+.ev-hero .container { position: relative; z-index: 2; }
+
+.ev-hero-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(201,162,39,0.12);
+    border: 1px solid rgba(201,162,39,0.25);
+    color: #e6c44d;
+    padding: 0.45rem 1.2rem;
+    border-radius: 50px;
+    font-size: 0.82rem; font-weight: 600;
+    margin-bottom: 1.25rem;
+    letter-spacing: .03em;
+}
+.ev-hero h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800; color: #fff;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+}
+.ev-hero p {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.7);
+    max-width: 560px; margin: 0 auto;
+    line-height: 1.7;
+}
+
+/* ── Grid Section ───────────────────────────────────────────── */
+.ev-section {
+    padding: 4rem 0 6rem;
+    background: #f4f6f9;
+}
+.ev-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 2rem;
+}
+
+/* ── Folder Card ────────────────────────────────────────────── */
+.ev-folder {
+    position: relative;
+    display: flex; flex-direction: column;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    text-decoration: none;
+    box-shadow: 0 4px 24px rgba(11,41,72,0.07);
+    transition: transform 0.45s cubic-bezier(.25,.46,.45,.94),
+                box-shadow 0.45s cubic-bezier(.25,.46,.45,.94);
+}
+.ev-folder:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 48px rgba(11,41,72,0.14);
+    text-decoration: none;
+}
+
+/* Cover image area */
+.ev-folder-cover {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: #0b2948;
+}
+.ev-folder-cover img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    object-position: center 35%;
+    transition: transform 0.55s cubic-bezier(.25,.46,.45,.94);
+}
+.ev-folder:hover .ev-folder-cover img {
+    transform: scale(1.06);
+}
+.ev-folder-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #1a2a4a, #0d1f3c);
+    color: rgba(201,162,39,0.2); font-size: 3rem;
+}
+
+/* Gradient over image bottom */
+.ev-folder-cover::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 50%;
+    background: linear-gradient(to top, rgba(11,41,72,0.55), transparent);
+    pointer-events: none;
+}
+
+/* Badges on image */
+.ev-folder-badges {
+    position: absolute; top: 14px; left: 14px; right: 14px;
+    display: flex; gap: 8px; z-index: 3; flex-wrap: wrap;
+}
+.ev-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 11px;
+    background: rgba(11,41,72,0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    font-size: 0.72rem; font-weight: 600;
+    color: rgba(255,255,255,0.92);
+}
+.ev-badge i { color: #e6c44d; font-size: 0.68rem; }
+
+/* Text content below image */
+.ev-folder-body {
+    padding: 1.35rem 1.5rem 1.5rem;
+    display: flex; flex-direction: column; gap: 0.5rem;
+    flex: 1;
+}
+.ev-folder-title {
+    font-size: 1.2rem; font-weight: 700;
+    color: #0b2948; line-height: 1.3;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.ev-folder-desc {
+    font-size: 0.88rem; color: #64748b;
+    line-height: 1.6; margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Bottom bar */
+.ev-folder-foot {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid #f0f2f5;
+}
+.ev-folder-meta {
+    display: flex; align-items: center; gap: 14px;
+    font-size: 0.78rem; color: #94a3b8;
+}
+.ev-folder-meta i { color: #c9a227; font-size: 0.7rem; }
+.ev-folder-open {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 0.78rem; font-weight: 600;
+    color: #0D5EAF;
+    transition: color 0.25s, gap 0.25s;
+}
+.ev-folder-open i { font-size: 0.65rem; transition: transform 0.25s; }
+.ev-folder:hover .ev-folder-open { color: #c9a227; }
+.ev-folder:hover .ev-folder-open i { transform: translateX(3px); }
+
+/* ── Empty state ────────────────────────────────────────────── */
+.ev-empty {
+    text-align: center; padding: 5rem 2rem;
+    background: #fff; border-radius: 18px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+.ev-empty i { font-size: 3.5rem; color: #cbd5e1; margin-bottom: 1.25rem; }
+.ev-empty h3 { font-size: 1.4rem; color: #334155; margin-bottom: 0.5rem; }
+.ev-empty p { color: #64748b; font-size: 0.95rem; }
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .ev-hero { padding: 7.5rem 0 3rem; }
+    .ev-section { padding: 2.5rem 0 4rem; }
+    .ev-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+@media (max-width: 480px) {
+    .ev-hero h1 { font-size: 1.75rem; }
+    .ev-hero p { font-size: 0.95rem; }
+    .ev-folder-body { padding: 1.1rem 1.15rem 1.15rem; }
+    .ev-folder-title { font-size: 1.05rem; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="ev-hero">
+    <div class="ev-hero-bg"></div>
+    <div class="container">
+        <span class="ev-hero-pill"><i class="fas fa-folder-open"></i> {% trans "Our Events" %}</span>
+        <h1>{% trans "Events & Gatherings" %}</h1>
+        <p>{% trans "Explore our exclusive events, property showcases, and community gatherings" %}</p>
+    </div>
+</section>
+
+<!-- Events Grid -->
+<section class="ev-section">
+    <div class="container">
+        {% if events %}
+        <div class="ev-grid">
+            {% for event in events %}
+            <a href="{{ event.get_absolute_url }}" class="ev-folder" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:0 }}0" data-aos-duration="600">
+                <!-- Cover -->
+                <div class="ev-folder-cover">
+                    {% if event.thumbnail %}
+                    <img src="{{ event.thumbnail.url }}"
+                         alt="{{ event.thumbnail_alt|default:event.title }}"
+                         loading="lazy"
+                         decoding="async">
+                    {% else %}
+                    <div class="ev-folder-placeholder"><i class="fas fa-images"></i></div>
+                    {% endif %}
+
+                    <div class="ev-folder-badges">
+                        <span class="ev-badge"><i class="fas fa-images"></i> {{ event.image_count }} {% trans "photos" %}</span>
+                        {% if event.video_file or event.video_url %}
+                        <span class="ev-badge"><i class="fas fa-play-circle"></i> {% trans "Video" %}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Body -->
+                <div class="ev-folder-body">
+                    <h3 class="ev-folder-title">{{ event.title }}</h3>
+                    {% if event.short_description %}
+                    <p class="ev-folder-desc">{{ event.short_description }}</p>
+                    {% endif %}
+
+                    <div class="ev-folder-foot">
+                        <div class="ev-folder-meta">
+                            {% if event.event_date %}
+                            <span><i class="fas fa-calendar"></i> {{ event.event_date|date:"M d, Y" }}</span>
+                            {% endif %}
+                            {% if event.location %}
+                            <span><i class="fas fa-map-marker-alt"></i> {{ event.location }}</span>
+                            {% endif %}
+                        </div>
+                        <span class="ev-folder-open">{% trans "Open" %} <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="ev-empty">
+            <i class="fas fa-calendar-times"></i>
+            <h3>{% trans "No Events Yet" %}</h3>
+            <p>{% trans "Check back soon for upcoming events and gatherings." %}</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

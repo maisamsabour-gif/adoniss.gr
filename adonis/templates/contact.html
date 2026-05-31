@@ -1,0 +1,783 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+
+{% block title %}{% if meta_title %}{{ meta_title }} | {{ SITE_NAME }}{% else %}Contact Us | {{ SITE_NAME }}{% endif %}{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="ct-hero">
+    <div class="ct-hero-bg"></div>
+    <div class="ct-hero-overlay"></div>
+    <div class="container">
+        <div class="ct-hero-content" data-aos="fade-up">
+            <h1>{% trans "Get in Touch" %}</h1>
+            <p>{% trans "We're here to help you navigate your Greek investment journey. Reach out to our expert team today." %}</p>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Content -->
+<section class="ct-section">
+    <div class="container">
+        <div class="ct-grid">
+            <!-- Form Side - Premium Design -->
+            <div class="ct-form-card" data-aos="fade-up">
+                <div class="ct-form-header">
+                    <div class="ct-form-icon">
+                        <i class="fas fa-envelope-open-text"></i>
+                    </div>
+                    <div class="ct-form-title">
+                        <h2>{% trans "Book a Free Consultation" %}</h2>
+                        <p>{% trans "Our experts will contact you within 24 hours" %}</p>
+                    </div>
+                </div>
+
+                {% if messages %}
+                <div class="ct-alerts">
+                    {% for message in messages %}
+                    <div class="ct-alert ct-alert-{{ message.tags }}">
+                        <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form method="POST" action="{% url 'contact' %}" class="ct-form unified-site-form" id="contactPageForm">
+                    {% csrf_token %}
+                    <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
+                    <div class="ct-form-row">
+                        <div class="ct-field">
+                            <label for="full_name"><i class="fas fa-user"></i> {% trans "Full Name" %} *</label>
+                            <input type="text" id="full_name" name="full_name" placeholder="John Smith" required>
+                        </div>
+                        <div class="ct-field">
+                            <label for="email"><i class="fas fa-envelope"></i> {% trans "Email Address" %} *</label>
+                            <input type="email" id="email" name="email" placeholder="john@example.com" required>
+                        </div>
+                    </div>
+                    <div class="ct-form-row">
+                        <div class="ct-field">
+                            <label for="phone"><i class="fas fa-phone-alt"></i> {% trans "Phone Number" %} *</label>
+                            <input type="tel" id="phone" name="phone" placeholder="+30 210 000 0000" required>
+                        </div>
+                        <div class="ct-field">
+                            <label for="request_type"><i class="fas fa-list-ul"></i> {% trans "I'm interested in" %}</label>
+                            <select id="request_type" name="request_type">
+                                <option value="customer">{% trans "Greek Golden Visa" %}</option>
+                                <option value="agent">{% trans "Property Investment" %}</option>
+                                <option value="partnership">{% trans "Business Partnership" %}</option>
+                                <option value="other">{% trans "Other Inquiry" %}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="ct-field ct-field-full">
+                        <label for="message"><i class="fas fa-comment-dots"></i> {% trans "Your Message" %}</label>
+                        <textarea id="message" name="message" rows="4" placeholder="{% trans 'Tell us about your goals and how we can help...' %}"></textarea>
+                    </div>
+                    <button type="submit" class="ct-submit">
+                        <span class="ct-submit-text">
+                            <i class="fas fa-paper-plane"></i> {% trans "Send Message" %}
+                        </span>
+                        <span class="ct-submit-loading">
+                            <i class="fas fa-spinner fa-spin"></i> {% trans "Sending..." %}
+                        </span>
+                    </button>
+                    <p class="ct-form-note"><i class="fas fa-shield-alt"></i> {% trans "Your information is secure and will never be shared." %}</p>
+                </form>
+            </div>
+
+            <!-- Info Side -->
+            <div class="ct-info-side" data-aos="fade-up" data-aos-delay="100">
+                <!-- Quick Contact -->
+                <div class="ct-quick-contact">
+                    <h3><i class="fas fa-bolt"></i> {% trans "Quick Contact" %}</h3>
+                    <a href="mailto:{{ SITE_EMAIL }}" class="ct-quick-btn ct-quick-email">
+                        <i class="fas fa-envelope"></i>
+                        <span>{{ SITE_EMAIL }}</span>
+                    </a>
+                    <a href="https://wa.me/{{ footer_settings.whatsapp_number|cut:'+' }}" class="ct-quick-btn ct-quick-whatsapp" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>{% trans "Chat on WhatsApp" %}</span>
+                    </a>
+                </div>
+
+                <!-- Offices -->
+                {% for office in offices %}
+                <div class="ct-office-card">
+                    <div class="ct-office-header">
+                        <div class="ct-office-flag">
+                            {% if office.country == 'Greece' %}🇬🇷{% elif office.country == 'Iran' %}🇮🇷{% else %}<i class="fas fa-building"></i>{% endif %}
+                        </div>
+                        <div class="ct-office-title">
+                            <h3>{{ office.city }} {% trans "Office" %}</h3>
+                            <span>{{ office.country }}</span>
+                        </div>
+                    </div>
+                    <div class="ct-office-details">
+                        <div class="ct-office-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <p>{{ office.address }}</p>
+                        </div>
+                        <div class="ct-office-item">
+                            <i class="fas fa-phone-alt"></i>
+                            <p><a href="tel:{{ office.phone_number }}">{{ office.phone_number }}</a></p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <!-- Trust Badges -->
+                <div class="ct-trust">
+                    <div class="ct-trust-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>{% trans "Licensed Immigration Consultants" %}</span>
+                    </div>
+                    <div class="ct-trust-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>{% trans "500+ Successful Applications" %}</span>
+                    </div>
+                    <div class="ct-trust-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>{% trans "Multilingual Support Team" %}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Maps Section -->
+<section class="ct-maps-section">
+    <div class="container">
+        <div class="ct-maps-header" data-aos="fade-up">
+            <h2><i class="fas fa-map-marked-alt"></i> {% trans "Our Offices" %}</h2>
+            <p>{% trans "Visit us at our offices in Athens and Tehran" %}</p>
+        </div>
+        <div class="ct-maps-grid">
+            {% for office in offices %}
+            <div class="ct-map-box" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00">
+                <div class="ct-map-box-header">
+                    <div class="ct-map-flag">
+                        {% if office.country == 'Greece' %}
+                        <span class="flag-icon">🇬🇷</span>
+                        {% elif office.country == 'Iran' %}
+                        <span class="flag-icon">🇮🇷</span>
+                        {% else %}
+                        <i class="fas fa-map-marker-alt"></i>
+                        {% endif %}
+                    </div>
+                    <div class="ct-map-title">
+                        <h3>{{ office.city }} {% trans "Office" %}</h3>
+                        <span>{{ office.country }}</span>
+                    </div>
+                </div>
+                <div class="ct-map-frame">
+                    <iframe 
+                        src="{{ office.map_embed_url }}" 
+                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+                <div class="ct-map-box-footer">
+                    <div class="ct-map-info">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>{{ office.address }}</span>
+                    </div>
+                    <div class="ct-map-info">
+                        <i class="fas fa-phone-alt"></i>
+                        <span><a href="tel:{{ office.phone_number }}">{{ office.phone_number }}</a></span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* =====================================================
+   Contact Page – Elegant Design (MEDIVEST style)
+   ===================================================== */
+
+/* Hero */
+.ct-hero {
+    position: relative;
+    padding: 13rem 0 5rem;
+    text-align: center;
+    overflow: hidden;
+}
+.ct-hero-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #0D5EAF 0%, #08407a 40%, #0b2948 100%);
+}
+.ct-hero-overlay {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.25) 100%);
+}
+.ct-hero-content {
+    position: relative; z-index: 1;
+    max-width: 640px; margin: 0 auto;
+}
+.ct-hero h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    color: #ffffff !important;
+    margin-bottom: 1rem;
+}
+.ct-hero p {
+    font-size: 1.15rem;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.7;
+}
+
+/* Main Section */
+.ct-section {
+    background: #f8fafc;
+    padding: 4.5rem 0;
+}
+.ct-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 2.5rem;
+    align-items: start;
+}
+
+/* Form Card - Premium Design */
+.ct-form-card {
+    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+    border: none;
+    border-radius: 24px;
+    padding: 0;
+    box-shadow: 0 25px 60px rgba(13,94,175,0.12), 0 8px 20px rgba(0,0,0,0.06);
+    overflow: hidden;
+    position: relative;
+}
+.ct-form-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #0D5EAF, #3b82d6, #0D5EAF);
+    background-size: 200% 100%;
+    animation: shimmer 3s ease-in-out infinite;
+}
+@keyframes shimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Form Header */
+.ct-form-header {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 2rem 2.5rem;
+    background: linear-gradient(135deg, #0D5EAF 0%, #08407a 100%);
+    color: #ffffff;
+}
+.ct-form-icon {
+    width: 64px;
+    height: 64px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    backdrop-filter: blur(10px);
+}
+.ct-form-title h2 {
+    font-size: 1.5rem;
+    margin: 0 0 0.3rem 0;
+    color: #ffffff !important;
+    font-weight: 700;
+}
+.ct-form-title p {
+    font-size: 0.92rem;
+    opacity: 0.85;
+    margin: 0;
+}
+
+/* Form Body */
+.ct-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 2rem 2.5rem 2.5rem;
+}
+.ct-form-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+}
+
+/* Alerts */
+.ct-alerts { margin: 0 2.5rem 0; padding-top: 1.5rem; }
+.ct-alert {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 1rem 1.25rem; border-radius: 12px;
+    font-size: 0.9rem; margin-bottom: 0.5rem;
+}
+.ct-alert-success { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
+.ct-alert-error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+
+/* Form Fields */
+.ct-field {
+    position: relative;
+    margin-bottom: 0.85rem;
+}
+.ct-field label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 0.3rem;
+}
+.ct-field label i {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+.ct-field input,
+.ct-field select,
+.ct-field textarea {
+    width: 100%;
+    padding: 0.6rem 0.85rem;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.92rem;
+    color: #1e293b;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.ct-field input:hover,
+.ct-field select:hover,
+.ct-field textarea:hover {
+    border-color: #cbd5e1;
+}
+.ct-field input:focus,
+.ct-field select:focus,
+.ct-field textarea:focus {
+    border-color: #0b5394;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(11,83,148,0.1);
+}
+.ct-field input::placeholder,
+.ct-field textarea::placeholder {
+    color: #94a3b8;
+}
+.ct-field textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+.ct-field select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%230D5EAF' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+}
+.ct-field-full {
+    grid-column: span 1;
+}
+
+/* Submit Button */
+.ct-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.75rem;
+    background: linear-gradient(135deg, #C9A84C, #B8963E);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter 0.2s, transform 0.2s, box-shadow 0.2s;
+    margin-top: 0.5rem;
+    box-shadow: 0 4px 16px rgba(201,168,76,0.3);
+}
+.ct-submit:hover {
+    filter: brightness(1.07);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 22px rgba(201,168,76,0.4);
+}
+.ct-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+.ct-submit-text {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+.ct-submit-loading {
+    display: none;
+}
+.ct-submit.loading .ct-submit-text { display: none; }
+.ct-submit.loading .ct-submit-loading { display: flex; align-items: center; gap: 0.6rem; }
+
+/* Form Note */
+.ct-form-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-top: 0.5rem;
+}
+.ct-form-note i {
+    color: #16a34a;
+}
+
+/* Info Side */
+.ct-info-side {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* Quick Contact */
+.ct-quick-contact {
+    background: linear-gradient(135deg, #0b2948 0%, #0D5EAF 100%);
+    border-radius: 18px;
+    padding: 1.75rem;
+    color: #ffffff;
+}
+.ct-quick-contact h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    color: #ffffff !important;
+    margin: 0 0 1rem 0;
+}
+.ct-quick-contact h3 i {
+    color: #fbbf24;
+}
+.ct-quick-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.9rem 1.1rem;
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.25s;
+    margin-bottom: 0.75rem;
+    backdrop-filter: blur(10px);
+}
+.ct-quick-btn:last-child {
+    margin-bottom: 0;
+}
+.ct-quick-btn:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateX(5px);
+    color: #ffffff;
+}
+.ct-quick-btn i {
+    font-size: 1.1rem;
+    width: 24px;
+    text-align: center;
+}
+.ct-quick-whatsapp {
+    background: rgba(37,211,102,0.25);
+}
+.ct-quick-whatsapp:hover {
+    background: rgba(37,211,102,0.4);
+}
+.ct-quick-whatsapp i {
+    color: #25D366;
+}
+
+/* Trust Badges */
+.ct-trust {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 1.5rem;
+}
+.ct-trust-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0;
+    font-size: 0.88rem;
+    color: #475569;
+}
+.ct-trust-item:not(:last-child) {
+    border-bottom: 1px solid #f1f5f9;
+}
+.ct-trust-item i {
+    color: #16a34a;
+    font-size: 1rem;
+}
+
+.ct-info-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 1.5rem 1.75rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    transition: all 0.25s;
+}
+.ct-info-card:hover {
+    border-color: #0D5EAF;
+    box-shadow: 0 6px 20px rgba(13,94,175,0.08);
+    transform: translateY(-2px);
+}
+
+.ct-info-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; margin-bottom: 0.85rem;
+}
+.ct-icon-blue { background: #eff6ff; color: #0D5EAF; }
+.ct-icon-green { background: #ecfdf5; color: #16a34a; }
+.ct-icon-purple { background: #faf5ff; color: #7c3aed; }
+
+.ct-info-card h3 { font-size: 1.05rem; margin-bottom: 0.35rem; }
+.ct-info-card p { color: #475569; font-size: 0.92rem; line-height: 1.6; }
+.ct-info-sub { display: block; font-size: 0.8rem; color: #94a3b8; margin-top: 0.3rem; }
+
+/* WhatsApp Card */
+.ct-whatsapp-card {
+    background: linear-gradient(135deg, #ecfdf5, #f0fdf4);
+    border: 1px solid #a7f3d0;
+    border-radius: 14px;
+    padding: 1.5rem 1.75rem;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem;
+}
+.ct-wa-content {
+    display: flex; align-items: center; gap: 1rem;
+}
+.ct-wa-content > i {
+    font-size: 2rem; color: #25D366;
+}
+.ct-wa-content h4 { font-size: 0.95rem; margin-bottom: 0.15rem; color: #065f46; }
+.ct-wa-content p { font-size: 0.82rem; color: #16a34a; }
+.ct-wa-btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.65rem 1.25rem; background: #25D366; color: #fff;
+    border-radius: 10px; font-size: 0.85rem; font-weight: 600;
+    transition: all 0.2s; white-space: nowrap;
+}
+.ct-wa-btn:hover { background: #1ebe5d; transform: translateY(-1px); color: #fff; }
+
+/* Office Cards */
+.ct-office-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    transition: all 0.25s;
+}
+.ct-office-card:hover {
+    border-color: #0D5EAF;
+    box-shadow: 0 8px 25px rgba(13,94,175,0.1);
+    transform: translateY(-3px);
+}
+.ct-office-header {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+.ct-office-flag {
+    font-size: 1.75rem;
+    line-height: 1;
+}
+.ct-office-title h3 { 
+    font-size: 1rem; 
+    margin: 0 0 0.15rem 0;
+    color: #0D5EAF;
+    font-weight: 700;
+}
+.ct-office-title span {
+    font-size: 0.82rem;
+    color: #64748b;
+}
+.ct-office-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+.ct-office-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    font-size: 0.88rem;
+}
+.ct-office-item i {
+    font-size: 0.8rem;
+    color: #0D5EAF;
+    margin-top: 0.25rem;
+    min-width: 14px;
+}
+.ct-office-item p { 
+    color: #475569; 
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Maps Section */
+.ct-maps-section {
+    background: #f8fafc;
+    padding: 4rem 0 5rem;
+}
+.ct-maps-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+.ct-maps-header h2 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+}
+.ct-maps-header h2 i { color: #0D5EAF; font-size: 1.4rem; }
+.ct-maps-header p {
+    color: #64748b;
+    font-size: 1rem;
+}
+.ct-maps-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+}
+.ct-map-box {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+.ct-map-box:hover {
+    border-color: #0D5EAF;
+    box-shadow: 0 8px 35px rgba(13,94,175,0.12);
+    transform: translateY(-4px);
+}
+.ct-map-box-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    background: linear-gradient(135deg, #0D5EAF 0%, #08407a 100%);
+    color: #ffffff;
+}
+.ct-map-flag {
+    width: 48px;
+    height: 48px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.ct-map-flag .flag-icon {
+    font-size: 1.75rem;
+}
+.ct-map-flag i {
+    font-size: 1.25rem;
+    color: #ffffff;
+}
+.ct-map-title h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 0.15rem 0;
+    color: #ffffff !important;
+}
+.ct-map-title span {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+.ct-map-frame {
+    height: 280px;
+    position: relative;
+}
+.ct-map-frame iframe {
+    width: 100%;
+    height: 100%;
+    filter: saturate(0.85) contrast(1.02);
+}
+.ct-map-box-footer {
+    padding: 1.25rem 1.5rem;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+.ct-map-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    font-size: 0.88rem;
+    color: #475569;
+}
+.ct-map-info i {
+    color: #0D5EAF;
+    font-size: 0.85rem;
+    margin-top: 0.15rem;
+    min-width: 14px;
+}
+.ct-map-info span {
+    line-height: 1.5;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 992px) {
+    .ct-grid { grid-template-columns: 1fr; }
+    .ct-whatsapp-card { flex-direction: column; text-align: center; }
+    .ct-wa-content { flex-direction: column; }
+    .ct-maps-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 576px) {
+    .ct-hero { padding: 10rem 0 3.5rem; }
+    .ct-form-header { padding: 1.5rem; flex-direction: column; text-align: center; gap: 1rem; }
+    .ct-form-icon { width: 56px; height: 56px; font-size: 1.4rem; }
+    .ct-form { padding: 1.5rem; }
+    .ct-office-card { padding: 1.25rem; }
+    .ct-maps-section { padding: 3rem 0 4rem; }
+    .ct-map-frame { height: 220px; }
+    .ct-map-box-header { padding: 1rem 1.25rem; }
+    .ct-map-box-footer { padding: 1rem 1.25rem; }
+}
+
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var successAlert = document.querySelector('.ct-alert-success');
+    if (successAlert && typeof showSuccessPopup === 'function') {
+        successAlert.parentElement.style.display = 'none';
+        showSuccessPopup(successAlert.textContent.trim());
+    }
+});
+</script>
+
+{% endblock %}

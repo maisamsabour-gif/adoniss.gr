@@ -1,0 +1,344 @@
+/* Dynamic /fa-new/ section tokens (model-driven styles)
+ *
+ * NOTE: background is intentionally NOT set here.
+ * Each section type gets its own background from home.css
+ * (.adonis-fa-new-why-greece, .adonis-fa-new-routes, etc.).
+ * Admin-configured backgrounds are applied as inline styles via
+ * section-dynamic.js, which have higher specificity than any class rule.
+ */
+.adonis-fa-new-section {
+  padding-top: var(--fa-section-pad-top, 96px);
+  padding-bottom: var(--fa-section-pad-bottom, 96px);
+  color: var(--fa-section-text, inherit);
+}
+
+.adonis-fa-new-section .adonis-fa-new-section-head,
+.adonis-fa-new-section .adonis-fa-new-split-text,
+.adonis-fa-new-section .adonis-fa-new-consult-text {
+  text-align: var(--fa-section-align, center);
+}
+
+.adonis-fa-new-section .adonis-fa-new-section-title {
+  font-size: var(--fa-section-title-desktop, 42px);
+  font-weight: var(--fa-section-font-weight, 700);
+}
+
+.adonis-fa-new-section .adonis-fa-new-section-lead {
+  font-size: var(--fa-section-description-size, 16px);
+  line-height: var(--fa-section-line-height, 1.7);
+}
+
+.adonis-fa-new-section .adonis-fa-new-feature,
+.adonis-fa-new-section .adonis-fa-new-route,
+.adonis-fa-new-section .adonis-fa-new-project,
+.adonis-fa-new-section .adonis-fa-new-stat-card,
+.adonis-fa-new-section .adonis-fa-new-quote,
+.adonis-fa-new-section .adonis-fa-new-consult-card,
+.adonis-fa-new-gateway-card {
+  background: var(--fa-section-card-bg, inherit);
+  border-radius: var(--fa-section-radius, 24px);
+  border-color: var(--fa-section-border, rgba(11, 31, 58, 0.1));
+  box-shadow: var(--fa-section-shadow, 0 16px 42px rgba(11, 31, 58, 0.2));
+  backdrop-filter: blur(var(--fa-section-blur, 0px));
+}
+
+.adonis-fa-new-section .adonis-fa-new-eyebrow,
+.adonis-fa-new-section .adonis-fa-new-route-tag,
+.adonis-fa-new-section .adonis-fa-new-link,
+.adonis-fa-new-section .adonis-fa-new-project-area,
+.adonis-fa-new-gateway-label {
+  color: var(--fa-section-accent, #1e5aa8);
+}
+
+.adonis-fa-new-section-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+/* Decorative bougainvillea transition (Hero -> Gateway) */
+.fa-bougainvillea-transition {
+  position: relative;
+  min-height: 220px;
+  margin-top: -80px;
+  margin-bottom: -40px;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 2; /* behind content, above background */
+}
+
+.fa-bougainvillea-branches {
+  position: relative;
+  width: 100%;
+  min-height: 220px;
+}
+
+.fa-bougainvillea-branch {
+  position: absolute;
+  top: 0;
+  width: 360px;
+  max-width: 32vw;
+  opacity: var(--fa-transition-opacity, 0.75);
+  filter: blur(var(--fa-transition-blur, 2px)) drop-shadow(0 18px 35px rgba(0, 0, 0, 0.28));
+  z-index: 3;
+  will-change: transform;
+}
+
+.fa-bougainvillea-branch img {
+  display: block;
+  width: 100%;
+  height: auto;
+  -webkit-mask-image: linear-gradient(to right, #000 16%, rgba(0, 0, 0, 0) 78%);
+  mask-image: linear-gradient(to right, #000 16%, rgba(0, 0, 0, 0) 78%);
+}
+
+.fa-bougainvillea-left {
+  left: -80px;
+}
+
+.fa-bougainvillea-right {
+  right: -80px;
+}
+
+.fa-bougainvillea-right img {
+  transform: scaleX(-1);
+  -webkit-mask-image: linear-gradient(to left, #000 16%, rgba(0, 0, 0, 0) 78%);
+  mask-image: linear-gradient(to left, #000 16%, rgba(0, 0, 0, 0) 78%);
+}
+
+.fa-bougainvillea-transition[data-decorative-animate="1"] .fa-bougainvillea-left {
+  animation: fa-bougainvillea-float-left 10s ease-in-out infinite;
+}
+
+.fa-bougainvillea-transition[data-decorative-animate="1"] .fa-bougainvillea-right {
+  animation: fa-bougainvillea-float-right 12s ease-in-out infinite;
+}
+
+@keyframes fa-bougainvillea-float-left {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
+}
+
+@keyframes fa-bougainvillea-float-right {
+  0%, 100% { transform: translateY(1px); }
+  50% { transform: translateY(4px); }
+}
+
+.adonis-fa-new-layout-1 {
+  grid-template-columns: 1fr !important;
+}
+.adonis-fa-new-layout-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+.adonis-fa-new-layout-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+.adonis-fa-new-mobile-carousel {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+.adonis-fa-new-mobile-carousel > * {
+  scroll-snap-align: start;
+}
+
+.adonis-fa-new-gateway-grid {
+  display: grid;
+  gap: var(--fa-section-gap, 24px);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.adonis-fa-new-gateway-card {
+  border: 1px solid var(--fa-section-border, rgba(11, 31, 58, 0.1));
+  padding: 20px;
+  position: relative;
+}
+
+.adonis-fa-new-gateway-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: 3px;
+  background: var(--fa-gateway-accent, var(--fa-section-accent, #1e5aa8));
+  border-radius: inherit;
+}
+
+.adonis-fa-new-gateway-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--fa-gateway-overlay, transparent);
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 1;
+}
+
+.adonis-fa-new-gateway-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.adonis-fa-new-gateway-image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: calc(var(--fa-section-radius, 24px) - 8px);
+  margin-bottom: 14px;
+}
+
+.adonis-fa-new-gateway-image--placeholder {
+  background:
+    linear-gradient(135deg, rgba(7, 21, 39, 0.55) 0%, rgba(30, 90, 168, 0.22) 100%),
+    linear-gradient(180deg, #102b4c 0%, #071527 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.adonis-fa-new-gateway-label {
+  display: inline-block;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.adonis-fa-new-gateway-card h3 {
+  margin: 0 0 8px;
+  font-size: var(--fa-section-subtitle-size, 22px);
+}
+
+.adonis-fa-new-feature-subtitle,
+.adonis-fa-new-route-subtitle,
+.adonis-fa-new-project-subtitle,
+.adonis-fa-new-timeline-subtitle {
+  margin: 0 0 8px;
+  font-weight: 600;
+  color: inherit;
+  opacity: 0.9;
+}
+
+.adonis-fa-new-gateway-subtitle {
+  margin: 0 0 8px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.adonis-fa-new-gateway-description {
+  margin: 0 0 12px;
+  line-height: var(--fa-section-line-height, 1.7);
+  font-size: var(--fa-section-description-size, 16px);
+}
+
+.adonis-fa-new-project-image--uploaded {
+  background-position: center;
+  background-size: cover;
+}
+
+@media (max-width: 1024px) {
+  .fa-bougainvillea-transition,
+  .fa-bougainvillea-branches {
+    min-height: 170px;
+  }
+  .fa-bougainvillea-branch {
+    width: 290px;
+    max-width: 30vw;
+  }
+  .adonis-fa-new-layout-3,
+  .adonis-fa-new-layout-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .fa-bougainvillea-transition,
+  .fa-bougainvillea-branches {
+    min-height: 120px;
+    margin-top: -40px;
+  }
+  .fa-bougainvillea-branch {
+    width: 220px;
+    max-width: 45vw;
+    opacity: 0.55;
+  }
+  .fa-bougainvillea-right {
+    display: none;
+  }
+  .fa-bougainvillea-transition:not([data-decorative-mobile="1"]) {
+    display: none;
+  }
+  .fa-bougainvillea-transition[data-decorative-mobile="1"] .fa-bougainvillea-left {
+    left: -54px;
+  }
+
+  .adonis-fa-new-section {
+    padding-top: clamp(2.5rem, 8vw, 4rem);
+    padding-bottom: clamp(2.5rem, 8vw, 4rem);
+  }
+  .adonis-fa-new-section .adonis-fa-new-section-title {
+    font-size: clamp(1.55rem, 6.5vw, var(--fa-section-title-mobile, 30px));
+    line-height: 1.35;
+  }
+  .adonis-fa-new-section .adonis-fa-new-section-lead {
+    font-size: clamp(0.92rem, 3.6vw, 1rem);
+  }
+  .adonis-fa-new-gateway-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .adonis-fa-new-gateway-card {
+    padding: 16px;
+  }
+  .adonis-fa-new-gateway-card h3 {
+    font-size: clamp(1.1rem, 5vw, 1.35rem);
+  }
+  .adonis-fa-new-gateway-image {
+    aspect-ratio: 16 / 10;
+    margin-bottom: 12px;
+  }
+  .adonis-fa-new-mobile-stacked,
+  .adonis-fa-new-layout-3,
+  .adonis-fa-new-layout-2 {
+    grid-template-columns: 1fr !important;
+  }
+  .adonis-fa-new-section[data-hide-image-mobile="1"] img,
+  .adonis-fa-new-section [data-hide-mobile-image="1"],
+  .adonis-fa-new-section .hide-mobile-image {
+    display: none !important;
+  }
+  .adonis-fa-new-section-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .adonis-fa-new-section-actions > a {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Mobile carousel: smooth horizontal swipe through cards */
+  .adonis-fa-new-mobile-carousel {
+    grid-template-columns: none !important;
+    display: flex !important;
+    gap: 12px !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 8px;
+    margin-inline: -1rem;
+    padding-inline: 1rem;
+  }
+  .adonis-fa-new-mobile-carousel::-webkit-scrollbar { display: none; }
+  .adonis-fa-new-mobile-carousel > * {
+    flex: 0 0 85%;
+    scroll-snap-align: start;
+  }
+}
+
+@media (max-width: 480px) {
+  .adonis-fa-new-gateway-card {
+    padding: 14px;
+    border-radius: 18px;
+  }
+  .adonis-fa-new-gateway-image { border-radius: 14px; }
+}

@@ -1,0 +1,775 @@
+/*
+ * ══════════════════════════════════════════════════════════════════════════════
+ * ADONIS PERSIAN ADMIN — Arvan-Inspired Modern Design
+ * طراحی مدرن و تمیز الهام گرفته از پنل ابرآروان
+ * ══════════════════════════════════════════════════════════════════════════════
+ */
+
+/* ── CSS Variables — Arvan-Style Color Palette ─────────────────────────────── */
+:root {
+  --arvan-primary: #0891b2;        /* Cyan/Teal */
+  --arvan-primary-dark: #0e7490;
+  --arvan-primary-light: #22d3ee;
+  --arvan-secondary: #6366f1;      /* Indigo */
+  --arvan-success: #10b981;
+  --arvan-warning: #f59e0b;
+  --arvan-danger: #ef4444;
+  --arvan-info: #3b82f6;
+  
+  --arvan-bg: #f8fafc;
+  --arvan-bg-card: #ffffff;
+  --arvan-bg-sidebar: #0f172a;
+  --arvan-bg-header: #ffffff;
+  
+  --arvan-text: #1e293b;
+  --arvan-text-muted: #64748b;
+  --arvan-text-light: #94a3b8;
+  
+  --arvan-border: #e2e8f0;
+  --arvan-border-light: #f1f5f9;
+  
+  --arvan-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --arvan-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --arvan-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --arvan-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  
+  --arvan-radius: 8px;
+  --arvan-radius-lg: 12px;
+  --arvan-radius-xl: 16px;
+  
+  --arvan-font: "Vazirmatn", "Estedad", "IRANSans", Tahoma, sans-serif;
+  --arvan-font-mono: "Vazir Code", "Fira Code", monospace;
+}
+
+/* ── Global Font & Base ────────────────────────────────────────────────────── */
+body {
+  font-family: var(--arvan-font) !important;
+  background: var(--arvan-bg) !important;
+  color: var(--arvan-text);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* ── Shell Direction Protection ────────────────────────────────────────────── */
+html, body, .wrapper {
+  direction: ltr !important;
+}
+
+/* ── Main Content RTL ──────────────────────────────────────────────────────── */
+#content-main {
+  direction: rtl;
+  font-family: var(--arvan-font);
+}
+
+/* ── Header — Clean & Modern ───────────────────────────────────────────────── */
+header,
+.header,
+nav[aria-label="breadcrumb"] {
+  background: var(--arvan-bg-header) !important;
+  border-bottom: 1px solid var(--arvan-border) !important;
+  box-shadow: var(--arvan-shadow-sm) !important;
+}
+
+/* ── Sidebar — Dark Modern Style ───────────────────────────────────────────── */
+aside,
+nav[role="navigation"],
+.sidebar {
+  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%) !important;
+  border-left: none !important;
+  box-shadow: var(--arvan-shadow-lg) !important;
+}
+
+aside a,
+.sidebar a {
+  color: #cbd5e1 !important;
+  font-family: var(--arvan-font) !important;
+  font-size: 13px !important;
+  padding: 10px 16px !important;
+  border-radius: var(--arvan-radius) !important;
+  transition: all 0.2s ease !important;
+  margin: 2px 8px !important;
+}
+
+aside a:hover,
+.sidebar a:hover {
+  background: rgba(8, 145, 178, 0.15) !important;
+  color: var(--arvan-primary-light) !important;
+}
+
+aside a[aria-current="page"],
+.sidebar a.active {
+  background: var(--arvan-primary) !important;
+  color: #fff !important;
+}
+
+/* Sidebar Section Titles */
+aside h2,
+aside h3,
+.sidebar-title {
+  color: var(--arvan-text-light) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  padding: 12px 16px 8px !important;
+  margin: 8px 0 0 !important;
+}
+
+/* ── Cards — Clean Arvan Style ─────────────────────────────────────────────── */
+.card,
+.module,
+fieldset {
+  background: var(--arvan-bg-card) !important;
+  border: 1px solid var(--arvan-border) !important;
+  border-radius: var(--arvan-radius-lg) !important;
+  box-shadow: var(--arvan-shadow) !important;
+  margin-bottom: 16px !important;
+  overflow: hidden;
+}
+
+/* Card Headers */
+.card-header,
+fieldset h2,
+.module h2 {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+  border-bottom: 1px solid var(--arvan-border) !important;
+  padding: 14px 20px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: var(--arvan-text) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+/* ── Form Elements — Modern & Clean ────────────────────────────────────────── */
+#content-main input[type="text"],
+#content-main input[type="search"],
+#content-main input[type="password"],
+#content-main input[type="number"],
+#content-main input[type="url"],
+#content-main input[type="email"],
+#content-main input[type="tel"],
+#content-main textarea,
+#content-main select {
+  font-family: var(--arvan-font) !important;
+  font-size: 14px !important;
+  color: var(--arvan-text) !important;
+  background: #fff !important;
+  border: 1.5px solid var(--arvan-border) !important;
+  border-radius: var(--arvan-radius) !important;
+  padding: 10px 14px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  transition: all 0.2s ease !important;
+  direction: rtl;
+  text-align: right;
+}
+
+#content-main input:focus,
+#content-main textarea:focus,
+#content-main select:focus {
+  border-color: var(--arvan-primary) !important;
+  box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.12) !important;
+  outline: none !important;
+}
+
+#content-main input::placeholder,
+#content-main textarea::placeholder {
+  color: var(--arvan-text-light) !important;
+}
+
+/* LTR Fields (URLs, Slugs, Emails) */
+#content-main input[name="slug"],
+#content-main input[name$="slug"],
+#content-main input[name$="_url"],
+#content-main input[name="canonical_url"],
+#content-main input[type="url"],
+#content-main input[type="email"] {
+  direction: ltr !important;
+  text-align: left !important;
+  font-family: var(--arvan-font-mono), var(--arvan-font) !important;
+}
+
+/* Textarea Sizing */
+#content-main textarea {
+  min-height: 120px !important;
+  line-height: 1.8 !important;
+  resize: vertical;
+}
+
+#content-main textarea#id_body,
+#content-main textarea#id_description {
+  min-height: 300px !important;
+}
+
+/* ── Labels — Clean Typography ─────────────────────────────────────────────── */
+#content-main label {
+  font-family: var(--arvan-font) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--arvan-text) !important;
+  margin-bottom: 6px !important;
+  display: block !important;
+  text-align: right !important;
+}
+
+#content-main .help,
+#content-main .helptext {
+  font-size: 12px !important;
+  color: var(--arvan-text-muted) !important;
+  margin-top: 4px !important;
+  text-align: right !important;
+  line-height: 1.6 !important;
+}
+
+/* ── Buttons — Modern Arvan Style ──────────────────────────────────────────── */
+.submit-row input[type="submit"],
+.submit-row button,
+button.default,
+input[type="submit"] {
+  font-family: var(--arvan-font) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  padding: 10px 24px !important;
+  border-radius: var(--arvan-radius) !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+}
+
+/* Primary Button */
+input[type="submit"][name="_save"],
+button.default,
+.submit-row input[type="submit"]:first-of-type {
+  background: linear-gradient(135deg, var(--arvan-primary) 0%, var(--arvan-primary-dark) 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(8, 145, 178, 0.3) !important;
+}
+
+input[type="submit"][name="_save"]:hover,
+button.default:hover {
+  background: linear-gradient(135deg, var(--arvan-primary-dark) 0%, #0c6477 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(8, 145, 178, 0.4) !important;
+}
+
+/* Secondary Button */
+input[type="submit"][name="_addanother"],
+input[type="submit"][name="_continue"] {
+  background: #fff !important;
+  color: var(--arvan-primary) !important;
+  border: 1.5px solid var(--arvan-primary) !important;
+}
+
+input[type="submit"][name="_addanother"]:hover,
+input[type="submit"][name="_continue"]:hover {
+  background: rgba(8, 145, 178, 0.08) !important;
+}
+
+/* Delete Button */
+.submit-row .deletelink,
+a.deletelink {
+  background: transparent !important;
+  color: var(--arvan-danger) !important;
+  border: 1.5px solid var(--arvan-danger) !important;
+  padding: 8px 16px !important;
+  border-radius: var(--arvan-radius) !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+}
+
+.submit-row .deletelink:hover,
+a.deletelink:hover {
+  background: var(--arvan-danger) !important;
+  color: #fff !important;
+}
+
+/* Submit Row Container */
+.submit-row {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+  border-top: 1px solid var(--arvan-border) !important;
+  padding: 16px 20px !important;
+  border-radius: 0 0 var(--arvan-radius-lg) var(--arvan-radius-lg) !important;
+  display: flex !important;
+  gap: 10px !important;
+  flex-wrap: wrap !important;
+}
+
+/* ── Table List — Clean Data Display ───────────────────────────────────────── */
+#result_list,
+table {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  background: #fff !important;
+  border-radius: var(--arvan-radius-lg) !important;
+  overflow: hidden !important;
+  box-shadow: var(--arvan-shadow) !important;
+}
+
+#result_list th,
+table th {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+  color: var(--arvan-text) !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+  padding: 14px 12px !important;
+  text-align: right !important;
+  border-bottom: 1px solid var(--arvan-border) !important;
+  white-space: nowrap !important;
+}
+
+#result_list td,
+table td {
+  padding: 12px !important;
+  border-bottom: 1px solid var(--arvan-border-light) !important;
+  font-size: 13px !important;
+  vertical-align: middle !important;
+}
+
+#result_list tbody tr:hover,
+table tbody tr:hover {
+  background: rgba(8, 145, 178, 0.04) !important;
+}
+
+#result_list tbody tr:last-child td,
+table tbody tr:last-child td {
+  border-bottom: none !important;
+}
+
+/* ── Table Links — Clean and Readable ─────────────────────────────────────── */
+#result_list td a,
+#result_list th a,
+table td a {
+  color: #1a1a2e !important;
+  text-decoration: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  display: inline !important;
+}
+
+#result_list td a:hover,
+table td a:hover {
+  color: #0891b2 !important;
+  text-decoration: underline !important;
+}
+
+#result_list td,
+table td {
+  background: #fff !important;
+  color: #374151 !important;
+}
+
+#result_list tbody tr,
+table tbody tr {
+  background: #fff !important;
+}
+
+#result_list tbody tr:hover,
+table tbody tr:hover {
+  background: #f9fafb !important;
+}
+
+#result_list tbody tr:hover td,
+table tbody tr:hover td {
+  background: #f9fafb !important;
+}
+
+/* ── List Editable Input Fields ───────────────────────────────────────────── */
+#result_list td input[type="text"],
+#result_list td input[type="number"],
+#result_list td input[type="email"],
+#result_list td input[type="url"],
+#result_list td select,
+table td input[type="text"],
+table td input[type="number"],
+table td input[type="email"],
+table td input[type="url"],
+table td select {
+  background: #fff !important;
+  color: #374151 !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 6px !important;
+  padding: 6px 10px !important;
+  font-size: 13px !important;
+  min-width: 60px !important;
+  text-align: center !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   FORCE WHITE INPUT FIELDS - Override ALL dark mode styles
+   ══════════════════════════════════════════════════════════════════════════════ */
+input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not([type="hidden"]),
+textarea,
+select {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 8px !important;
+  caret-color: #111827 !important;
+}
+
+/* Dark mode specific overrides */
+html.dark input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not([type="hidden"]),
+html.dark textarea,
+html.dark select,
+.dark input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not([type="hidden"]),
+.dark textarea,
+.dark select {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  border-color: #d1d5db !important;
+}
+
+/* Tailwind dark: prefix override */
+.dark\:bg-base-900 input,
+.dark\:bg-base-900 textarea,
+.dark\:bg-base-900 select,
+[class*="dark:"] input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+[class*="dark:"] textarea,
+[class*="dark:"] select {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+}
+
+/* Placeholder */
+input::placeholder,
+textarea::placeholder {
+  color: #9ca3af !important;
+  -webkit-text-fill-color: #9ca3af !important;
+  opacity: 1 !important;
+}
+
+/* Focus */
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #0891b2 !important;
+  box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.15) !important;
+  outline: none !important;
+  background: #ffffff !important;
+}
+
+/* Select arrow */
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: left 12px center !important;
+  padding-left: 36px !important;
+}
+
+#result_list td input[type="text"]:focus,
+#result_list td input[type="number"]:focus,
+table td input[type="text"]:focus,
+table td input[type="number"]:focus {
+  border-color: #0891b2 !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(8, 145, 178, 0.15) !important;
+}
+
+/* ── Checkbox & Boolean Fields ─────────────────────────────────────────────── */
+input[type="checkbox"] {
+  width: 18px !important;
+  height: 18px !important;
+  border-radius: 4px !important;
+  border: 2px solid var(--arvan-border) !important;
+  cursor: pointer !important;
+  accent-color: var(--arvan-primary) !important;
+}
+
+/* ── Select Dropdown ───────────────────────────────────────────────────────── */
+#content-main select {
+  appearance: none !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: left 12px center !important;
+  padding-left: 36px !important;
+}
+
+/* ── File Upload ───────────────────────────────────────────────────────────── */
+.file-upload,
+input[type="file"] {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+  border: 2px dashed var(--arvan-border) !important;
+  border-radius: var(--arvan-radius) !important;
+  padding: 16px !important;
+  transition: all 0.2s ease !important;
+}
+
+.file-upload:hover,
+input[type="file"]:hover {
+  border-color: var(--arvan-primary) !important;
+  background: rgba(8, 145, 178, 0.04) !important;
+}
+
+/* Image Thumbnails */
+.file-upload img,
+.inline-related img {
+  border-radius: var(--arvan-radius) !important;
+  box-shadow: var(--arvan-shadow) !important;
+  max-height: 100px !important;
+  object-fit: cover !important;
+}
+
+/* ── Pagination — Modern Style ─────────────────────────────────────────────── */
+.paginator,
+.pagination {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  padding: 16px !important;
+}
+
+.paginator a,
+.pagination a,
+.paginator span {
+  padding: 8px 14px !important;
+  border-radius: var(--arvan-radius) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+
+.paginator a:hover,
+.pagination a:hover {
+  background: var(--arvan-primary) !important;
+  color: #fff !important;
+}
+
+/* ── Breadcrumbs ───────────────────────────────────────────────────────────── */
+.breadcrumbs,
+nav[aria-label="breadcrumb"] {
+  font-size: 13px !important;
+  color: var(--arvan-text-muted) !important;
+  padding: 12px 20px !important;
+}
+
+.breadcrumbs a {
+  color: var(--arvan-primary) !important;
+  text-decoration: none !important;
+}
+
+.breadcrumbs a:hover {
+  text-decoration: underline !important;
+}
+
+/* ── Filters Sidebar ───────────────────────────────────────────────────────── */
+#changelist-filter {
+  background: var(--arvan-bg-card) !important;
+  border-radius: var(--arvan-radius-lg) !important;
+  box-shadow: var(--arvan-shadow) !important;
+  padding: 16px !important;
+  border: 1px solid var(--arvan-border) !important;
+}
+
+#changelist-filter h2 {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: var(--arvan-text) !important;
+  padding-bottom: 12px !important;
+  margin-bottom: 12px !important;
+  border-bottom: 1px solid var(--arvan-border) !important;
+}
+
+#changelist-filter h3 {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: var(--arvan-primary) !important;
+  margin: 16px 0 8px !important;
+  text-transform: uppercase !important;
+}
+
+#changelist-filter ul li a {
+  display: block !important;
+  padding: 6px 10px !important;
+  border-radius: 6px !important;
+  font-size: 13px !important;
+  color: var(--arvan-text) !important;
+  transition: all 0.15s ease !important;
+}
+
+#changelist-filter ul li a:hover {
+  background: rgba(8, 145, 178, 0.08) !important;
+  color: var(--arvan-primary) !important;
+}
+
+#changelist-filter ul li.selected a {
+  background: var(--arvan-primary) !important;
+  color: #fff !important;
+}
+
+/* ── Inline Forms ──────────────────────────────────────────────────────────── */
+.inline-group {
+  background: var(--arvan-bg) !important;
+  border-radius: var(--arvan-radius-lg) !important;
+  padding: 16px !important;
+  margin-top: 16px !important;
+}
+
+.inline-group h2 {
+  background: var(--arvan-bg-sidebar) !important;
+  color: #fff !important;
+  padding: 10px 16px !important;
+  border-radius: var(--arvan-radius) !important;
+  font-size: 13px !important;
+  margin-bottom: 12px !important;
+}
+
+.inline-related {
+  background: var(--arvan-bg-card) !important;
+  border: 1px solid var(--arvan-border) !important;
+  border-radius: var(--arvan-radius) !important;
+  padding: 12px !important;
+  margin-bottom: 8px !important;
+}
+
+/* ── Messages & Alerts ─────────────────────────────────────────────────────── */
+.messagelist li,
+.alert {
+  padding: 12px 16px !important;
+  border-radius: var(--arvan-radius) !important;
+  font-size: 13px !important;
+  margin-bottom: 12px !important;
+}
+
+.messagelist .success,
+.alert-success {
+  background: rgba(16, 185, 129, 0.1) !important;
+  border: 1px solid var(--arvan-success) !important;
+  color: #065f46 !important;
+}
+
+.messagelist .warning,
+.alert-warning {
+  background: rgba(245, 158, 11, 0.1) !important;
+  border: 1px solid var(--arvan-warning) !important;
+  color: #92400e !important;
+}
+
+.messagelist .error,
+.alert-danger {
+  background: rgba(239, 68, 68, 0.1) !important;
+  border: 1px solid var(--arvan-danger) !important;
+  color: #991b1b !important;
+}
+
+/* ── Persian Dashboard Cards ───────────────────────────────────────────────── */
+.fa-admin-shell {
+  max-width: 1200px;
+  margin: 24px auto;
+  padding: 0 20px;
+}
+
+.fa-admin-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--arvan-text);
+  margin: 0 0 8px;
+}
+
+.fa-admin-subtitle {
+  color: var(--arvan-text-muted);
+  font-size: 14px;
+  margin: 0 0 24px;
+}
+
+.fa-admin-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.fa-admin-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--arvan-bg-card);
+  border: 1px solid var(--arvan-border);
+  color: var(--arvan-text);
+  padding: 16px 20px;
+  border-radius: var(--arvan-radius-lg);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: var(--arvan-shadow-sm);
+}
+
+.fa-admin-card:hover {
+  border-color: var(--arvan-primary);
+  box-shadow: var(--arvan-shadow-md);
+  transform: translateY(-2px);
+}
+
+.fa-admin-card::before {
+  content: '';
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--arvan-primary) 0%, var(--arvan-primary-dark) 100%);
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+/* ── CKEditor Persian RTL ──────────────────────────────────────────────────── */
+#content-main .ck-editor__editable,
+#content-main .ck-content {
+  direction: rtl !important;
+  text-align: right !important;
+  font-family: var(--arvan-font) !important;
+  min-height: 350px !important;
+  line-height: 2 !important;
+}
+
+/* ── Responsive Adjustments ────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .fa-admin-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .submit-row {
+    flex-direction: column;
+  }
+  
+  .submit-row input[type="submit"],
+  .submit-row button {
+    width: 100% !important;
+  }
+}
+
+/* ── Scrollbar — Modern Style ──────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--arvan-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--arvan-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--arvan-text-light);
+}
+
+/* ── Print Styles ──────────────────────────────────────────────────────────── */
+@media print {
+  aside, .sidebar, .submit-row, #changelist-filter {
+    display: none !important;
+  }
+}

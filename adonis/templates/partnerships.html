@@ -1,0 +1,1865 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+
+{% block title %}{% if meta_title %}{{ meta_title }} | {{ SITE_NAME }}{% else %}Partnerships | {{ SITE_NAME }}{% endif %}{% endblock %}
+
+{% block content %}
+<!-- Hero Section – Cinematic -->
+<section class="pp-hero">
+    {% if ps.hero_image %}
+    <div class="pp-hero-bg" style="background-image: url('{{ ps.hero_image.url }}');"></div>
+    {% endif %}
+    <div class="pp-hero-overlay"></div>
+    <div class="container">
+        <div class="pp-hero-content" data-aos="fade-up">
+            <span class="pp-hero-badge"><i class="fas fa-handshake"></i> {% trans "Partnership Program" %}</span>
+            <h1 class="pp-hero-title">{{ ps.hero_title }}</h1>
+            <div class="pp-hero-subtitle">{{ ps.hero_subtitle|safe }}</div>
+            <div class="pp-hero-buttons">
+                <button type="button" class="pp-btn pp-btn-gold pp-btn-hero-main open-partner-modal"><i class="fas fa-handshake"></i> {% trans "Become a Partner" %}</button>
+            </div>
+        </div>
+    </div>
+    <!-- Animated scroll indicator -->
+    <div class="pp-scroll-indicator" data-aos="fade-up" data-aos-delay="400">
+        <i class="fas fa-chevron-down"></i>
+    </div>
+</section>
+
+<!-- Video + Inline Form Section -->
+<section class="pp-video-section" id="pp-video">
+    <div class="container">
+        {% if ps.video_title %}
+        <div class="pp-section-header" data-aos="fade-up">
+            <h2 class="pp-section-title">{{ ps.video_title|striptags }}</h2>
+            {% if ps.video_subtitle %}<div class="pp-section-subtitle">{{ ps.video_subtitle|safe }}</div>{% endif %}
+        </div>
+        {% endif %}
+
+        <div class="pp-video-form-grid">
+            <!-- Left: Video -->
+            <div class="pp-video-col" data-aos="fade-right" data-aos-delay="100">
+                <div class="pp-video-container">
+                    {% if ps.video %}
+                    <video id="ppVideo" playsinline preload="metadata"
+                           {% if ps.video_cover %}poster="{{ ps.video_cover.url }}"{% endif %}>
+                        <source src="{{ ps.video.url }}" type="video/mp4">
+                    </video>
+                    <div class="pp-video-play" id="ppVideoPlay">
+                        <div class="pp-play-btn"><i class="fas fa-play"></i></div>
+                        <span class="pp-play-text">{% trans "Watch Our Story" %}</span>
+                    </div>
+                    {% elif ps.video_embed_url %}
+                    {% if ps.video_cover %}
+                    <div class="pp-video-thumb" id="ppVideoThumb"
+                         style="background-image:url('{{ ps.video_cover.url }}');">
+                        <div class="pp-video-play" id="ppVideoPlay">
+                            <div class="pp-play-btn"><i class="fas fa-play"></i></div>
+                            <span class="pp-play-text">{% trans "Watch Our Story" %}</span>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <iframe id="ppVideoIframe"
+                            src="{{ ps.video_embed_url }}"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen
+                            {% if ps.video_cover %}style="display:none;"{% endif %}>
+                    </iframe>
+                    {% elif ps.video_cover %}
+                    <img src="{{ ps.video_cover.url }}" alt="Partnership Video" class="pp-video-poster" loading="lazy" decoding="async">
+                    {% else %}
+                    <div class="pp-video-placeholder">
+                        <i class="fas fa-video"></i>
+                        <p>{% trans "Video Coming Soon" %}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Right: Inline B2B Application Form -->
+            <div class="pp-inline-form-col" data-aos="fade-left" data-aos-delay="200">
+                <div class="pp-inline-form-card">
+                    <div class="pp-inline-form-header">
+                        <div class="pp-inline-form-icon"><i class="fas fa-handshake"></i></div>
+                        <h3 class="pp-inline-form-title">{% trans "Become a Partner" %}</h3>
+                        <p class="pp-inline-form-subtitle">{% trans "Fill in the form below and our team will contact you shortly." %}</p>
+                    </div>
+
+                    <div class="pl-error-banner" id="pliErrorBanner" style="display:none;"></div>
+
+                    <div id="pliFormState">
+                        <form id="partnerLeadFormInline" class="unified-site-form" novalidate autocomplete="off">
+                            {% csrf_token %}
+                            <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
+
+                            <div class="pl-row">
+                                <div class="pl-field">
+                                    <label for="pli_first_name">{% trans "First Name" %} <span class="pl-req">*</span></label>
+                                    <input type="text" id="pli_first_name" name="first_name" placeholder="John" autocomplete="given-name">
+                                    <span class="pl-field-error" id="erri_first_name"></span>
+                                </div>
+                                <div class="pl-field">
+                                    <label for="pli_last_name">{% trans "Last Name" %} <span class="pl-req">*</span></label>
+                                    <input type="text" id="pli_last_name" name="last_name" placeholder="Smith" autocomplete="family-name">
+                                    <span class="pl-field-error" id="erri_last_name"></span>
+                                </div>
+                            </div>
+
+                            <div class="pl-row">
+                                <div class="pl-field">
+                                    <label for="pli_email">{% trans "Email" %} <span class="pl-req">*</span></label>
+                                    <input type="email" id="pli_email" name="email" placeholder="you@example.com" autocomplete="email">
+                                    <span class="pl-field-error" id="erri_email"></span>
+                                </div>
+                                <div class="pl-field">
+                                    <label for="pli_phone">{% trans "Phone" %} <span class="pl-req">*</span></label>
+                                    <input type="tel" id="pli_phone" name="phone" placeholder="+30 210 000 0000" autocomplete="tel">
+                                    <span class="pl-field-error" id="erri_phone"></span>
+                                </div>
+                            </div>
+
+                            <div class="pl-field">
+                                <label for="pli_partner_type">{% trans "Partner Type" %} <span class="pl-req">*</span></label>
+                                <select id="pli_partner_type" name="partner_type">
+                                    <option value="">{% trans "— Select type —" %}</option>
+                                    <option value="broker">{% trans "Broker" %}</option>
+                                    <option value="agent">{% trans "Agent" %}</option>
+                                    <option value="lawyer">{% trans "Lawyer" %}</option>
+                                    <option value="client">{% trans "Client" %}</option>
+                                    <option value="other">{% trans "Other" %}</option>
+                                </select>
+                                <span class="pl-field-error" id="erri_partner_type"></span>
+                            </div>
+
+                            <div class="pl-field pl-other-title" id="otherTitleWrapInline" style="display:none;">
+                                <label for="pli_other_title">{% trans "Your Title" %} <span class="pl-req">*</span></label>
+                                <input type="text" id="pli_other_title" name="other_title" placeholder="e.g. Developer, Investor…">
+                                <span class="pl-field-error" id="erri_other_title"></span>
+                            </div>
+
+                            <div class="pl-row">
+                                <div class="pl-field">
+                                    <label for="pli_country">{% trans "Country" %} <span class="pl-opt">({% trans "optional" %})</span></label>
+                                    <input type="text" id="pli_country" name="country" placeholder="Greece" autocomplete="country-name">
+                                </div>
+                                <div class="pl-field">
+                                    <label for="pli_company">{% trans "Company" %} <span class="pl-opt">({% trans "optional" %})</span></label>
+                                    <input type="text" id="pli_company" name="company" placeholder="Acme Ltd." autocomplete="organization">
+                                </div>
+                            </div>
+
+                            <div class="pl-consent">
+                                <label class="pl-checkbox-label">
+                                    <input type="checkbox" id="pli_consent" name="consent" value="true">
+                                    <span class="pl-checkmark"></span>
+                                    <span>{% trans "I agree to be contacted by ADONIS." %} <span class="pl-req">*</span></span>
+                                </label>
+                                <span class="pl-field-error" id="erri_consent"></span>
+                            </div>
+
+                            <button type="submit" class="pl-submit" id="pliSubmitBtn">
+                                <span class="pl-submit-text"><i class="fas fa-paper-plane"></i> {% trans "Submit Application" %}</span>
+                                <span class="pl-submit-loading" style="display:none;"><i class="fas fa-spinner fa-spin"></i> {% trans "Sending..." %}</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div id="pliSuccessState" style="display:none;">
+                        <div class="pl-success">
+                            <div class="pl-success-icon"><i class="fas fa-check-circle"></i></div>
+                            <h3 class="pl-success-title">{% trans "Thank you!" %}</h3>
+                            <p class="pl-success-text">{% trans "Thanks for completing the form. Our team will contact you shortly." %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.pp-video-form-grid -->
+
+        <!-- Why Choose Us Stats Section -->
+        <div class="pp-why-choose-section" data-aos="fade-up" data-aos-delay="300">
+            <div class="pp-why-choose-header">
+                <span class="pp-why-badge"><i class="fas fa-star"></i> {% trans "Why Choose Us" %}</span>
+                <h2 class="pp-why-title">{% trans "Why B2B with Adonis Group" %}</h2>
+            </div>
+            <div class="pp-video-stats">
+                <div class="pp-video-stat">
+                    <span class="pp-video-stat-number">4700</span>
+                    <span class="pp-video-stat-label">{% trans "Sq M Construction Built" %}</span>
+                </div>
+                <div class="pp-video-stat">
+                    <span class="pp-video-stat-number">480+</span>
+                    <span class="pp-video-stat-label">{% trans "Successful Clients" %}</span>
+                </div>
+                <div class="pp-video-stat">
+                    <span class="pp-video-stat-number">24+</span>
+                    <span class="pp-video-stat-label">{% trans "Active Partners Worldwide" %}</span>
+                </div>
+                <div class="pp-video-stat">
+                    <span class="pp-video-stat-number">20+</span>
+                    <span class="pp-video-stat-label">{% trans "Active Properties" %}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Benefits Section - Glassmorphism -->
+<section class="pp-benefits-section">
+    <div class="pp-benefits-bg"></div>
+    <div class="pp-benefits-overlay"></div>
+    <div class="container">
+        <div class="pp-section-header pp-benefits-header" data-aos="fade-up">
+            <span class="pp-glass-badge"><i class="fas fa-gem"></i> {% trans "Benefits" %}</span>
+            <h2 class="pp-benefits-title">{% trans "Partnership Benefits" %}</h2>
+            <p class="pp-benefits-subtitle">{% trans "Everything you need to succeed in the Greek real estate market" %}</p>
+        </div>
+        <div class="pp-benefits-grid">
+            {% for b in benefits %}
+            <div class="pp-glass-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}50">
+                <div class="pp-glass-icon">
+                    <i class="{{ b.icon }}"></i>
+                </div>
+                <h3 class="pp-glass-title">{{ b.title }}</h3>
+                <p class="pp-glass-text">{{ b.text|striptags }}</p>
+                <div class="pp-glass-number">0{{ forloop.counter }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="pp-cta-section">
+    <div class="container">
+        <div class="pp-cta-content" data-aos="zoom-in">
+            <div class="pp-cta-glow"></div>
+            <i class="fas fa-rocket pp-cta-icon"></i>
+            <h2 class="pp-cta-title">{{ ps.cta_title }}</h2>
+            <p class="pp-cta-text">{{ ps.cta_text|striptags }}</p>
+            <button type="button" class="pp-btn pp-btn-gold pp-btn-lg open-partner-modal" id="openPartnerModal">
+                <i class="fas fa-handshake"></i> {{ ps.cta_button_text }}
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Partner Lead Modal ===== -->
+<div class="pl-overlay" id="partnerModal" role="dialog" aria-modal="true" aria-labelledby="plModalTitle">
+    <div class="pl-modal">
+        <button class="pl-close" id="plClose" aria-label="Close"><i class="fas fa-times"></i></button>
+
+        <!-- Form State -->
+        <div id="plFormState">
+            <div class="pl-header">
+                <div class="pl-icon"><i class="fas fa-handshake"></i></div>
+                <h2 class="pl-title" id="plModalTitle">{% trans "Become a Partner" %}</h2>
+                <p class="pl-subtitle">{% trans "Fill in the form below and our team will contact you shortly." %}</p>
+            </div>
+
+            <div class="pl-error-banner" id="plErrorBanner" style="display:none;"></div>
+
+            <form id="partnerLeadForm" class="unified-site-form" novalidate autocomplete="off">
+                {% csrf_token %}
+                <!-- Honeypot -->
+                <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
+
+                <div class="pl-row">
+                    <div class="pl-field">
+                        <label for="pl_first_name">{% trans "First Name" %} <span class="pl-req">*</span></label>
+                        <input type="text" id="pl_first_name" name="first_name" placeholder="John" autocomplete="given-name">
+                        <span class="pl-field-error" id="err_first_name"></span>
+                    </div>
+                    <div class="pl-field">
+                        <label for="pl_last_name">{% trans "Last Name" %} <span class="pl-req">*</span></label>
+                        <input type="text" id="pl_last_name" name="last_name" placeholder="Smith" autocomplete="family-name">
+                        <span class="pl-field-error" id="err_last_name"></span>
+                    </div>
+                </div>
+
+                <div class="pl-row">
+                    <div class="pl-field">
+                        <label for="pl_email">{% trans "Email" %} <span class="pl-req">*</span></label>
+                        <input type="email" id="pl_email" name="email" placeholder="you@example.com" autocomplete="email">
+                        <span class="pl-field-error" id="err_email"></span>
+                    </div>
+                    <div class="pl-field">
+                        <label for="pl_phone">{% trans "Phone" %} <span class="pl-req">*</span></label>
+                        <input type="tel" id="pl_phone" name="phone" placeholder="+30 210 000 0000" autocomplete="tel">
+                        <span class="pl-field-error" id="err_phone"></span>
+                    </div>
+                </div>
+
+                <div class="pl-field">
+                    <label for="pl_partner_type">{% trans "Partner Type" %} <span class="pl-req">*</span></label>
+                    <select id="pl_partner_type" name="partner_type">
+                        <option value="">{% trans "— Select type —" %}</option>
+                        <option value="broker">{% trans "Broker" %}</option>
+                        <option value="agent">{% trans "Agent" %}</option>
+                        <option value="lawyer">{% trans "Lawyer" %}</option>
+                        <option value="client">{% trans "Client" %}</option>
+                        <option value="other">{% trans "Other" %}</option>
+                    </select>
+                    <span class="pl-field-error" id="err_partner_type"></span>
+                </div>
+
+                <div class="pl-field pl-other-title" id="otherTitleWrap" style="display:none;">
+                    <label for="pl_other_title">{% trans "Your Title" %} <span class="pl-req">*</span></label>
+                    <input type="text" id="pl_other_title" name="other_title" placeholder="e.g. Developer, Investor…">
+                    <span class="pl-field-error" id="err_other_title"></span>
+                </div>
+
+                <div class="pl-row">
+                    <div class="pl-field">
+                        <label for="pl_country">{% trans "Country" %} <span class="pl-opt">({% trans "optional" %})</span></label>
+                        <input type="text" id="pl_country" name="country" placeholder="Greece" autocomplete="country-name">
+                    </div>
+                    <div class="pl-field">
+                        <label for="pl_company">{% trans "Company / Organization" %} <span class="pl-opt">({% trans "optional" %})</span></label>
+                        <input type="text" id="pl_company" name="company" placeholder="Acme Ltd." autocomplete="organization">
+                    </div>
+                </div>
+
+                <div class="pl-field">
+                    <label for="pl_message">{% trans "Message / Notes" %} <span class="pl-opt">({% trans "optional" %})</span></label>
+                    <textarea id="pl_message" name="message" rows="3" placeholder="Tell us a bit about yourself or your goals…"></textarea>
+                </div>
+
+                <div class="pl-consent">
+                    <label class="pl-checkbox-label">
+                        <input type="checkbox" id="pl_consent" name="consent" value="true">
+                        <span class="pl-checkmark"></span>
+                        <span>{% trans "I agree to be contacted by ADONIS." %} <span class="pl-req">*</span></span>
+                    </label>
+                    <span class="pl-field-error" id="err_consent"></span>
+                </div>
+
+                <button type="submit" class="pl-submit" id="plSubmitBtn">
+                    <span class="pl-submit-text"><i class="fas fa-paper-plane"></i> {% trans "Submit" %}</span>
+                    <span class="pl-submit-loading" style="display:none;"><i class="fas fa-spinner fa-spin"></i> {% trans "Sending..." %}</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Success State -->
+        <div id="plSuccessState" style="display:none;">
+            <div class="pl-success">
+                <div class="pl-success-icon"><i class="fas fa-check-circle"></i></div>
+                <h2 class="pl-success-title">{% trans "Thank you!" %}</h2>
+                <p class="pl-success-text">{% trans "Thanks for completing the form. Our team will contact you shortly." %}</p>
+                <button class="pp-btn pp-btn-gold" id="plSuccessClose">{% trans "Close" %}</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ===== HERO SECTION ===== */
+.pp-hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #0a1628;
+}
+.pp-hero-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+    animation: ppHeroZoom 20s ease-in-out infinite alternate;
+}
+@keyframes ppHeroZoom {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.08); }
+}
+.pp-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(10,22,40,0.4) 0%, rgba(10,22,40,0.35) 30%, rgba(10,22,40,0.6) 55%, rgba(11,25,52,0.92) 80%, #0a1628 100%);
+    z-index: 2;
+}
+.pp-hero .container {
+    position: relative;
+    z-index: 3;
+}
+.pp-hero-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+.pp-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, rgba(201,162,39,0.15), rgba(201,162,39,0.05));
+    border: 1px solid rgba(201,162,39,0.3);
+    color: #c9a227;
+    padding: 8px 24px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+}
+.pp-hero-title {
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.15;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #fff 0%, #c9a227 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.pp-hero-subtitle {
+    font-size: 1.15rem;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.8;
+    max-width: 600px;
+    margin: 0 auto 2.5rem;
+}
+.pp-hero-buttons {
+    display: flex;
+    justify-content: center;
+}
+.pp-hero-buttons .pp-btn {
+    border: none;
+    font-family: inherit;
+}
+.pp-btn-hero-main {
+    padding: 18px 48px;
+    font-size: 1.15rem;
+    letter-spacing: .03em;
+}
+.pp-scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    color: rgba(201,162,39,0.6);
+    font-size: 1.5rem;
+    animation: ppBounce 2s infinite;
+}
+@keyframes ppBounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(10px); }
+}
+
+/* ===== BUTTONS ===== */
+.pp-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 32px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+.pp-btn-gold {
+    background: linear-gradient(135deg, #c9a227, #e6c44d);
+    color: #0a1628;
+    box-shadow: 0 4px 20px rgba(201,162,39,0.3);
+}
+.pp-btn-gold:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(201,162,39,0.5);
+    color: #0a1628;
+    text-decoration: none;
+}
+.pp-btn-outline {
+    border: 2px solid rgba(255,255,255,0.3);
+    color: #fff;
+    background: transparent;
+}
+.pp-btn-outline:hover {
+    border-color: #c9a227;
+    color: #c9a227;
+    text-decoration: none;
+}
+.pp-btn-lg {
+    padding: 18px 40px;
+    font-size: 1.05rem;
+}
+
+/* ===== VIDEO SECTION ===== */
+.pp-video-section {
+    padding: 6rem 0;
+    background: linear-gradient(180deg, #0a1628 0%, #0d1f3c 100%);
+}
+.pp-section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+.pp-section-title {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1rem;
+}
+.pp-section-subtitle {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.6);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* ── Two-column: video left, form right ── */
+.pp-video-form-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 36px;
+    align-items: stretch;
+}
+.pp-video-col {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Inline form card ── */
+.pp-inline-form-col {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+.pp-inline-form-card {
+    background: linear-gradient(160deg, #0f2240 0%, #0a1628 100%);
+    border: 1px solid rgba(201,162,39,0.25);
+    border-radius: 20px;
+    padding: 2.25rem 2rem;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: auto;
+}
+.pp-inline-form-header {
+    text-align: center;
+    margin-bottom: 1.6rem;
+    padding-bottom: 1.4rem;
+    border-bottom: 1px solid rgba(201,162,39,0.15);
+}
+.pp-inline-form-icon {
+    width: 52px; height: 52px;
+    background: linear-gradient(135deg, #c9a227, #e6c44d);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    color: #0a1628;
+    margin: 0 auto 0.9rem;
+    box-shadow: 0 6px 20px rgba(201,162,39,0.35);
+}
+.pp-inline-form-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.3rem;
+}
+.pp-inline-form-subtitle {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.5;
+}
+
+/* ── Dark-theme form fields ── */
+.pp-inline-form-card .pl-field label,
+.pp-inline-form-card .pl-consent label,
+.pp-inline-form-card .pl-checkbox-label span {
+    color: rgba(255,255,255,0.85) !important;
+    font-size: 0.82rem;
+}
+.pp-inline-form-card .pl-req { color: #e6c44d !important; }
+.pp-inline-form-card .pl-opt { color: rgba(255,255,255,0.5) !important; font-size: 0.78rem; }
+.pp-inline-form-card input[type="text"],
+.pp-inline-form-card input[type="email"],
+.pp-inline-form-card input[type="tel"],
+.pp-inline-form-card select,
+.pp-inline-form-card textarea {
+    background: rgba(255,255,255,0.07) !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    color: #fff !important;
+    border-radius: 8px !important;
+}
+.pp-inline-form-card input[type="text"]::placeholder,
+.pp-inline-form-card input[type="email"]::placeholder,
+.pp-inline-form-card input[type="tel"]::placeholder,
+.pp-inline-form-card textarea::placeholder { color: rgba(255,255,255,0.45) !important; }
+.pp-inline-form-card input[type="text"]:focus,
+.pp-inline-form-card input[type="email"]:focus,
+.pp-inline-form-card input[type="tel"]:focus,
+.pp-inline-form-card select:focus,
+.pp-inline-form-card textarea:focus {
+    border-color: rgba(201,162,39,0.6) !important;
+    background: rgba(255,255,255,0.1) !important;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(201,162,39,0.12) !important;
+}
+.pp-inline-form-card select option { background: #0d1f3c; color: #fff; }
+.pp-inline-form-card .pl-invalid {
+    border-color: #f87171 !important;
+    box-shadow: 0 0 0 3px rgba(248,113,113,0.15) !important;
+}
+.pp-inline-form-card .pl-field-error { color: #fca5a5 !important; }
+.pp-inline-form-card .pl-checkmark {
+    border-color: rgba(255,255,255,0.3) !important;
+    background: rgba(255,255,255,0.06) !important;
+}
+.pp-inline-form-card input[type="checkbox"]:checked + .pl-checkmark {
+    background: #c9a227 !important;
+    border-color: #c9a227 !important;
+}
+.pp-inline-form-card #pliErrorBanner {
+    background: rgba(239,68,68,0.15);
+    border: 1px solid rgba(239,68,68,0.4);
+    color: #fca5a5;
+    border-radius: 8px;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+}
+.pp-inline-form-card .pl-submit {
+    background: linear-gradient(135deg, #c9a227, #e6c44d);
+    color: #0a1628;
+    font-weight: 700;
+    border: none;
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: filter 0.2s, transform 0.2s, box-shadow 0.2s;
+    margin-top: auto;
+    box-shadow: 0 4px 16px rgba(201,162,39,0.3);
+}
+.pp-inline-form-card .pl-submit:hover { filter: brightness(1.07); transform: translateY(-1px); box-shadow: 0 6px 22px rgba(201,162,39,0.4); }
+
+/* Dark success state */
+.pp-inline-form-card .pl-success-icon i { color: #e6c44d; font-size: 2.8rem; }
+.pp-inline-form-card .pl-success-title { color: #fff; }
+.pp-inline-form-card .pl-success-text { color: rgba(255,255,255,0.6); }
+
+.pp-video-container {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #111;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,162,39,0.15);
+    flex: 1;
+    min-height: 340px;
+}
+.pp-video-container video,
+.pp-video-container iframe,
+.pp-video-container .pp-video-poster {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+.pp-video-play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    background: rgba(10,22,40,0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+.pp-video-play:hover {
+    background: rgba(10,22,40,0.3);
+}
+.pp-play-btn {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #c9a227, #e6c44d);
+    border-radius: 50%;
+    color: #0a1628;
+    font-size: 1.8rem;
+    box-shadow: 0 8px 40px rgba(201,162,39,0.4);
+    transition: all 0.3s ease;
+}
+.pp-video-play:hover .pp-play-btn {
+    transform: scale(1.1);
+    box-shadow: 0 12px 50px rgba(201,162,39,0.6);
+}
+.pp-play-text {
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+.pp-video-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    color: rgba(255,255,255,0.3);
+    font-size: 3rem;
+}
+.pp-video-placeholder p {
+    font-size: 1rem;
+}
+/* Thumbnail cover for URL videos */
+.pp-video-thumb {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    z-index: 2;
+    transition: opacity 0.3s ease;
+}
+#ppVideoIframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    border: none;
+    z-index: 1;
+}
+
+/* ===== BENEFITS SECTION - GLASSMORPHISM ===== */
+.pp-benefits-section {
+    position: relative;
+    padding: 7rem 0;
+    overflow: hidden;
+}
+.pp-benefits-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('{% static 'img/unsplash/1497366216548-37526070297c_1920.jpg' %}');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+.pp-benefits-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(10,22,40,0.65) 0%, rgba(13,30,60,0.60) 100%);
+    backdrop-filter: blur(1px);
+}
+.pp-benefits-section .container {
+    position: relative;
+    z-index: 2;
+}
+.pp-benefits-header {
+    margin-bottom: 3.5rem;
+}
+.pp-glass-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 10px 24px;
+    border-radius: 50px;
+    color: #c9a227;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+}
+.pp-benefits-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+}
+.pp-benefits-subtitle {
+    font-size: 1.15rem;
+    color: rgba(255,255,255,0.7);
+    max-width: 600px;
+    margin: 0 auto;
+}
+.pp-benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+/* Glass Card */
+.pp-glass-card {
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+}
+.pp-glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+}
+.pp-glass-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #c9a227, transparent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+.pp-glass-card:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(201,162,39,0.3);
+    transform: translateY(-8px);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,162,39,0.1);
+}
+.pp-glass-card:hover::after {
+    opacity: 1;
+}
+.pp-glass-icon {
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(201,162,39,0.2), rgba(201,162,39,0.05));
+    border: 1px solid rgba(201,162,39,0.25);
+    border-radius: 20px;
+    font-size: 1.6rem;
+    color: #c9a227;
+    margin-bottom: 1.5rem;
+    transition: all 0.4s ease;
+}
+.pp-glass-card:hover .pp-glass-icon {
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(201,162,39,0.3);
+}
+.pp-glass-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.8rem;
+}
+.pp-glass-text {
+    color: rgba(255,255,255,0.65);
+    font-size: 0.92rem;
+    line-height: 1.75;
+}
+.pp-glass-number {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    font-size: 3rem;
+    font-weight: 800;
+    color: rgba(255,255,255,0.04);
+    line-height: 1;
+    transition: color 0.4s ease;
+}
+.pp-glass-card:hover .pp-glass-number {
+    color: rgba(201,162,39,0.1);
+}
+
+/* ===== CTA SECTION ===== */
+.pp-cta-section {
+    padding: 6rem 0;
+    background: #0a1628;
+}
+.pp-cta-content {
+    position: relative;
+    text-align: center;
+    padding: 5rem 3rem;
+    background: linear-gradient(145deg, rgba(201,162,39,0.08), rgba(201,162,39,0.02));
+    border: 1px solid rgba(201,162,39,0.15);
+    border-radius: 30px;
+    overflow: hidden;
+}
+.pp-cta-glow {
+    position: absolute;
+    top: -50%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(201,162,39,0.15) 0%, transparent 70%);
+    pointer-events: none;
+}
+.pp-cta-icon {
+    font-size: 2.5rem;
+    color: #c9a227;
+    margin-bottom: 1.5rem;
+    display: block;
+}
+.pp-cta-title {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1rem;
+}
+.pp-cta-text {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.6);
+    max-width: 550px;
+    margin: 0 auto 2rem;
+    line-height: 1.7;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 992px) {
+    .pp-benefits-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .pp-benefits-title {
+        font-size: 2.2rem;
+    }
+}
+/* ── Why Choose Us Section Below Video ── */
+.pp-why-choose-section {
+    margin-top: 3rem;
+    padding: 2.5rem 2rem;
+    background: linear-gradient(145deg, rgba(201,162,39,0.08), rgba(201,162,39,0.02));
+    border: 1px solid rgba(201,162,39,0.2);
+    border-radius: 20px;
+}
+.pp-why-choose-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.pp-why-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, rgba(201,162,39,0.15), rgba(201,162,39,0.05));
+    border: 1px solid rgba(201,162,39,0.3);
+    color: #c9a227;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+.pp-why-title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+    background: linear-gradient(135deg, #fff 0%, #c9a227 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ── Stats Grid ── */
+.pp-video-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    text-align: center;
+}
+.pp-video-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+}
+.pp-video-stat:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: -1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 50px;
+    width: 1px;
+    background: rgba(201,162,39,0.25);
+}
+.pp-video-stat-number {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #c9a227;
+    line-height: 1;
+    background: linear-gradient(135deg, #c9a227 0%, #e6c44d 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.pp-video-stat-label {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.65);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+}
+
+@media (max-width: 992px) {
+    .pp-video-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+    .pp-video-stat:nth-child(2)::after {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .pp-hero {
+        min-height: 80vh;
+    }
+    .pp-hero-content {
+        padding: 1rem;
+    }
+    .pp-hero-subtitle {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+    /* Hero button: stack vertically on tablet/mobile */
+    .pp-hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    .pp-hero-buttons .pp-btn {
+        width: min(100%, 320px);
+        justify-content: center;
+    }
+    .pp-btn-hero-main {
+        padding: 14px 32px;
+        font-size: 1rem;
+    }
+    .pp-benefits-section {
+        padding: 4rem 0;
+        /* Fix iOS fixed-position parallax glitch */
+        background-attachment: scroll;
+    }
+    .pp-benefits-bg {
+        background-attachment: scroll !important;
+    }
+    .pp-benefits-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    .pp-benefits-title {
+        font-size: 1.8rem;
+    }
+    .pp-glass-card {
+        padding: 2rem 1.5rem;
+    }
+    .pp-cta-content {
+        padding: 3rem 1.5rem;
+    }
+    .pp-video-section,
+    .pp-b2b-section,
+    .pp-benefits-section,
+    .pp-cta-section {
+        padding: 4rem 0;
+    }
+    .pp-video-form-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    .pp-video-container {
+        min-height: 220px;
+        aspect-ratio: 16 / 9;
+        flex: none;
+    }
+    .pp-inline-form-card {
+        padding: 1.75rem 1.5rem;
+    }
+    /* Why choose section */
+    .pp-why-choose-section {
+        padding: 2rem 1.5rem;
+        margin-top: 2rem;
+    }
+    .pp-video-stats {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 1.25rem;
+        gap: 1.25rem;
+    }
+    .pp-video-stat::after {
+        display: none;
+    }
+    .pp-video-stat-number {
+        font-size: 1.6rem;
+    }
+    .pp-video-stat-label {
+        font-size: 0.75rem;
+    }
+}
+
+/* ── Small phones: 576px and below ── */
+@media (max-width: 576px) {
+    .pp-hero {
+        min-height: 75vh;
+    }
+    .pp-hero-content {
+        padding: 0.75rem;
+    }
+    .pp-hero-badge {
+        font-size: 0.72rem;
+        padding: 6px 14px;
+        letter-spacing: 0.5px;
+        margin-bottom: 1.25rem;
+    }
+    .pp-hero-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.7;
+    }
+    .pp-hero-buttons .pp-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    .pp-btn-hero-main {
+        font-size: 0.92rem;
+        padding: 13px 22px;
+    }
+
+    /* Video/form section */
+    .pp-video-section,
+    .pp-b2b-section,
+    .pp-benefits-section,
+    .pp-cta-section {
+        padding: 2.5rem 0;
+    }
+    .pp-section-header {
+        margin-bottom: 2rem;
+    }
+    .pp-section-title {
+        font-size: 1.5rem;
+    }
+    .pp-section-subtitle {
+        font-size: 0.9rem;
+    }
+    .pp-video-form-grid {
+        gap: 16px;
+    }
+    .pp-video-container {
+        min-height: 180px;
+    }
+
+    /* Why choose + stats */
+    .pp-why-choose-section {
+        padding: 1.25rem 0.875rem;
+        margin-top: 1.25rem;
+        border-radius: 14px;
+    }
+    .pp-why-badge {
+        font-size: 0.72rem;
+        padding: 6px 14px;
+    }
+    .pp-why-title {
+        font-size: 1.2rem;
+    }
+    .pp-why-choose-header {
+        margin-bottom: 1.25rem;
+    }
+    .pp-video-stats {
+        gap: 0.75rem;
+        padding: 1rem 0.75rem;
+    }
+    .pp-video-stat-number {
+        font-size: 1.45rem;
+    }
+    .pp-video-stat-label {
+        font-size: 0.68rem;
+        letter-spacing: 0;
+    }
+
+    /* Benefits */
+    .pp-benefits-section {
+        padding: 2.5rem 0;
+    }
+    .pp-benefits-header {
+        margin-bottom: 2rem;
+    }
+    .pp-benefits-title {
+        font-size: 1.5rem;
+    }
+    .pp-benefits-subtitle {
+        font-size: 0.9rem;
+    }
+    .pp-glass-badge {
+        font-size: 0.72rem;
+        padding: 8px 16px;
+    }
+    .pp-glass-card {
+        padding: 1.5rem 1.25rem;
+        border-radius: 18px;
+    }
+    .pp-glass-icon {
+        width: 55px;
+        height: 55px;
+        font-size: 1.3rem;
+        border-radius: 16px;
+        margin-bottom: 1.1rem;
+    }
+    .pp-glass-title {
+        font-size: 1.05rem;
+    }
+    .pp-glass-text {
+        font-size: 0.88rem;
+        line-height: 1.65;
+    }
+
+    /* CTA section */
+    .pp-cta-section {
+        padding: 2.5rem 0;
+    }
+    .pp-cta-content {
+        padding: 2.25rem 1rem;
+        border-radius: 20px;
+    }
+    .pp-cta-icon {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+    .pp-cta-text {
+        font-size: 0.95rem;
+    }
+    .pp-cta-section .pp-btn-lg {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 24px;
+    }
+
+    /* Inline form card */
+    .pp-inline-form-card {
+        padding: 1.5rem 1rem;
+        border-radius: 16px;
+    }
+    .pp-inline-form-title {
+        font-size: 1.1rem;
+    }
+
+    /* Modal */
+    .pl-modal {
+        padding: 1.5rem 1rem 1.5rem;
+        border-radius: 14px;
+    }
+    .pl-title {
+        font-size: 1.25rem;
+    }
+}
+
+/* ── Very small phones: 400px and below ── */
+@media (max-width: 400px) {
+    .pp-hero-content {
+        padding: 0.5rem;
+    }
+    .pp-hero-badge {
+        font-size: 0.68rem;
+        padding: 5px 12px;
+    }
+    .pp-video-stat-number {
+        font-size: 1.3rem;
+    }
+    .pp-video-stat-label {
+        font-size: 0.65rem;
+    }
+    .pp-glass-card {
+        padding: 1.25rem 1rem;
+    }
+    .pp-cta-content {
+        padding: 2rem 0.875rem;
+    }
+    .pp-inline-form-card {
+        padding: 1.25rem 0.875rem;
+    }
+}
+
+/* ===================================================================
+   Partner Lead Modal
+   =================================================================== */
+.pl-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    background: rgba(8, 28, 52, 0.65);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.pl-overlay.open {
+    opacity: 1;
+    visibility: visible;
+}
+.pl-modal {
+    background: #ffffff;
+    border-radius: 18px;
+    max-width: 640px;
+    width: 100%;
+    max-height: 92vh;
+    overflow-y: auto;
+    position: relative;
+    padding: 2.25rem 2rem 2rem;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.28);
+    transform: translateY(24px) scale(0.97);
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+.pl-overlay.open .pl-modal {
+    transform: translateY(0) scale(1);
+}
+/* Scrollbar */
+.pl-modal::-webkit-scrollbar { width: 4px; }
+.pl-modal::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+
+.pl-close {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    background: #f1f5f9;
+    border: none;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.88rem;
+    color: #475569;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, color 0.2s;
+    z-index: 1;
+}
+.pl-close:hover { background: #e2e8f0; color: #0b2948; }
+
+.pl-header { text-align: center; margin-bottom: 1.75rem; }
+.pl-icon {
+    width: 56px; height: 56px;
+    background: linear-gradient(135deg, #0D5EAF, #08407a);
+    border-radius: 14px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; color: #fff;
+    margin-bottom: 1rem;
+    box-shadow: 0 8px 24px rgba(13,94,175,0.25);
+}
+.pl-title {
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: #0b2948;
+    margin-bottom: 0.4rem;
+}
+.pl-subtitle {
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+/* Error banner */
+.pl-error-banner {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.88rem;
+    margin-bottom: 1.25rem;
+}
+
+/* Layout */
+.pl-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+}
+.pl-field {
+    margin-bottom: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+.pl-field label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #334155;
+}
+.pl-req { color: #dc2626; margin-left: 1px; }
+.pl-opt { color: #94a3b8; font-weight: 400; }
+
+.pl-field input,
+.pl-field select,
+.pl-field textarea {
+    padding: 0.6rem 0.85rem;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.92rem;
+    color: #1e293b;
+    background: #f8fafc;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.pl-field input:focus,
+.pl-field select:focus,
+.pl-field textarea:focus {
+    border-color: #0b5394;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(11,83,148,0.1);
+}
+.pl-field input.pl-invalid,
+.pl-field select.pl-invalid,
+.pl-field textarea.pl-invalid {
+    border-color: #ef4444;
+    background: #fff5f5;
+}
+.pl-field textarea { resize: vertical; min-height: 80px; }
+.pl-field select { cursor: pointer; }
+
+.pl-field-error {
+    font-size: 0.77rem;
+    color: #dc2626;
+    min-height: 1em;
+}
+
+/* Consent */
+.pl-consent { margin-bottom: 1.25rem; }
+.pl-checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    cursor: pointer;
+    font-size: 0.87rem;
+    color: #334155;
+    line-height: 1.45;
+}
+.pl-checkbox-label input[type="checkbox"] { display: none; }
+.pl-checkmark {
+    flex-shrink: 0;
+    width: 18px; height: 18px;
+    border: 2px solid #cbd5e1;
+    border-radius: 5px;
+    background: #f8fafc;
+    margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+}
+.pl-checkbox-label input[type="checkbox"]:checked ~ .pl-checkmark {
+    background: #0D5EAF;
+    border-color: #0D5EAF;
+}
+.pl-checkbox-label input[type="checkbox"]:checked ~ .pl-checkmark::after {
+    content: '';
+    width: 5px; height: 9px;
+    border: 2px solid #fff;
+    border-top: none; border-left: none;
+    transform: rotate(45deg);
+    margin-top: -2px;
+    display: block;
+}
+
+/* Submit button */
+.pl-submit {
+    width: 100%;
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+    background: linear-gradient(135deg, #C9A84C, #B8963E);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: filter 0.2s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(201,168,76,0.3);
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+}
+.pl-submit:hover:not(:disabled) {
+    filter: brightness(1.07);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 22px rgba(201,168,76,0.4);
+}
+.pl-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* Success state */
+.pl-success {
+    text-align: center;
+    padding: 2.5rem 1rem 1.5rem;
+}
+.pl-success-icon {
+    font-size: 3.5rem;
+    color: #16a34a;
+    margin-bottom: 1rem;
+    animation: plBounce 0.6s cubic-bezier(0.34,1.56,0.64,1);
+}
+.pl-success-title {
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #0b2948;
+    margin-bottom: 0.6rem;
+}
+.pl-success-text {
+    font-size: 0.95rem;
+    color: #64748b;
+    max-width: 380px;
+    margin: 0 auto 1.75rem;
+    line-height: 1.6;
+}
+
+@keyframes plBounce {
+    from { transform: scale(0.4); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+}
+
+/* Responsive: modal on mobile */
+@media (max-width: 600px) {
+    .pl-modal { padding: 1.75rem 1.25rem 1.5rem; border-radius: 14px; }
+    .pl-title { font-size: 1.3rem; }
+    .pl-submit { font-size: 0.92rem; padding: 0.75rem; }
+    .pl-overlay { padding: 0.5rem; align-items: flex-end; }
+    .pl-modal { max-height: 95dvh; max-height: 95vh; border-radius: 18px 18px 14px 14px; }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    /* ── Uploaded MP4 video player ── */
+    var video = document.getElementById('ppVideo');
+    var playOverlay = document.getElementById('ppVideoPlay');
+    if (video && playOverlay) {
+        playOverlay.addEventListener('click', function() {
+            playOverlay.style.opacity = '0';
+            playOverlay.style.pointerEvents = 'none';
+            video.play();
+            video.controls = true;
+        });
+        video.addEventListener('ended', function() {
+            playOverlay.style.opacity = '1';
+            playOverlay.style.pointerEvents = 'auto';
+            video.controls = false;
+        });
+        video.addEventListener('pause', function() {
+            if (video.ended) return;
+            playOverlay.style.opacity = '1';
+            playOverlay.style.pointerEvents = 'auto';
+            video.controls = false;
+        });
+        video.addEventListener('play', function() {
+            playOverlay.style.opacity = '0';
+            playOverlay.style.pointerEvents = 'none';
+            video.controls = true;
+        });
+    }
+
+    /* ================================================================
+       Inline Partner Lead Form (next to video)
+    ================================================================ */
+    (function() {
+        var inlineForm    = document.getElementById('partnerLeadFormInline');
+        var inlineSubmit  = document.getElementById('pliSubmitBtn');
+        var inlineErr     = document.getElementById('pliErrorBanner');
+        var inlineFormState    = document.getElementById('pliFormState');
+        var inlineSuccess = document.getElementById('pliSuccessState');
+        var inlineTypeSelect   = document.getElementById('pli_partner_type');
+        var inlineOtherWrap    = document.getElementById('otherTitleWrapInline');
+
+        function setErr(field, msg) {
+            var el = document.getElementById('pli_' + field);
+            var er = document.getElementById('erri_' + field);
+            if (el) el.classList.add('pl-invalid');
+            if (er) er.textContent = msg;
+        }
+        function clearErr(field) {
+            var el = document.getElementById('pli_' + field);
+            var er = document.getElementById('erri_' + field);
+            if (el) el.classList.remove('pl-invalid');
+            if (er) er.textContent = '';
+        }
+        function clearAllErrors() {
+            ['first_name','last_name','email','phone','partner_type','other_title','consent'].forEach(clearErr);
+        }
+
+        inlineTypeSelect && inlineTypeSelect.addEventListener('change', function() {
+            if (this.value === 'other') {
+                inlineOtherWrap.style.display = 'flex';
+            } else {
+                inlineOtherWrap.style.display = 'none';
+                document.getElementById('pli_other_title').value = '';
+                clearErr('other_title');
+            }
+        });
+
+        inlineForm && inlineForm.querySelectorAll('input, select, textarea').forEach(function(el) {
+            el.addEventListener('input', function() { if (el.name) clearErr(el.name); inlineErr.style.display = 'none'; });
+            el.addEventListener('change', function() { if (el.name) clearErr(el.name); });
+        });
+
+        inlineForm && inlineForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            clearAllErrors();
+            inlineErr.style.display = 'none';
+
+            inlineSubmit.disabled = true;
+            inlineSubmit.querySelector('.pl-submit-text').style.display = 'none';
+            inlineSubmit.querySelector('.pl-submit-loading').style.display = '';
+
+            var csrf = inlineForm.querySelector('[name=csrfmiddlewaretoken]').value;
+            var data = new FormData(inlineForm);
+            data.set('consent', document.getElementById('pli_consent').checked ? 'true' : 'false');
+
+            fetch('{% url "submit_partner_lead" %}', {
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrf, 'X-Requested-With': 'XMLHttpRequest' },
+                body: data,
+            })
+            .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
+            .then(function(res) {
+                if (res.data.success) {
+                    inlineForm.reset();
+                    showPartnerSuccessPopup(res.data.message);
+                    return;
+                }
+                var errors = res.data.errors || {};
+                var hasFieldErr = false;
+                Object.keys(errors).forEach(function(field) {
+                    setErr(field, Array.isArray(errors[field]) ? errors[field][0] : errors[field]);
+                    hasFieldErr = true;
+                });
+                if (!hasFieldErr && res.data.error) {
+                    inlineErr.textContent = res.data.error;
+                    inlineErr.style.display = 'block';
+                }
+            })
+            .catch(function() {
+                inlineErr.textContent = 'An unexpected error occurred. Please try again.';
+                inlineErr.style.display = 'block';
+            })
+            .finally(function() {
+                inlineSubmit.disabled = false;
+                inlineSubmit.querySelector('.pl-submit-text').style.display = '';
+                inlineSubmit.querySelector('.pl-submit-loading').style.display = 'none';
+            });
+        });
+    })();
+
+    /* ── YouTube / Vimeo URL video: click thumbnail to reveal iframe ── */
+    var videoThumb  = document.getElementById('ppVideoThumb');
+    var videoIframe = document.getElementById('ppVideoIframe');
+    if (videoThumb && videoIframe) {
+        videoThumb.addEventListener('click', function() {
+            // Show iframe first (so it's ready behind the fading thumb)
+            videoIframe.style.display = 'block';
+            // Append autoplay=1 to start playback immediately
+            var src = videoIframe.src;
+            if (src.indexOf('autoplay') === -1) {
+                videoIframe.src = src + (src.indexOf('?') >= 0 ? '&' : '?') + 'autoplay=1';
+            }
+            // Fade out and then fully hide the thumbnail
+            videoThumb.style.opacity = '0';
+            videoThumb.style.pointerEvents = 'none';
+            setTimeout(function() { videoThumb.style.display = 'none'; }, 350);
+        });
+    }
+
+    /* ================================================================
+       Partner Lead Modal
+    ================================================================ */
+    var overlay     = document.getElementById('partnerModal');
+    var openBtns    = document.querySelectorAll('.open-partner-modal');
+    var openBtn     = document.getElementById('openPartnerModal');   // kept for compat
+    var closeBtn    = document.getElementById('plClose');
+    var successClose = document.getElementById('plSuccessClose');
+    var form        = document.getElementById('partnerLeadForm');
+    var submitBtn   = document.getElementById('plSubmitBtn');
+    var formState   = document.getElementById('plFormState');
+    var successState = document.getElementById('plSuccessState');
+    var errorBanner = document.getElementById('plErrorBanner');
+    var partnerTypeSelect = document.getElementById('pl_partner_type');
+    var otherTitleWrap    = document.getElementById('otherTitleWrap');
+
+    function showPartnerSuccessPopup(message) {
+        if (!overlay || !formState || !successState) {
+            if (typeof showSuccessPopup === 'function') {
+                showSuccessPopup(message || 'Submitted successfully.');
+            } else {
+                alert(message || 'Submitted successfully.');
+            }
+            return;
+        }
+        var successText = successState.querySelector('.pl-success-text');
+        if (successText && message) successText.textContent = message;
+        formState.style.display = 'none';
+        successState.style.display = 'block';
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function openModal() {
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        setTimeout(function() {
+            var first = form.querySelector('input:not([type=hidden])');
+            if (first) first.focus();
+        }, 350);
+    }
+
+    function closeModal() {
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    function resetModal() {
+        form.reset();
+        clearErrors();
+        errorBanner.style.display = 'none';
+        otherTitleWrap.style.display = 'none';
+        formState.style.display = 'block';
+        successState.style.display = 'none';
+        submitBtn.disabled = false;
+        submitBtn.querySelector('.pl-submit-text').style.display = '';
+        submitBtn.querySelector('.pl-submit-loading').style.display = 'none';
+    }
+
+    openBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            resetModal();
+            openModal();
+        });
+    });
+
+    closeBtn && closeBtn.addEventListener('click', closeModal);
+    successClose && successClose.addEventListener('click', closeModal);
+
+    overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) closeModal();
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
+    });
+
+    /* Show/hide "Other title" field */
+    partnerTypeSelect && partnerTypeSelect.addEventListener('change', function() {
+        if (this.value === 'other') {
+            otherTitleWrap.style.display = 'flex';
+        } else {
+            otherTitleWrap.style.display = 'none';
+            document.getElementById('pl_other_title').value = '';
+            clearFieldError('other_title');
+        }
+    });
+
+    /* ── Validation helpers ── */
+    function setFieldError(field, msg) {
+        var el = document.getElementById('pl_' + field);
+        var errEl = document.getElementById('err_' + field);
+        if (el) el.classList.add('pl-invalid');
+        if (errEl) errEl.textContent = msg;
+    }
+
+    function clearFieldError(field) {
+        var el = document.getElementById('pl_' + field);
+        var errEl = document.getElementById('err_' + field);
+        if (el) el.classList.remove('pl-invalid');
+        if (errEl) errEl.textContent = '';
+    }
+
+    function clearErrors() {
+        ['first_name','last_name','email','phone','partner_type','other_title','consent'].forEach(function(f) {
+            clearFieldError(f);
+        });
+    }
+
+    /* Live clear on input */
+    form && form.querySelectorAll('input, select, textarea').forEach(function(el) {
+        el.addEventListener('input', function() {
+            var field = el.name;
+            if (field) clearFieldError(field);
+            errorBanner.style.display = 'none';
+        });
+        el.addEventListener('change', function() {
+            var field = el.name;
+            if (field) clearFieldError(field);
+        });
+    });
+
+    /* ── Form submit ── */
+    form && form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearErrors();
+        errorBanner.style.display = 'none';
+
+        /* Disable & show spinner */
+        submitBtn.disabled = true;
+        submitBtn.querySelector('.pl-submit-text').style.display = 'none';
+        submitBtn.querySelector('.pl-submit-loading').style.display = '';
+
+        var csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+        var data = new FormData(form);
+        /* Checkbox: FormData sends 'true' only if checked, else omits key */
+        data.set('consent', document.getElementById('pl_consent').checked ? 'true' : 'false');
+
+        fetch('{% url "submit_partner_lead" %}', {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
+            body: data,
+        })
+        .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
+        .then(function(res) {
+            if (res.data.success) {
+                form.reset();
+                otherTitleWrap.style.display = 'none';
+                showPartnerSuccessPopup(res.data.message);
+                return;
+            }
+            /* Field errors */
+            var errors = res.data.errors || {};
+            var hasFieldError = false;
+            Object.keys(errors).forEach(function(field) {
+                setFieldError(field, Array.isArray(errors[field]) ? errors[field][0] : errors[field]);
+                hasFieldError = true;
+            });
+            if (!hasFieldError && res.data.error) {
+                errorBanner.textContent = res.data.error;
+                errorBanner.style.display = 'block';
+            }
+        })
+        .catch(function() {
+            errorBanner.textContent = 'An unexpected error occurred. Please try again.';
+            errorBanner.style.display = 'block';
+        })
+        .finally(function() {
+            submitBtn.disabled = false;
+            submitBtn.querySelector('.pl-submit-text').style.display = '';
+            submitBtn.querySelector('.pl-submit-loading').style.display = 'none';
+        });
+    });
+
+});
+</script>
+{% endblock %}

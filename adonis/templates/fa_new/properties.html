@@ -1,0 +1,63 @@
+{% load static %}<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>{{ meta_title|default:"املاک و پروژه‌های آدونیس" }}</title>
+    {% if meta_description %}<meta name="description" content="{{ meta_description }}">{% endif %}
+    <meta name="robots" content="{{ robots_content|default:'index, follow' }}">
+    {% if canonical_url %}<link rel="canonical" href="{{ canonical_url }}">{% endif %}
+    <meta name="theme-color" content="#060814">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon/favicon-32x32.png' %}">
+    <link rel="stylesheet" href="{% static 'fonts/fonts.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/fontawesome/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fa-new/home.css' %}?v=20260529-gold-btn-v1">
+</head>
+<body class="adonis-fa-new-body">
+    <a class="adonis-fa-new-skip-link" href="#adonis-fa-new-main">پرش به محتوای اصلی</a>
+    {% include "fa_new/_header.html" with is_home=False %}
+
+    <main id="adonis-fa-new-main" class="adonis-fa-new-main">
+        <section class="adonis-fa-new-section fa-featprop-section" style="background:#fff">
+            <div class="adonis-fa-new-container">
+                <div class="fa-featprop-head">
+                    <span class="adonis-fa-new-eyebrow">املاک آدونیس</span>
+                    <h2 class="fa-featprop-title">پروژه‌های ساختمانی و املاک یونان</h2>
+                    <p class="fa-featprop-subtitle">منتخبی از پروژه‌های آدونیس برای سرمایه‌گذاری، اقامت و زندگی در یونان.</p>
+                </div>
+
+                {% if properties %}
+                <div class="fa-restypes-grid fa-proplist-grid">
+                    {% for p in properties %}
+                    <a class="fa-featprop-card" href="{{ p.url }}">
+                        <div class="fa-featprop-media">
+                            {% if p.image_url %}
+                            <img class="fa-featprop-img" src="{{ p.image_url }}" alt="{{ p.name }}" loading="lazy" decoding="async">
+                            {% else %}
+                            <div class="fa-featprop-img fa-featprop-ph" aria-hidden="true"></div>
+                            {% endif %}
+                            <div class="fa-featprop-grad" aria-hidden="true"></div>
+                            {% if p.price_label %}<span class="fa-featprop-price">{{ p.price_label }}</span>{% endif %}
+                        </div>
+                        <div class="fa-featprop-body">
+                            <h3 class="fa-featprop-name">{{ p.name }}</h3>
+                            {% if p.location %}<span class="fa-featprop-loc"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1112 6.5a2.5 2.5 0 010 5z" fill="currentColor"/></svg> {{ p.location }}</span>{% endif %}
+                            <span class="fa-featprop-btn">درخواست مشاوره و اطلاعات
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </span>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p style="text-align:center;color:#64748b">به‌زودی پروژه‌های جدید اضافه می‌شوند.</p>
+                {% endif %}
+            </div>
+        </section>
+    </main>
+
+    {% include "fa_new/_footer.html" %}
+    <script src="{% static 'js/fa-new/home.js' %}?v=20260528-benefits-bg-1" defer></script>
+</body>
+</html>
