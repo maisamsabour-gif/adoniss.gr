@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+{% load i18n static %}
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>خروج | پنل فارسی آدونیس</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Vazirmatn', system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+        }
+        .logout-box {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 48px 40px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        .logout-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #ef4444, #f87171);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        .logout-icon span { font-size: 40px; color: white; }
+        h1 { color: #fff; font-size: 24px; margin-bottom: 12px; }
+        p { color: rgba(255,255,255,0.6); font-size: 14px; margin-bottom: 32px; }
+        .logout-btn {
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: inherit;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .logout-btn:hover { opacity: 0.9; }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .back-link:hover { color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="logout-box">
+        <div class="logout-icon">
+            <span class="material-symbols-outlined">logout</span>
+        </div>
+        <h1>خروج از پنل</h1>
+        <p>آیا می‌خواهید از حساب کاربری خود خارج شوید؟</p>
+        
+        <form method="post" action="/fa-admin/logout/">
+            {% csrf_token %}
+            <button type="submit" class="logout-btn">
+                <span class="material-symbols-outlined">logout</span>
+                بله، خارج شو
+            </button>
+        </form>
+        
+        <a href="/fa-admin/" class="back-link">
+            <span class="material-symbols-outlined">arrow_forward</span>
+            بازگشت به پنل
+        </a>
+    </div>
+</body>
+</html>

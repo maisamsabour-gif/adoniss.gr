@@ -133,9 +133,23 @@
 
 {% block content %}
 <div class="fa-dash">
-    <div class="fa-dash-header">
-        <h1>🇮🇷 پنل مدیریت محتوای فارسی</h1>
-        <p>مدیریت کامل صفحه فارسی سایت ADONIS — بدون نیاز به کد، مستقیم روی سایت اعمال می‌شود.</p>
+    <div class="fa-dash-header" style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+            <h1>🇮🇷 پنل مدیریت محتوای فارسی</h1>
+            <p>مدیریت کامل صفحه فارسی سایت ADONIS — بدون نیاز به کد، مستقیم روی سایت اعمال می‌شود.</p>
+        </div>
+        <form method="post" action="/fa-admin/logout/" style="margin:0;" id="logout-form">
+            {% csrf_token %}
+            <button type="submit" style="background:linear-gradient(135deg,#dc2626,#ef4444); color:white; border:none; padding:12px 24px; border-radius:10px; cursor:pointer; font-weight:700; font-size:15px; display:flex; align-items:center; gap:10px; box-shadow:0 4px 15px rgba(220,38,38,0.4); transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <span class="material-symbols-outlined" style="font-size:20px;">logout</span>
+                خروج از پنل
+            </button>
+        </form>
+        <script>
+            document.getElementById('logout-form').addEventListener('submit', function(e) {
+                console.log('Logout form submitted to: /fa-admin/logout/');
+            });
+        </script>
     </div>
 
     {# ── Live preview banner ── #}

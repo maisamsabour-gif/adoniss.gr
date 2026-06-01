@@ -1,19 +1,22 @@
 from django.http import HttpRequest, HttpResponse
 from django.template.response import TemplateResponse
-from django.urls import reverse
+from django.urls import reverse, NoReverseMatch
 from unfold.sites import UnfoldAdminSite
 
 
 def _persian_sidebar_navigation(request):
-    """Return sidebar navigation for Persian admin - NO English properties."""
+    """Return sidebar navigation for Persian admin - NO English properties.
+    
+    All sections are collapsible (accordion-style) for cleaner UI.
+    """
     return [
         # ═══════════════════════════════════════════════════════════════════
-        # 1. تنظیمات صفحه اصلی (آبی)
+        # 1. تنظیمات صفحه اصلی
         # ═══════════════════════════════════════════════════════════════════
         {
             'title': '⚙️ تنظیمات صفحه اصلی',
             'separator': True,
-            'collapsible': False,
+            'collapsible': True,
             'items': [
                 {'title': 'تنظیمات هیرو', 'icon': 'play_circle', 'link': '/fa-admin/core/fanewsettings/', 'has_permission': True},
                 {'title': 'سکشن‌های صفحه', 'icon': 'view_agenda', 'link': '/fa-admin/core/fanewsection/', 'has_permission': True},
@@ -21,12 +24,12 @@ def _persian_sidebar_navigation(request):
             ],
         },
         # ═══════════════════════════════════════════════════════════════════
-        # 2. منو و زیرمنوها (سبز)
+        # 2. منو و زیرمنوها
         # ═══════════════════════════════════════════════════════════════════
         {
-            'title': '🧭 منو و زیرمنوها',
+            'title': '🧭 منو و صفحات',
             'separator': True,
-            'collapsible': False,
+            'collapsible': True,
             'items': [
                 {'title': 'همه منوها', 'icon': 'menu', 'link': '/fa-admin/core/fanavmenuitem/', 'has_permission': True},
                 {'title': 'افزودن آیتم منو', 'icon': 'add_circle', 'link': '/fa-admin/core/fanavmenuitem/add/', 'has_permission': True},
@@ -35,12 +38,12 @@ def _persian_sidebar_navigation(request):
             ],
         },
         # ═══════════════════════════════════════════════════════════════════
-        # 3. پروژه‌های ساختمانی (طلایی)
+        # 3. پروژه‌های ساختمانی
         # ═══════════════════════════════════════════════════════════════════
         {
             'title': '🏗️ پروژه‌های ساختمانی',
             'separator': True,
-            'collapsible': False,
+            'collapsible': True,
             'items': [
                 {'title': 'همه پروژه‌ها', 'icon': 'apartment', 'link': '/fa-admin/persian_cms/faproperty/', 'has_permission': True},
                 {'title': 'افزودن پروژه', 'icon': 'add_home', 'link': '/fa-admin/persian_cms/faproperty/add/', 'has_permission': True},
@@ -48,12 +51,12 @@ def _persian_sidebar_navigation(request):
             ],
         },
         # ═══════════════════════════════════════════════════════════════════
-        # 4. محتوا و بلاگ (بنفش)
+        # 4. محتوا و بلاگ
         # ═══════════════════════════════════════════════════════════════════
         {
             'title': '📝 محتوا و بلاگ',
             'separator': True,
-            'collapsible': False,
+            'collapsible': True,
             'items': [
                 {'title': 'همه پست‌ها', 'icon': 'article', 'link': '/fa-admin/persian_cms/persianblogpost/', 'has_permission': True},
                 {'title': 'نوشتن پست جدید', 'icon': 'post_add', 'link': '/fa-admin/persian_cms/persianblogpost/add/', 'has_permission': True},
@@ -62,24 +65,24 @@ def _persian_sidebar_navigation(request):
             ],
         },
         # ═══════════════════════════════════════════════════════════════════
-        # 5. پیام‌های دریافتی (قرمز)
+        # 5. پیام‌های دریافتی
         # ═══════════════════════════════════════════════════════════════════
         {
             'title': '📩 پیام‌های دریافتی',
             'separator': True,
-            'collapsible': False,
+            'collapsible': True,
             'items': [
                 {'title': 'فرم‌های تماس', 'icon': 'mail', 'link': '/fa-admin/core/contactsubmission/', 'has_permission': True},
                 {'title': 'درخواست مشاوره', 'icon': 'support_agent', 'link': '/fa-admin/core/consultrequest/', 'has_permission': True},
             ],
         },
         # ═══════════════════════════════════════════════════════════════════
-        # 6. سئو و بهینه‌سازی (نارنجی)
+        # 6. سئو و بهینه‌سازی
         # ═══════════════════════════════════════════════════════════════════
         {
             'title': '🔍 سئو و بهینه‌سازی',
             'separator': True,
-            'collapsible': False,
+            'collapsible': True,
             'items': [
                 {'title': 'تنظیمات سئو', 'icon': 'travel_explore', 'link': '/fa-admin/persian_cms/persianseosettings/', 'has_permission': True},
                 {'title': 'ریدایرکت‌ها', 'icon': 'alt_route', 'link': '/fa-admin/persian_cms/persianredirectmap/', 'has_permission': True},
@@ -91,7 +94,7 @@ def _persian_sidebar_navigation(request):
         {
             'title': '👥 کاربران و دسترسی',
             'separator': True,
-            'collapsible': False,
+            'collapsible': True,
             'items': [
                 {'title': 'همه کاربران', 'icon': 'group', 'link': '/admin/auth/user/', 'has_permission': True},
                 {'title': 'افزودن کاربر', 'icon': 'person_add', 'link': '/admin/auth/user/add/', 'has_permission': True},
@@ -99,7 +102,7 @@ def _persian_sidebar_navigation(request):
             ],
         },
         # ═══════════════════════════════════════════════════════════════════
-        # پیش‌نمایش سایت
+        # پیش‌نمایش سایت (همیشه باز)
         # ═══════════════════════════════════════════════════════════════════
         {
             'title': '👁 پیش‌نمایش سایت',
@@ -126,6 +129,7 @@ class PersianAdminSite(UnfoldAdminSite):
     site_url = "/fa-new/"
     enable_nav_sidebar = True
     login_template = "persian_cms/admin/login.html"
+    logout_template = "persian_cms/admin/logout.html"
     index_template = "persian_cms/admin/index.html"
     settings_name = "UNFOLD_PERSIAN"
 
@@ -141,6 +145,16 @@ class PersianAdminSite(UnfoldAdminSite):
         sidebar_nav = _persian_sidebar_navigation(request)
         ctx["navigation"] = sidebar_nav
         ctx["sidebar_navigation"] = sidebar_nav
+        # Provide logout URL for this admin site (persian_admin:logout)
+        try:
+            ctx["logout_url"] = reverse(f"{self.name}:logout")
+        except NoReverseMatch:
+            ctx["logout_url"] = reverse("admin:logout")
+        # Provide password_change URL for this admin site
+        try:
+            ctx["password_change_url"] = reverse(f"{self.name}:password_change")
+        except NoReverseMatch:
+            ctx["password_change_url"] = reverse("admin:password_change")
         return ctx
     
     def get_sidebar_list(self, request):

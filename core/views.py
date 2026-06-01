@@ -1603,7 +1603,9 @@ def fa_new_home(request):
                 })
         else:
             # Fallback: use all active FaProperty records if no manual selection exists
-            fp_qs = FaProperty.objects.filter(is_active=True).order_by('display_order', '-is_featured', '-created_at')[:12]
+            fp_qs = FaProperty.objects.filter(is_active=True, is_featured=True).order_by('display_order', '-created_at')[:12]
+            if not fp_qs.exists():
+                fp_qs = FaProperty.objects.filter(is_active=True).order_by('display_order', '-created_at')[:12]
             for p in fp_qs:
                 img = ''
                 mi = getattr(p, 'main_image', None)
@@ -1614,9 +1616,12 @@ def fa_new_home(request):
                         img = ''
                 featured_properties.append({
                     'name': (p.name or '').strip(),
+                    'tagline': (p.tagline or '').strip(),
+                    'short_description': (p.short_description or '').strip(),
                     'location': (p.location or '').strip(),
                     'price_label': (p.price_label or '').strip(),
                     'area': (p.area or '').strip(),
+                    'property_type': p.get_property_type_display() if hasattr(p, 'get_property_type_display') else '',
                     'image_url': img,
                     'url': p.get_absolute_url(),
                 })

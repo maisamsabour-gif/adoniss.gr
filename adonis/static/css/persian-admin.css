@@ -767,6 +767,189 @@ nav[aria-label="breadcrumb"] {
   background: var(--arvan-text-light);
 }
 
+/* ══════════════════════════════════════════════════════════════════════════════
+   ACCORDION / COLLAPSIBLE SIDEBAR — کرکره‌ای
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* Sidebar Navigation Groups */
+aside nav > ul > li,
+.sidebar nav > ul > li,
+nav[aria-label="Navigation"] > ul > li {
+  margin-bottom: 4px;
+}
+
+/* Group Header (Parent Menu Item) */
+aside nav > ul > li > a:first-child,
+aside nav > ul > li > button,
+aside nav > ul > li > span:first-child,
+.sidebar-group-header,
+[data-collapsible] > span:first-child,
+[data-collapsible] > a:first-child {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  padding: 12px 16px !important;
+  margin: 0 !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #e2e8f0 !important;
+  background: rgba(30, 41, 59, 0.5) !important;
+  border-radius: 10px !important;
+  cursor: pointer !important;
+  transition: all 0.25s ease !important;
+  border: none !important;
+}
+
+aside nav > ul > li > a:first-child:hover,
+aside nav > ul > li > button:hover,
+[data-collapsible] > span:first-child:hover,
+[data-collapsible] > a:first-child:hover {
+  background: rgba(8, 145, 178, 0.2) !important;
+  color: #22d3ee !important;
+}
+
+/* Chevron/Arrow Icon for Collapsible */
+aside nav > ul > li > a:first-child::after,
+aside nav > ul > li > button::after,
+[data-collapsible] > span:first-child::after,
+[data-collapsible] > a:first-child::after,
+.sidebar-group-header::after {
+  content: '▼' !important;
+  font-size: 10px !important;
+  color: #94a3b8 !important;
+  transition: transform 0.3s ease !important;
+  margin-right: auto !important;
+  margin-left: 8px !important;
+}
+
+/* Rotated arrow when expanded */
+aside nav > ul > li.is-expanded > a:first-child::after,
+aside nav > ul > li.is-expanded > button::after,
+[data-collapsible].is-expanded > span:first-child::after,
+[data-collapsible].is-expanded > a:first-child::after,
+aside nav > ul > li[aria-expanded="true"] > a::after,
+aside nav > ul > li[aria-expanded="true"] > button::after {
+  transform: rotate(180deg) !important;
+}
+
+/* Submenu Container (Children) */
+aside nav > ul > li > ul,
+.sidebar nav > ul > li > ul,
+[data-collapsible] > ul,
+.sidebar-group-items {
+  max-height: 0 !important;
+  overflow: hidden !important;
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.25s ease,
+              padding 0.25s ease !important;
+  opacity: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: rgba(15, 23, 42, 0.4) !important;
+  border-radius: 0 0 10px 10px !important;
+}
+
+/* Expanded Submenu */
+aside nav > ul > li.is-expanded > ul,
+aside nav > ul > li[aria-expanded="true"] > ul,
+[data-collapsible].is-expanded > ul,
+.sidebar-group-items.is-open {
+  max-height: 500px !important;
+  opacity: 1 !important;
+  padding: 8px 0 !important;
+}
+
+/* Submenu Items */
+aside nav > ul > li > ul > li > a,
+.sidebar nav > ul > li > ul > li > a,
+[data-collapsible] > ul > li > a {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 10px 20px 10px 16px !important;
+  margin: 2px 8px !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: #94a3b8 !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
+  border-right: 3px solid transparent !important;
+}
+
+aside nav > ul > li > ul > li > a:hover,
+[data-collapsible] > ul > li > a:hover {
+  background: rgba(8, 145, 178, 0.15) !important;
+  color: #22d3ee !important;
+  border-right-color: #0891b2 !important;
+}
+
+aside nav > ul > li > ul > li > a[aria-current="page"],
+aside nav > ul > li > ul > li > a.active,
+[data-collapsible] > ul > li > a.active {
+  background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%) !important;
+  color: #fff !important;
+  border-right-color: #22d3ee !important;
+  font-weight: 500 !important;
+}
+
+/* Material Icons in Submenu */
+aside nav > ul > li > ul > li > a .material-symbols-outlined,
+aside nav > ul > li > ul > li > a span.material-icons,
+[data-collapsible] > ul > li > a span[class*="material"] {
+  font-size: 18px !important;
+  color: inherit !important;
+  opacity: 0.8 !important;
+}
+
+/* Section Separator */
+aside nav > ul > li[data-separator="true"]::before,
+[data-separator="true"]::before {
+  content: '';
+  display: block;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.3), transparent);
+  margin: 12px 16px 8px;
+}
+
+/* Active Group Highlight */
+aside nav > ul > li.has-active-child > a:first-child,
+aside nav > ul > li.has-active-child > button {
+  background: rgba(8, 145, 178, 0.25) !important;
+  color: #22d3ee !important;
+}
+
+/* ── Unfold Theme Specific Overrides ─────────────────────────────────────────── */
+/* Target Unfold's navigation structure */
+nav[aria-label="Navigation"] ul li[data-collapsible="true"] {
+  margin-bottom: 4px;
+}
+
+nav[aria-label="Navigation"] ul li[data-collapsible="true"] > span,
+nav[aria-label="Navigation"] ul li[data-collapsible="true"] > button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 12px 16px !important;
+  background: rgba(30, 41, 59, 0.5) !important;
+  border-radius: 10px !important;
+  cursor: pointer !important;
+  transition: all 0.25s ease !important;
+}
+
+nav[aria-label="Navigation"] ul li[data-collapsible="true"]:not(.is-collapsed) > ul {
+  max-height: 500px !important;
+  opacity: 1 !important;
+  padding: 8px 0 !important;
+}
+
+nav[aria-label="Navigation"] ul li[data-collapsible="true"].is-collapsed > ul {
+  max-height: 0 !important;
+  opacity: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
 /* ── Print Styles ──────────────────────────────────────────────────────────── */
 @media print {
   aside, .sidebar, .submit-row, #changelist-filter {

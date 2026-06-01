@@ -87,11 +87,12 @@ def notify_new_contact(contact_submission):
 
     # Source → human label + flag emoji
     _SOURCE_LABELS = {
-        'fa_landing_modal':   ('🇮🇷 Landing FA',     'فارسی'),
-        'consultation_modal': ('🌐 Global Modal',     'EN/TR'),
-        'contact_page':       ('📋 Contact Page',     'EN/TR'),
-        'modal_form':         ('🖥 Modal Form',       'EN/TR'),
-        'public_contact_page':('📋 Contact Page',     'EN/TR'),
+        'fa_landing_modal':      ('🇮🇷 Landing FA',      'فارسی'),
+        'fa_new_consult_modal':  ('🇮🇷 سایت فارسی',       'فارسی'),
+        'consultation_modal':    ('🌐 Global Modal',      'EN/TR'),
+        'contact_page':          ('📋 Contact Page',      'EN/TR'),
+        'modal_form':            ('🖥 Modal Form',        'EN/TR'),
+        'public_contact_page':   ('📋 Contact Page',      'EN/TR'),
     }
 
     try:

@@ -401,3 +401,67 @@ def fa_new_robots_txt(request: HttpRequest) -> HttpResponse:
         f"Sitemap: {sitemap_url}",
     ]
     return HttpResponse("\n".join(lines), content_type="text/plain; charset=utf-8")
+
+
+def fa_new_consult_submit(request: HttpRequest) -> HttpResponse:
+    """Handle Persian consultation form submission via AJAX.
+    
+    Saves to ContactSubmission model and sends Telegram notification.
+    Returns JSON response for frontend handling.
+    """
+    import json
+    from django.http import JsonResponse
+    from django.views.decorators.csrf import csrf_exempt
+    from django.views.decorators.http import require_POST
+    from core.models import ContactSubmission
+    from core.telegram import notify_new_contact
+    
+    if request.method != "POST":
+        return JsonResponse({"ok": False, "error": "Method not allowed"}, status=405)
+    
+    try:
+        # Parse JSON body or form data
+        if request.content_type == "application/json":
+            data = json.loads(request.body)
+        else:
+            data = request.POST
+        
+        # Extract fields
+        first_name = (data.get("first_name") or "").strip()
+        last_name = (data.get("last_name") or "").strip()
+        full_name = f"{first_name} {last_name}".strip()
+        phone = (data.get("phone") or "").strip()
+        email = (data.get("email") or "").strip()
+        message = (data.get("message") or "").strip()
+        
+        # Validation
+        if not full_name:
+            return JsonResponse({"ok": False, "error": "لطفاً نام و نام خانوادگی را وارد کنید"}, status=400)
+        if not phone:
+            return JsonResponse({"ok": False, "error": "لطفاً شماره تماس را وارد کنید"}, status=400)
+        
+        # Create submission
+        submission = ContactSubmission.objects.create(
+            full_name=full_name,
+            phone=phone,
+            email=email,
+            message=message,
+            request_type="general",
+            source="fa_new_consult_modal",
+        )
+        
+        # Send Telegram notification
+        try:
+            notify_new_contact(submission)
+        except Exception:
+            pass  # Don't fail the request if Telegram fails
+        
+        return JsonResponse({
+            "ok": True,
+            "message": "درخواست شما با موفقیت ثبت شد. کارشناسان ما به زودی با شما تماس خواهند گرفت.",
+        })
+        
+    except json.JSONDecodeError:
+        return JsonResponse({"ok": False, "error": "Invalid JSON"}, status=400)
+    except Exception as e:
+        return JsonResponse({"ok": False, "error": str(e)}, status=500)

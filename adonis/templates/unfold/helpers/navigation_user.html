@@ -1,4 +1,5 @@
 {% load i18n %}
+<!-- CUSTOM_ADONIS_TEMPLATE_V2 logout_url={{ logout_url }} -->
 <div class="sidebar-user-bar border-t border-base-200 dark:border-base-800 relative group">
     {# Settings popup - opens on hover using CSS group #}
     <nav class="absolute bg-white border border-base-200 dark:bg-base-800 dark:border-base-700
@@ -9,13 +10,23 @@
         {% include "unfold/helpers/theme_switch.html" %}
         {% include "unfold/helpers/language_switch.html" %}
         {% if user.has_usable_password %}
-            <a href="{% url 'admin:password_change' %}"
+            <a href="{{ password_change_url|default:'/admin/password_change/' }}"
                class="flex items-center gap-2 mx-1 px-3 py-2 rounded-default text-sm
                       hover:bg-base-100 dark:hover:bg-base-700">
                 <span class="material-symbols-outlined" style="font-size:16px;">key</span>
                 {% trans "Change password" %}
             </a>
         {% endif %}
+        {# Logout link in popup as fallback #}
+        <form method="post" action="{{ logout_url|default:'/admin/logout/' }}"
+              class="flex items-center gap-2 mx-1 px-3 py-2 rounded-default text-sm hover:bg-red-100 dark:hover:bg-red-900/30"
+              style="margin:0;">
+            {% csrf_token %}
+            <button type="submit" class="flex items-center gap-2 w-full text-red-500 bg-transparent border-none cursor-pointer" style="font-size:inherit;">
+                <span class="material-symbols-outlined" style="font-size:16px;">logout</span>
+                {% trans "Log out" %}
+            </button>
+        </form>
     </nav>
     {# Always-visible user strip #}
     <div class="flex items-center gap-2 px-3 py-2.5 min-h-[56px]">
@@ -31,9 +42,9 @@
         <span class="sb-icon-btn" title="{% trans 'Settings' %}">
             <span class="material-symbols-outlined" style="font-size:18px;">settings</span>
         </span>
-        <form method="post" action="{% url 'admin:logout' %}" style="margin:0;padding:0;">
+        <form id="logout-form-persian" method="post" action="{{ logout_url|default:'/admin/logout/' }}" style="margin:0;padding:0;">
             {% csrf_token %}
-            <button type="submit" title="{% trans 'Log out' %}" class="sb-logout-btn">
+            <button type="submit" title="{% trans 'Log out' %} ({{ logout_url|default:'/admin/logout/' }})" class="sb-logout-btn">
                 <span class="material-symbols-outlined" style="font-size:18px;">logout</span>
             </button>
         </form>

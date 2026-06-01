@@ -31,4 +31,5 @@ urlpatterns = [
     # Persian letters under Python's default unicode regex; \u200c = ZWNJ.
     re_path(r"^fa-new/blog/(?P<slug>[-\w\u200c]+)/$", views.fa_new_blog_detail, name="fa_new_blog_detail"),
     path("fa-new/robots.txt", views.fa_new_robots_txt, name="fa_new_robots_txt"),
+    path("fa-new/api/consult/", views.fa_new_consult_submit, name="fa_new_consult_submit"),
 ]

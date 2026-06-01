@@ -299,8 +299,11 @@ def dashboard_callback(request, context: dict[str, Any]) -> dict[str, Any]:
     Injected by UNFOLD["DASHBOARD_CALLBACK"].
     Adds `dashboard_cards` to the admin index context.
     """
+    from django.urls import reverse
     context["dashboard_cards"] = _resolve_cards(request)
     context["dashboard_user_name"] = (
         request.user.get_full_name() or request.user.username
     )
+    # Provide logout URL for sidebar template
+    context["logout_url"] = reverse("admin:logout")
     return context

@@ -54,12 +54,9 @@ on internal pages they link back to /fa-new/.
         </nav>
 
         <div class="adonis-fa-new-header-actions">
-            <a class="adonis-fa-new-btn adonis-fa-new-btn--ghost" href="{% if is_home %}#{{ consult_anchor }}{% else %}/fa-new/#{{ consult_anchor }}{% endif %}">
-                <span>مشاوره</span>
-            </a>
-            <a class="adonis-fa-new-btn adonis-fa-new-btn--gold" href="{% if is_home %}#{{ consult_anchor }}{% else %}/fa-new/#{{ consult_anchor }}{% endif %}">
+            <button type="button" class="adonis-fa-new-btn adonis-fa-new-btn--gold" onclick="openFaConsultModal()">
                 <span>دریافت مشاوره رایگان</span>
-            </a>
+            </button>
             <button class="adonis-fa-new-burger" aria-label="باز کردن منو" data-fa-burger>
                 <span></span><span></span><span></span>
             </button>
@@ -93,7 +90,7 @@ on internal pages they link back to /fa-new/.
                 <li><a href="/fa-new/about/">درباره ما</a></li>
                 <li><a href="/fa-new/contact/">تماس</a></li>
             {% endif %}
-            <li><a href="{% if is_home %}#{{ consult_anchor }}{% else %}/fa-new/#{{ consult_anchor }}{% endif %}" class="adonis-fa-new-mobile-cta">مشاوره رایگان</a></li>
+            <li><button type="button" onclick="openFaConsultModal(); closeFaMobileMenu();" class="adonis-fa-new-mobile-cta">مشاوره رایگان</button></li>
         </ul>
     </div>
 </header>
