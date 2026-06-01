@@ -52,11 +52,12 @@ def robots_txt(request):
 
 def ai_txt(request):
     """Optional machine-readable hints for AI crawlers."""
+    host = request.get_host()
     lines = [
-        "Project: ADONISS",
-        "Canonical: https://adoniss.gr/",
-        "Sitemap: https://adoniss.gr/sitemap.xml",
-        "Sitemap: https://adoniss.gr/fa-new/sitemap.xml",
+        "Project: ADONIS",
+        f"Canonical: https://{host}/",
+        f"Sitemap: https://{host}/sitemap.xml",
+        f"Sitemap: https://{host}/fa-new/sitemap.xml",
         "Policy: Public marketing pages may be indexed.",
         "Policy: Admin and private paths must not be indexed.",
     ]
