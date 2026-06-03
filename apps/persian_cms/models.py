@@ -5,6 +5,7 @@ from pathlib import Path
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.text import slugify
+from django_ckeditor_5.fields import CKEditor5Field
 
 # Register HEIC/HEIF support with Pillow for iPhone images
 try:
@@ -1152,6 +1153,136 @@ class GoldenVisaLandingPage(GVBaseModel):
         blank=True,
         verbose_name='یادداشت ادمین',
         help_text='توضیح کوتاه داخلی برای مدیران (در سایت نمایش داده نمی‌شود)',
+    )
+    
+    # ── Hero Section (Flat Fields) ────────────────────────────────────────────
+    hero_title = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name='عنوان هیرو',
+    )
+    hero_subtitle = models.TextField(
+        blank=True,
+        verbose_name='زیرعنوان هیرو',
+    )
+    hero_image = models.ImageField(
+        upload_to='landing/hero/',
+        blank=True,
+        null=True,
+        verbose_name='تصویر هیرو',
+    )
+    hero_video = models.FileField(
+        upload_to='landing/videos/',
+        blank=True,
+        null=True,
+        verbose_name='ویدیو هیرو',
+    )
+    hero_cta_text = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name='متن دکمه CTA',
+    )
+    hero_cta_link = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name='لینک دکمه CTA',
+    )
+    
+    # ── Intro / About Section ─────────────────────────────────────────────────
+    intro_title = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name='عنوان بخش معرفی',
+    )
+    intro_body = CKEditor5Field(
+        config_name='persian_blog',
+        blank=True,
+        verbose_name='متن بخش معرفی',
+    )
+    
+    # ── Benefits Section ──────────────────────────────────────────────────────
+    benefits_title = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name='عنوان بخش مزایا',
+    )
+    benefits_body = CKEditor5Field(
+        config_name='persian_blog',
+        blank=True,
+        verbose_name='محتوای مزایا',
+    )
+    
+    # ── Requirements Section ──────────────────────────────────────────────────
+    requirements_title = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name='عنوان شرایط',
+    )
+    requirements_body = CKEditor5Field(
+        config_name='persian_blog',
+        blank=True,
+        verbose_name='محتوای شرایط',
+    )
+    
+    # ── Process Section ───────────────────────────────────────────────────────
+    process_title = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name='عنوان مراحل',
+    )
+    process_body = CKEditor5Field(
+        config_name='persian_blog',
+        blank=True,
+        verbose_name='مراحل دریافت ویزا',
+    )
+    
+    # ── FAQ Section ───────────────────────────────────────────────────────────
+    faq_title = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name='عنوان سوالات متداول',
+    )
+    faq_body = CKEditor5Field(
+        config_name='persian_blog',
+        blank=True,
+        verbose_name='سوالات متداول',
+        help_text='HTML accordion یا لیست سوالات',
+    )
+    
+    # ── CTA Banner ────────────────────────────────────────────────────────────
+    cta_banner_title = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name='عنوان بنر CTA',
+    )
+    cta_banner_text = models.TextField(
+        blank=True,
+        verbose_name='متن بنر CTA',
+    )
+    cta_banner_button = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name='متن دکمه بنر',
+    )
+    
+    # ── SEO Fields ────────────────────────────────────────────────────────────
+    meta_description = models.TextField(
+        blank=True,
+        verbose_name='توضیحات متا',
+        help_text='توضیحات برای موتورهای جستجو (۱۵۰-۱۶۰ کاراکتر)',
+    )
+    meta_keywords = models.CharField(
+        max_length=500,
+        blank=True,
+        verbose_name='کلمات کلیدی',
+        help_text='کلمات کلیدی با کاما جدا شوند',
+    )
+    og_image = models.ImageField(
+        upload_to='landing/og/',
+        blank=True,
+        null=True,
+        verbose_name='تصویر شبکه اجتماعی',
+        help_text='تصویر برای اشتراک‌گذاری (1200x630 پیکسل)',
     )
     
     class Meta:

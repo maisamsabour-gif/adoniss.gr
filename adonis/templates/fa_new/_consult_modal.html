@@ -1,0 +1,216 @@
+{% load static %}
+{# ───────────── Consultation Modal (Shared Partial) ───────────── #}
+<div id="faConsultModal" class="fa-consult-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="faConsultModalTitle">
+    <div class="fa-consult-modal-backdrop" onclick="closeFaConsultModal()"></div>
+    <div class="fa-consult-modal-container">
+        <div class="fa-consult-modal-card">
+            <button type="button" class="fa-consult-modal-close" onclick="closeFaConsultModal()" aria-label="بستن">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+            
+            <div class="fa-consult-modal-header">
+                <div class="fa-consult-modal-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                        <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h2 id="faConsultModalTitle" class="fa-consult-modal-title">درخواست مشاوره رایگان</h2>
+                <p class="fa-consult-modal-subtitle">فرم زیر را تکمیل کنید تا کارشناسان ما با شما تماس بگیرند</p>
+            </div>
+
+            <form id="faConsultForm" class="fa-consult-form" onsubmit="return submitFaConsultForm(event)">
+                {% csrf_token %}
+                <div class="fa-consult-form-row">
+                    <div class="fa-consult-form-group">
+                        <label for="fa_consult_fname">نام <span class="fa-required">*</span></label>
+                        <input type="text" id="fa_consult_fname" name="first_name" required placeholder="نام شما">
+                    </div>
+                    <div class="fa-consult-form-group">
+                        <label for="fa_consult_lname">نام خانوادگی <span class="fa-required">*</span></label>
+                        <input type="text" id="fa_consult_lname" name="last_name" required placeholder="نام خانوادگی">
+                    </div>
+                </div>
+
+                <div class="fa-consult-form-group">
+                    <label for="fa_consult_phone">شماره تماس <span class="fa-required">*</span></label>
+                    <div class="fa-consult-phone-input">
+                        <div class="fa-consult-country-select" onclick="toggleCountryDropdown()">
+                            <span class="fa-consult-flag" id="selectedFlag">🇮🇷</span>
+                            <span class="fa-consult-code" id="selectedCode">+98</span>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="fa-consult-country-dropdown" id="countryDropdown">
+                            <div class="fa-consult-country-item" data-code="+98" data-flag="🇮🇷">🇮🇷 ایران (+98)</div>
+                            <div class="fa-consult-country-item" data-code="+30" data-flag="🇬🇷">🇬🇷 یونان (+30)</div>
+                            <div class="fa-consult-country-item" data-code="+971" data-flag="🇦🇪">🇦🇪 امارات (+971)</div>
+                            <div class="fa-consult-country-item" data-code="+90" data-flag="🇹🇷">🇹🇷 ترکیه (+90)</div>
+                            <div class="fa-consult-country-item" data-code="+1" data-flag="🇺🇸">🇺🇸 آمریکا (+1)</div>
+                            <div class="fa-consult-country-item" data-code="+44" data-flag="🇬🇧">🇬🇧 انگلیس (+44)</div>
+                            <div class="fa-consult-country-item" data-code="+49" data-flag="🇩🇪">🇩🇪 آلمان (+49)</div>
+                            <div class="fa-consult-country-item" data-code="+33" data-flag="🇫🇷">🇫🇷 فرانسه (+33)</div>
+                            <div class="fa-consult-country-item" data-code="+61" data-flag="🇦🇺">🇦🇺 استرالیا (+61)</div>
+                            <div class="fa-consult-country-item" data-code="+1" data-flag="🇨🇦">🇨🇦 کانادا (+1)</div>
+                        </div>
+                        <input type="tel" id="fa_consult_phone" name="phone_number" required placeholder="۹۱۲۳۴۵۶۷۸۹" dir="ltr">
+                        <input type="hidden" id="fa_consult_phone_full" name="phone">
+                    </div>
+                </div>
+
+                <div class="fa-consult-form-group">
+                    <label for="fa_consult_email">ایمیل</label>
+                    <input type="email" id="fa_consult_email" name="email" placeholder="example@email.com" dir="ltr">
+                </div>
+
+                <div class="fa-consult-form-group">
+                    <label for="fa_consult_message">سوال یا پیام شما</label>
+                    <textarea id="fa_consult_message" name="message" rows="2" placeholder="اگر سوالی دارید اینجا بنویسید..."></textarea>
+                </div>
+
+                <button type="submit" class="fa-consult-submit" id="faConsultSubmit">
+                    <span class="fa-consult-submit-text">ارسال درخواست مشاوره</span>
+                    <span class="fa-consult-submit-loading" style="display:none">
+                        <svg class="fa-spinner" width="20" height="20" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4" stroke-linecap="round"/></svg>
+                        در حال ارسال...
+                    </span>
+                </button>
+            </form>
+
+            <p class="fa-consult-privacy">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.5"/></svg>
+                اطلاعات شما محرمانه است و فقط برای تماس با شما استفاده می‌شود
+            </p>
+        </div>
+    </div>
+</div>
+
+{# ───────────── Success Modal ───────────── #}
+<div id="faConsultSuccess" class="fa-consult-success" aria-hidden="true">
+    <div class="fa-consult-success-backdrop" onclick="closeFaConsultSuccess()"></div>
+    <div class="fa-consult-success-card">
+        <div class="fa-consult-success-icon">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M8 12l3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <h3 class="fa-consult-success-title">درخواست شما ثبت شد!</h3>
+        <p class="fa-consult-success-text">کارشناسان آدونیس به زودی با شما تماس خواهند گرفت.</p>
+        <button type="button" class="fa-consult-success-btn" onclick="closeFaConsultSuccess()">متوجه شدم</button>
+    </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+// Consultation Modal Scripts
+// ═══════════════════════════════════════════════════════════════════════════════
+
+function openFaConsultModal() {
+    document.getElementById('faConsultModal').classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeFaConsultModal() {
+    document.getElementById('faConsultModal').classList.remove('is-open');
+    document.body.style.overflow = '';
+}
+
+function closeFaMobileMenu() {
+    var menu = document.querySelector('[data-fa-mobile-menu]');
+    if (menu) menu.classList.remove('is-open');
+    var burger = document.querySelector('[data-fa-burger]');
+    if (burger) burger.classList.remove('is-open');
+}
+
+function toggleCountryDropdown() {
+    document.getElementById('countryDropdown').classList.toggle('is-open');
+}
+
+// Country selection
+document.querySelectorAll('.fa-consult-country-item').forEach(function(item) {
+    item.addEventListener('click', function() {
+        document.getElementById('selectedFlag').textContent = this.dataset.flag;
+        document.getElementById('selectedCode').textContent = this.dataset.code;
+        document.getElementById('countryDropdown').classList.remove('is-open');
+    });
+});
+
+// Close dropdown on outside click
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.fa-consult-phone-input')) {
+        var dropdown = document.getElementById('countryDropdown');
+        if (dropdown) dropdown.classList.remove('is-open');
+    }
+});
+
+// Form submission
+function submitFaConsultForm(e) {
+    e.preventDefault();
+    
+    var btn = document.getElementById('faConsultSubmit');
+    var btnText = btn.querySelector('.fa-consult-submit-text');
+    var btnLoading = btn.querySelector('.fa-consult-submit-loading');
+    
+    // Build full phone
+    var code = document.getElementById('selectedCode').textContent;
+    var phone = document.getElementById('fa_consult_phone').value.replace(/^0+/, '');
+    document.getElementById('fa_consult_phone_full').value = code + phone;
+    
+    // Show loading
+    btnText.style.display = 'none';
+    btnLoading.style.display = 'inline-flex';
+    btn.disabled = true;
+    
+    // Prepare data
+    var formData = {
+        first_name: document.getElementById('fa_consult_fname').value,
+        last_name: document.getElementById('fa_consult_lname').value,
+        phone: document.getElementById('fa_consult_phone_full').value,
+        email: document.getElementById('fa_consult_email').value,
+        message: document.getElementById('fa_consult_message').value
+    };
+    
+    // Submit
+    fetch('/fa-new/api/consult/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+        btnText.style.display = '';
+        btnLoading.style.display = 'none';
+        btn.disabled = false;
+        
+        if (data.ok) {
+            closeFaConsultModal();
+            document.getElementById('faConsultForm').reset();
+            document.getElementById('faConsultSuccess').classList.add('is-open');
+        } else {
+            alert(data.error || 'خطا در ارسال فرم');
+        }
+    })
+    .catch(function(err) {
+        btnText.style.display = '';
+        btnLoading.style.display = 'none';
+        btn.disabled = false;
+        alert('خطا در ارتباط با سرور');
+    });
+    
+    return false;
+}
+
+function closeFaConsultSuccess() {
+    document.getElementById('faConsultSuccess').classList.remove('is-open');
+}
+
+// Close modal on Escape
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeFaConsultModal();
+        closeFaConsultSuccess();
+    }
+});
+</script>

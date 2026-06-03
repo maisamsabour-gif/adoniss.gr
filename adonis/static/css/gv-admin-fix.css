@@ -1,0 +1,43 @@
+/* Golden Visa Admin - Force white backgrounds for form fields */
+
+/* Target ALL textarea and text inputs */
+textarea,
+input[type="text"],
+input[type="url"],
+input[type="number"],
+.vLargeTextField {
+    background: #fff !important;
+    background-color: #fff !important;
+    color: #1f2937 !important;
+}
+
+/* More specific selectors */
+#content textarea,
+#content input[type="text"],
+#content input[type="url"],
+.form-row textarea,
+.form-row input[type="text"],
+fieldset textarea,
+fieldset input {
+    background: #fff !important;
+    background-color: #fff !important;
+    color: #1f2937 !important;
+    border: 1px solid #d1d5db !important;
+}
+
+/* Unfold specific overrides */
+.border-base-200 textarea,
+.border-base-200 input,
+[class*="bg-"] textarea,
+[class*="bg-"] input[type="text"] {
+    background: #fff !important;
+    color: #1f2937 !important;
+}
+
+/* Focus states */
+textarea:focus,
+input[type="text"]:focus {
+    background: #fff !important;
+    border-color: #3b82f6 !important;
+    outline: none !important;
+}

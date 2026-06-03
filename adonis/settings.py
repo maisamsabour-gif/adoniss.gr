@@ -276,6 +276,33 @@ CKEDITOR_5_CONFIGS = {
         'height': '500px',
         'width': '100%',
     },
+    # ── Persian Clean: RTL editor with removeFormat for Word paste cleanup ──────
+    # This config is optimized for pasting content from Microsoft Word. It has
+    # minimal formatting tools and includes removeFormat to strip Word styles.
+    # Allowed tags: p, h2, h3, h4, ul, ol, li, strong, b, em, br, a
+    'persian_clean': {
+        'toolbar': {
+            'items': [
+                'heading', '|',
+                'bold', 'italic', '|',
+                'bulletedList', 'numberedList', '|',
+                'link', '|',
+                'removeFormat', '|',
+                'undo', 'redo', 'sourceEditing',
+            ],
+        },
+        'heading': {
+            'options': [
+                {'model': 'paragraph', 'title': 'Paragraph', 'class': 'ck-heading_paragraph'},
+                {'model': 'heading2', 'view': 'h2', 'title': 'Heading 2', 'class': 'ck-heading_heading2'},
+                {'model': 'heading3', 'view': 'h3', 'title': 'Heading 3', 'class': 'ck-heading_heading3'},
+                {'model': 'heading4', 'view': 'h4', 'title': 'Heading 4', 'class': 'ck-heading_heading4'},
+            ],
+        },
+        'language': {'ui': 'en', 'content': 'fa'},
+        'height': '400px',
+        'width': '100%',
+    },
 }
 
 CKEDITOR_5_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
@@ -804,8 +831,30 @@ UNFOLD_PERSIAN = {
                 'items': [
                     {'title': _('📝 بلاگ فارسی'), 'icon': 'edit_note', 'link': '/fa-admin/persian_cms/persianblogpost/'},
                     {'title': _('📄 صفحات'), 'icon': 'description', 'link': '/fa-admin/persian_cms/persianpage/'},
+                    {'title': _('🚀 لندینگ پیج‌ها'), 'icon': 'rocket_launch', 'link': '/fa-admin/persian_cms/goldenvisalandingpage/'},
                     {'title': _('🔍 تنظیمات سئو'), 'icon': 'travel_explore', 'link': '/fa-admin/persian_cms/persianseosettings/'},
                     {'title': _('❓ سوالات متداول'), 'icon': 'quiz', 'link': '/fa-admin/persian_cms/persianfaq/'},
+                ],
+            },
+            {
+                'title': _('🎨 بخش‌های لندینگ'),
+                'separator': False,
+                'collapsible': True,
+                'items': [
+                    {'title': _('🎬 هیرو'), 'icon': 'slideshow', 'link': '/fa-admin/persian_cms/gvherosection/'},
+                    {'title': _('⭐ مزایا'), 'icon': 'stars', 'link': '/fa-admin/persian_cms/gvbenefitssection/'},
+                    {'title': _('✅ شرایط'), 'icon': 'checklist', 'link': '/fa-admin/persian_cms/gveligibilitysection/'},
+                    {'title': _('📊 مراحل'), 'icon': 'timeline', 'link': '/fa-admin/persian_cms/gvprocesssection/'},
+                    {'title': _('📈 آمار'), 'icon': 'analytics', 'link': '/fa-admin/persian_cms/gvstatisticssection/'},
+                    {'title': _('🏗️ پروژه‌ها'), 'icon': 'business', 'link': '/fa-admin/persian_cms/gvproject/'},
+                    {'title': _('👨‍👩‍👧 خانواده'), 'icon': 'family_restroom', 'link': '/fa-admin/persian_cms/gvfamilysection/'},
+                    {'title': _('📋 مدارک'), 'icon': 'folder', 'link': '/fa-admin/persian_cms/gvdocumentssection/'},
+                    {'title': _('💰 هزینه‌ها'), 'icon': 'payments', 'link': '/fa-admin/persian_cms/gvcostsection/'},
+                    {'title': _('💬 نظرات'), 'icon': 'reviews', 'link': '/fa-admin/persian_cms/gvtestimonialssection/'},
+                    {'title': _('❓ FAQ'), 'icon': 'help', 'link': '/fa-admin/persian_cms/gvfaqsection/'},
+                    {'title': _('📢 CTA'), 'icon': 'campaign', 'link': '/fa-admin/persian_cms/gvfinalctasection/'},
+                    {'title': _('🔍 سئو'), 'icon': 'search', 'link': '/fa-admin/persian_cms/gvseosettings/'},
+                    {'title': _('🎨 طراحی'), 'icon': 'palette', 'link': '/fa-admin/persian_cms/gvdesignsettings/'},
                 ],
             },
             {

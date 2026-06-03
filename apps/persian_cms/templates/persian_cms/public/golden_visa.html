@@ -1,17 +1,290 @@
 {% extends "persian_cms/public/base.html" %}
+{% load static %}
 
 {% block content %}
-<main class="adonis-fa-new-main" style="padding:48px 0;">
-    <div class="adonis-fa-new-container">
-        <h1 class="adonis-fa-new-section-title">{% if page %}{{ page.title }}{% else %}گلدن ویزا{% endif %}</h1>
-        {% if page and page.body %}<p class="adonis-fa-new-section-lead">{{ page.body }}</p>{% endif %}
-        {% for section in sections %}
-        <section style="margin:24px 0;">
-            <h2>{{ section.title|default:section.internal_name }}</h2>
-            {% if section.subtitle %}<p>{{ section.subtitle }}</p>{% endif %}
-            {% if section.body %}<div>{{ section.body|linebreaks }}</div>{% endif %}
-        </section>
-        {% endfor %}
-    </div>
+{% include "fa_new/_header.html" %}
+
+<main class="gv-landing" dir="rtl">
+    
+    {% if landing %}
+    
+    <!-- Hero Section -->
+    {% if landing.hero_title or landing.hero_image %}
+    <section class="gv-hero" {% if landing.hero_image %}style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), url('{{ landing.hero_image.url }}');"{% endif %}>
+        <div class="gv-container">
+            <h1 class="gv-hero-title">{{ landing.hero_title|default:landing.title }}</h1>
+            {% if landing.hero_subtitle %}
+            <p class="gv-hero-subtitle">{{ landing.hero_subtitle }}</p>
+            {% endif %}
+            {% if landing.hero_cta_text %}
+            <a href="{{ landing.hero_cta_link|default:'#contact' }}" class="gv-btn gv-btn-primary">
+                {{ landing.hero_cta_text }}
+            </a>
+            {% endif %}
+        </div>
+        {% if landing.hero_video %}
+        <video class="gv-hero-video" autoplay muted loop playsinline>
+            <source src="{{ landing.hero_video.url }}" type="video/mp4">
+        </video>
+        {% endif %}
+    </section>
+    {% endif %}
+    
+    <!-- Intro Section -->
+    {% if landing.intro_title or landing.intro_body %}
+    <section class="gv-section gv-intro">
+        <div class="gv-container">
+            {% if landing.intro_title %}
+            <h2 class="gv-section-title">{{ landing.intro_title }}</h2>
+            {% endif %}
+            {% if landing.intro_body %}
+            <div class="gv-content">{{ landing.intro_body|safe }}</div>
+            {% endif %}
+        </div>
+    </section>
+    {% endif %}
+    
+    <!-- Benefits Section -->
+    {% if landing.benefits_title or landing.benefits_body %}
+    <section class="gv-section gv-benefits">
+        <div class="gv-container">
+            {% if landing.benefits_title %}
+            <h2 class="gv-section-title">{{ landing.benefits_title }}</h2>
+            {% endif %}
+            {% if landing.benefits_body %}
+            <div class="gv-content">{{ landing.benefits_body|safe }}</div>
+            {% endif %}
+        </div>
+    </section>
+    {% endif %}
+    
+    <!-- Requirements Section -->
+    {% if landing.requirements_title or landing.requirements_body %}
+    <section class="gv-section gv-requirements">
+        <div class="gv-container">
+            {% if landing.requirements_title %}
+            <h2 class="gv-section-title">{{ landing.requirements_title }}</h2>
+            {% endif %}
+            {% if landing.requirements_body %}
+            <div class="gv-content">{{ landing.requirements_body|safe }}</div>
+            {% endif %}
+        </div>
+    </section>
+    {% endif %}
+    
+    <!-- Process Section -->
+    {% if landing.process_title or landing.process_body %}
+    <section class="gv-section gv-process">
+        <div class="gv-container">
+            {% if landing.process_title %}
+            <h2 class="gv-section-title">{{ landing.process_title }}</h2>
+            {% endif %}
+            {% if landing.process_body %}
+            <div class="gv-content">{{ landing.process_body|safe }}</div>
+            {% endif %}
+        </div>
+    </section>
+    {% endif %}
+    
+    <!-- FAQ Section -->
+    {% if landing.faq_title or landing.faq_body %}
+    <section class="gv-section gv-faq">
+        <div class="gv-container">
+            {% if landing.faq_title %}
+            <h2 class="gv-section-title">{{ landing.faq_title }}</h2>
+            {% endif %}
+            {% if landing.faq_body %}
+            <div class="gv-content">{{ landing.faq_body|safe }}</div>
+            {% endif %}
+        </div>
+    </section>
+    {% endif %}
+    
+    <!-- CTA Banner -->
+    {% if landing.cta_banner_title or landing.cta_banner_text %}
+    <section class="gv-section gv-cta-banner">
+        <div class="gv-container">
+            {% if landing.cta_banner_title %}
+            <h2 class="gv-cta-title">{{ landing.cta_banner_title }}</h2>
+            {% endif %}
+            {% if landing.cta_banner_text %}
+            <p class="gv-cta-text">{{ landing.cta_banner_text }}</p>
+            {% endif %}
+            {% if landing.cta_banner_button %}
+            <a href="#contact" class="gv-btn gv-btn-primary">{{ landing.cta_banner_button }}</a>
+            {% endif %}
+        </div>
+    </section>
+    {% endif %}
+    
+    {% else %}
+    <!-- Fallback if no landing page -->
+    <section class="gv-section">
+        <div class="gv-container">
+            <h1>گلدن ویزای یونان</h1>
+            <p>محتوای این صفحه در حال آماده‌سازی است.</p>
+        </div>
+    </section>
+    {% endif %}
+    
 </main>
+
+<style>
+/* Golden Visa Landing Page Styles */
+.gv-landing {
+    font-family: var(--adonis-font-primary, 'Vazirmatn'), 'IRANSans', sans-serif;
+    line-height: 1.8;
+    color: #1a1a2e;
+}
+
+.gv-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Hero */
+.gv-hero {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    color: #fff;
+    padding: 80px 24px;
+}
+
+.gv-hero-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    opacity: 0.3;
+}
+
+.gv-hero .gv-container {
+    position: relative;
+    z-index: 1;
+}
+
+.gv-hero-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+}
+
+.gv-hero-subtitle {
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    opacity: 0.9;
+    max-width: 700px;
+    margin: 0 auto 30px;
+}
+
+/* Sections */
+.gv-section {
+    padding: 80px 0;
+}
+
+.gv-section:nth-child(even) {
+    background: #f8f9fa;
+}
+
+.gv-section-title {
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: #1a1a2e;
+}
+
+.gv-content {
+    max-width: 900px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+}
+
+.gv-content h3, .gv-content h4 {
+    margin-top: 30px;
+    color: #1a1a2e;
+}
+
+.gv-content ul, .gv-content ol {
+    padding-right: 24px;
+}
+
+.gv-content li {
+    margin-bottom: 10px;
+}
+
+/* CTA Banner */
+.gv-cta-banner {
+    background: linear-gradient(135deg, #c9a227 0%, #b8941f 100%);
+    color: #fff;
+    text-align: center;
+}
+
+.gv-cta-title {
+    color: #fff;
+    font-size: 2rem;
+    margin-bottom: 16px;
+}
+
+.gv-cta-text {
+    font-size: 1.2rem;
+    opacity: 0.95;
+    margin-bottom: 24px;
+}
+
+/* Buttons */
+.gv-btn {
+    display: inline-block;
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.gv-btn-primary {
+    background: #c9a227;
+    color: #fff;
+}
+
+.gv-btn-primary:hover {
+    background: #b8941f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(201,162,39,0.4);
+}
+
+.gv-cta-banner .gv-btn-primary {
+    background: #fff;
+    color: #c9a227;
+}
+
+.gv-cta-banner .gv-btn-primary:hover {
+    background: #f5f5f5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .gv-hero {
+        min-height: 60vh;
+        padding: 60px 16px;
+    }
+    
+    .gv-section {
+        padding: 50px 0;
+    }
+}
+</style>
+
+{% include "fa_new/_footer.html" %}
 {% endblock %}

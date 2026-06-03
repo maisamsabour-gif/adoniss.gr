@@ -19,6 +19,7 @@ from .models import (
     PersianPage,
     PersianSEOSettings,
     PersianSection,
+    GoldenVisaLandingPage,
 )
 
 
@@ -304,30 +305,50 @@ def fa_new_custom_page(request: HttpRequest, slug: str) -> HttpResponse:
 
 
 def fa_new_golden_visa(request: HttpRequest) -> HttpResponse:
-    page = _safe_first(PersianPage.objects.filter(page_type="golden_visa", is_published=True))
-    sections = _safe_list(
-        PersianSection.objects.filter(
-            is_active=True,
-            section_type__in=["routes", "projects", "landing_block", "custom"],
-        ).order_by("sort_order", "id")
+    """Golden Visa landing page using the new GoldenVisaLandingPage model."""
+    from core.models import FaNewSettings, FaNavMenuItem, FaFooterSettings
+    
+    landing = _safe_first(GoldenVisaLandingPage.objects.filter(is_active=True))
+    
+    # Get settings for header/footer
+    fa_new = FaNewSettings.get_settings()
+    header_logo_url = fa_new.header_logo.url if fa_new.header_logo else None
+    
+    # Get navigation items
+    nav_items = (
+        FaNavMenuItem.objects
+        .filter(is_active=True)
+        .prefetch_related('children')
+        .order_by('order')
     )
+    
+    # Get footer settings
+    footer = FaFooterSettings.get_settings()
+    
     context = _seo_context(
         request,
         "golden_visa",
-        "گلدن ویزای یونان",
-        "همه مسیرهای دریافت گلدن ویزای یونان برای مخاطب فارسی.",
+        landing.title if landing else "گلدن ویزای یونان",
+        landing.meta_description if landing else "همه مسیرهای دریافت گلدن ویزای یونان برای مخاطب فارسی.",
     )
-    if page:
+    
+    if landing:
         context.update({
-            "meta_title": page.meta_title or context["meta_title"],
-            "meta_description": page.meta_description or context["meta_description"],
-            "canonical_url": page.canonical_url or context["canonical_url"],
-            "og_title": page.og_title or context["og_title"],
-            "og_description": page.og_description or context["og_description"],
-            "og_image": page.og_image.url if page.og_image else context["og_image"],
-            "robots_content": "noindex, follow" if page.noindex else context["robots_content"],
+            "meta_title": landing.title,
+            "meta_description": landing.meta_description or context["meta_description"],
+            "meta_keywords": landing.meta_keywords,
+            "og_image": landing.og_image.url if landing.og_image else context["og_image"],
         })
-    context.update({"page": page, "sections": sections})
+    
+    context.update({
+        "landing": landing,
+        "page": landing,
+        "settings": fa_new,
+        "fa": fa_new,
+        "header_logo_url": header_logo_url,
+        "nav_items": nav_items,
+        "footer": footer,
+    })
     return render(request, "persian_cms/public/golden_visa.html", context)
 
 

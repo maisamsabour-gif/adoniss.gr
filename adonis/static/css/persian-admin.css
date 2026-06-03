@@ -956,3 +956,51 @@ nav[aria-label="Navigation"] ul li[data-collapsible="true"].is-collapsed > ul {
     display: none !important;
   }
 }
+
+/* ── Fix dark textarea fields in admin ─────────────────────────────────────── */
+.model-goldenvisalandingpage textarea,
+.model-goldenvisalandingpage .vLargeTextField,
+.model-goldenvisalandingpage input[type="text"],
+.model-goldenvisalandingpage input[type="url"],
+.model-goldenvisalandingpage input[type="number"] {
+    background-color: #fff !important;
+    color: #1a1a2e !important;
+    border: 1px solid #d1d5db !important;
+}
+
+.model-goldenvisalandingpage textarea:focus,
+.model-goldenvisalandingpage input:focus {
+    border-color: #2563eb !important;
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2) !important;
+}
+
+/* ── Force white background for ALL form fields ────────────────────────────── */
+body.model-goldenvisalandingpage #content textarea,
+body.model-goldenvisalandingpage #content input[type="text"],
+body.model-goldenvisalandingpage #content input[type="url"],
+body.model-goldenvisalandingpage #content input[type="number"],
+body.model-goldenvisalandingpage #content .vLargeTextField,
+body.model-goldenvisalandingpage .form-row textarea,
+body.model-goldenvisalandingpage .form-row input,
+body.model-goldenvisalandingpage fieldset textarea,
+body.model-goldenvisalandingpage fieldset input[type="text"],
+#goldenvisalandingpage_form textarea,
+#goldenvisalandingpage_form input[type="text"],
+.change-form textarea,
+.change-form input[type="text"] {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 6px !important;
+}
+
+/* Dark mode override */
+[data-theme="dark"] .model-goldenvisalandingpage textarea,
+[data-theme="dark"] .model-goldenvisalandingpage input[type="text"],
+.dark .model-goldenvisalandingpage textarea,
+.dark .model-goldenvisalandingpage input[type="text"] {
+    background: #ffffff !important;
+    color: #111827 !important;
+}

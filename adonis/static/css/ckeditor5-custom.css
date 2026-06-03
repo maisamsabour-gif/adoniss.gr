@@ -8,6 +8,43 @@
     color: #1e293b;
 }
 
+/* ── Persian / RTL content areas ────────────────────────────────────────────── */
+/* Applied when editor has lang="fa" or within Persian admin pages */
+.ck-editor__editable[lang="fa"],
+.ck-editor__editable[dir="rtl"],
+.model-goldenvisalandingpage .ck-editor__editable,
+.model-persianpage .ck-editor__editable,
+.model-fablogpost .ck-editor__editable {
+    direction: rtl !important;
+    text-align: right !important;
+    font-family: 'Vazirmatn', 'Yekan Bakh', 'IRANSans', Tahoma, sans-serif !important;
+    font-size: 15px;
+    line-height: 2;
+}
+
+/* Force RTL for list items in Persian editors */
+.model-goldenvisalandingpage .ck-editor__editable ul,
+.model-goldenvisalandingpage .ck-editor__editable ol,
+.model-persianpage .ck-editor__editable ul,
+.model-persianpage .ck-editor__editable ol {
+    padding-right: 1.5rem;
+    padding-left: 0;
+    direction: rtl;
+}
+
+/* Remove Word-specific junk that may slip through */
+.ck-editor__editable span[style*="mso"],
+.ck-editor__editable span[class*="Mso"],
+.ck-editor__editable font,
+.ck-editor__editable *[class*="mso"],
+.ck-editor__editable *[style*="mso"] {
+    font-family: inherit !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    color: inherit !important;
+    background: transparent !important;
+}
+
 .ck-editor__editable:focus {
     border-color: #2563eb !important;
     box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15) !important;

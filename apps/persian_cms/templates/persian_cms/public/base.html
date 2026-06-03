@@ -13,6 +13,10 @@
     <meta property="og:title" content="{{ og_title|default:meta_title }}">
     {% if og_description %}<meta property="og:description" content="{{ og_description }}">{% endif %}
     {% if og_image %}<meta property="og:image" content="{{ og_image }}">{% endif %}
+    <!-- Fonts -->
+    <link rel="stylesheet" href="{% static 'fonts/fonts.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/fontawesome/css/all.min.css' %}" media="print" onload="this.media='all'">
+    <!-- Styles -->
     <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
     <link rel="stylesheet" href="{% static 'css/fa-new/home.css' %}?v=5">
 </head>

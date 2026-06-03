@@ -56,6 +56,7 @@ class PersianBaseAdmin(admin.ModelAdmin):
 
     class Media:
         css = {"all": ("css/persian-admin.css",)}
+        js = ("js/ckeditor5-word-cleanup.js",)
 
 
 class PersianPageAdminForm(forms.ModelForm):
@@ -683,57 +684,87 @@ class FaPropertyMediaAdmin(PersianBaseAdmin):
 
 # ── Custom Forms with CKEditor5 ───────────────────────────────────────────────
 
+class GoldenVisaLandingPageForm(forms.ModelForm):
+    """Form with CKEditor5 for all rich text fields - uses persian_clean for Word paste cleanup."""
+    
+    class Meta:
+        model = GoldenVisaLandingPage
+        fields = '__all__'
+        widgets = {
+            'intro_body': CKEditor5Widget(
+                config_name='persian_clean',
+                attrs={'class': 'django_ckeditor_5', 'dir': 'rtl'},
+            ),
+            'benefits_body': CKEditor5Widget(
+                config_name='persian_clean',
+                attrs={'class': 'django_ckeditor_5', 'dir': 'rtl'},
+            ),
+            'requirements_body': CKEditor5Widget(
+                config_name='persian_clean',
+                attrs={'class': 'django_ckeditor_5', 'dir': 'rtl'},
+            ),
+            'process_body': CKEditor5Widget(
+                config_name='persian_clean',
+                attrs={'class': 'django_ckeditor_5', 'dir': 'rtl'},
+            ),
+            'faq_body': CKEditor5Widget(
+                config_name='persian_clean',
+                attrs={'class': 'django_ckeditor_5', 'dir': 'rtl'},
+            ),
+        }
+
+
 class GVFAQItemForm(forms.ModelForm):
-    """Form with CKEditor5 for FAQ answers."""
+    """Form with CKEditor5 for FAQ answers - uses persian_clean for Word paste cleanup."""
     
     class Meta:
         model = GVFAQItem
         fields = '__all__'
         widgets = {
             'answer': CKEditor5Widget(
-                config_name='persian_blog',
+                config_name='persian_clean',
                 attrs={'class': 'django_ckeditor_5', 'dir': 'rtl'},
             ),
         }
 
 
 class GVBenefitCardForm(forms.ModelForm):
-    """Form with CKEditor5 for benefit descriptions."""
+    """Form with CKEditor5 for benefit descriptions - uses persian_clean for Word paste cleanup."""
     
     class Meta:
         model = GVBenefitCard
         fields = '__all__'
         widgets = {
             'description': CKEditor5Widget(
-                config_name='persian_blog',
+                config_name='persian_clean',
                 attrs={'class': 'django_ckeditor_5', 'dir': 'rtl'},
             ),
         }
 
 
 class GVProcessStepForm(forms.ModelForm):
-    """Form with CKEditor5 for process step descriptions."""
+    """Form with CKEditor5 for process step descriptions - uses persian_clean for Word paste cleanup."""
     
     class Meta:
         model = GVProcessStep
         fields = '__all__'
         widgets = {
             'description': CKEditor5Widget(
-                config_name='persian_blog',
+                config_name='persian_clean',
                 attrs={'class': 'django_ckeditor_5', 'dir': 'rtl'},
             ),
         }
 
 
 class GVEligibilityCardForm(forms.ModelForm):
-    """Form with CKEditor5 for eligibility descriptions."""
+    """Form with CKEditor5 for eligibility descriptions - uses persian_clean for Word paste cleanup."""
     
     class Meta:
         model = GVEligibilityCard
         fields = '__all__'
         widgets = {
             'description': CKEditor5Widget(
-                config_name='persian_blog',
+                config_name='persian_clean',
                 attrs={'class': 'django_ckeditor_5', 'dir': 'rtl'},
             ),
         }
@@ -1415,136 +1446,77 @@ class GoldenVisaLandingPageAdmin(PersianBaseAdmin):
     تمام بخش‌های صفحه از یک جا قابل مدیریت هستند.
     """
     
-    list_display = ('title', 'slug', 'is_active', 'sections_status', 'updated_at', 'edit_button')
+    form = GoldenVisaLandingPageForm
+    list_display = ('title', 'slug', 'is_active', 'updated_at', 'edit_link')
+    list_display_links = ('title',)
     prepopulated_fields = {'slug': ('title',)}
     list_filter = ('is_active',)
     search_fields = ('title', 'slug')
     save_on_top = True
     
+    @admin.display(description='ویرایش')
+    def edit_link(self, obj):
+        return format_html(
+            '<a href="/fa-admin/persian_cms/goldenvisalandingpage/{}/change/" '
+            'style="background:#2563eb;color:#fff;padding:6px 12px;border-radius:6px;'
+            'text-decoration:none;font-size:12px;">✏️ ویرایش</a>',
+            obj.pk
+        )
+    
     fieldsets = (
-        ('⚙️ تنظیمات اصلی', {
-            'fields': ('title', 'slug', 'is_active', 'admin_note'),
-            'description': '''
-            <div style="background:#1e3a5f;color:#fff;padding:16px;border-radius:8px;margin-bottom:20px;">
-                <strong style="font-size:16px;">🏗️ Page Builder گلدن ویزا</strong>
-                <p style="margin:8px 0 0 0;opacity:0.9;">
-                    از این صفحه می‌توانید تمام محتوای لندینگ پیج گلدن ویزا را مدیریت کنید.
-                    هر بخش را با کلیک روی عنوان باز کنید و محتوا را ویرایش کنید.
-                </p>
-            </div>
-            ''',
+        ('تنظیمات اصلی', {
+            'fields': ('title', 'slug', 'is_active'),
+        }),
+        ('هیرو (Hero Section)', {
+            'fields': (
+                'hero_title',
+                'hero_subtitle',
+                'hero_image',
+                'hero_video',
+                'hero_cta_text',
+                'hero_cta_link',
+            ),
+        }),
+        ('معرفی', {
+            'fields': ('intro_title', 'intro_body'),
+        }),
+        ('مزایا', {
+            'fields': ('benefits_title', 'benefits_body'),
+        }),
+        ('شرایط', {
+            'fields': ('requirements_title', 'requirements_body'),
+        }),
+        ('مراحل', {
+            'fields': ('process_title', 'process_body'),
+        }),
+        ('سوالات متداول', {
+            'fields': ('faq_title', 'faq_body'),
+        }),
+        ('بنر CTA', {
+            'fields': ('cta_banner_title', 'cta_banner_text', 'cta_banner_button'),
+        }),
+        ('سئو', {
+            'fields': ('meta_description', 'meta_keywords', 'og_image'),
         }),
     )
     
-    inlines = [
-        # Section Settings
-        GVHeroSectionInline,
-        GVBenefitsSectionInline,
-        GVEligibilitySectionInline,
-        GVProcessSectionInline,
-        GVStatisticsSectionInline,
-        GVProjectsSectionInline,
-        GVFamilySectionInline,
-        GVDocumentsSectionInline,
-        GVCostSectionInline,
-        GVTestimonialsSectionInline,
-        GVFAQSectionInline,
-        GVFinalCTASectionInline,
-        # Settings
-        GVSEOSettingsInline,
-        GVAnimationSettingsInline,
-        GVDesignSettingsInline,
-    ]
+    # No inlines - using flat fields instead for cleaner UI
+    inlines = []
     
     class Media:
-        css = {
-            'all': (
-                'css/persian-admin.css',
-                'css/gv-admin-pagebuilder.css',
-            )
-        }
-        js = ('js/gv-admin-pagebuilder.js',)
+        css = {'all': ('css/persian-admin.css', 'css/gv-admin-fix.css',)}
+        js = ('js/ckeditor5-word-cleanup.js',)
     
-    def get_inline_instances(self, request, obj=None):
-        """Show inlines only when editing existing object."""
-        if obj is None:
-            return []
-        return super().get_inline_instances(request, obj)
-    
-    @admin.display(description='وضعیت بخش‌ها')
-    def sections_status(self, obj):
-        """Show quick status of sections."""
-        sections = []
-        
-        if hasattr(obj, 'hero_section'):
-            hero = obj.hero_section
-            sections.append(('🎬', hero.is_enabled, 'Hero'))
-        
-        if hasattr(obj, 'benefits_section'):
-            sections.append(('⭐', obj.benefits_section.is_enabled, 'Benefits'))
-        
-        if hasattr(obj, 'eligibility_section'):
-            sections.append(('💰', obj.eligibility_section.is_enabled, 'Eligibility'))
-        
-        if hasattr(obj, 'process_section'):
-            sections.append(('📊', obj.process_section.is_enabled, 'Process'))
-        
-        if hasattr(obj, 'faq_section'):
-            sections.append(('❓', obj.faq_section.is_enabled, 'FAQ'))
-        
-        if hasattr(obj, 'seo_settings'):
-            sections.append(('🔍', True, 'SEO'))
-        
-        html_parts = []
-        for icon, enabled, name in sections[:6]:
-            color = '#22c55e' if enabled else '#94a3b8'
-            html_parts.append(
-                f'<span title="{name}" style="color:{color};font-size:14px;">{icon}</span>'
-            )
-        
-        return format_html(
-            '<span style="display:flex;gap:4px;">{}</span>',
-            mark_safe(''.join(html_parts))
-        )
-    
-    @admin.display(description='عملیات')
-    def edit_button(self, obj):
-        return format_html(
-            '<a href="/fa-admin/persian_cms/goldenvisalandingpage/{}/change/" '
-            'class="gv-edit-btn" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);'
-            'color:#fff;padding:8px 16px;border-radius:8px;text-decoration:none;'
-            'font-weight:600;font-size:12px;display:inline-flex;align-items:center;'
-            'gap:6px;white-space:nowrap;box-shadow:0 2px 8px rgba(37,99,235,0.3);'
-            'transition:all 0.2s;">'
-            '✏️ ویرایش کامل</a>',
-            obj.pk,
-        )
-    
-    def save_model(self, request, obj, form, change):
-        """Auto-create related sections on first save."""
-        super().save_model(request, obj, form, change)
-        
-        if not change:
-            # Create all sections for new landing page
-            self._create_default_sections(obj)
-    
-    def _create_default_sections(self, landing_page):
-        """Create default sections for a new landing page."""
-        GVHeroSection.objects.get_or_create(landing_page=landing_page)
-        GVBenefitsSection.objects.get_or_create(landing_page=landing_page)
-        GVEligibilitySection.objects.get_or_create(landing_page=landing_page)
-        GVProcessSection.objects.get_or_create(landing_page=landing_page)
-        GVStatisticsSection.objects.get_or_create(landing_page=landing_page)
-        GVProjectsSection.objects.get_or_create(landing_page=landing_page)
-        GVFamilySection.objects.get_or_create(landing_page=landing_page)
-        GVDocumentsSection.objects.get_or_create(landing_page=landing_page)
-        GVCostSection.objects.get_or_create(landing_page=landing_page)
-        GVTestimonialsSection.objects.get_or_create(landing_page=landing_page)
-        GVFAQSection.objects.get_or_create(landing_page=landing_page)
-        GVFinalCTASection.objects.get_or_create(landing_page=landing_page)
-        GVSEOSettings.objects.get_or_create(landing_page=landing_page)
-        GVAnimationSettings.objects.get_or_create(landing_page=landing_page)
-        GVDesignSettings.objects.get_or_create(landing_page=landing_page)
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        # Force white background on all text fields
+        white_style = 'background-color: #fff !important; color: #1f2937 !important; border: 1px solid #d1d5db;'
+        for field_name in form.base_fields:
+            field = form.base_fields[field_name]
+            if hasattr(field.widget, 'attrs'):
+                existing_style = field.widget.attrs.get('style', '')
+                field.widget.attrs['style'] = existing_style + white_style
+        return form
 
 
 # ── Section Admin Classes with Nested Items ───────────────────────────────────
