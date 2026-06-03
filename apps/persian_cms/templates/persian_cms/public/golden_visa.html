@@ -1,246 +1,329 @@
 {% extends "persian_cms/public/base.html" %}
 {% load static %}
 
-{% block extra_head %}
-<!-- AOS Animation Library -->
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-<!-- Font Awesome Icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-{% endblock %}
-
 {% block content %}
 {% include "fa_new/_header.html" %}
+
+<!-- Load Libraries Inline -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <main class="gv-landing" dir="rtl">
     
     {% if landing %}
     
-    <!-- Hero Section with Parallax -->
-    {% if landing.hero_title or landing.hero_image %}
-    <section class="gv-hero" {% if landing.hero_image %}style="background-image: linear-gradient(rgba(10,21,48,0.75), rgba(10,21,48,0.85)), url('{{ landing.hero_image.url }}');"{% endif %}>
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         HERO SECTION
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <section class="gv-hero" {% if landing.hero_image %}style="background-image: url('{{ landing.hero_image.url }}');"{% endif %}>
+        <div class="gv-hero-overlay"></div>
         
-        <!-- Animated Particles Background -->
-        <div class="gv-particles">
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
+        <!-- Animated Background Elements -->
+        <div class="gv-hero-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
         </div>
         
-        <div class="gv-container">
-            <div class="gv-hero-badge" data-aos="fade-down" data-aos-delay="100">
-                <i class="fas fa-crown"></i>
-                <span>گلدن ویزا</span>
+        <div class="gv-container gv-hero-content">
+            <!-- Badge -->
+            <div class="gv-glass-badge" data-aos="zoom-in" data-aos-duration="600">
+                <i class="fas fa-gem"></i>
+                <span>Golden Visa</span>
             </div>
             
-            <h1 class="gv-hero-title" data-aos="fade-up" data-aos-delay="200">
+            <!-- Title -->
+            <h1 class="gv-hero-title" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
                 {{ landing.hero_title|default:landing.title }}
             </h1>
             
+            <!-- Subtitle -->
             {% if landing.hero_subtitle %}
-            <p class="gv-hero-subtitle" data-aos="fade-up" data-aos-delay="300">
+            <p class="gv-hero-subtitle" data-aos="fade-up" data-aos-duration="800" data-aos-delay="200">
                 {{ landing.hero_subtitle }}
             </p>
             {% endif %}
             
-            {% if landing.hero_cta_text %}
-            <div class="gv-hero-ctas" data-aos="fade-up" data-aos-delay="400">
-                <a href="{{ landing.hero_cta_link|default:'#contact' }}" class="gv-btn gv-btn-primary gv-btn-glow">
-                    <i class="fas fa-paper-plane"></i>
-                    {{ landing.hero_cta_text }}
+            <!-- CTA Buttons -->
+            <div class="gv-hero-buttons" data-aos="fade-up" data-aos-duration="800" data-aos-delay="300">
+                {% if landing.hero_cta_text %}
+                <a href="{{ landing.hero_cta_link|default:'#contact' }}" class="gv-btn-glass gv-btn-primary">
+                    <span>{{ landing.hero_cta_text }}</span>
+                    <i class="fas fa-arrow-left"></i>
                 </a>
-                <a href="#intro" class="gv-btn gv-btn-outline">
-                    <i class="fas fa-info-circle"></i>
-                    اطلاعات بیشتر
-                </a>
-            </div>
-            {% endif %}
-            
-            <!-- Floating Stats -->
-            <div class="gv-hero-stats" data-aos="fade-up" data-aos-delay="500">
-                <div class="gv-stat">
-                    <div class="gv-stat-icon"><i class="fas fa-passport"></i></div>
-                    <div class="gv-stat-number" data-count="250">۲۵۰<span>+</span></div>
-                    <div class="gv-stat-label">ویزای موفق</div>
-                </div>
-                <div class="gv-stat">
-                    <div class="gv-stat-icon"><i class="fas fa-building"></i></div>
-                    <div class="gv-stat-number" data-count="100">۱۰۰<span>+</span></div>
-                    <div class="gv-stat-label">پروژه فعال</div>
-                </div>
-                <div class="gv-stat">
-                    <div class="gv-stat-icon"><i class="fas fa-users"></i></div>
-                    <div class="gv-stat-number" data-count="15">۱۵<span>+</span></div>
-                    <div class="gv-stat-label">سال تجربه</div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Scroll Indicator -->
-        <div class="gv-scroll-indicator">
-            <i class="fas fa-chevron-down"></i>
-        </div>
-        
-        {% if landing.hero_video %}
-        <video class="gv-hero-video" autoplay muted loop playsinline>
-            <source src="{{ landing.hero_video.url }}" type="video/mp4">
-        </video>
-        {% endif %}
-    </section>
-    {% endif %}
-    
-    <!-- Intro Section -->
-    {% if landing.intro_title or landing.intro_body %}
-    <section id="intro" class="gv-section gv-intro">
-        <div class="gv-container">
-            <div class="gv-section-header" data-aos="fade-up">
-                <span class="gv-section-tag"><i class="fas fa-lightbulb"></i> آشنایی</span>
-                {% if landing.intro_title %}
-                <h2 class="gv-section-title">{{ landing.intro_title }}</h2>
                 {% endif %}
+                <a href="#benefits" class="gv-btn-glass gv-btn-secondary">
+                    <span>مزایا</span>
+                    <i class="fas fa-chevron-down"></i>
+                </a>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div class="gv-stats-row" data-aos="fade-up" data-aos-duration="800" data-aos-delay="400">
+                <div class="gv-stat-glass">
+                    <div class="gv-stat-icon-wrap">
+                        <i class="fas fa-passport"></i>
+                    </div>
+                    <div class="gv-stat-info">
+                        <span class="gv-stat-num">۲۵۰+</span>
+                        <span class="gv-stat-txt">ویزای موفق</span>
+                    </div>
+                </div>
+                <div class="gv-stat-glass">
+                    <div class="gv-stat-icon-wrap">
+                        <i class="fas fa-city"></i>
+                    </div>
+                    <div class="gv-stat-info">
+                        <span class="gv-stat-num">۱۰۰+</span>
+                        <span class="gv-stat-txt">پروژه فعال</span>
+                    </div>
+                </div>
+                <div class="gv-stat-glass">
+                    <div class="gv-stat-icon-wrap">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <div class="gv-stat-info">
+                        <span class="gv-stat-num">۱۵+</span>
+                        <span class="gv-stat-txt">سال تجربه</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll Down -->
+        <div class="gv-scroll-down">
+            <span>اسکرول کنید</span>
+            <div class="gv-scroll-icon">
+                <i class="fas fa-mouse"></i>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         INTRO SECTION
+         ═══════════════════════════════════════════════════════════════════════ -->
+    {% if landing.intro_title or landing.intro_body %}
+    <section id="intro" class="gv-section gv-section-light">
+        <div class="gv-container">
+            <div class="gv-section-head" data-aos="fade-up">
+                <div class="gv-icon-glass"><i class="fas fa-info-circle"></i></div>
+                <h2 class="gv-section-title">{{ landing.intro_title|default:"معرفی" }}</h2>
+                <div class="gv-title-line"></div>
             </div>
             {% if landing.intro_body %}
-            <div class="gv-content gv-content-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="gv-content-box" data-aos="fade-up" data-aos-delay="100">
                 {{ landing.intro_body|safe }}
             </div>
             {% endif %}
         </div>
     </section>
     {% endif %}
-    
-    <!-- Benefits Section with Cards -->
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         BENEFITS SECTION
+         ═══════════════════════════════════════════════════════════════════════ -->
     {% if landing.benefits_title or landing.benefits_body %}
-    <section class="gv-section gv-benefits">
+    <section id="benefits" class="gv-section gv-section-dark">
+        <div class="gv-section-bg-pattern"></div>
         <div class="gv-container">
-            <div class="gv-section-header" data-aos="fade-up">
-                <span class="gv-section-tag"><i class="fas fa-star"></i> مزایا</span>
-                {% if landing.benefits_title %}
-                <h2 class="gv-section-title">{{ landing.benefits_title }}</h2>
-                {% endif %}
+            <div class="gv-section-head" data-aos="fade-up">
+                <div class="gv-icon-glass gv-icon-gold"><i class="fas fa-star"></i></div>
+                <h2 class="gv-section-title gv-title-light">{{ landing.benefits_title|default:"مزایا" }}</h2>
+                <div class="gv-title-line gv-line-gold"></div>
             </div>
             
-            <!-- Benefits Icons Grid -->
-            <div class="gv-benefits-icons" data-aos="fade-up" data-aos-delay="100">
-                <div class="gv-benefit-icon-card">
-                    <div class="gv-icon-wrapper"><i class="fas fa-plane-departure"></i></div>
-                    <span>سفر آزاد</span>
+            <!-- Benefits Grid -->
+            <div class="gv-benefits-grid">
+                <div class="gv-benefit-card" data-aos="flip-up" data-aos-delay="0">
+                    <div class="gv-benefit-icon"><i class="fas fa-plane-departure"></i></div>
+                    <h4>سفر بدون ویزا</h4>
+                    <p>دسترسی به ۲۷ کشور شنگن</p>
                 </div>
-                <div class="gv-benefit-icon-card">
-                    <div class="gv-icon-wrapper"><i class="fas fa-graduation-cap"></i></div>
-                    <span>تحصیل</span>
+                <div class="gv-benefit-card" data-aos="flip-up" data-aos-delay="100">
+                    <div class="gv-benefit-icon"><i class="fas fa-home"></i></div>
+                    <h4>اقامت اروپا</h4>
+                    <p>زندگی در یونان و اروپا</p>
                 </div>
-                <div class="gv-benefit-icon-card">
-                    <div class="gv-icon-wrapper"><i class="fas fa-briefcase"></i></div>
-                    <span>کسب و کار</span>
+                <div class="gv-benefit-card" data-aos="flip-up" data-aos-delay="200">
+                    <div class="gv-benefit-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <h4>تحصیل رایگان</h4>
+                    <p>دانشگاه‌های معتبر اروپایی</p>
                 </div>
-                <div class="gv-benefit-icon-card">
-                    <div class="gv-icon-wrapper"><i class="fas fa-home"></i></div>
-                    <span>اقامت</span>
+                <div class="gv-benefit-card" data-aos="flip-up" data-aos-delay="300">
+                    <div class="gv-benefit-icon"><i class="fas fa-briefcase"></i></div>
+                    <h4>کسب و کار</h4>
+                    <p>فعالیت اقتصادی در اروپا</p>
                 </div>
-                <div class="gv-benefit-icon-card">
-                    <div class="gv-icon-wrapper"><i class="fas fa-heart"></i></div>
-                    <span>بهداشت</span>
+                <div class="gv-benefit-card" data-aos="flip-up" data-aos-delay="400">
+                    <div class="gv-benefit-icon"><i class="fas fa-heart-pulse"></i></div>
+                    <h4>بهداشت و درمان</h4>
+                    <p>خدمات پزشکی پیشرفته</p>
                 </div>
-                <div class="gv-benefit-icon-card">
-                    <div class="gv-icon-wrapper"><i class="fas fa-shield-alt"></i></div>
-                    <span>امنیت</span>
+                <div class="gv-benefit-card" data-aos="flip-up" data-aos-delay="500">
+                    <div class="gv-benefit-icon"><i class="fas fa-users"></i></div>
+                    <h4>خانواده</h4>
+                    <p>اقامت برای همه اعضا</p>
                 </div>
             </div>
             
             {% if landing.benefits_body %}
-            <div class="gv-content" data-aos="fade-up" data-aos-delay="200">
+            <div class="gv-content-box gv-content-dark" data-aos="fade-up" data-aos-delay="200">
                 {{ landing.benefits_body|safe }}
             </div>
             {% endif %}
         </div>
     </section>
     {% endif %}
-    
-    <!-- Requirements Section -->
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         REQUIREMENTS SECTION
+         ═══════════════════════════════════════════════════════════════════════ -->
     {% if landing.requirements_title or landing.requirements_body %}
-    <section class="gv-section gv-requirements">
+    <section id="requirements" class="gv-section gv-section-light">
         <div class="gv-container">
-            <div class="gv-section-header" data-aos="fade-up">
-                <span class="gv-section-tag"><i class="fas fa-clipboard-check"></i> شرایط</span>
-                {% if landing.requirements_title %}
-                <h2 class="gv-section-title">{{ landing.requirements_title }}</h2>
-                {% endif %}
+            <div class="gv-section-head" data-aos="fade-up">
+                <div class="gv-icon-glass"><i class="fas fa-clipboard-list"></i></div>
+                <h2 class="gv-section-title">{{ landing.requirements_title|default:"شرایط" }}</h2>
+                <div class="gv-title-line"></div>
             </div>
+            
+            <!-- Requirements List -->
+            <div class="gv-req-list" data-aos="fade-up" data-aos-delay="100">
+                <div class="gv-req-item">
+                    <div class="gv-req-num">۱</div>
+                    <div class="gv-req-text">حداقل سرمایه‌گذاری ۲۵۰,۰۰۰ یورو</div>
+                </div>
+                <div class="gv-req-item">
+                    <div class="gv-req-num">۲</div>
+                    <div class="gv-req-text">خرید ملک در یونان</div>
+                </div>
+                <div class="gv-req-item">
+                    <div class="gv-req-num">۳</div>
+                    <div class="gv-req-text">عدم سوء پیشینه</div>
+                </div>
+                <div class="gv-req-item">
+                    <div class="gv-req-num">۴</div>
+                    <div class="gv-req-text">بیمه درمانی معتبر</div>
+                </div>
+            </div>
+            
             {% if landing.requirements_body %}
-            <div class="gv-content gv-content-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="gv-content-box" data-aos="fade-up" data-aos-delay="200">
                 {{ landing.requirements_body|safe }}
             </div>
             {% endif %}
         </div>
     </section>
     {% endif %}
-    
-    <!-- Process Section with Timeline -->
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         PROCESS SECTION
+         ═══════════════════════════════════════════════════════════════════════ -->
     {% if landing.process_title or landing.process_body %}
-    <section class="gv-section gv-process">
+    <section id="process" class="gv-section gv-section-gradient">
         <div class="gv-container">
-            <div class="gv-section-header" data-aos="fade-up">
-                <span class="gv-section-tag"><i class="fas fa-route"></i> مراحل</span>
-                {% if landing.process_title %}
-                <h2 class="gv-section-title">{{ landing.process_title }}</h2>
-                {% endif %}
+            <div class="gv-section-head" data-aos="fade-up">
+                <div class="gv-icon-glass gv-icon-white"><i class="fas fa-route"></i></div>
+                <h2 class="gv-section-title gv-title-light">{{ landing.process_title|default:"مراحل" }}</h2>
+                <div class="gv-title-line gv-line-white"></div>
             </div>
+            
+            <!-- Timeline -->
+            <div class="gv-timeline">
+                <div class="gv-timeline-item" data-aos="fade-left" data-aos-delay="0">
+                    <div class="gv-timeline-dot"><i class="fas fa-search"></i></div>
+                    <div class="gv-timeline-content">
+                        <h4>مشاوره اولیه</h4>
+                        <p>بررسی شرایط و انتخاب بهترین گزینه</p>
+                    </div>
+                </div>
+                <div class="gv-timeline-item" data-aos="fade-right" data-aos-delay="100">
+                    <div class="gv-timeline-dot"><i class="fas fa-building"></i></div>
+                    <div class="gv-timeline-content">
+                        <h4>انتخاب ملک</h4>
+                        <p>بازدید و انتخاب ملک مناسب</p>
+                    </div>
+                </div>
+                <div class="gv-timeline-item" data-aos="fade-left" data-aos-delay="200">
+                    <div class="gv-timeline-dot"><i class="fas fa-file-signature"></i></div>
+                    <div class="gv-timeline-content">
+                        <h4>مدارک و قرارداد</h4>
+                        <p>تکمیل مدارک و امضای قرارداد</p>
+                    </div>
+                </div>
+                <div class="gv-timeline-item" data-aos="fade-right" data-aos-delay="300">
+                    <div class="gv-timeline-dot"><i class="fas fa-passport"></i></div>
+                    <div class="gv-timeline-content">
+                        <h4>دریافت اقامت</h4>
+                        <p>صدور کارت اقامت ۵ ساله</p>
+                    </div>
+                </div>
+            </div>
+            
             {% if landing.process_body %}
-            <div class="gv-content gv-timeline-content" data-aos="fade-up" data-aos-delay="100">
+            <div class="gv-content-box gv-content-glass" data-aos="fade-up" data-aos-delay="200">
                 {{ landing.process_body|safe }}
             </div>
             {% endif %}
         </div>
     </section>
     {% endif %}
-    
-    <!-- FAQ Section with Accordion -->
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         FAQ SECTION
+         ═══════════════════════════════════════════════════════════════════════ -->
     {% if landing.faq_title or landing.faq_body %}
-    <section class="gv-section gv-faq">
+    <section id="faq" class="gv-section gv-section-light">
         <div class="gv-container">
-            <div class="gv-section-header" data-aos="fade-up">
-                <span class="gv-section-tag"><i class="fas fa-question-circle"></i> سوالات</span>
-                {% if landing.faq_title %}
-                <h2 class="gv-section-title">{{ landing.faq_title }}</h2>
-                {% endif %}
+            <div class="gv-section-head" data-aos="fade-up">
+                <div class="gv-icon-glass"><i class="fas fa-question-circle"></i></div>
+                <h2 class="gv-section-title">{{ landing.faq_title|default:"سوالات متداول" }}</h2>
+                <div class="gv-title-line"></div>
             </div>
+            
             {% if landing.faq_body %}
-            <div class="gv-content gv-faq-content" data-aos="fade-up" data-aos-delay="100">
+            <div class="gv-faq-content" data-aos="fade-up" data-aos-delay="100">
                 {{ landing.faq_body|safe }}
             </div>
             {% endif %}
         </div>
     </section>
     {% endif %}
-    
-    <!-- CTA Banner with Gradient -->
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         CTA SECTION
+         ═══════════════════════════════════════════════════════════════════════ -->
     {% if landing.cta_banner_title or landing.cta_banner_text %}
-    <section class="gv-section gv-cta-banner">
+    <section id="contact" class="gv-cta-section">
         <div class="gv-cta-bg"></div>
-        <div class="gv-container" data-aos="zoom-in">
-            <div class="gv-cta-icon">
-                <i class="fas fa-rocket"></i>
+        <div class="gv-container">
+            <div class="gv-cta-box" data-aos="zoom-in" data-aos-duration="800">
+                <div class="gv-cta-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                {% if landing.cta_banner_title %}
+                <h2 class="gv-cta-title">{{ landing.cta_banner_title }}</h2>
+                {% endif %}
+                {% if landing.cta_banner_text %}
+                <p class="gv-cta-desc">{{ landing.cta_banner_text }}</p>
+                {% endif %}
+                {% if landing.cta_banner_button %}
+                <a href="tel:+302101234567" class="gv-cta-btn">
+                    <i class="fas fa-phone"></i>
+                    <span>{{ landing.cta_banner_button }}</span>
+                </a>
+                {% endif %}
             </div>
-            {% if landing.cta_banner_title %}
-            <h2 class="gv-cta-title">{{ landing.cta_banner_title }}</h2>
-            {% endif %}
-            {% if landing.cta_banner_text %}
-            <p class="gv-cta-text">{{ landing.cta_banner_text }}</p>
-            {% endif %}
-            {% if landing.cta_banner_button %}
-            <a href="#contact" class="gv-btn gv-btn-cta gv-btn-glow">
-                <i class="fas fa-arrow-left"></i>
-                {{ landing.cta_banner_button }}
-            </a>
-            {% endif %}
         </div>
     </section>
     {% endif %}
-    
+
     {% else %}
+    <!-- Fallback -->
     <section class="gv-section">
-        <div class="gv-container">
+        <div class="gv-container" style="text-align:center; padding: 100px 20px;">
             <h1>گلدن ویزای یونان</h1>
             <p>محتوای این صفحه در حال آماده‌سازی است.</p>
         </div>
@@ -249,16 +332,33 @@
     
 </main>
 
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     STYLES
+     ═══════════════════════════════════════════════════════════════════════════ -->
 <style>
-/* ══════════════════════════════════════════════════════════════════════════════
-   GOLDEN VISA LANDING — PREMIUM ANIMATED DESIGN
-   ══════════════════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════════════
+   GOLDEN VISA LANDING - PREMIUM GLASSMORPHISM DESIGN
+   ═══════════════════════════════════════════════════════════════════════════ */
 
-/* Base */
+:root {
+    --gv-gold: #c9a227;
+    --gv-gold-light: #e8c547;
+    --gv-navy: #0a1530;
+    --gv-navy-light: #142448;
+    --gv-white: #ffffff;
+    --gv-gray: #f4f6f8;
+    --gv-text: #1a1a2e;
+    --gv-text-light: #64748b;
+    --gv-glass: rgba(255, 255, 255, 0.1);
+    --gv-glass-border: rgba(255, 255, 255, 0.2);
+    --gv-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    --gv-font: 'Vazirmatn', 'IRANSans', Tahoma, sans-serif;
+}
+
 .gv-landing {
-    font-family: var(--adonis-font-primary, 'Vazirmatn'), 'IRANSans', sans-serif;
+    font-family: var(--gv-font);
     line-height: 1.9;
-    color: #1a1a2e;
+    color: var(--gv-text);
     overflow-x: hidden;
 }
 
@@ -268,125 +368,111 @@
     padding: 0 24px;
 }
 
-/* ── Hero Section ─────────────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   HERO SECTION
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 .gv-hero {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    background: linear-gradient(135deg, #0a1530 0%, #1a2a5e 50%, #0d1b3e 100%);
+    position: relative;
+    background: linear-gradient(135deg, var(--gv-navy) 0%, var(--gv-navy-light) 50%, var(--gv-navy) 100%);
     background-size: cover;
     background-position: center;
-    background-attachment: fixed;
-    position: relative;
-    color: #fff;
-    padding: 100px 24px;
     overflow: hidden;
 }
 
-/* Animated Particles */
-.gv-particles {
+.gv-hero-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    z-index: 0;
-}
-
-.particle {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background: rgba(201, 162, 39, 0.3);
-    border-radius: 50%;
-    animation: float-particle 15s infinite;
-}
-
-.particle:nth-child(1) { left: 10%; animation-delay: 0s; width: 8px; height: 8px; }
-.particle:nth-child(2) { left: 30%; animation-delay: 2s; width: 12px; height: 12px; }
-.particle:nth-child(3) { left: 50%; animation-delay: 4s; width: 6px; height: 6px; }
-.particle:nth-child(4) { left: 70%; animation-delay: 6s; width: 14px; height: 14px; }
-.particle:nth-child(5) { left: 90%; animation-delay: 8s; width: 10px; height: 10px; }
-
-@keyframes float-particle {
-    0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
-}
-
-.gv-hero-video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 0;
-    opacity: 0.25;
-}
-
-.gv-hero .gv-container {
-    position: relative;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(10,21,48,0.92) 0%, rgba(20,36,72,0.88) 100%);
     z-index: 1;
 }
 
-/* Hero Badge */
-.gv-hero-badge {
+/* Animated Shapes */
+.gv-hero-shapes {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    overflow: hidden;
+}
+
+.shape {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(201,162,39,0.15) 0%, rgba(201,162,39,0.05) 100%);
+    animation: float-shape 20s ease-in-out infinite;
+}
+
+.shape-1 { width: 400px; height: 400px; top: -100px; right: -100px; animation-delay: 0s; }
+.shape-2 { width: 300px; height: 300px; bottom: -50px; left: -50px; animation-delay: -5s; }
+.shape-3 { width: 200px; height: 200px; top: 40%; left: 10%; animation-delay: -10s; }
+.shape-4 { width: 150px; height: 150px; bottom: 30%; right: 15%; animation-delay: -15s; }
+
+@keyframes float-shape {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+    25% { transform: translate(20px, -30px) scale(1.05); opacity: 0.7; }
+    50% { transform: translate(-10px, 20px) scale(0.95); opacity: 0.5; }
+    75% { transform: translate(15px, 10px) scale(1.02); opacity: 0.6; }
+}
+
+.gv-hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 60px 0;
+}
+
+/* Glass Badge */
+.gv-glass-badge {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    background: rgba(201, 162, 39, 0.2);
-    border: 1px solid rgba(201, 162, 39, 0.4);
-    color: #c9a227;
-    padding: 10px 24px;
+    padding: 12px 28px;
+    background: rgba(201, 162, 39, 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(201, 162, 39, 0.3);
     border-radius: 50px;
+    color: var(--gv-gold);
     font-size: 0.95rem;
     font-weight: 600;
-    margin-bottom: 24px;
-    backdrop-filter: blur(10px);
-    animation: pulse-glow 2s infinite;
+    margin-bottom: 28px;
+    box-shadow: 0 8px 32px rgba(201, 162, 39, 0.2);
 }
 
-@keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 20px rgba(201, 162, 39, 0.3); }
-    50% { box-shadow: 0 0 40px rgba(201, 162, 39, 0.5); }
-}
-
-.gv-hero-badge i {
+.gv-glass-badge i {
     font-size: 1.1rem;
+    animation: pulse 2s ease-in-out infinite;
 }
 
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+/* Hero Title */
 .gv-hero-title {
-    font-size: clamp(2.2rem, 6vw, 4rem);
-    font-weight: 800;
-    margin-bottom: 24px;
-    text-shadow: 0 4px 30px rgba(0,0,0,0.4);
-    background: linear-gradient(135deg, #fff 0%, #c9a227 50%, #fff 100%);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: shine 4s linear infinite;
-}
-
-@keyframes shine {
-    to { background-position: 200% center; }
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    color: var(--gv-white);
+    margin: 0 0 20px;
+    line-height: 1.3;
+    text-shadow: 0 4px 30px rgba(0,0,0,0.3);
 }
 
 .gv-hero-subtitle {
-    font-size: clamp(1.05rem, 2.2vw, 1.5rem);
-    opacity: 0.9;
-    max-width: 750px;
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    color: rgba(255,255,255,0.85);
+    max-width: 650px;
     margin: 0 auto 36px;
     line-height: 2;
 }
 
-/* Hero CTAs */
-.gv-hero-ctas {
+/* Hero Buttons */
+.gv-hero-buttons {
     display: flex;
     gap: 16px;
     justify-content: center;
@@ -394,419 +480,654 @@
     margin-bottom: 50px;
 }
 
-/* Hero Stats */
-.gv-hero-stats {
+.gv-btn-glass {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 32px;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid transparent;
+}
+
+.gv-btn-glass i {
+    font-size: 0.9rem;
+    transition: transform 0.3s ease;
+}
+
+.gv-btn-glass:hover i {
+    transform: translateX(-5px);
+}
+
+.gv-btn-primary {
+    background: linear-gradient(135deg, var(--gv-gold) 0%, var(--gv-gold-light) 100%);
+    color: var(--gv-navy);
+    box-shadow: 0 8px 30px rgba(201, 162, 39, 0.4);
+}
+
+.gv-btn-primary:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(201, 162, 39, 0.5);
+}
+
+.gv-btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--gv-white);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.gv-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-4px);
+}
+
+/* Stats Row */
+.gv-stats-row {
     display: flex;
-    gap: 40px;
+    gap: 24px;
     justify-content: center;
     flex-wrap: wrap;
-    margin-top: 20px;
 }
 
-.gv-stat {
-    text-align: center;
-    padding: 24px 20px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 8px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.15);
-    width: 140px;
-    height: 140px;
+.gv-stat-glass {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 28px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    transition: all 0.4s ease;
+}
+
+.gv-stat-glass:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(201, 162, 39, 0.4);
+    box-shadow: 0 15px 40px rgba(201, 162, 39, 0.2);
+}
+
+.gv-stat-icon-wrap {
+    width: 56px;
+    height: 56px;
+    display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: linear-gradient(135deg, var(--gv-gold) 0%, var(--gv-gold-light) 100%);
+    border-radius: 14px;
+    font-size: 1.4rem;
+    color: var(--gv-navy);
 }
 
-.gv-stat:hover {
-    transform: translateY(-8px) scale(1.05);
-    box-shadow: 0 15px 40px rgba(201, 162, 39, 0.3);
-    border-color: rgba(201, 162, 39, 0.5);
-    background: rgba(201, 162, 39, 0.1);
+.gv-stat-info {
+    text-align: right;
 }
 
-.gv-stat-icon {
-    font-size: 1.8rem;
-    color: #c9a227;
-    margin-bottom: 10px;
+.gv-stat-num {
+    display: block;
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--gv-white);
+    line-height: 1.2;
 }
 
-.gv-stat-number {
-    font-size: 2rem;
-    font-weight: 800;
-    color: #fff;
+.gv-stat-txt {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.7);
 }
 
-.gv-stat-number span {
-    color: #c9a227;
-}
-
-.gv-stat-label {
-    font-size: 0.9rem;
-    opacity: 0.8;
-    margin-top: 4px;
-}
-
-/* Scroll Indicator */
-.gv-scroll-indicator {
+/* Scroll Down */
+.gv-scroll-down {
     position: absolute;
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
-    color: #fff;
-    opacity: 0.6;
-    animation: bounce 2s infinite;
-    font-size: 1.5rem;
+    z-index: 10;
+    text-align: center;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.8rem;
 }
 
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
-    40% { transform: translateX(-50%) translateY(-15px); }
-    60% { transform: translateX(-50%) translateY(-7px); }
+.gv-scroll-down span {
+    display: block;
+    margin-bottom: 8px;
 }
 
-/* ── Sections ─────────────────────────────────────────────────────────────────── */
+.gv-scroll-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: bounce-scroll 2s ease-in-out infinite;
+}
+
+.gv-scroll-icon i:first-child {
+    font-size: 1.4rem;
+    margin-bottom: 4px;
+}
+
+.gv-scroll-icon i:last-child {
+    font-size: 0.8rem;
+    animation: bounce-arrow 1s ease-in-out infinite;
+}
+
+@keyframes bounce-scroll {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+}
+
+@keyframes bounce-arrow {
+    0%, 100% { opacity: 0.5; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(4px); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SECTIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 .gv-section {
     padding: 100px 0;
     position: relative;
 }
 
-.gv-section:nth-child(even) {
-    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+.gv-section-light {
+    background: var(--gv-white);
+}
+
+.gv-section-dark {
+    background: var(--gv-navy);
+    position: relative;
+    overflow: hidden;
+}
+
+.gv-section-bg-pattern {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(201,162,39,0.1) 1px, transparent 1px);
+    background-size: 30px 30px;
+    opacity: 0.5;
+}
+
+.gv-section-gradient {
+    background: linear-gradient(135deg, var(--gv-navy) 0%, #1a3a6e 50%, var(--gv-navy-light) 100%);
 }
 
 /* Section Header */
-.gv-section-header {
+.gv-section-head {
     text-align: center;
-    margin-bottom: 50px;
+    margin-bottom: 60px;
 }
 
-.gv-section-tag {
-    display: inline-flex;
+.gv-icon-glass {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    display: flex;
     align-items: center;
-    gap: 8px;
-    background: linear-gradient(135deg, #c9a227 0%, #d4af37 100%);
-    color: #fff;
-    padding: 8px 20px;
-    border-radius: 50px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-bottom: 16px;
-    box-shadow: 0 4px 15px rgba(201, 162, 39, 0.3);
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(201,162,39,0.1) 0%, rgba(201,162,39,0.05) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(201,162,39,0.2);
+    border-radius: 20px;
+    font-size: 2rem;
+    color: var(--gv-gold);
+    transition: all 0.4s ease;
+}
+
+.gv-icon-glass:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.gv-icon-gold {
+    background: linear-gradient(135deg, var(--gv-gold) 0%, var(--gv-gold-light) 100%);
+    color: var(--gv-navy);
+    border: none;
+}
+
+.gv-icon-white {
+    background: rgba(255,255,255,0.15);
+    color: var(--gv-white);
+    border-color: rgba(255,255,255,0.2);
 }
 
 .gv-section-title {
-    font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
     font-weight: 800;
-    color: #0a1530;
-    margin: 0;
-    position: relative;
-    display: inline-block;
+    color: var(--gv-navy);
+    margin: 0 0 16px;
 }
 
-.gv-section-title::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
+.gv-title-light {
+    color: var(--gv-white);
+}
+
+.gv-title-line {
+    width: 80px;
     height: 4px;
-    background: linear-gradient(90deg, #c9a227, #d4af37);
+    background: linear-gradient(90deg, var(--gv-gold), var(--gv-gold-light));
+    margin: 0 auto;
     border-radius: 2px;
 }
 
-/* Content */
-.gv-content {
+.gv-line-gold {
+    background: linear-gradient(90deg, var(--gv-gold-light), var(--gv-gold));
+}
+
+.gv-line-white {
+    background: rgba(255,255,255,0.5);
+}
+
+/* Content Box */
+.gv-content-box {
+    background: var(--gv-gray);
+    padding: 40px;
+    border-radius: 24px;
     max-width: 900px;
     margin: 0 auto;
     font-size: 1.1rem;
     line-height: 2.2;
 }
 
-.gv-content-card {
-    background: #fff;
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-    border: 1px solid rgba(0,0,0,0.05);
+.gv-content-dark {
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.9);
 }
 
-.gv-content h3, .gv-content h4 {
-    margin-top: 32px;
-    margin-bottom: 16px;
-    color: #0a1530;
-    font-weight: 700;
+.gv-content-glass {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--gv-white);
 }
 
-.gv-content h3::before {
-    content: '◆';
-    color: #c9a227;
-    margin-left: 10px;
-    font-size: 0.8em;
-}
-
-.gv-content ul, .gv-content ol {
-    padding-right: 24px;
-}
-
-.gv-content li {
+.gv-content-box h3, .gv-content-box h4 {
+    color: var(--gv-navy);
+    margin-top: 28px;
     margin-bottom: 12px;
-    position: relative;
 }
 
-.gv-content ul li::marker {
-    color: #c9a227;
+.gv-content-dark h3, .gv-content-dark h4,
+.gv-content-glass h3, .gv-content-glass h4 {
+    color: var(--gv-gold);
 }
 
-/* ── Benefits Icons ───────────────────────────────────────────────────────────── */
-.gv-benefits-icons {
+/* ═══════════════════════════════════════════════════════════════════════════
+   BENEFITS GRID
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.gv-benefits-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 24px;
     margin-bottom: 50px;
 }
 
-.gv-benefit-icon-card {
-    background: #fff;
-    padding: 30px 20px;
-    border-radius: 16px;
+.gv-benefit-card {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 32px 20px;
     text-align: center;
-    box-shadow: 0 5px 25px rgba(0,0,0,0.08);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border: 2px solid transparent;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.gv-benefit-icon-card:hover {
+.gv-benefit-card:hover {
     transform: translateY(-10px) scale(1.02);
-    border-color: #c9a227;
-    box-shadow: 0 15px 40px rgba(201, 162, 39, 0.2);
+    background: rgba(201,162,39,0.1);
+    border-color: rgba(201,162,39,0.3);
+    box-shadow: 0 20px 50px rgba(201,162,39,0.2);
 }
 
-.gv-icon-wrapper {
+.gv-benefit-icon {
     width: 70px;
     height: 70px;
-    margin: 0 auto 16px;
-    background: linear-gradient(135deg, #0a1530 0%, #1a2a5e 100%);
-    border-radius: 50%;
+    margin: 0 auto 20px;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: linear-gradient(135deg, rgba(201,162,39,0.2) 0%, rgba(201,162,39,0.1) 100%);
+    border-radius: 50%;
     font-size: 1.6rem;
-    color: #c9a227;
+    color: var(--gv-gold);
+    transition: all 0.4s ease;
+}
+
+.gv-benefit-card:hover .gv-benefit-icon {
+    background: linear-gradient(135deg, var(--gv-gold) 0%, var(--gv-gold-light) 100%);
+    color: var(--gv-navy);
+    transform: scale(1.1) rotate(10deg);
+}
+
+.gv-benefit-card h4 {
+    color: var(--gv-white);
+    font-size: 1.1rem;
+    margin: 0 0 8px;
+}
+
+.gv-benefit-card p {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   REQUIREMENTS LIST
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.gv-req-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto 50px;
+}
+
+.gv-req-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    background: var(--gv-gray);
+    border-radius: 16px;
+    border-right: 4px solid var(--gv-gold);
     transition: all 0.3s ease;
 }
 
-.gv-benefit-icon-card:hover .gv-icon-wrapper {
-    background: linear-gradient(135deg, #c9a227 0%, #d4af37 100%);
-    color: #fff;
-    transform: rotateY(360deg);
+.gv-req-item:hover {
+    transform: translateX(-5px);
+    box-shadow: var(--gv-shadow);
 }
 
-.gv-benefit-icon-card span {
+.gv-req-num {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--gv-gold) 0%, var(--gv-gold-light) 100%);
+    color: var(--gv-navy);
+    font-weight: 900;
+    font-size: 1.2rem;
+    border-radius: 12px;
+    flex-shrink: 0;
+}
+
+.gv-req-text {
     font-weight: 600;
-    color: #0a1530;
-    font-size: 1rem;
+    color: var(--gv-navy);
 }
 
-/* ── CTA Banner ───────────────────────────────────────────────────────────────── */
-.gv-cta-banner {
-    background: linear-gradient(135deg, #0a1530 0%, #1a2a5e 50%, #0d1b3e 100%);
-    color: #fff;
-    text-align: center;
+/* ═══════════════════════════════════════════════════════════════════════════
+   TIMELINE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.gv-timeline {
+    max-width: 700px;
+    margin: 0 auto 50px;
+    position: relative;
+}
+
+.gv-timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 28px;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--gv-gold), rgba(201,162,39,0.2));
+    border-radius: 2px;
+}
+
+.gv-timeline-item {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 32px;
+    position: relative;
+}
+
+.gv-timeline-dot {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--gv-gold) 0%, var(--gv-gold-light) 100%);
+    border-radius: 50%;
+    font-size: 1.3rem;
+    color: var(--gv-navy);
+    flex-shrink: 0;
+    box-shadow: 0 8px 25px rgba(201,162,39,0.3);
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.gv-timeline-item:hover .gv-timeline-dot {
+    transform: scale(1.15);
+    box-shadow: 0 12px 35px rgba(201,162,39,0.4);
+}
+
+.gv-timeline-content {
+    flex: 1;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.gv-timeline-content h4 {
+    color: var(--gv-gold);
+    margin: 0 0 8px;
+    font-size: 1.15rem;
+}
+
+.gv-timeline-content p {
+    color: rgba(255,255,255,0.7);
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FAQ
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.gv-faq-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.gv-faq-content h3, .gv-faq-content h4 {
+    color: var(--gv-navy);
+    margin-top: 32px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CTA SECTION
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.gv-cta-section {
+    padding: 100px 0;
+    background: linear-gradient(135deg, var(--gv-navy) 0%, var(--gv-navy-light) 100%);
     position: relative;
     overflow: hidden;
 }
 
 .gv-cta-bg {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a227' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    opacity: 0.5;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23c9a227' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+    opacity: 0.8;
 }
 
-.gv-cta-banner .gv-container {
+.gv-cta-box {
     position: relative;
     z-index: 1;
+    text-align: center;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(30px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 32px;
+    padding: 60px 40px;
+    max-width: 700px;
+    margin: 0 auto;
 }
 
 .gv-cta-icon {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 24px;
-    background: linear-gradient(135deg, #c9a227 0%, #d4af37 100%);
-    border-radius: 50%;
+    width: 90px;
+    height: 90px;
+    margin: 0 auto 28px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
-    color: #fff;
-    animation: float 3s ease-in-out infinite;
+    background: linear-gradient(135deg, var(--gv-gold) 0%, var(--gv-gold-light) 100%);
+    border-radius: 50%;
+    font-size: 2.2rem;
+    color: var(--gv-navy);
+    animation: float-icon 3s ease-in-out infinite;
+    box-shadow: 0 15px 40px rgba(201,162,39,0.3);
 }
 
-@keyframes float {
+@keyframes float-icon {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    50% { transform: translateY(-12px); }
 }
 
 .gv-cta-title {
-    color: #fff;
-    font-size: clamp(1.8rem, 4vw, 2.5rem);
-    margin-bottom: 16px;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    color: var(--gv-white);
+    margin: 0 0 16px;
     font-weight: 800;
 }
 
-.gv-cta-text {
-    font-size: 1.2rem;
-    opacity: 0.9;
-    margin-bottom: 32px;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+.gv-cta-desc {
+    color: rgba(255,255,255,0.8);
+    font-size: 1.1rem;
+    margin: 0 0 32px;
+    line-height: 1.9;
 }
 
-/* ── Buttons ──────────────────────────────────────────────────────────────────── */
-.gv-btn {
+.gv-cta-btn {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 16px 36px;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 1rem;
-    text-decoration: none;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border: 2px solid transparent;
-}
-
-.gv-btn i {
-    transition: transform 0.3s ease;
-}
-
-.gv-btn:hover i {
-    transform: translateX(-5px);
-}
-
-.gv-btn-primary {
-    background: linear-gradient(135deg, #c9a227 0%, #d4af37 100%);
-    color: #fff;
-    box-shadow: 0 4px 20px rgba(201, 162, 39, 0.4);
-}
-
-.gv-btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(201, 162, 39, 0.5);
-}
-
-.gv-btn-outline {
-    background: transparent;
-    color: #fff;
-    border-color: rgba(255,255,255,0.4);
-}
-
-.gv-btn-outline:hover {
-    background: rgba(255,255,255,0.1);
-    border-color: #fff;
-}
-
-.gv-btn-cta {
-    background: #fff;
-    color: #0a1530;
+    gap: 12px;
+    padding: 18px 40px;
+    background: linear-gradient(135deg, var(--gv-gold) 0%, var(--gv-gold-light) 100%);
+    color: var(--gv-navy);
     font-size: 1.1rem;
-    padding: 18px 42px;
+    font-weight: 800;
+    text-decoration: none;
+    border-radius: 16px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 8px 30px rgba(201,162,39,0.4);
 }
 
-.gv-btn-cta:hover {
-    background: #c9a227;
-    color: #fff;
+.gv-cta-btn:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 45px rgba(201,162,39,0.5);
 }
 
-.gv-btn-glow {
-    animation: btn-glow 2s infinite;
-}
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════════════════ */
 
-@keyframes btn-glow {
-    0%, 100% { box-shadow: 0 4px 20px rgba(201, 162, 39, 0.4); }
-    50% { box-shadow: 0 4px 35px rgba(201, 162, 39, 0.7); }
-}
-
-/* ── Responsive ───────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
     .gv-hero {
-        min-height: 90vh;
-        padding: 80px 16px;
-        background-attachment: scroll;
+        min-height: auto;
+        padding: 120px 16px 80px;
     }
     
     .gv-section {
-        padding: 60px 0;
+        padding: 70px 0;
     }
     
-    .gv-hero-stats {
-        gap: 16px;
-    }
-    
-    .gv-stat {
-        width: 110px;
-        height: 110px;
-        padding: 16px 12px;
-    }
-    
-    .gv-stat-icon {
-        font-size: 1.4rem;
-        margin-bottom: 6px;
-    }
-    
-    .gv-stat-number {
-        font-size: 1.5rem;
-    }
-    
-    .gv-stat-label {
-        font-size: 0.8rem;
-    }
-    
-    .gv-content-card {
-        padding: 24px;
-    }
-    
-    .gv-hero-ctas {
+    .gv-stats-row {
         flex-direction: column;
         align-items: center;
     }
     
-    .gv-btn {
+    .gv-stat-glass {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .gv-hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .gv-btn-glass {
         width: 100%;
         max-width: 280px;
         justify-content: center;
     }
+    
+    .gv-content-box {
+        padding: 28px 20px;
+    }
+    
+    .gv-timeline::before {
+        right: 20px;
+    }
+    
+    .gv-timeline-dot {
+        width: 44px;
+        height: 44px;
+        font-size: 1rem;
+    }
+    
+    .gv-cta-box {
+        padding: 40px 24px;
+    }
+    
+    .gv-benefits-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 </style>
 
-<!-- AOS Init -->
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     SCRIPTS
+     ═══════════════════════════════════════════════════════════════════════════ -->
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize AOS
-        AOS.init({
-            duration: 800,
-            easing: 'ease-out-cubic',
-            once: true,
-            offset: 50
-        });
-        
-        // Parallax effect on scroll
-        window.addEventListener('scroll', function() {
-            const hero = document.querySelector('.gv-hero');
-            if (hero) {
-                const scrolled = window.pageYOffset;
-                hero.style.backgroundPositionY = scrolled * 0.5 + 'px';
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize AOS
+    AOS.init({
+        duration: 800,
+        easing: 'ease-out-cubic',
+        once: true,
+        offset: 50,
+        disable: 'mobile'
+    });
+    
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         });
     });
+    
+    // Parallax effect on hero shapes
+    window.addEventListener('scroll', function() {
+        const shapes = document.querySelectorAll('.shape');
+        const scrolled = window.pageYOffset;
+        shapes.forEach((shape, i) => {
+            const speed = 0.1 * (i + 1);
+            shape.style.transform = `translateY(${scrolled * speed}px)`;
+        });
+    });
+});
 </script>
 
 {% include "fa_new/_footer.html" %}
