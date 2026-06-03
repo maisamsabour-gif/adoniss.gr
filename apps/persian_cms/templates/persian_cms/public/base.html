@@ -19,6 +19,7 @@
     <!-- Styles -->
     <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
     <link rel="stylesheet" href="{% static 'css/fa-new/home.css' %}?v=5">
+    {% block extra_head %}{% endblock %}
 </head>
 <body class="adonis-fa-new-body">
     {% block content %}{% endblock %}
