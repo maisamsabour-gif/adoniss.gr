@@ -1411,12 +1411,11 @@ class GVAnimationSettingsInline(admin.StackedInline):
 
 class GVDesignSettingsInline(admin.StackedInline):
     model = GVDesignSettings
-    extra = 0
+    extra = 1
     max_num = 1
     can_delete = False
-    verbose_name = 'Design Settings'
+    verbose_name = '🎨 تنظیمات طراحی'
     verbose_name_plural = '🎨 تنظیمات طراحی'
-    classes = ['collapse']
     fieldsets = (
         ('رنگ‌ها', {
             'fields': (
@@ -1425,7 +1424,7 @@ class GVDesignSettingsInline(admin.StackedInline):
                 'text_color',
             ),
         }),
-        ('استایل', {
+        ('فونت و استایل', {
             'fields': (
                 ('card_style', 'font_family'),
                 ('section_spacing', 'border_radius'),
@@ -1510,8 +1509,8 @@ class GoldenVisaLandingPageAdmin(PersianBaseAdmin):
         }),
     )
     
-    # No inlines - using flat fields instead for cleaner UI
-    inlines = []
+    # Design settings inline for styling
+    inlines = [GVDesignSettingsInline]
     
     class Media:
         css = {'all': ('css/persian-admin.css', 'css/gv-admin-fix.css',)}
