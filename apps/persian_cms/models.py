@@ -1491,6 +1491,17 @@ class GVHeroFloatingCard(GVBaseModel):
 
 # ── 2. Benefits Section ───────────────────────────────────────────────────────
 
+SECTION_LAYOUT_CHOICES = [
+    ('full', 'تمام عرض'),
+    ('text_left', 'متن چپ - تصویر راست'),
+    ('text_right', 'متن راست - تصویر چپ'),
+    ('text_top', 'متن بالا - تصویر پایین'),
+    ('text_bottom', 'متن پایین - تصویر بالا'),
+    ('bg_image', 'تصویر پس‌زمینه'),
+    ('video_bg', 'ویدیو پس‌زمینه'),
+]
+
+
 class GVBenefitsSection(GVBaseModel):
     """Benefits section showing advantages of Golden Visa."""
     
@@ -1516,6 +1527,29 @@ class GVBenefitsSection(GVBaseModel):
         upload_to='gv_landing/benefits/',
         blank=True,
         verbose_name='تصویر پس‌زمینه',
+    )
+    side_image = models.ImageField(
+        upload_to='gv_landing/benefits/',
+        blank=True,
+        verbose_name='تصویر کناری',
+        help_text='تصویری که در کنار متن نمایش داده می‌شود',
+    )
+    side_image_alt = models.CharField(max_length=200, blank=True, verbose_name='Alt تصویر کناری')
+    section_video = models.FileField(
+        upload_to='gv_landing/benefits/videos/',
+        blank=True,
+        verbose_name='ویدیو بخش',
+    )
+    video_poster = models.ImageField(
+        upload_to='gv_landing/benefits/',
+        blank=True,
+        verbose_name='پوستر ویدیو',
+    )
+    layout_style = models.CharField(
+        max_length=20,
+        choices=SECTION_LAYOUT_CHOICES,
+        default='full',
+        verbose_name='نحوه چیدمان',
     )
     display_order = models.PositiveIntegerField(default=2, verbose_name='ترتیب نمایش')
     
@@ -1592,6 +1626,28 @@ class GVEligibilitySection(GVBaseModel):
         upload_to='gv_landing/eligibility/',
         blank=True,
         verbose_name='تصویر پس‌زمینه',
+    )
+    side_image = models.ImageField(
+        upload_to='gv_landing/eligibility/',
+        blank=True,
+        verbose_name='تصویر کناری',
+    )
+    side_image_alt = models.CharField(max_length=200, blank=True, verbose_name='Alt تصویر کناری')
+    section_video = models.FileField(
+        upload_to='gv_landing/eligibility/videos/',
+        blank=True,
+        verbose_name='ویدیو بخش',
+    )
+    video_poster = models.ImageField(
+        upload_to='gv_landing/eligibility/',
+        blank=True,
+        verbose_name='پوستر ویدیو',
+    )
+    layout_style = models.CharField(
+        max_length=20,
+        choices=SECTION_LAYOUT_CHOICES,
+        default='full',
+        verbose_name='نحوه چیدمان',
     )
     cta_text = models.CharField(
         max_length=100,
@@ -1700,6 +1756,33 @@ class GVProcessSection(GVBaseModel):
         verbose_name='زیرعنوان',
     )
     section_description = models.TextField(blank=True, verbose_name='توضیحات بخش')
+    background_image = models.ImageField(
+        upload_to='gv_landing/process/',
+        blank=True,
+        verbose_name='تصویر پس‌زمینه',
+    )
+    side_image = models.ImageField(
+        upload_to='gv_landing/process/',
+        blank=True,
+        verbose_name='تصویر کناری',
+    )
+    side_image_alt = models.CharField(max_length=200, blank=True, verbose_name='Alt تصویر کناری')
+    section_video = models.FileField(
+        upload_to='gv_landing/process/videos/',
+        blank=True,
+        verbose_name='ویدیو بخش',
+    )
+    video_poster = models.ImageField(
+        upload_to='gv_landing/process/',
+        blank=True,
+        verbose_name='پوستر ویدیو',
+    )
+    layout_style = models.CharField(
+        max_length=20,
+        choices=SECTION_LAYOUT_CHOICES,
+        default='full',
+        verbose_name='نحوه چیدمان',
+    )
     display_order = models.PositiveIntegerField(default=4, verbose_name='ترتیب نمایش')
     
     class Meta:
@@ -1776,6 +1859,28 @@ class GVStatisticsSection(GVBaseModel):
         upload_to='gv_landing/stats/',
         blank=True,
         verbose_name='تصویر پس‌زمینه',
+    )
+    side_image = models.ImageField(
+        upload_to='gv_landing/stats/',
+        blank=True,
+        verbose_name='تصویر کناری',
+    )
+    side_image_alt = models.CharField(max_length=200, blank=True, verbose_name='Alt تصویر کناری')
+    section_video = models.FileField(
+        upload_to='gv_landing/stats/videos/',
+        blank=True,
+        verbose_name='ویدیو بخش',
+    )
+    video_poster = models.ImageField(
+        upload_to='gv_landing/stats/',
+        blank=True,
+        verbose_name='پوستر ویدیو',
+    )
+    layout_style = models.CharField(
+        max_length=20,
+        choices=SECTION_LAYOUT_CHOICES,
+        default='bg_image',
+        verbose_name='نحوه چیدمان',
     )
     display_order = models.PositiveIntegerField(default=5, verbose_name='ترتیب نمایش')
     
@@ -2109,6 +2214,23 @@ class GVFamilySection(GVBaseModel):
         blank=True,
         verbose_name='تصویر اصلی',
     )
+    main_image_alt = models.CharField(max_length=200, blank=True, verbose_name='Alt تصویر اصلی')
+    section_video = models.FileField(
+        upload_to='gv_landing/family/videos/',
+        blank=True,
+        verbose_name='ویدیو بخش',
+    )
+    video_poster = models.ImageField(
+        upload_to='gv_landing/family/',
+        blank=True,
+        verbose_name='پوستر ویدیو',
+    )
+    layout_style = models.CharField(
+        max_length=20,
+        choices=SECTION_LAYOUT_CHOICES,
+        default='text_right',
+        verbose_name='نحوه چیدمان',
+    )
     display_order = models.PositiveIntegerField(default=7, verbose_name='ترتیب نمایش')
     
     class Meta:
@@ -2177,6 +2299,33 @@ class GVDocumentsSection(GVBaseModel):
         verbose_name='زیرعنوان',
     )
     section_description = models.TextField(blank=True, verbose_name='توضیحات بخش')
+    background_image = models.ImageField(
+        upload_to='gv_landing/documents/',
+        blank=True,
+        verbose_name='تصویر پس‌زمینه',
+    )
+    side_image = models.ImageField(
+        upload_to='gv_landing/documents/',
+        blank=True,
+        verbose_name='تصویر کناری',
+    )
+    side_image_alt = models.CharField(max_length=200, blank=True, verbose_name='Alt تصویر کناری')
+    section_video = models.FileField(
+        upload_to='gv_landing/documents/videos/',
+        blank=True,
+        verbose_name='ویدیو بخش',
+    )
+    video_poster = models.ImageField(
+        upload_to='gv_landing/documents/',
+        blank=True,
+        verbose_name='پوستر ویدیو',
+    )
+    layout_style = models.CharField(
+        max_length=20,
+        choices=SECTION_LAYOUT_CHOICES,
+        default='full',
+        verbose_name='نحوه چیدمان',
+    )
     display_order = models.PositiveIntegerField(default=8, verbose_name='ترتیب نمایش')
     
     class Meta:
@@ -2242,6 +2391,33 @@ class GVCostSection(GVBaseModel):
         verbose_name='زیرعنوان',
     )
     section_description = models.TextField(blank=True, verbose_name='توضیحات بخش')
+    background_image = models.ImageField(
+        upload_to='gv_landing/costs/',
+        blank=True,
+        verbose_name='تصویر پس‌زمینه',
+    )
+    side_image = models.ImageField(
+        upload_to='gv_landing/costs/',
+        blank=True,
+        verbose_name='تصویر کناری',
+    )
+    side_image_alt = models.CharField(max_length=200, blank=True, verbose_name='Alt تصویر کناری')
+    section_video = models.FileField(
+        upload_to='gv_landing/costs/videos/',
+        blank=True,
+        verbose_name='ویدیو بخش',
+    )
+    video_poster = models.ImageField(
+        upload_to='gv_landing/costs/',
+        blank=True,
+        verbose_name='پوستر ویدیو',
+    )
+    layout_style = models.CharField(
+        max_length=20,
+        choices=SECTION_LAYOUT_CHOICES,
+        default='full',
+        verbose_name='نحوه چیدمان',
+    )
     display_order = models.PositiveIntegerField(default=9, verbose_name='ترتیب نمایش')
     
     class Meta:
@@ -2306,6 +2482,33 @@ class GVTestimonialsSection(GVBaseModel):
         verbose_name='زیرعنوان',
     )
     section_description = models.TextField(blank=True, verbose_name='توضیحات بخش')
+    background_image = models.ImageField(
+        upload_to='gv_landing/testimonials/',
+        blank=True,
+        verbose_name='تصویر پس‌زمینه',
+    )
+    side_image = models.ImageField(
+        upload_to='gv_landing/testimonials/',
+        blank=True,
+        verbose_name='تصویر کناری',
+    )
+    side_image_alt = models.CharField(max_length=200, blank=True, verbose_name='Alt تصویر کناری')
+    section_video = models.FileField(
+        upload_to='gv_landing/testimonials/videos/',
+        blank=True,
+        verbose_name='ویدیو بخش',
+    )
+    video_poster = models.ImageField(
+        upload_to='gv_landing/testimonials/',
+        blank=True,
+        verbose_name='پوستر ویدیو',
+    )
+    layout_style = models.CharField(
+        max_length=20,
+        choices=SECTION_LAYOUT_CHOICES,
+        default='full',
+        verbose_name='نحوه چیدمان',
+    )
     display_order = models.PositiveIntegerField(default=10, verbose_name='ترتیب نمایش')
     
     class Meta:
@@ -2374,6 +2577,33 @@ class GVFAQSection(GVBaseModel):
         blank=True,
         default='پاسخ به سوالات رایج درباره گلدن ویزای یونان',
         verbose_name='زیرعنوان',
+    )
+    background_image = models.ImageField(
+        upload_to='gv_landing/faq/',
+        blank=True,
+        verbose_name='تصویر پس‌زمینه',
+    )
+    side_image = models.ImageField(
+        upload_to='gv_landing/faq/',
+        blank=True,
+        verbose_name='تصویر کناری',
+    )
+    side_image_alt = models.CharField(max_length=200, blank=True, verbose_name='Alt تصویر کناری')
+    section_video = models.FileField(
+        upload_to='gv_landing/faq/videos/',
+        blank=True,
+        verbose_name='ویدیو بخش',
+    )
+    video_poster = models.ImageField(
+        upload_to='gv_landing/faq/',
+        blank=True,
+        verbose_name='پوستر ویدیو',
+    )
+    layout_style = models.CharField(
+        max_length=20,
+        choices=SECTION_LAYOUT_CHOICES,
+        default='full',
+        verbose_name='نحوه چیدمان',
     )
     display_order = models.PositiveIntegerField(default=11, verbose_name='ترتیب نمایش')
     

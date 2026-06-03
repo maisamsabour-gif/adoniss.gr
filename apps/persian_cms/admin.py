@@ -3,6 +3,15 @@ from django.contrib import admin
 from django.utils.html import format_html, mark_safe
 from django_ckeditor_5.widgets import CKEditor5Widget
 
+# Sortable admin for drag-and-drop
+try:
+    from adminsortable2.admin import SortableAdminMixin, SortableInlineAdminMixin
+    SORTABLE_AVAILABLE = True
+except ImportError:
+    SORTABLE_AVAILABLE = False
+    SortableAdminMixin = object
+    SortableInlineAdminMixin = object
+
 from core.admin import (
     FaFooterSettingsAdmin,
     FaNavMenuItemAdmin,
@@ -1110,13 +1119,20 @@ class GVBenefitsSectionInline(admin.StackedInline):
     fieldsets = (
         (None, {
             'fields': (
-                'is_enabled',
+                ('is_enabled', 'display_order'),
                 'section_title',
                 'section_subtitle',
                 'section_description',
-                'background_image',
-                'display_order',
+                'layout_style',
             ),
+        }),
+        ('تصاویر و ویدیو', {
+            'fields': (
+                ('background_image', 'side_image'),
+                'side_image_alt',
+                ('section_video', 'video_poster'),
+            ),
+            'classes': ('collapse',),
         }),
     )
 
@@ -1131,14 +1147,21 @@ class GVEligibilitySectionInline(admin.StackedInline):
     fieldsets = (
         (None, {
             'fields': (
-                'is_enabled',
+                ('is_enabled', 'display_order'),
                 'section_title',
                 'section_subtitle',
                 'section_description',
-                'background_image',
                 ('cta_text', 'cta_link'),
-                'display_order',
+                'layout_style',
             ),
+        }),
+        ('تصاویر و ویدیو', {
+            'fields': (
+                ('background_image', 'side_image'),
+                'side_image_alt',
+                ('section_video', 'video_poster'),
+            ),
+            'classes': ('collapse',),
         }),
     )
 
@@ -1153,12 +1176,20 @@ class GVProcessSectionInline(admin.StackedInline):
     fieldsets = (
         (None, {
             'fields': (
-                'is_enabled',
+                ('is_enabled', 'display_order'),
                 'section_title',
                 'section_subtitle',
                 'section_description',
-                'display_order',
+                'layout_style',
             ),
+        }),
+        ('تصاویر و ویدیو', {
+            'fields': (
+                ('background_image', 'side_image'),
+                'side_image_alt',
+                ('section_video', 'video_poster'),
+            ),
+            'classes': ('collapse',),
         }),
     )
 
@@ -1173,12 +1204,19 @@ class GVStatisticsSectionInline(admin.StackedInline):
     fieldsets = (
         (None, {
             'fields': (
-                'is_enabled',
+                ('is_enabled', 'display_order'),
                 'section_title',
                 'section_subtitle',
-                'background_image',
-                'display_order',
+                'layout_style',
             ),
+        }),
+        ('تصاویر و ویدیو', {
+            'fields': (
+                ('background_image', 'side_image'),
+                'side_image_alt',
+                ('section_video', 'video_poster'),
+            ),
+            'classes': ('collapse',),
         }),
     )
 
@@ -1214,13 +1252,20 @@ class GVFamilySectionInline(admin.StackedInline):
     fieldsets = (
         (None, {
             'fields': (
-                'is_enabled',
+                ('is_enabled', 'display_order'),
                 'section_title',
                 'section_subtitle',
                 'section_description',
-                ('main_image', 'background_image'),
-                'display_order',
+                'layout_style',
             ),
+        }),
+        ('تصاویر و ویدیو', {
+            'fields': (
+                ('main_image', 'main_image_alt'),
+                'background_image',
+                ('section_video', 'video_poster'),
+            ),
+            'classes': ('collapse',),
         }),
     )
 
@@ -1235,12 +1280,20 @@ class GVDocumentsSectionInline(admin.StackedInline):
     fieldsets = (
         (None, {
             'fields': (
-                'is_enabled',
+                ('is_enabled', 'display_order'),
                 'section_title',
                 'section_subtitle',
                 'section_description',
-                'display_order',
+                'layout_style',
             ),
+        }),
+        ('تصاویر و ویدیو', {
+            'fields': (
+                ('background_image', 'side_image'),
+                'side_image_alt',
+                ('section_video', 'video_poster'),
+            ),
+            'classes': ('collapse',),
         }),
     )
 
@@ -1255,12 +1308,20 @@ class GVCostSectionInline(admin.StackedInline):
     fieldsets = (
         (None, {
             'fields': (
-                'is_enabled',
+                ('is_enabled', 'display_order'),
                 'section_title',
                 'section_subtitle',
                 'section_description',
-                'display_order',
+                'layout_style',
             ),
+        }),
+        ('تصاویر و ویدیو', {
+            'fields': (
+                ('background_image', 'side_image'),
+                'side_image_alt',
+                ('section_video', 'video_poster'),
+            ),
+            'classes': ('collapse',),
         }),
     )
 
@@ -1275,12 +1336,20 @@ class GVTestimonialsSectionInline(admin.StackedInline):
     fieldsets = (
         (None, {
             'fields': (
-                'is_enabled',
+                ('is_enabled', 'display_order'),
                 'section_title',
                 'section_subtitle',
                 'section_description',
-                'display_order',
+                'layout_style',
             ),
+        }),
+        ('تصاویر و ویدیو', {
+            'fields': (
+                ('background_image', 'side_image'),
+                'side_image_alt',
+                ('section_video', 'video_poster'),
+            ),
+            'classes': ('collapse',),
         }),
     )
 
@@ -1295,11 +1364,19 @@ class GVFAQSectionInline(admin.StackedInline):
     fieldsets = (
         (None, {
             'fields': (
-                'is_enabled',
+                ('is_enabled', 'display_order'),
                 'section_title',
                 'section_subtitle',
-                'display_order',
+                'layout_style',
             ),
+        }),
+        ('تصاویر و ویدیو', {
+            'fields': (
+                ('background_image', 'side_image'),
+                'side_image_alt',
+                ('section_video', 'video_poster'),
+            ),
+            'classes': ('collapse',),
         }),
     )
 

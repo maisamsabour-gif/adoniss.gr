@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     'django.forms',
     'ckeditor',
     'django_ckeditor_5',
+    'adminsortable2',
     'core',
     'properties',
     'brochures',

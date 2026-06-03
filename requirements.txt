@@ -22,3 +22,6 @@ markdown>=3.5
 requests>=2.31.0
 csscompressor>=0.9.5
 rjsmin>=1.2.0
+# ── Page Builder Features ──────────────────────────────────────────────────────
+django-admin-sortable2>=2.1.0
+pillow-heif>=0.15.0
