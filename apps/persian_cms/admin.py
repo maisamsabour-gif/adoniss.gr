@@ -56,7 +56,7 @@ class PersianBaseAdmin(admin.ModelAdmin):
 
     class Media:
         css = {"all": ("css/persian-admin.css",)}
-        js = ("js/ckeditor5-word-cleanup.js",)
+        js = ("js/persian-admin.js", "js/ckeditor5-word-cleanup.js",)
 
 
 class PersianPageAdminForm(forms.ModelForm):
