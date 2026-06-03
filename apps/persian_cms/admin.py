@@ -1586,8 +1586,24 @@ class GoldenVisaLandingPageAdmin(PersianBaseAdmin):
         }),
     )
     
-    # Design settings inline for styling
-    inlines = [GVDesignSettingsInline]
+    # All section inlines - each section can have media/layout settings
+    inlines = [
+        GVHeroSectionInline,
+        GVBenefitsSectionInline,
+        GVEligibilitySectionInline,
+        GVProcessSectionInline,
+        GVStatisticsSectionInline,
+        GVProjectsSectionInline,
+        GVFamilySectionInline,
+        GVDocumentsSectionInline,
+        GVCostSectionInline,
+        GVTestimonialsSectionInline,
+        GVFAQSectionInline,
+        GVFinalCTASectionInline,
+        GVSEOSettingsInline,
+        GVAnimationSettingsInline,
+        GVDesignSettingsInline,
+    ]
     
     class Media:
         css = {'all': ('css/persian-admin.css', 'css/gv-admin-fix.css',)}
