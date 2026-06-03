@@ -1467,7 +1467,7 @@ class GoldenVisaLandingPageAdmin(PersianBaseAdmin):
         ('تنظیمات اصلی', {
             'fields': ('title', 'slug', 'is_active'),
         }),
-        ('🎨 تنظیمات استایل', {
+        ('🎨 تنظیمات استایل (فونت، رنگ، سایز)', {
             'fields': (
                 'style_font_family',
                 ('style_primary_color', 'style_secondary_color'),
@@ -1475,8 +1475,7 @@ class GoldenVisaLandingPageAdmin(PersianBaseAdmin):
                 ('style_button_radius', 'style_card_radius'),
                 'style_hero_overlay_opacity',
             ),
-            'classes': ('collapse',),
-            'description': 'تنظیمات فونت، رنگ و سایز المان‌های صفحه',
+            'description': 'از اینجا می‌توانید فونت، رنگ‌ها و سایز المان‌های صفحه را تغییر دهید',
         }),
         ('هیرو (Hero Section)', {
             'fields': (
