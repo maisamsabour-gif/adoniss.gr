@@ -1117,3 +1117,1468 @@ class FaPropertyMedia(PersianTimeStampedModel):
         if self.video:
             return f'ویدیو — {self.property.name}'
         return f'عکس {self.order} — {self.property.name}'
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# GOLDEN VISA LANDING PAGE MODELS
+# ══════════════════════════════════════════════════════════════════════════════
+
+class GVBaseModel(PersianTimeStampedModel):
+    """Base abstract model for Golden Visa landing page components."""
+    
+    class Meta:
+        abstract = True
+
+
+# ── Main Landing Page ─────────────────────────────────────────────────────────
+
+class GoldenVisaLandingPage(GVBaseModel):
+    """Main Golden Visa landing page container."""
+    
+    slug = models.SlugField(
+        max_length=100,
+        unique=True,
+        default='golden-visa-greece',
+        verbose_name='اسلاگ',
+        help_text='آدرس صفحه: /fa-new/golden-visa/[slug]/',
+    )
+    title = models.CharField(
+        max_length=200,
+        default='گلدن ویزای یونان | اقامت اروپا با خرید ملک',
+        verbose_name='عنوان صفحه',
+    )
+    is_active = models.BooleanField(default=True, verbose_name='فعال')
+    admin_note = models.TextField(
+        blank=True,
+        verbose_name='یادداشت ادمین',
+        help_text='توضیح کوتاه داخلی برای مدیران (در سایت نمایش داده نمی‌شود)',
+    )
+    
+    class Meta:
+        db_table = 'gv_landing_page'
+        verbose_name = 'صفحه لندینگ گلدن ویزا'
+        verbose_name_plural = 'صفحات لندینگ گلدن ویزا'
+    
+    def __str__(self):
+        return self.title
+
+
+# ── 1. Hero Section ───────────────────────────────────────────────────────────
+
+class GVHeroSection(GVBaseModel):
+    """Hero section at the top of landing page."""
+    
+    landing_page = models.OneToOneField(
+        GoldenVisaLandingPage,
+        on_delete=models.CASCADE,
+        related_name='hero_section',
+        verbose_name='صفحه لندینگ',
+    )
+    is_enabled = models.BooleanField(default=True, verbose_name='فعال')
+    main_title = models.CharField(
+        max_length=300,
+        default='اقامت اروپا با خرید ملک در یونان',
+        verbose_name='عنوان اصلی',
+    )
+    highlighted_word = models.CharField(
+        max_length=100,
+        blank=True,
+        default='اروپا',
+        verbose_name='کلمه برجسته',
+        help_text='این کلمه با رنگ طلایی نمایش داده می‌شود',
+    )
+    subtitle = models.CharField(
+        max_length=300,
+        blank=True,
+        default='گلدن ویزای یونان',
+        verbose_name='زیرعنوان',
+    )
+    description = models.TextField(
+        blank=True,
+        default='با سرمایه‌گذاری از ۲۵۰ هزار یورو، اقامت ۵ ساله اروپا را برای خود و خانواده‌تان دریافت کنید.',
+        verbose_name='توضیحات',
+    )
+    primary_cta_text = models.CharField(
+        max_length=100,
+        default='دریافت مشاوره رایگان',
+        verbose_name='متن دکمه اصلی',
+    )
+    primary_cta_link = models.CharField(
+        max_length=500,
+        default='#contact',
+        verbose_name='لینک دکمه اصلی',
+    )
+    secondary_cta_text = models.CharField(
+        max_length=100,
+        blank=True,
+        default='مشاهده پروژه‌ها',
+        verbose_name='متن دکمه ثانویه',
+    )
+    secondary_cta_link = models.CharField(
+        max_length=500,
+        blank=True,
+        default='#projects',
+        verbose_name='لینک دکمه ثانویه',
+    )
+    background_image = models.ImageField(
+        upload_to='gv_landing/hero/',
+        blank=True,
+        verbose_name='تصویر پس‌زمینه',
+    )
+    background_video = models.FileField(
+        upload_to='gv_landing/hero/videos/',
+        blank=True,
+        verbose_name='ویدیو پس‌زمینه',
+    )
+    mobile_background_image = models.ImageField(
+        upload_to='gv_landing/hero/',
+        blank=True,
+        verbose_name='تصویر پس‌زمینه موبایل',
+    )
+    hero_main_visual = models.ImageField(
+        upload_to='gv_landing/hero/',
+        blank=True,
+        verbose_name='تصویر اصلی هیرو',
+        help_text='تصویری که در کنار متن نمایش داده می‌شود',
+    )
+    hero_image_alt = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name='Alt Text تصویر هیرو',
+        help_text='توضیح تصویر برای سئو و دسترسی‌پذیری',
+    )
+    display_order = models.PositiveIntegerField(default=1, verbose_name='ترتیب نمایش')
+    
+    class Meta:
+        db_table = 'gv_hero_section'
+        verbose_name = '۱. بخش هیرو'
+        verbose_name_plural = '۱. بخش هیرو'
+    
+    def __str__(self):
+        return f'Hero - {self.landing_page.title}'
+
+
+class GVHeroFloatingCard(GVBaseModel):
+    """Floating cards shown in hero section."""
+    
+    hero_section = models.ForeignKey(
+        GVHeroSection,
+        on_delete=models.CASCADE,
+        related_name='floating_cards',
+        verbose_name='بخش هیرو',
+    )
+    title = models.CharField(max_length=100, verbose_name='عنوان کارت')
+    text = models.CharField(max_length=200, blank=True, verbose_name='متن کارت')
+    icon = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name='آیکون',
+        help_text='نام آیکون FontAwesome یا کلاس آیکون',
+    )
+    icon_image = models.ImageField(
+        upload_to='gv_landing/icons/',
+        blank=True,
+        verbose_name='تصویر آیکون',
+    )
+    display_order = models.PositiveIntegerField(default=0, verbose_name='ترتیب نمایش')
+    is_active = models.BooleanField(default=True, verbose_name='فعال')
+    
+    class Meta:
+        db_table = 'gv_hero_floating_card'
+        ordering = ['display_order', 'pk']
+        verbose_name = 'کارت شناور هیرو'
+        verbose_name_plural = 'کارت‌های شناور هیرو'
+    
+    def __str__(self):
+        return self.title
+
+
+# ── 2. Benefits Section ───────────────────────────────────────────────────────
+
+class GVBenefitsSection(GVBaseModel):
+    """Benefits section showing advantages of Golden Visa."""
+    
+    landing_page = models.OneToOneField(
+        GoldenVisaLandingPage,
+        on_delete=models.CASCADE,
+        related_name='benefits_section',
+        verbose_name='صفحه لندینگ',
+    )
+    is_enabled = models.BooleanField(default=True, verbose_name='فعال')
+    section_title = models.CharField(
+        max_length=200,
+        default='مزایای گلدن ویزای یونان',
+        verbose_name='عنوان بخش',
+    )
+    section_subtitle = models.TextField(
+        blank=True,
+        default='چرا هزاران سرمایه‌گذار، یونان را انتخاب می‌کنند؟',
+        verbose_name='زیرعنوان',
+    )
+    section_description = models.TextField(blank=True, verbose_name='توضیحات بخش')
+    background_image = models.ImageField(
+        upload_to='gv_landing/benefits/',
+        blank=True,
+        verbose_name='تصویر پس‌زمینه',
+    )
+    display_order = models.PositiveIntegerField(default=2, verbose_name='ترتیب نمایش')
+    
+    class Meta:
+        db_table = 'gv_benefits_section'
+        verbose_name = '۲. بخش مزایا'
+        verbose_name_plural = '۲. بخش مزایا'
+    
+    def __str__(self):
+        return f'Benefits - {self.landing_page.title}'
+
+
+class GVBenefitCard(GVBaseModel):
+    """Individual benefit card."""
+    
+    benefits_section = models.ForeignKey(
+        GVBenefitsSection,
+        on_delete=models.CASCADE,
+        related_name='benefit_cards',
+        verbose_name='بخش مزایا',
+    )
+    title = models.CharField(max_length=150, verbose_name='عنوان')
+    description = models.TextField(blank=True, verbose_name='توضیحات')
+    icon = models.CharField(max_length=100, blank=True, verbose_name='آیکون')
+    icon_image = models.ImageField(
+        upload_to='gv_landing/benefits/icons/',
+        blank=True,
+        verbose_name='تصویر آیکون',
+    )
+    card_image = models.ImageField(
+        upload_to='gv_landing/benefits/',
+        blank=True,
+        verbose_name='تصویر کارت',
+    )
+    button_text = models.CharField(max_length=100, blank=True, verbose_name='متن دکمه')
+    button_link = models.CharField(max_length=500, blank=True, verbose_name='لینک دکمه')
+    display_order = models.PositiveIntegerField(default=0, verbose_name='ترتیب نمایش')
+    is_active = models.BooleanField(default=True, verbose_name='فعال')
+    
+    class Meta:
+        db_table = 'gv_benefit_card'
+        ordering = ['display_order', 'pk']
+        verbose_name = 'کارت مزیت'
+        verbose_name_plural = 'کارت‌های مزایا'
+    
+    def __str__(self):
+        return self.title
+
+
+# ── 3. Eligibility Section ────────────────────────────────────────────────────
+
+class GVEligibilitySection(GVBaseModel):
+    """Eligibility requirements section with investment tiers."""
+    
+    landing_page = models.OneToOneField(
+        GoldenVisaLandingPage,
+        on_delete=models.CASCADE,
+        related_name='eligibility_section',
+        verbose_name='صفحه لندینگ',
+    )
+    is_enabled = models.BooleanField(default=True, verbose_name='فعال')
+    section_title = models.CharField(
+        max_length=200,
+        default='شرایط دریافت گلدن ویزا',
+        verbose_name='عنوان بخش',
+    )
+    section_subtitle = models.TextField(
+        blank=True,
+        default='سه مسیر سرمایه‌گذاری متناسب با بودجه شما',
+        verbose_name='زیرعنوان',
+    )
+    section_description = models.TextField(blank=True, verbose_name='توضیحات بخش')
+    background_image = models.ImageField(
+        upload_to='gv_landing/eligibility/',
+        blank=True,
+        verbose_name='تصویر پس‌زمینه',
+    )
+    cta_text = models.CharField(
+        max_length=100,
+        blank=True,
+        default='مشاوره رایگان',
+        verbose_name='متن دکمه CTA',
+    )
+    cta_link = models.CharField(
+        max_length=500,
+        blank=True,
+        default='#contact',
+        verbose_name='لینک دکمه CTA',
+    )
+    display_order = models.PositiveIntegerField(default=3, verbose_name='ترتیب نمایش')
+    
+    class Meta:
+        db_table = 'gv_eligibility_section'
+        verbose_name = '۳. بخش شرایط واجدین'
+        verbose_name_plural = '۳. بخش شرایط واجدین'
+    
+    def __str__(self):
+        return f'Eligibility - {self.landing_page.title}'
+
+
+class GVEligibilityCard(GVBaseModel):
+    """Investment tier card."""
+    
+    TIER_CHOICES = [
+        ('250k', '€250,000'),
+        ('400k', '€400,000'),
+        ('800k', '€800,000'),
+        ('custom', 'سفارشی'),
+    ]
+    
+    eligibility_section = models.ForeignKey(
+        GVEligibilitySection,
+        on_delete=models.CASCADE,
+        related_name='eligibility_cards',
+        verbose_name='بخش شرایط',
+    )
+    investment_amount = models.CharField(
+        max_length=100,
+        verbose_name='مبلغ سرمایه‌گذاری',
+        help_text='مثلاً: €۲۵۰,۰۰۰',
+    )
+    tier = models.CharField(
+        max_length=20,
+        choices=TIER_CHOICES,
+        default='250k',
+        verbose_name='سطح',
+    )
+    area_name = models.CharField(
+        max_length=200,
+        verbose_name='نام منطقه',
+        help_text='مثلاً: سایر مناطق یونان',
+    )
+    property_type = models.CharField(max_length=150, blank=True, verbose_name='نوع ملک')
+    minimum_area = models.CharField(max_length=100, blank=True, verbose_name='حداقل متراژ')
+    description = models.TextField(blank=True, verbose_name='توضیحات')
+    badge_text = models.CharField(
+        max_length=50,
+        blank=True,
+        verbose_name='متن نشان',
+        help_text='مثلاً: محبوب‌ترین',
+    )
+    icon = models.CharField(max_length=100, blank=True, verbose_name='آیکون')
+    icon_image = models.ImageField(
+        upload_to='gv_landing/eligibility/icons/',
+        blank=True,
+        verbose_name='تصویر آیکون',
+    )
+    is_featured = models.BooleanField(default=False, verbose_name='برجسته')
+    display_order = models.PositiveIntegerField(default=0, verbose_name='ترتیب نمایش')
+    is_active = models.BooleanField(default=True, verbose_name='فعال')
+    
+    class Meta:
+        db_table = 'gv_eligibility_card'
+        ordering = ['display_order', 'pk']
+        verbose_name = 'کارت شرایط سرمایه‌گذاری'
+        verbose_name_plural = 'کارت‌های شرایط سرمایه‌گذاری'
+    
+    def __str__(self):
+        return f'{self.tier} - {self.area_name}'
+
+
+# ── 4. Process Section ────────────────────────────────────────────────────────
+
+class GVProcessSection(GVBaseModel):
+    """Process steps section."""
+    
+    landing_page = models.OneToOneField(
+        GoldenVisaLandingPage,
+        on_delete=models.CASCADE,
+        related_name='process_section',
+        verbose_name='صفحه لندینگ',
+    )
+    is_enabled = models.BooleanField(default=True, verbose_name='فعال')
+    section_title = models.CharField(
+        max_length=200,
+        default='مراحل دریافت گلدن ویزا',
+        verbose_name='عنوان بخش',
+    )
+    section_subtitle = models.TextField(
+        blank=True,
+        default='از مشاوره تا دریافت کارت اقامت',
+        verbose_name='زیرعنوان',
+    )
+    section_description = models.TextField(blank=True, verbose_name='توضیحات بخش')
+    display_order = models.PositiveIntegerField(default=4, verbose_name='ترتیب نمایش')
+    
+    class Meta:
+        db_table = 'gv_process_section'
+        verbose_name = '۴. بخش مراحل فرآیند'
+        verbose_name_plural = '۴. بخش مراحل فرآیند'
+    
+    def __str__(self):
+        return f'Process - {self.landing_page.title}'
+
+
+class GVProcessStep(GVBaseModel):
+    """Individual process step."""
+    
+    process_section = models.ForeignKey(
+        GVProcessSection,
+        on_delete=models.CASCADE,
+        related_name='steps',
+        verbose_name='بخش مراحل',
+    )
+    step_number = models.PositiveIntegerField(default=1, verbose_name='شماره مرحله')
+    title = models.CharField(max_length=200, verbose_name='عنوان مرحله')
+    description = models.TextField(blank=True, verbose_name='توضیحات')
+    icon = models.CharField(max_length=100, blank=True, verbose_name='آیکون')
+    icon_image = models.ImageField(
+        upload_to='gv_landing/process/icons/',
+        blank=True,
+        verbose_name='تصویر آیکون',
+    )
+    step_image = models.ImageField(
+        upload_to='gv_landing/process/',
+        blank=True,
+        verbose_name='تصویر مرحله',
+    )
+    estimated_time = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name='زمان تقریبی',
+        help_text='مثلاً: ۱-۲ هفته',
+    )
+    display_order = models.PositiveIntegerField(default=0, verbose_name='ترتیب نمایش')
+    is_active = models.BooleanField(default=True, verbose_name='فعال')
+    
+    class Meta:
+        db_table = 'gv_process_step'
+        ordering = ['display_order', 'step_number']
+        verbose_name = 'مرحله فرآیند'
+        verbose_name_plural = 'مراحل فرآیند'
+    
+    def __str__(self):
+        return f'{self.step_number}. {self.title}'
+
+
+# ── 5. Statistics Section ─────────────────────────────────────────────────────
+
+class GVStatisticsSection(GVBaseModel):
+    """Statistics/counter section."""
+    
+    landing_page = models.OneToOneField(
+        GoldenVisaLandingPage,
+        on_delete=models.CASCADE,
+        related_name='statistics_section',
+        verbose_name='صفحه لندینگ',
+    )
+    is_enabled = models.BooleanField(default=True, verbose_name='فعال')
+    section_title = models.CharField(
+        max_length=200,
+        blank=True,
+        default='آدونیس در یک نگاه',
+        verbose_name='عنوان بخش',
+    )
+    section_subtitle = models.TextField(blank=True, verbose_name='زیرعنوان')
+    background_image = models.ImageField(
+        upload_to='gv_landing/stats/',
+        blank=True,
+        verbose_name='تصویر پس‌زمینه',
+    )
+    display_order = models.PositiveIntegerField(default=5, verbose_name='ترتیب نمایش')
+    
+    class Meta:
+        db_table = 'gv_statistics_section'
+        verbose_name = '۵. بخش آمار'
+        verbose_name_plural = '۵. بخش آمار'
+    
+    def __str__(self):
+        return f'Statistics - {self.landing_page.title}'
+
+
+class GVStatItem(GVBaseModel):
+    """Individual statistic item."""
+    
+    statistics_section = models.ForeignKey(
+        GVStatisticsSection,
+        on_delete=models.CASCADE,
+        related_name='stat_items',
+        verbose_name='بخش آمار',
+    )
+    number = models.CharField(
+        max_length=50,
+        verbose_name='عدد',
+        help_text='مثلاً: 500',
+    )
+    prefix = models.CharField(
+        max_length=20,
+        blank=True,
+        verbose_name='پیشوند',
+        help_text='مثلاً: +',
+    )
+    suffix = models.CharField(
+        max_length=20,
+        blank=True,
+        verbose_name='پسوند',
+        help_text='مثلاً: %',
+    )
+    label = models.CharField(
+        max_length=150,
+        verbose_name='برچسب',
+        help_text='مثلاً: پروژه موفق',
+    )
+    description = models.CharField(max_length=200, blank=True, verbose_name='توضیح کوتاه')
+    icon = models.CharField(max_length=100, blank=True, verbose_name='آیکون')
+    icon_image = models.ImageField(
+        upload_to='gv_landing/stats/icons/',
+        blank=True,
+        verbose_name='تصویر آیکون',
+    )
+    display_order = models.PositiveIntegerField(default=0, verbose_name='ترتیب نمایش')
+    is_active = models.BooleanField(default=True, verbose_name='فعال')
+    
+    class Meta:
+        db_table = 'gv_stat_item'
+        ordering = ['display_order', 'pk']
+        verbose_name = 'آیتم آمار'
+        verbose_name_plural = 'آیتم‌های آمار'
+    
+    def __str__(self):
+        return f'{self.prefix}{self.number}{self.suffix} {self.label}'
+
+
+# ── 6. Projects Section ───────────────────────────────────────────────────────
+
+class GVProjectsSection(GVBaseModel):
+    """Featured projects section."""
+    
+    landing_page = models.OneToOneField(
+        GoldenVisaLandingPage,
+        on_delete=models.CASCADE,
+        related_name='projects_section',
+        verbose_name='صفحه لندینگ',
+    )
+    is_enabled = models.BooleanField(default=True, verbose_name='فعال')
+    section_title = models.CharField(
+        max_length=200,
+        default='پروژه‌های منتخب گلدن ویزا',
+        verbose_name='عنوان بخش',
+    )
+    section_subtitle = models.TextField(
+        blank=True,
+        default='پروژه‌های واجد شرایط گلدن ویزا با بهترین موقعیت مکانی',
+        verbose_name='زیرعنوان',
+    )
+    section_description = models.TextField(blank=True, verbose_name='توضیحات بخش')
+    cta_text = models.CharField(
+        max_length=100,
+        blank=True,
+        default='مشاهده همه پروژه‌ها',
+        verbose_name='متن دکمه CTA',
+    )
+    cta_link = models.CharField(
+        max_length=500,
+        blank=True,
+        default='/fa-new/properties/',
+        verbose_name='لینک دکمه CTA',
+    )
+    display_order = models.PositiveIntegerField(default=6, verbose_name='ترتیب نمایش')
+    
+    class Meta:
+        db_table = 'gv_projects_section'
+        verbose_name = '۶. بخش پروژه‌ها'
+        verbose_name_plural = '۶. بخش پروژه‌ها'
+    
+    def __str__(self):
+        return f'Projects - {self.landing_page.title}'
+
+
+class GVProject(GVBaseModel):
+    """Individual project for Golden Visa landing page."""
+    
+    STATUS_CHOICES = [
+        ('available', 'موجود'),
+        ('reserved', 'رزرو شده'),
+        ('limited', 'واحدهای محدود'),
+        ('sold_out', 'فروخته شده'),
+    ]
+    
+    projects_section = models.ForeignKey(
+        GVProjectsSection,
+        on_delete=models.CASCADE,
+        related_name='projects',
+        verbose_name='بخش پروژه‌ها',
+    )
+    name = models.CharField(max_length=200, verbose_name='نام پروژه')
+    short_description = models.TextField(max_length=500, blank=True, verbose_name='توضیح کوتاه')
+    main_image = models.ImageField(
+        upload_to='gv_landing/projects/',
+        verbose_name='تصویر اصلی',
+    )
+    project_video = models.FileField(
+        upload_to='gv_landing/projects/videos/',
+        blank=True,
+        verbose_name='ویدیو پروژه',
+    )
+    location_title = models.CharField(max_length=200, blank=True, verbose_name='عنوان موقعیت')
+    google_maps_link = models.URLField(blank=True, verbose_name='لینک گوگل مپ')
+    area = models.CharField(max_length=100, blank=True, verbose_name='منطقه')
+    starting_price = models.CharField(
+        max_length=100,
+        verbose_name='قیمت شروع',
+        help_text='مثلاً: از €۲۵۰,۰۰۰',
+    )
+    golden_visa_eligible = models.BooleanField(default=True, verbose_name='واجد شرایط گلدن ویزا')
+    progress_percentage = models.PositiveIntegerField(
+        default=0,
+        validators=[MaxValueValidator(100)],
+        verbose_name='درصد پیشرفت',
+    )
+    delivery_date = models.CharField(max_length=100, blank=True, verbose_name='تاریخ تحویل')
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='available',
+        verbose_name='وضعیت',
+    )
+    cta_text = models.CharField(max_length=100, default='جزئیات پروژه', verbose_name='متن دکمه')
+    cta_link = models.CharField(max_length=500, blank=True, verbose_name='لینک دکمه')
+    display_order = models.PositiveIntegerField(default=0, verbose_name='ترتیب نمایش')
+    is_active = models.BooleanField(default=True, verbose_name='فعال')
+    
+    class Meta:
+        db_table = 'gv_project'
+        ordering = ['display_order', 'pk']
+        verbose_name = 'پروژه گلدن ویزا'
+        verbose_name_plural = 'پروژه‌های گلدن ویزا'
+    
+    def __str__(self):
+        return self.name
+
+
+class GVProjectUnit(GVBaseModel):
+    """Individual unit within a project."""
+    
+    STATUS_CHOICES = [
+        ('available', 'موجود'),
+        ('reserved', 'رزرو شده'),
+        ('sold', 'فروخته شده'),
+    ]
+    
+    project = models.ForeignKey(
+        GVProject,
+        on_delete=models.CASCADE,
+        related_name='units',
+        verbose_name='پروژه',
+    )
+    floor = models.CharField(max_length=50, verbose_name='طبقه')
+    unit_number = models.CharField(max_length=50, verbose_name='شماره واحد')
+    area_sqm = models.PositiveIntegerField(verbose_name='متراژ (m²)')
+    bedrooms = models.PositiveIntegerField(default=1, verbose_name='اتاق خواب')
+    bathrooms = models.PositiveIntegerField(default=1, verbose_name='سرویس')
+    price = models.CharField(max_length=100, verbose_name='قیمت')
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='available',
+        verbose_name='وضعیت',
+    )
+    notes = models.CharField(max_length=200, blank=True, verbose_name='یادداشت')
+    display_order = models.PositiveIntegerField(default=0, verbose_name='ترتیب')
+    is_active = models.BooleanField(default=True, verbose_name='فعال')
+    
+    class Meta:
+        db_table = 'gv_project_unit'
+        ordering = ['display_order', 'floor', 'unit_number']
+        verbose_name = 'واحد پروژه'
+        verbose_name_plural = 'واحدهای پروژه'
+    
+    def __str__(self):
+        return f'{self.project.name} - طبقه {self.floor} واحد {self.unit_number}'
+
+
+class GVProjectGalleryImage(GVBaseModel):
+    """Gallery image for a project."""
+    
+    project = models.ForeignKey(
+        GVProject,
+        on_delete=models.CASCADE,
+        related_name='gallery_images',
+        verbose_name='پروژه',
+    )
+    image = models.ImageField(
+        upload_to='gv_landing/projects/gallery/',
+        verbose_name='تصویر',
+    )
+    caption = models.CharField(max_length=200, blank=True, verbose_name='توضیح')
+    alt_text = models.CharField(max_length=200, blank=True, verbose_name='Alt Text')
+    display_order = models.PositiveIntegerField(default=0, verbose_name='ترتیب')
+    
+    class Meta:
+        db_table = 'gv_project_gallery_image'
+        ordering = ['display_order', 'pk']
+        verbose_name = 'تصویر گالری پروژه'
+        verbose_name_plural = 'تصاویر گالری پروژه'
+    
+    def __str__(self):
+        return f'{self.project.name} - تصویر {self.display_order}'
+
+
+class GVFaPropertyRelation(GVBaseModel):
+    """Link existing FaProperty projects to the Golden Visa landing page.
+    
+    This allows selecting existing properties from persian_cms instead of
+    duplicating data in GVProject.
+    """
+    
+    projects_section = models.ForeignKey(
+        GVProjectsSection,
+        on_delete=models.CASCADE,
+        related_name='property_relations',
+        verbose_name='بخش پروژه‌ها',
+    )
+    property = models.ForeignKey(
+        'persian_cms.FaProperty',
+        on_delete=models.CASCADE,
+        related_name='gv_landing_relations',
+        verbose_name='پروژه ملکی',
+        help_text='پروژه را از لیست پروژه‌های ملکی فارسی انتخاب کنید',
+    )
+    display_title = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name='عنوان نمایشی',
+        help_text='عنوان جایگزین برای نمایش در لندینگ (اختیاری)',
+    )
+    display_description = models.TextField(
+        blank=True,
+        verbose_name='توضیح نمایشی',
+        help_text='توضیح کوتاه جایگزین (اختیاری)',
+    )
+    badge_text = models.CharField(
+        max_length=100,
+        blank=True,
+        default='مناسب گلدن ویزا',
+        verbose_name='متن نشان',
+        help_text='مثلاً: مناسب گلدن ویزا، پیشنهاد ویژه',
+    )
+    display_order = models.PositiveIntegerField(default=0, verbose_name='ترتیب نمایش')
+    is_active = models.BooleanField(default=True, verbose_name='فعال')
+    
+    class Meta:
+        db_table = 'gv_fa_property_relation'
+        ordering = ['display_order', 'pk']
+        verbose_name = 'پروژه مرتبط (از FaProperty)'
+        verbose_name_plural = 'پروژه‌های مرتبط (از FaProperty)'
+        unique_together = [['projects_section', 'property']]
+    
+    def __str__(self):
+        return self.display_title or str(self.property)
+    
+    def get_title(self):
+        """Return display title or original property name."""
+        return self.display_title or self.property.name
+    
+    def get_description(self):
+        """Return display description or original property tagline."""
+        return self.display_description or self.property.tagline
+
+
+# ── 7. Family Section ─────────────────────────────────────────────────────────
+
+class GVFamilySection(GVBaseModel):
+    """Family members eligibility section."""
+    
+    landing_page = models.OneToOneField(
+        GoldenVisaLandingPage,
+        on_delete=models.CASCADE,
+        related_name='family_section',
+        verbose_name='صفحه لندینگ',
+    )
+    is_enabled = models.BooleanField(default=True, verbose_name='فعال')
+    section_title = models.CharField(
+        max_length=200,
+        default='اقامت برای تمام اعضای خانواده',
+        verbose_name='عنوان بخش',
+    )
+    section_subtitle = models.TextField(
+        blank=True,
+        default='با گلدن ویزای یونان، تمام اعضای خانواده شما اقامت دریافت می‌کنند',
+        verbose_name='زیرعنوان',
+    )
+    section_description = models.TextField(blank=True, verbose_name='توضیحات بخش')
+    background_image = models.ImageField(
+        upload_to='gv_landing/family/',
+        blank=True,
+        verbose_name='تصویر پس‌زمینه',
+    )
+    main_image = models.ImageField(
+        upload_to='gv_landing/family/',
+        blank=True,
+        verbose_name='تصویر اصلی',
+    )
+    display_order = models.PositiveIntegerField(default=7, verbose_name='ترتیب نمایش')
+    
+    class Meta:
+        db_table = 'gv_family_section'
+        verbose_name = '۷. بخش اعضای خانواده'
+        verbose_name_plural = '۷. بخش اعضای خانواده'
+    
+    def __str__(self):
+        return f'Family - {self.landing_page.title}'
+
+
+class GVFamilyMemberCard(GVBaseModel):
+    """Family member eligibility card."""
+    
+    family_section = models.ForeignKey(
+        GVFamilySection,
+        on_delete=models.CASCADE,
+        related_name='member_cards',
+        verbose_name='بخش خانواده',
+    )
+    title = models.CharField(
+        max_length=150,
+        verbose_name='عنوان',
+        help_text='مثلاً: متقاضی اصلی',
+    )
+    description = models.TextField(blank=True, verbose_name='توضیحات')
+    icon = models.CharField(max_length=100, blank=True, verbose_name='آیکون')
+    icon_image = models.ImageField(
+        upload_to='gv_landing/family/icons/',
+        blank=True,
+        verbose_name='تصویر آیکون',
+    )
+    display_order = models.PositiveIntegerField(default=0, verbose_name='ترتیب نمایش')
+    is_active = models.BooleanField(default=True, verbose_name='فعال')
+    
+    class Meta:
+        db_table = 'gv_family_member_card'
+        ordering = ['display_order', 'pk']
+        verbose_name = 'کارت عضو خانواده'
+        verbose_name_plural = 'کارت‌های اعضای خانواده'
+    
+    def __str__(self):
+        return self.title
+
+
+# ── 8. Documents Section ──────────────────────────────────────────────────────
+
+class GVDocumentsSection(GVBaseModel):
+    """Required documents section."""
+    
+    landing_page = models.OneToOneField(
+        GoldenVisaLandingPage,
+        on_delete=models.CASCADE,
+        related_name='documents_section',
+        verbose_name='صفحه لندینگ',
+    )
+    is_enabled = models.BooleanField(default=True, verbose_name='فعال')
+    section_title = models.CharField(
+        max_length=200,
+        default='مدارک مورد نیاز',
+        verbose_name='عنوان بخش',
+    )
+    section_subtitle = models.TextField(
+        blank=True,
+        default='لیست مدارک لازم برای ثبت درخواست گلدن ویزا',
+        verbose_name='زیرعنوان',
+    )
+    section_description = models.TextField(blank=True, verbose_name='توضیحات بخش')
+    display_order = models.PositiveIntegerField(default=8, verbose_name='ترتیب نمایش')
+    
+    class Meta:
+        db_table = 'gv_documents_section'
+        verbose_name = '۸. بخش مدارک'
+        verbose_name_plural = '۸. بخش مدارک'
+    
+    def __str__(self):
+        return f'Documents - {self.landing_page.title}'
+
+
+class GVDocumentItem(GVBaseModel):
+    """Individual required document."""
+    
+    documents_section = models.ForeignKey(
+        GVDocumentsSection,
+        on_delete=models.CASCADE,
+        related_name='document_items',
+        verbose_name='بخش مدارک',
+    )
+    title = models.CharField(max_length=200, verbose_name='عنوان مدرک')
+    description = models.TextField(blank=True, verbose_name='توضیحات')
+    icon = models.CharField(max_length=100, blank=True, verbose_name='آیکون')
+    icon_image = models.ImageField(
+        upload_to='gv_landing/documents/icons/',
+        blank=True,
+        verbose_name='تصویر آیکون',
+    )
+    is_required = models.BooleanField(default=True, verbose_name='اجباری')
+    display_order = models.PositiveIntegerField(default=0, verbose_name='ترتیب نمایش')
+    is_active = models.BooleanField(default=True, verbose_name='فعال')
+    
+    class Meta:
+        db_table = 'gv_document_item'
+        ordering = ['display_order', 'pk']
+        verbose_name = 'مدرک مورد نیاز'
+        verbose_name_plural = 'مدارک مورد نیاز'
+    
+    def __str__(self):
+        return self.title
+
+
+# ── 9. Cost Section ───────────────────────────────────────────────────────────
+
+class GVCostSection(GVBaseModel):
+    """Costs breakdown section."""
+    
+    landing_page = models.OneToOneField(
+        GoldenVisaLandingPage,
+        on_delete=models.CASCADE,
+        related_name='cost_section',
+        verbose_name='صفحه لندینگ',
+    )
+    is_enabled = models.BooleanField(default=True, verbose_name='فعال')
+    section_title = models.CharField(
+        max_length=200,
+        default='هزینه‌های دریافت گلدن ویزا',
+        verbose_name='عنوان بخش',
+    )
+    section_subtitle = models.TextField(
+        blank=True,
+        default='تمام هزینه‌ها به صورت شفاف',
+        verbose_name='زیرعنوان',
+    )
+    section_description = models.TextField(blank=True, verbose_name='توضیحات بخش')
+    display_order = models.PositiveIntegerField(default=9, verbose_name='ترتیب نمایش')
+    
+    class Meta:
+        db_table = 'gv_cost_section'
+        verbose_name = '۹. بخش هزینه‌ها'
+        verbose_name_plural = '۹. بخش هزینه‌ها'
+    
+    def __str__(self):
+        return f'Costs - {self.landing_page.title}'
+
+
+class GVCostItem(GVBaseModel):
+    """Individual cost item."""
+    
+    cost_section = models.ForeignKey(
+        GVCostSection,
+        on_delete=models.CASCADE,
+        related_name='cost_items',
+        verbose_name='بخش هزینه‌ها',
+    )
+    title = models.CharField(max_length=200, verbose_name='عنوان هزینه')
+    amount = models.CharField(
+        max_length=100,
+        verbose_name='مبلغ',
+        help_text='مثلاً: ۳.۰۹٪ یا €۱,۵۰۰',
+    )
+    currency = models.CharField(max_length=20, blank=True, default='EUR', verbose_name='واحد پول')
+    description = models.TextField(blank=True, verbose_name='توضیحات')
+    display_order = models.PositiveIntegerField(default=0, verbose_name='ترتیب نمایش')
+    is_active = models.BooleanField(default=True, verbose_name='فعال')
+    
+    class Meta:
+        db_table = 'gv_cost_item'
+        ordering = ['display_order', 'pk']
+        verbose_name = 'آیتم هزینه'
+        verbose_name_plural = 'آیتم‌های هزینه'
+    
+    def __str__(self):
+        return f'{self.title}: {self.amount}'
+
+
+# ── 10. Testimonials Section ──────────────────────────────────────────────────
+
+class GVTestimonialsSection(GVBaseModel):
+    """Client testimonials section."""
+    
+    landing_page = models.OneToOneField(
+        GoldenVisaLandingPage,
+        on_delete=models.CASCADE,
+        related_name='testimonials_section',
+        verbose_name='صفحه لندینگ',
+    )
+    is_enabled = models.BooleanField(default=True, verbose_name='فعال')
+    section_title = models.CharField(
+        max_length=200,
+        default='نظرات مشتریان',
+        verbose_name='عنوان بخش',
+    )
+    section_subtitle = models.TextField(
+        blank=True,
+        default='تجربه واقعی مشتریان آدونیس',
+        verbose_name='زیرعنوان',
+    )
+    section_description = models.TextField(blank=True, verbose_name='توضیحات بخش')
+    display_order = models.PositiveIntegerField(default=10, verbose_name='ترتیب نمایش')
+    
+    class Meta:
+        db_table = 'gv_testimonials_section'
+        verbose_name = '۱۰. بخش نظرات مشتریان'
+        verbose_name_plural = '۱۰. بخش نظرات مشتریان'
+    
+    def __str__(self):
+        return f'Testimonials - {self.landing_page.title}'
+
+
+class GVTestimonial(GVBaseModel):
+    """Individual client testimonial."""
+    
+    testimonials_section = models.ForeignKey(
+        GVTestimonialsSection,
+        on_delete=models.CASCADE,
+        related_name='testimonials',
+        verbose_name='بخش نظرات',
+    )
+    client_name = models.CharField(max_length=150, verbose_name='نام مشتری')
+    client_image = models.ImageField(
+        upload_to='gv_landing/testimonials/',
+        blank=True,
+        verbose_name='تصویر مشتری',
+    )
+    client_country = models.CharField(max_length=100, blank=True, verbose_name='کشور مشتری')
+    review_text = models.TextField(verbose_name='متن نظر')
+    video_url = models.URLField(blank=True, verbose_name='لینک ویدیو')
+    rating = models.PositiveIntegerField(
+        default=5,
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+        verbose_name='امتیاز',
+    )
+    display_order = models.PositiveIntegerField(default=0, verbose_name='ترتیب نمایش')
+    is_active = models.BooleanField(default=True, verbose_name='فعال')
+    
+    class Meta:
+        db_table = 'gv_testimonial'
+        ordering = ['display_order', 'pk']
+        verbose_name = 'نظر مشتری'
+        verbose_name_plural = 'نظرات مشتریان'
+    
+    def __str__(self):
+        return f'{self.client_name} - {self.rating}⭐'
+
+
+# ── 11. FAQ Section ───────────────────────────────────────────────────────────
+
+class GVFAQSection(GVBaseModel):
+    """Frequently asked questions section."""
+    
+    landing_page = models.OneToOneField(
+        GoldenVisaLandingPage,
+        on_delete=models.CASCADE,
+        related_name='faq_section',
+        verbose_name='صفحه لندینگ',
+    )
+    is_enabled = models.BooleanField(default=True, verbose_name='فعال')
+    section_title = models.CharField(
+        max_length=200,
+        default='سوالات متداول',
+        verbose_name='عنوان بخش',
+    )
+    section_subtitle = models.TextField(
+        blank=True,
+        default='پاسخ به سوالات رایج درباره گلدن ویزای یونان',
+        verbose_name='زیرعنوان',
+    )
+    display_order = models.PositiveIntegerField(default=11, verbose_name='ترتیب نمایش')
+    
+    class Meta:
+        db_table = 'gv_faq_section'
+        verbose_name = '۱۱. بخش سوالات متداول'
+        verbose_name_plural = '۱۱. بخش سوالات متداول'
+    
+    def __str__(self):
+        return f'FAQ - {self.landing_page.title}'
+
+
+class GVFAQItem(GVBaseModel):
+    """Individual FAQ item."""
+    
+    CATEGORY_CHOICES = [
+        ('general', 'عمومی'),
+        ('investment', 'سرمایه‌گذاری'),
+        ('process', 'فرآیند'),
+        ('family', 'خانواده'),
+        ('documents', 'مدارک'),
+        ('legal', 'حقوقی'),
+        ('other', 'سایر'),
+    ]
+    
+    faq_section = models.ForeignKey(
+        GVFAQSection,
+        on_delete=models.CASCADE,
+        related_name='faq_items',
+        verbose_name='بخش سوالات',
+    )
+    question = models.CharField(max_length=500, verbose_name='سوال')
+    answer = models.TextField(verbose_name='پاسخ')
+    category = models.CharField(
+        max_length=20,
+        choices=CATEGORY_CHOICES,
+        default='general',
+        blank=True,
+        verbose_name='دسته‌بندی',
+    )
+    display_order = models.PositiveIntegerField(default=0, verbose_name='ترتیب نمایش')
+    is_active = models.BooleanField(default=True, verbose_name='فعال')
+    
+    class Meta:
+        db_table = 'gv_faq_item'
+        ordering = ['display_order', 'pk']
+        verbose_name = 'سوال متداول'
+        verbose_name_plural = 'سوالات متداول'
+    
+    def __str__(self):
+        return self.question[:50]
+
+
+# ── 12. Final CTA Section ─────────────────────────────────────────────────────
+
+class GVFinalCTASection(GVBaseModel):
+    """Final call-to-action section at the bottom."""
+    
+    landing_page = models.OneToOneField(
+        GoldenVisaLandingPage,
+        on_delete=models.CASCADE,
+        related_name='final_cta_section',
+        verbose_name='صفحه لندینگ',
+    )
+    is_enabled = models.BooleanField(default=True, verbose_name='فعال')
+    title = models.CharField(
+        max_length=300,
+        default='همین امروز شروع کنید',
+        verbose_name='عنوان',
+    )
+    subtitle = models.CharField(
+        max_length=300,
+        blank=True,
+        default='مشاوره رایگان با کارشناسان آدونیس',
+        verbose_name='زیرعنوان',
+    )
+    description = models.TextField(
+        blank=True,
+        default='تیم متخصص ما آماده پاسخگویی به تمام سوالات شما درباره گلدن ویزای یونان است.',
+        verbose_name='توضیحات',
+    )
+    background_image = models.ImageField(
+        upload_to='gv_landing/cta/',
+        blank=True,
+        verbose_name='تصویر پس‌زمینه',
+    )
+    background_video = models.FileField(
+        upload_to='gv_landing/cta/videos/',
+        blank=True,
+        verbose_name='ویدیو پس‌زمینه',
+    )
+    primary_cta_text = models.CharField(
+        max_length=100,
+        default='دریافت مشاوره رایگان',
+        verbose_name='متن دکمه اصلی',
+    )
+    primary_cta_link = models.CharField(
+        max_length=500,
+        default='#contact',
+        verbose_name='لینک دکمه اصلی',
+    )
+    secondary_cta_text = models.CharField(
+        max_length=100,
+        blank=True,
+        default='تماس مستقیم',
+        verbose_name='متن دکمه ثانویه',
+    )
+    secondary_cta_link = models.CharField(
+        max_length=500,
+        blank=True,
+        default='tel:+306985989596',
+        verbose_name='لینک دکمه ثانویه',
+    )
+    whatsapp_number = models.CharField(
+        max_length=50,
+        blank=True,
+        default='+306985989596',
+        verbose_name='شماره واتس‌اپ',
+    )
+    phone_number = models.CharField(
+        max_length=50,
+        blank=True,
+        default='+30 210 7000 570',
+        verbose_name='شماره تلفن',
+    )
+    display_order = models.PositiveIntegerField(default=12, verbose_name='ترتیب نمایش')
+    
+    class Meta:
+        db_table = 'gv_final_cta_section'
+        verbose_name = '۱۲. بخش فراخوان نهایی'
+        verbose_name_plural = '۱۲. بخش فراخوان نهایی'
+    
+    def __str__(self):
+        return f'Final CTA - {self.landing_page.title}'
+
+
+# ── 13. SEO Settings ──────────────────────────────────────────────────────────
+
+class GVSEOSettings(GVBaseModel):
+    """SEO settings for the landing page."""
+    
+    landing_page = models.OneToOneField(
+        GoldenVisaLandingPage,
+        on_delete=models.CASCADE,
+        related_name='seo_settings',
+        verbose_name='صفحه لندینگ',
+    )
+    seo_title = models.CharField(
+        max_length=70,
+        default='گلدن ویزای یونان | اقامت اروپا با خرید ملک | آدونیس',
+        verbose_name='عنوان سئو',
+        help_text='حداکثر ۷۰ کاراکتر',
+    )
+    meta_description = models.TextField(
+        max_length=160,
+        default='با خرید ملک در یونان از ۲۵۰ هزار یورو، اقامت ۵ ساله اروپا برای خود و خانواده دریافت کنید. مشاوره رایگان با آدونیس.',
+        verbose_name='Meta Description',
+        help_text='حداکثر ۱۶۰ کاراکتر',
+    )
+    meta_keywords = models.CharField(
+        max_length=300,
+        blank=True,
+        default='گلدن ویزا یونان، اقامت یونان، خرید ملک در یونان، سرمایه‌گذاری یونان، اقامت اروپا',
+        verbose_name='Meta Keywords',
+    )
+    canonical_url = models.URLField(blank=True, verbose_name='Canonical URL')
+    og_title = models.CharField(max_length=100, blank=True, verbose_name='OG Title')
+    og_description = models.TextField(max_length=300, blank=True, verbose_name='OG Description')
+    og_image = models.ImageField(
+        upload_to='gv_landing/seo/',
+        blank=True,
+        verbose_name='OG Image',
+        help_text='تصویر اشتراک‌گذاری در شبکه‌های اجتماعی (1200x630 پیکسل)',
+    )
+    twitter_image = models.ImageField(
+        upload_to='gv_landing/seo/',
+        blank=True,
+        verbose_name='Twitter Image',
+    )
+    schema_json = models.TextField(
+        blank=True,
+        verbose_name='Schema JSON-LD',
+        help_text='کد JSON-LD برای Rich Snippets',
+    )
+    robots_index = models.BooleanField(default=True, verbose_name='اجازه ایندکس')
+    robots_follow = models.BooleanField(default=True, verbose_name='اجازه دنبال‌کردن لینک‌ها')
+    include_in_sitemap = models.BooleanField(default=True, verbose_name='نمایش در Sitemap')
+    
+    class Meta:
+        db_table = 'gv_seo_settings'
+        verbose_name = '۱۳. تنظیمات سئو'
+        verbose_name_plural = '۱۳. تنظیمات سئو'
+    
+    def __str__(self):
+        return f'SEO - {self.landing_page.title}'
+
+
+# ── 14. Animation Settings ────────────────────────────────────────────────────
+
+class GVAnimationSettings(GVBaseModel):
+    """Animation settings for landing page sections."""
+    
+    ANIMATION_CHOICES = [
+        ('fade-up', 'Fade Up'),
+        ('fade-in', 'Fade In'),
+        ('slide-left', 'Slide Left'),
+        ('slide-right', 'Slide Right'),
+        ('scale', 'Scale'),
+        ('parallax', 'Parallax'),
+        ('none', 'بدون انیمیشن'),
+    ]
+    
+    landing_page = models.OneToOneField(
+        GoldenVisaLandingPage,
+        on_delete=models.CASCADE,
+        related_name='animation_settings',
+        verbose_name='صفحه لندینگ',
+    )
+    animations_enabled = models.BooleanField(default=True, verbose_name='فعال‌سازی انیمیشن‌ها')
+    hero_animation = models.CharField(
+        max_length=20,
+        choices=ANIMATION_CHOICES,
+        default='fade-up',
+        verbose_name='انیمیشن هیرو',
+    )
+    benefits_animation = models.CharField(
+        max_length=20,
+        choices=ANIMATION_CHOICES,
+        default='fade-up',
+        verbose_name='انیمیشن مزایا',
+    )
+    eligibility_animation = models.CharField(
+        max_length=20,
+        choices=ANIMATION_CHOICES,
+        default='scale',
+        verbose_name='انیمیشن شرایط',
+    )
+    process_animation = models.CharField(
+        max_length=20,
+        choices=ANIMATION_CHOICES,
+        default='slide-left',
+        verbose_name='انیمیشن مراحل',
+    )
+    stats_animation = models.CharField(
+        max_length=20,
+        choices=ANIMATION_CHOICES,
+        default='fade-up',
+        verbose_name='انیمیشن آمار',
+    )
+    projects_animation = models.CharField(
+        max_length=20,
+        choices=ANIMATION_CHOICES,
+        default='fade-up',
+        verbose_name='انیمیشن پروژه‌ها',
+    )
+    family_animation = models.CharField(
+        max_length=20,
+        choices=ANIMATION_CHOICES,
+        default='fade-in',
+        verbose_name='انیمیشن خانواده',
+    )
+    documents_animation = models.CharField(
+        max_length=20,
+        choices=ANIMATION_CHOICES,
+        default='slide-right',
+        verbose_name='انیمیشن مدارک',
+    )
+    cost_animation = models.CharField(
+        max_length=20,
+        choices=ANIMATION_CHOICES,
+        default='fade-up',
+        verbose_name='انیمیشن هزینه‌ها',
+    )
+    testimonials_animation = models.CharField(
+        max_length=20,
+        choices=ANIMATION_CHOICES,
+        default='fade-in',
+        verbose_name='انیمیشن نظرات',
+    )
+    faq_animation = models.CharField(
+        max_length=20,
+        choices=ANIMATION_CHOICES,
+        default='fade-up',
+        verbose_name='انیمیشن سوالات',
+    )
+    cta_animation = models.CharField(
+        max_length=20,
+        choices=ANIMATION_CHOICES,
+        default='scale',
+        verbose_name='انیمیشن CTA',
+    )
+    animation_duration = models.PositiveIntegerField(
+        default=600,
+        verbose_name='مدت انیمیشن (میلی‌ثانیه)',
+    )
+    animation_delay = models.PositiveIntegerField(
+        default=100,
+        verbose_name='تاخیر انیمیشن (میلی‌ثانیه)',
+    )
+    parallax_enabled = models.BooleanField(default=True, verbose_name='فعال‌سازی پارالکس')
+    floating_cards_enabled = models.BooleanField(default=True, verbose_name='فعال‌سازی کارت‌های شناور')
+    
+    class Meta:
+        db_table = 'gv_animation_settings'
+        verbose_name = '۱۴. تنظیمات انیمیشن'
+        verbose_name_plural = '۱۴. تنظیمات انیمیشن'
+    
+    def __str__(self):
+        return f'Animations - {self.landing_page.title}'
+
+
+# ── 15. Design Settings ───────────────────────────────────────────────────────
+
+class GVDesignSettings(GVBaseModel):
+    """Design/theming settings for landing page."""
+    
+    CARD_STYLE_CHOICES = [
+        ('solid', 'جامد'),
+        ('glass', 'شیشه‌ای (Glassmorphism)'),
+        ('minimal', 'مینیمال'),
+    ]
+    
+    FONT_FAMILY_CHOICES = [
+        ('vazirmatn', 'وزیر‌متن'),
+        ('estedad', 'استعداد'),
+        ('dana', 'دانا'),
+        ('yekan', 'یکان'),
+        ('sahel', 'ساحل'),
+        ('custom', 'سفارشی'),
+    ]
+    
+    landing_page = models.OneToOneField(
+        GoldenVisaLandingPage,
+        on_delete=models.CASCADE,
+        related_name='design_settings',
+        verbose_name='صفحه لندینگ',
+    )
+    primary_color = models.CharField(
+        max_length=20,
+        default='#c9a227',
+        verbose_name='رنگ اصلی',
+        help_text='رنگ طلایی پیش‌فرض: #c9a227',
+    )
+    secondary_color = models.CharField(
+        max_length=20,
+        default='#0a1530',
+        verbose_name='رنگ ثانویه',
+        help_text='رنگ تیره پیش‌فرض: #0a1530',
+    )
+    accent_color = models.CharField(
+        max_length=20,
+        default='#3b82f6',
+        verbose_name='رنگ تاکیدی',
+    )
+    background_color = models.CharField(
+        max_length=20,
+        default='#0a0f1a',
+        verbose_name='رنگ پس‌زمینه',
+    )
+    text_color = models.CharField(
+        max_length=20,
+        default='#ffffff',
+        verbose_name='رنگ متن',
+    )
+    section_spacing = models.CharField(
+        max_length=20,
+        default='120px',
+        verbose_name='فاصله بین بخش‌ها',
+    )
+    border_radius = models.CharField(
+        max_length=20,
+        default='16px',
+        verbose_name='گردی گوشه‌ها',
+    )
+    card_style = models.CharField(
+        max_length=20,
+        choices=CARD_STYLE_CHOICES,
+        default='glass',
+        verbose_name='استایل کارت‌ها',
+    )
+    font_family = models.CharField(
+        max_length=20,
+        choices=FONT_FAMILY_CHOICES,
+        default='vazirmatn',
+        verbose_name='فونت اصلی',
+    )
+    custom_font_url = models.URLField(
+        blank=True,
+        verbose_name='لینک فونت سفارشی',
+        help_text='لینک Google Fonts یا فونت سفارشی',
+    )
+    custom_css = models.TextField(
+        blank=True,
+        verbose_name='CSS سفارشی',
+        help_text='کد CSS اضافی برای سفارشی‌سازی',
+    )
+    
+    class Meta:
+        db_table = 'gv_design_settings'
+        verbose_name = '۱۵. تنظیمات طراحی'
+        verbose_name_plural = '۱۵. تنظیمات طراحی'
+    
+    def __str__(self):
+        return f'Design - {self.landing_page.title}'

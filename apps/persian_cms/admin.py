@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib import admin
-from django.utils.html import format_html
+from django.utils.html import format_html, mark_safe
 from django_ckeditor_5.widgets import CKEditor5Widget
 
 from core.admin import (
@@ -32,6 +32,22 @@ from .models import (
     PersianRedirectMap,
     PersianSEOSettings,
     PersianSection,
+    # Golden Visa Landing Page Models
+    GoldenVisaLandingPage,
+    GVHeroSection, GVHeroFloatingCard,
+    GVBenefitsSection, GVBenefitCard,
+    GVEligibilitySection, GVEligibilityCard,
+    GVProcessSection, GVProcessStep,
+    GVStatisticsSection, GVStatItem,
+    GVProjectsSection, GVProject, GVProjectUnit, GVProjectGalleryImage,
+    GVFaPropertyRelation,
+    GVFamilySection, GVFamilyMemberCard,
+    GVDocumentsSection, GVDocumentItem,
+    GVCostSection, GVCostItem,
+    GVTestimonialsSection, GVTestimonial,
+    GVFAQSection, GVFAQItem,
+    GVFinalCTASection,
+    GVSEOSettings, GVAnimationSettings, GVDesignSettings,
 )
 
 
@@ -67,8 +83,8 @@ class PersianPageAdminForm(forms.ModelForm):
 @admin.register(PersianPage, site=persian_admin_site)
 class PersianPageAdmin(PersianBaseAdmin):
     form = PersianPageAdminForm
-    list_display = ("title", "page_type", "public_link", "is_published", "seo_status", "sort_order")
-    list_editable = ("is_published", "seo_status", "sort_order")
+    list_display = ("title", "page_type", "public_link", "is_published", "seo_status_badge", "sort_order", "edit_button")
+    list_editable = ("is_published", "sort_order")
     search_fields = ("title", "slug", "route_path")
     list_filter = ("page_type", "is_published", "noindex", "seo_status")
     prepopulated_fields = {"slug": ("title",)}
@@ -92,7 +108,36 @@ class PersianPageAdmin(PersianBaseAdmin):
     @admin.display(description="آدرس صفحه")
     def public_link(self, obj):
         url = obj.get_absolute_url()
-        return format_html('<a href="{}" target="_blank" rel="noopener">{}</a>', url, url)
+        return format_html(
+            '<a href="{}" target="_blank" rel="noopener" style="color:#2563eb;text-decoration:none">{}</a>',
+            url, url
+        )
+
+    @admin.display(description="وضعیت سئو")
+    def seo_status_badge(self, obj):
+        colors = {
+            'draft': ('#6b7280', 'پیش‌نویس'),
+            'needs_review': ('#d97706', 'نیاز به بررسی'),
+            'optimized': ('#059669', 'بهینه شده'),
+        }
+        color, label = colors.get(obj.seo_status, ('#6b7280', obj.seo_status))
+        return format_html(
+            '<span style="background:{};color:#fff;padding:4px 10px;border-radius:20px;'
+            'font-size:11px;font-weight:500;white-space:nowrap">{}</span>',
+            color, label
+        )
+
+    @admin.display(description="عملیات")
+    def edit_button(self, obj):
+        return format_html(
+            '<a href="/fa-admin/persian_cms/persianpage/{}/change/" '
+            'style="background:#2563eb;color:#fff;'
+            'padding:6px 12px;border-radius:6px;text-decoration:none;font-weight:500;'
+            'font-size:12px;display:inline-flex;align-items:center;gap:4px;'
+            'white-space:nowrap">'
+            '✏️ ویرایش</a>',
+            obj.pk,
+        )
 
     @admin.display(description="آدرس عمومی این صفحه")
     def public_url_box(self, obj):
@@ -333,61 +378,69 @@ class FaPropertyAdmin(PersianBaseAdmin):
     def thumbnail_preview(self, obj):
         img = obj.main_image
         if img:
+            featured_badge = (
+                '<span style="position:absolute;top:4px;right:4px;background:#c9a227;color:#fff;'
+                'font-size:9px;padding:2px 6px;border-radius:4px;font-weight:600">⭐</span>'
+            ) if obj.is_featured else ''
+            
             return format_html(
-                '<div style="position:relative">'
-                '<a href="{0}" target="_blank">'
-                '<img src="{0}" style="height:60px;width:90px;object-fit:cover;border-radius:8px;'
-                'box-shadow:0 2px 8px rgba(0,0,0,0.15)" /></a>'
-                '{1}</div>',
+                '<div style="position:relative;display:inline-block">'
+                '<img src="{}" style="height:50px;width:70px;object-fit:cover;border-radius:6px;'
+                'box-shadow:0 2px 6px rgba(0,0,0,0.12);display:block" />'
+                '{}</div>',
                 img.url,
-                '<span style="position:absolute;top:2px;right:2px;background:#c9a227;color:#fff;'
-                'font-size:9px;padding:1px 4px;border-radius:3px">ویژه</span>' if obj.is_featured else '',
+                mark_safe(featured_badge),
             )
-        return format_html('<span style="color:#999">—</span>')
+        return format_html('<span style="color:#9ca3af;font-size:12px">بدون تصویر</span>')
     
     @admin.display(description='موقعیت')
     def location_display(self, obj):
-        parts = [p for p in [obj.area, obj.location, obj.city] if p]
-        return ' • '.join(parts) if parts else '—'
+        parts = [p for p in [obj.city, obj.area] if p]
+        if parts:
+            return format_html(
+                '<span style="color:#374151;font-size:13px">{}</span>',
+                ' • '.join(parts),
+            )
+        return format_html('<span style="color:#9ca3af">—</span>')
     
     @admin.display(description='قیمت')
     def price_display(self, obj):
         if obj.price_label:
             return format_html(
-                '<span style="font-weight:600;color:#1a5f2a">{}</span>',
+                '<span style="font-weight:600;color:#059669;font-size:13px;direction:ltr;display:inline-block">{}</span>',
                 obj.price_label,
             )
         if obj.price:
             formatted_price = f'€{obj.price:,.0f}'
             return format_html(
-                '<span style="font-weight:600;color:#1a5f2a">{}</span>',
+                '<span style="font-weight:600;color:#059669;font-size:13px;direction:ltr;display:inline-block">{}</span>',
                 formatted_price,
             )
-        return '—'
+        return format_html('<span style="color:#9ca3af">—</span>')
     
     @admin.display(description='وضعیت')
     def status_badge(self, obj):
         colors = {
-            'available': ('#059669', '#d1fae5'),
-            'reserved': ('#d97706', '#fef3c7'),
-            'sold_out_soon': ('#dc2626', '#fee2e2'),
-            'sold_out': ('#6b7280', '#f3f4f6'),
+            'available': ('#059669', '#dcfce7'),      # سبز - موجود
+            'reserved': ('#d97706', '#fef3c7'),       # نارنجی - رزرو
+            'sold_out_soon': ('#dc2626', '#fee2e2'),  # قرمز - رو به اتمام
+            'sold_out': ('#6b7280', '#f3f4f6'),       # خاکستری - فروخته شده
         }
-        bg, text_bg = colors.get(obj.status, ('#6b7280', '#f3f4f6'))
+        bg_color, text_bg = colors.get(obj.status, ('#6b7280', '#f3f4f6'))
         return format_html(
-            '<span style="background:{};color:#fff;padding:3px 8px;border-radius:12px;'
-            'font-size:11px;font-weight:500">{}</span>',
-            bg, obj.get_status_display(),
+            '<span style="background:{};color:#fff;padding:4px 10px;border-radius:20px;'
+            'font-size:11px;font-weight:500;white-space:nowrap">{}</span>',
+            bg_color, obj.get_status_display(),
         )
     
     @admin.display(description='عملیات')
     def edit_button(self, obj):
         return format_html(
             '<a href="/fa-admin/persian_cms/faproperty/{}/change/" '
-            'style="background:linear-gradient(135deg,#c9a227,#e8d48a);color:#1a1a2e;'
-            'padding:6px 14px;border-radius:6px;text-decoration:none;font-weight:600;'
+            'style="background:#2563eb;color:#fff;'
+            'padding:6px 12px;border-radius:6px;text-decoration:none;font-weight:500;'
             'font-size:12px;display:inline-flex;align-items:center;gap:4px;'
-            'box-shadow:0 2px 6px rgba(201,162,39,0.3);transition:all 0.2s">'
+            'white-space:nowrap">'
             '✏️ ویرایش</a>',
             obj.pk,
         )
@@ -620,6 +673,1134 @@ class FaPropertyMediaAdmin(PersianBaseAdmin):
         if obj.caption:
             return obj.caption[:50] + '...' if len(obj.caption) > 50 else obj.caption
         return '—'
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# GOLDEN VISA LANDING PAGE ADMIN - PROFESSIONAL PAGE BUILDER
+# مدیریت حرفه‌ای صفحه لندینگ گلدن ویزا
+# ══════════════════════════════════════════════════════════════════════════════
+
+
+# ── Custom Forms with CKEditor5 ───────────────────────────────────────────────
+
+class GVFAQItemForm(forms.ModelForm):
+    """Form with CKEditor5 for FAQ answers."""
+    
+    class Meta:
+        model = GVFAQItem
+        fields = '__all__'
+        widgets = {
+            'answer': CKEditor5Widget(
+                config_name='persian_blog',
+                attrs={'class': 'django_ckeditor_5', 'dir': 'rtl'},
+            ),
+        }
+
+
+class GVBenefitCardForm(forms.ModelForm):
+    """Form with CKEditor5 for benefit descriptions."""
+    
+    class Meta:
+        model = GVBenefitCard
+        fields = '__all__'
+        widgets = {
+            'description': CKEditor5Widget(
+                config_name='persian_blog',
+                attrs={'class': 'django_ckeditor_5', 'dir': 'rtl'},
+            ),
+        }
+
+
+class GVProcessStepForm(forms.ModelForm):
+    """Form with CKEditor5 for process step descriptions."""
+    
+    class Meta:
+        model = GVProcessStep
+        fields = '__all__'
+        widgets = {
+            'description': CKEditor5Widget(
+                config_name='persian_blog',
+                attrs={'class': 'django_ckeditor_5', 'dir': 'rtl'},
+            ),
+        }
+
+
+class GVEligibilityCardForm(forms.ModelForm):
+    """Form with CKEditor5 for eligibility descriptions."""
+    
+    class Meta:
+        model = GVEligibilityCard
+        fields = '__all__'
+        widgets = {
+            'description': CKEditor5Widget(
+                config_name='persian_blog',
+                attrs={'class': 'django_ckeditor_5', 'dir': 'rtl'},
+            ),
+        }
+
+
+# ── Image Preview Mixin ───────────────────────────────────────────────────────
+
+class ImagePreviewMixin:
+    """Mixin to add image preview functionality to admin."""
+    
+    def image_preview(self, obj):
+        """Show image thumbnail preview."""
+        if hasattr(obj, 'main_image') and obj.main_image:
+            return format_html(
+                '<img src="{}" style="max-width:120px;max-height:80px;'
+                'object-fit:cover;border-radius:8px;border:1px solid #ddd;"/>',
+                obj.main_image.url
+            )
+        if hasattr(obj, 'image') and obj.image:
+            return format_html(
+                '<img src="{}" style="max-width:120px;max-height:80px;'
+                'object-fit:cover;border-radius:8px;border:1px solid #ddd;"/>',
+                obj.image.url
+            )
+        if hasattr(obj, 'icon_image') and obj.icon_image:
+            return format_html(
+                '<img src="{}" style="max-width:60px;max-height:60px;'
+                'object-fit:contain;border-radius:4px;"/>',
+                obj.icon_image.url
+            )
+        return '—'
+    image_preview.short_description = 'پیش‌نمایش'
+
+
+# ── Enhanced Inline Classes with Full Fields ──────────────────────────────────
+
+class GVHeroFloatingCardInline(admin.StackedInline):
+    model = GVHeroFloatingCard
+    extra = 0
+    min_num = 0
+    max_num = 5
+    verbose_name = 'کارت شناور'
+    verbose_name_plural = '📌 کارت‌های شناور هیرو'
+    classes = ['collapse']
+    ordering = ['display_order', 'pk']
+    fields = [
+        ('title', 'is_active'),
+        'text',
+        ('icon', 'icon_image'),
+        'display_order',
+    ]
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).order_by('display_order', 'pk')
+
+
+class GVBenefitCardInline(admin.StackedInline):
+    model = GVBenefitCard
+    form = GVBenefitCardForm
+    extra = 0
+    min_num = 0
+    max_num = 12
+    verbose_name = 'کارت مزیت'
+    verbose_name_plural = '⭐ کارت‌های مزایا'
+    classes = ['collapse']
+    ordering = ['display_order', 'pk']
+    fields = [
+        ('title', 'is_active'),
+        'description',
+        ('icon', 'icon_image'),
+        ('card_image', 'display_order'),
+        ('button_text', 'button_link'),
+    ]
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).order_by('display_order', 'pk')
+
+
+class GVEligibilityCardInline(admin.StackedInline):
+    model = GVEligibilityCard
+    form = GVEligibilityCardForm
+    extra = 0
+    min_num = 0
+    max_num = 6
+    verbose_name = 'کارت شرایط'
+    verbose_name_plural = '💰 کارت‌های شرایط سرمایه‌گذاری'
+    classes = ['collapse']
+    ordering = ['display_order', 'pk']
+    fields = [
+        ('investment_amount', 'tier', 'is_active'),
+        ('area_name', 'property_type'),
+        ('minimum_area', 'badge_text'),
+        'description',
+        ('icon', 'icon_image'),
+        ('is_featured', 'display_order'),
+    ]
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).order_by('display_order', 'pk')
+
+
+class GVProcessStepInline(admin.StackedInline):
+    model = GVProcessStep
+    form = GVProcessStepForm
+    extra = 0
+    min_num = 0
+    max_num = 12
+    verbose_name = 'مرحله'
+    verbose_name_plural = '📊 مراحل فرآیند'
+    classes = ['collapse']
+    ordering = ['display_order', 'step_number']
+    fields = [
+        ('step_number', 'title', 'is_active'),
+        'description',
+        ('estimated_time', 'display_order'),
+        ('icon', 'icon_image'),
+        'step_image',
+    ]
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).order_by('display_order', 'step_number')
+
+
+class GVStatItemInline(admin.StackedInline):
+    model = GVStatItem
+    extra = 0
+    min_num = 0
+    max_num = 8
+    verbose_name = 'آیتم آمار'
+    verbose_name_plural = '📈 آیتم‌های آمار'
+    classes = ['collapse']
+    ordering = ['display_order', 'pk']
+    fields = [
+        ('number', 'prefix', 'suffix', 'is_active'),
+        ('label', 'description'),
+        ('icon', 'icon_image'),
+        'display_order',
+    ]
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).order_by('display_order', 'pk')
+
+
+class GVProjectInline(admin.StackedInline):
+    model = GVProject
+    extra = 0
+    min_num = 0
+    max_num = 12
+    verbose_name = 'پروژه'
+    verbose_name_plural = '🏗️ پروژه‌های گلدن ویزا (جدید)'
+    classes = ['collapse']
+    ordering = ['display_order', 'pk']
+    show_change_link = True
+    fields = [
+        ('name', 'status', 'is_active'),
+        'short_description',
+        ('main_image', 'project_video'),
+        ('location_title', 'area'),
+        ('starting_price', 'golden_visa_eligible'),
+        ('progress_percentage', 'delivery_date'),
+        ('cta_text', 'cta_link'),
+        ('google_maps_link', 'display_order'),
+    ]
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).order_by('display_order', 'pk')
+
+
+class GVFaPropertyRelationInline(admin.TabularInline):
+    model = GVFaPropertyRelation
+    extra = 1
+    min_num = 0
+    max_num = 20
+    verbose_name = 'پروژه مرتبط'
+    verbose_name_plural = '🏠 پروژه‌های مرتبط از FaProperty'
+    classes = ['collapse']
+    ordering = ['display_order', 'pk']
+    autocomplete_fields = ['property']
+    fields = ['property', 'display_title', 'badge_text', 'display_order', 'is_active']
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).order_by('display_order', 'pk')
+
+
+class GVFamilyMemberCardInline(admin.StackedInline):
+    model = GVFamilyMemberCard
+    extra = 0
+    min_num = 0
+    max_num = 8
+    verbose_name = 'کارت عضو خانواده'
+    verbose_name_plural = '👨‍👩‍👧 کارت‌های اعضای خانواده'
+    classes = ['collapse']
+    ordering = ['display_order', 'pk']
+    fields = [
+        ('title', 'is_active'),
+        'description',
+        ('icon', 'icon_image'),
+        'display_order',
+    ]
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).order_by('display_order', 'pk')
+
+
+class GVDocumentItemInline(admin.StackedInline):
+    model = GVDocumentItem
+    extra = 0
+    min_num = 0
+    max_num = 20
+    verbose_name = 'مدرک'
+    verbose_name_plural = '📋 مدارک مورد نیاز'
+    classes = ['collapse']
+    ordering = ['display_order', 'pk']
+    fields = [
+        ('title', 'is_required', 'is_active'),
+        'description',
+        ('icon', 'icon_image'),
+        'display_order',
+    ]
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).order_by('display_order', 'pk')
+
+
+class GVCostItemInline(admin.StackedInline):
+    model = GVCostItem
+    extra = 0
+    min_num = 0
+    max_num = 15
+    verbose_name = 'آیتم هزینه'
+    verbose_name_plural = '💵 آیتم‌های هزینه'
+    classes = ['collapse']
+    ordering = ['display_order', 'pk']
+    fields = [
+        ('title', 'is_active'),
+        ('amount', 'currency'),
+        'description',
+        'display_order',
+    ]
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).order_by('display_order', 'pk')
+
+
+class GVTestimonialInline(admin.StackedInline):
+    model = GVTestimonial
+    extra = 0
+    min_num = 0
+    max_num = 10
+    verbose_name = 'نظر مشتری'
+    verbose_name_plural = '💬 نظرات مشتریان'
+    classes = ['collapse']
+    ordering = ['display_order', 'pk']
+    fields = [
+        ('client_name', 'client_country', 'is_active'),
+        'review_text',
+        ('client_image', 'video_url'),
+        ('rating', 'display_order'),
+    ]
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).order_by('display_order', 'pk')
+
+
+class GVFAQItemInline(admin.StackedInline):
+    model = GVFAQItem
+    form = GVFAQItemForm
+    extra = 0
+    min_num = 0
+    max_num = 30
+    verbose_name = 'سوال متداول'
+    verbose_name_plural = '❓ سوالات متداول'
+    classes = ['collapse']
+    ordering = ['display_order', 'pk']
+    fields = [
+        ('question', 'is_active'),
+        'answer',
+        ('category', 'display_order'),
+    ]
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).order_by('display_order', 'pk')
+
+
+class GVProjectUnitInline(admin.TabularInline):
+    model = GVProjectUnit
+    extra = 1
+    fields = ['floor', 'unit_number', 'area_sqm', 'bedrooms', 'bathrooms', 'price', 'status', 'display_order', 'is_active']
+
+
+class GVProjectGalleryImageInline(admin.TabularInline):
+    model = GVProjectGalleryImage
+    extra = 2
+    fields = ['image', 'caption', 'alt_text', 'display_order']
+
+
+# ── Section Inlines with All Fields ───────────────────────────────────────────
+
+class GVHeroSectionInline(admin.StackedInline):
+    model = GVHeroSection
+    extra = 0
+    max_num = 1
+    can_delete = False
+    verbose_name = 'Hero Section'
+    verbose_name_plural = '🎬 بخش هیرو (Hero)'
+    fieldsets = (
+        ('تنظیمات کلی', {
+            'fields': ('is_enabled', 'display_order'),
+        }),
+        ('متن‌های اصلی', {
+            'fields': (
+                'main_title',
+                'highlighted_word',
+                'subtitle',
+                'description',
+            ),
+        }),
+        ('دکمه‌ها', {
+            'fields': (
+                ('primary_cta_text', 'primary_cta_link'),
+                ('secondary_cta_text', 'secondary_cta_link'),
+            ),
+        }),
+        ('تصاویر و ویدیو', {
+            'fields': (
+                'hero_main_visual',
+                'hero_image_alt',
+                ('background_image', 'mobile_background_image'),
+                'background_video',
+            ),
+            'classes': ('collapse',),
+        }),
+    )
+
+
+class GVBenefitsSectionInline(admin.StackedInline):
+    model = GVBenefitsSection
+    extra = 0
+    max_num = 1
+    can_delete = False
+    verbose_name = 'Benefits Section'
+    verbose_name_plural = '⭐ بخش مزایا'
+    fieldsets = (
+        (None, {
+            'fields': (
+                'is_enabled',
+                'section_title',
+                'section_subtitle',
+                'section_description',
+                'background_image',
+                'display_order',
+            ),
+        }),
+    )
+
+
+class GVEligibilitySectionInline(admin.StackedInline):
+    model = GVEligibilitySection
+    extra = 0
+    max_num = 1
+    can_delete = False
+    verbose_name = 'Eligibility Section'
+    verbose_name_plural = '💰 بخش شرایط سرمایه‌گذاری'
+    fieldsets = (
+        (None, {
+            'fields': (
+                'is_enabled',
+                'section_title',
+                'section_subtitle',
+                'section_description',
+                'background_image',
+                ('cta_text', 'cta_link'),
+                'display_order',
+            ),
+        }),
+    )
+
+
+class GVProcessSectionInline(admin.StackedInline):
+    model = GVProcessSection
+    extra = 0
+    max_num = 1
+    can_delete = False
+    verbose_name = 'Process Section'
+    verbose_name_plural = '📊 بخش مراحل'
+    fieldsets = (
+        (None, {
+            'fields': (
+                'is_enabled',
+                'section_title',
+                'section_subtitle',
+                'section_description',
+                'display_order',
+            ),
+        }),
+    )
+
+
+class GVStatisticsSectionInline(admin.StackedInline):
+    model = GVStatisticsSection
+    extra = 0
+    max_num = 1
+    can_delete = False
+    verbose_name = 'Statistics Section'
+    verbose_name_plural = '📈 بخش آمار'
+    fieldsets = (
+        (None, {
+            'fields': (
+                'is_enabled',
+                'section_title',
+                'section_subtitle',
+                'background_image',
+                'display_order',
+            ),
+        }),
+    )
+
+
+class GVProjectsSectionInline(admin.StackedInline):
+    model = GVProjectsSection
+    extra = 0
+    max_num = 1
+    can_delete = False
+    verbose_name = 'Projects Section'
+    verbose_name_plural = '🏗️ بخش پروژه‌ها'
+    fieldsets = (
+        (None, {
+            'fields': (
+                'is_enabled',
+                'section_title',
+                'section_subtitle',
+                'section_description',
+                ('cta_text', 'cta_link'),
+                'display_order',
+            ),
+        }),
+    )
+
+
+class GVFamilySectionInline(admin.StackedInline):
+    model = GVFamilySection
+    extra = 0
+    max_num = 1
+    can_delete = False
+    verbose_name = 'Family Section'
+    verbose_name_plural = '👨‍👩‍👧 بخش خانواده'
+    fieldsets = (
+        (None, {
+            'fields': (
+                'is_enabled',
+                'section_title',
+                'section_subtitle',
+                'section_description',
+                ('main_image', 'background_image'),
+                'display_order',
+            ),
+        }),
+    )
+
+
+class GVDocumentsSectionInline(admin.StackedInline):
+    model = GVDocumentsSection
+    extra = 0
+    max_num = 1
+    can_delete = False
+    verbose_name = 'Documents Section'
+    verbose_name_plural = '📋 بخش مدارک'
+    fieldsets = (
+        (None, {
+            'fields': (
+                'is_enabled',
+                'section_title',
+                'section_subtitle',
+                'section_description',
+                'display_order',
+            ),
+        }),
+    )
+
+
+class GVCostSectionInline(admin.StackedInline):
+    model = GVCostSection
+    extra = 0
+    max_num = 1
+    can_delete = False
+    verbose_name = 'Cost Section'
+    verbose_name_plural = '💵 بخش هزینه‌ها'
+    fieldsets = (
+        (None, {
+            'fields': (
+                'is_enabled',
+                'section_title',
+                'section_subtitle',
+                'section_description',
+                'display_order',
+            ),
+        }),
+    )
+
+
+class GVTestimonialsSectionInline(admin.StackedInline):
+    model = GVTestimonialsSection
+    extra = 0
+    max_num = 1
+    can_delete = False
+    verbose_name = 'Testimonials Section'
+    verbose_name_plural = '💬 بخش نظرات'
+    fieldsets = (
+        (None, {
+            'fields': (
+                'is_enabled',
+                'section_title',
+                'section_subtitle',
+                'section_description',
+                'display_order',
+            ),
+        }),
+    )
+
+
+class GVFAQSectionInline(admin.StackedInline):
+    model = GVFAQSection
+    extra = 0
+    max_num = 1
+    can_delete = False
+    verbose_name = 'FAQ Section'
+    verbose_name_plural = '❓ بخش سوالات متداول'
+    fieldsets = (
+        (None, {
+            'fields': (
+                'is_enabled',
+                'section_title',
+                'section_subtitle',
+                'display_order',
+            ),
+        }),
+    )
+
+
+class GVFinalCTASectionInline(admin.StackedInline):
+    model = GVFinalCTASection
+    extra = 0
+    max_num = 1
+    can_delete = False
+    verbose_name = 'Final CTA Section'
+    verbose_name_plural = '📢 بخش فراخوان نهایی (CTA)'
+    fieldsets = (
+        ('تنظیمات کلی', {
+            'fields': ('is_enabled', 'display_order'),
+        }),
+        ('متن‌ها', {
+            'fields': (
+                'title',
+                'subtitle',
+                'description',
+            ),
+        }),
+        ('دکمه‌ها', {
+            'fields': (
+                ('primary_cta_text', 'primary_cta_link'),
+                ('secondary_cta_text', 'secondary_cta_link'),
+            ),
+        }),
+        ('تماس', {
+            'fields': (
+                ('whatsapp_number', 'phone_number'),
+            ),
+        }),
+        ('تصاویر', {
+            'fields': (
+                'background_image',
+                'background_video',
+            ),
+            'classes': ('collapse',),
+        }),
+    )
+
+
+class GVSEOSettingsInline(admin.StackedInline):
+    model = GVSEOSettings
+    extra = 0
+    max_num = 1
+    can_delete = False
+    verbose_name = 'SEO Settings'
+    verbose_name_plural = '🔍 تنظیمات سئو'
+    fieldsets = (
+        ('متا تگ‌های اصلی', {
+            'fields': (
+                'seo_title',
+                'meta_description',
+                'meta_keywords',
+                'canonical_url',
+            ),
+        }),
+        ('تنظیمات اشتراک‌گذاری (Open Graph)', {
+            'fields': (
+                'og_title',
+                'og_description',
+                ('og_image', 'twitter_image'),
+            ),
+            'classes': ('collapse',),
+        }),
+        ('تنظیمات خزنده‌ها', {
+            'fields': (
+                ('robots_index', 'robots_follow'),
+                'include_in_sitemap',
+            ),
+        }),
+        ('Schema JSON-LD', {
+            'fields': ('schema_json',),
+            'classes': ('collapse',),
+        }),
+    )
+
+
+class GVAnimationSettingsInline(admin.StackedInline):
+    model = GVAnimationSettings
+    extra = 0
+    max_num = 1
+    can_delete = False
+    verbose_name = 'Animation Settings'
+    verbose_name_plural = '✨ تنظیمات انیمیشن'
+    classes = ['collapse']
+    fieldsets = (
+        ('تنظیمات کلی', {
+            'fields': (
+                ('animations_enabled', 'parallax_enabled', 'floating_cards_enabled'),
+                ('animation_duration', 'animation_delay'),
+            ),
+        }),
+        ('انیمیشن بخش‌ها', {
+            'fields': (
+                ('hero_animation', 'benefits_animation'),
+                ('eligibility_animation', 'process_animation'),
+                ('stats_animation', 'projects_animation'),
+                ('family_animation', 'documents_animation'),
+                ('cost_animation', 'testimonials_animation'),
+                ('faq_animation', 'cta_animation'),
+            ),
+            'classes': ('collapse',),
+        }),
+    )
+
+
+class GVDesignSettingsInline(admin.StackedInline):
+    model = GVDesignSettings
+    extra = 0
+    max_num = 1
+    can_delete = False
+    verbose_name = 'Design Settings'
+    verbose_name_plural = '🎨 تنظیمات طراحی'
+    classes = ['collapse']
+    fieldsets = (
+        ('رنگ‌ها', {
+            'fields': (
+                ('primary_color', 'secondary_color'),
+                ('accent_color', 'background_color'),
+                'text_color',
+            ),
+        }),
+        ('استایل', {
+            'fields': (
+                ('card_style', 'font_family'),
+                ('section_spacing', 'border_radius'),
+                'custom_font_url',
+            ),
+        }),
+    )
+
+
+# ── Main Landing Page Admin - Professional Page Builder ───────────────────────
+
+@admin.register(GoldenVisaLandingPage, site=persian_admin_site)
+class GoldenVisaLandingPageAdmin(PersianBaseAdmin):
+    """
+    Professional Page Builder Admin for Golden Visa Landing Page.
+    
+    ویرایشگر حرفه‌ای صفحه لندینگ گلدن ویزا
+    تمام بخش‌های صفحه از یک جا قابل مدیریت هستند.
+    """
+    
+    list_display = ('title', 'slug', 'is_active', 'sections_status', 'updated_at', 'edit_button')
+    prepopulated_fields = {'slug': ('title',)}
+    list_filter = ('is_active',)
+    search_fields = ('title', 'slug')
+    save_on_top = True
+    
+    fieldsets = (
+        ('⚙️ تنظیمات اصلی', {
+            'fields': ('title', 'slug', 'is_active', 'admin_note'),
+            'description': '''
+            <div style="background:#1e3a5f;color:#fff;padding:16px;border-radius:8px;margin-bottom:20px;">
+                <strong style="font-size:16px;">🏗️ Page Builder گلدن ویزا</strong>
+                <p style="margin:8px 0 0 0;opacity:0.9;">
+                    از این صفحه می‌توانید تمام محتوای لندینگ پیج گلدن ویزا را مدیریت کنید.
+                    هر بخش را با کلیک روی عنوان باز کنید و محتوا را ویرایش کنید.
+                </p>
+            </div>
+            ''',
+        }),
+    )
+    
+    inlines = [
+        # Section Settings
+        GVHeroSectionInline,
+        GVBenefitsSectionInline,
+        GVEligibilitySectionInline,
+        GVProcessSectionInline,
+        GVStatisticsSectionInline,
+        GVProjectsSectionInline,
+        GVFamilySectionInline,
+        GVDocumentsSectionInline,
+        GVCostSectionInline,
+        GVTestimonialsSectionInline,
+        GVFAQSectionInline,
+        GVFinalCTASectionInline,
+        # Settings
+        GVSEOSettingsInline,
+        GVAnimationSettingsInline,
+        GVDesignSettingsInline,
+    ]
+    
+    class Media:
+        css = {
+            'all': (
+                'css/persian-admin.css',
+                'css/gv-admin-pagebuilder.css',
+            )
+        }
+        js = ('js/gv-admin-pagebuilder.js',)
+    
+    def get_inline_instances(self, request, obj=None):
+        """Show inlines only when editing existing object."""
+        if obj is None:
+            return []
+        return super().get_inline_instances(request, obj)
+    
+    @admin.display(description='وضعیت بخش‌ها')
+    def sections_status(self, obj):
+        """Show quick status of sections."""
+        sections = []
+        
+        if hasattr(obj, 'hero_section'):
+            hero = obj.hero_section
+            sections.append(('🎬', hero.is_enabled, 'Hero'))
+        
+        if hasattr(obj, 'benefits_section'):
+            sections.append(('⭐', obj.benefits_section.is_enabled, 'Benefits'))
+        
+        if hasattr(obj, 'eligibility_section'):
+            sections.append(('💰', obj.eligibility_section.is_enabled, 'Eligibility'))
+        
+        if hasattr(obj, 'process_section'):
+            sections.append(('📊', obj.process_section.is_enabled, 'Process'))
+        
+        if hasattr(obj, 'faq_section'):
+            sections.append(('❓', obj.faq_section.is_enabled, 'FAQ'))
+        
+        if hasattr(obj, 'seo_settings'):
+            sections.append(('🔍', True, 'SEO'))
+        
+        html_parts = []
+        for icon, enabled, name in sections[:6]:
+            color = '#22c55e' if enabled else '#94a3b8'
+            html_parts.append(
+                f'<span title="{name}" style="color:{color};font-size:14px;">{icon}</span>'
+            )
+        
+        return format_html(
+            '<span style="display:flex;gap:4px;">{}</span>',
+            mark_safe(''.join(html_parts))
+        )
+    
+    @admin.display(description='عملیات')
+    def edit_button(self, obj):
+        return format_html(
+            '<a href="/fa-admin/persian_cms/goldenvisalandingpage/{}/change/" '
+            'class="gv-edit-btn" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);'
+            'color:#fff;padding:8px 16px;border-radius:8px;text-decoration:none;'
+            'font-weight:600;font-size:12px;display:inline-flex;align-items:center;'
+            'gap:6px;white-space:nowrap;box-shadow:0 2px 8px rgba(37,99,235,0.3);'
+            'transition:all 0.2s;">'
+            '✏️ ویرایش کامل</a>',
+            obj.pk,
+        )
+    
+    def save_model(self, request, obj, form, change):
+        """Auto-create related sections on first save."""
+        super().save_model(request, obj, form, change)
+        
+        if not change:
+            # Create all sections for new landing page
+            self._create_default_sections(obj)
+    
+    def _create_default_sections(self, landing_page):
+        """Create default sections for a new landing page."""
+        GVHeroSection.objects.get_or_create(landing_page=landing_page)
+        GVBenefitsSection.objects.get_or_create(landing_page=landing_page)
+        GVEligibilitySection.objects.get_or_create(landing_page=landing_page)
+        GVProcessSection.objects.get_or_create(landing_page=landing_page)
+        GVStatisticsSection.objects.get_or_create(landing_page=landing_page)
+        GVProjectsSection.objects.get_or_create(landing_page=landing_page)
+        GVFamilySection.objects.get_or_create(landing_page=landing_page)
+        GVDocumentsSection.objects.get_or_create(landing_page=landing_page)
+        GVCostSection.objects.get_or_create(landing_page=landing_page)
+        GVTestimonialsSection.objects.get_or_create(landing_page=landing_page)
+        GVFAQSection.objects.get_or_create(landing_page=landing_page)
+        GVFinalCTASection.objects.get_or_create(landing_page=landing_page)
+        GVSEOSettings.objects.get_or_create(landing_page=landing_page)
+        GVAnimationSettings.objects.get_or_create(landing_page=landing_page)
+        GVDesignSettings.objects.get_or_create(landing_page=landing_page)
+
+
+# ── Section Admin Classes with Nested Items ───────────────────────────────────
+
+@admin.register(GVHeroSection, site=persian_admin_site)
+class GVHeroSectionAdmin(PersianBaseAdmin, ImagePreviewMixin):
+    list_display = ('main_title', 'landing_page', 'is_enabled', 'cards_count')
+    list_filter = ('is_enabled',)
+    inlines = [GVHeroFloatingCardInline]
+    
+    fieldsets = (
+        ('تنظیمات', {
+            'fields': ('landing_page', 'is_enabled', 'display_order'),
+        }),
+        ('متن‌ها', {
+            'fields': ('main_title', 'highlighted_word', 'subtitle', 'description'),
+        }),
+        ('دکمه‌ها', {
+            'fields': (
+                ('primary_cta_text', 'primary_cta_link'),
+                ('secondary_cta_text', 'secondary_cta_link'),
+            ),
+        }),
+        ('تصاویر و ویدیو', {
+            'fields': (
+                'hero_main_visual', 'hero_image_alt',
+                'background_image', 'mobile_background_image',
+                'background_video',
+            ),
+            'classes': ('collapse',),
+        }),
+    )
+    
+    @admin.display(description='کارت‌های شناور')
+    def cards_count(self, obj):
+        count = obj.floating_cards.count()
+        return f'{count} کارت'
+
+
+@admin.register(GVBenefitsSection, site=persian_admin_site)
+class GVBenefitsSectionAdmin(PersianBaseAdmin):
+    list_display = ('section_title', 'landing_page', 'is_enabled', 'cards_count')
+    list_filter = ('is_enabled',)
+    inlines = [GVBenefitCardInline]
+    
+    @admin.display(description='کارت‌های مزیت')
+    def cards_count(self, obj):
+        count = obj.benefit_cards.count()
+        return f'{count} کارت'
+
+
+@admin.register(GVEligibilitySection, site=persian_admin_site)
+class GVEligibilitySectionAdmin(PersianBaseAdmin):
+    list_display = ('section_title', 'landing_page', 'is_enabled', 'cards_count')
+    list_filter = ('is_enabled',)
+    inlines = [GVEligibilityCardInline]
+    
+    @admin.display(description='کارت‌های شرایط')
+    def cards_count(self, obj):
+        count = obj.eligibility_cards.count()
+        return f'{count} کارت'
+
+
+@admin.register(GVProcessSection, site=persian_admin_site)
+class GVProcessSectionAdmin(PersianBaseAdmin):
+    list_display = ('section_title', 'landing_page', 'is_enabled', 'steps_count')
+    list_filter = ('is_enabled',)
+    inlines = [GVProcessStepInline]
+    
+    @admin.display(description='مراحل')
+    def steps_count(self, obj):
+        count = obj.steps.count()
+        return f'{count} مرحله'
+
+
+@admin.register(GVStatisticsSection, site=persian_admin_site)
+class GVStatisticsSectionAdmin(PersianBaseAdmin):
+    list_display = ('section_title', 'landing_page', 'is_enabled', 'items_count')
+    list_filter = ('is_enabled',)
+    inlines = [GVStatItemInline]
+    
+    @admin.display(description='آیتم‌ها')
+    def items_count(self, obj):
+        count = obj.stat_items.count()
+        return f'{count} آیتم'
+
+
+@admin.register(GVProjectsSection, site=persian_admin_site)
+class GVProjectsSectionAdmin(PersianBaseAdmin):
+    list_display = ('section_title', 'landing_page', 'is_enabled', 'projects_count', 'relations_count')
+    list_filter = ('is_enabled',)
+    inlines = [GVProjectInline, GVFaPropertyRelationInline]
+    
+    fieldsets = (
+        ('تنظیمات بخش', {
+            'fields': ('landing_page', 'is_enabled', 'display_order'),
+        }),
+        ('محتوا', {
+            'fields': ('section_title', 'section_subtitle', 'section_description'),
+        }),
+        ('دکمه CTA', {
+            'fields': ('cta_text', 'cta_link'),
+        }),
+    )
+    
+    @admin.display(description='پروژه‌های جدید')
+    def projects_count(self, obj):
+        count = obj.projects.count()
+        return f'{count} پروژه'
+    
+    @admin.display(description='پروژه‌های FaProperty')
+    def relations_count(self, obj):
+        count = obj.property_relations.count()
+        return f'{count} پروژه'
+
+
+@admin.register(GVProject, site=persian_admin_site)
+class GVProjectAdmin(PersianBaseAdmin, ImagePreviewMixin):
+    list_display = ('name', 'image_preview', 'starting_price', 'status', 'golden_visa_eligible', 'display_order', 'is_active')
+    list_filter = ('status', 'golden_visa_eligible', 'is_active')
+    search_fields = ('name', 'area', 'location_title')
+    list_editable = ('display_order', 'is_active')
+    inlines = [GVProjectUnitInline, GVProjectGalleryImageInline]
+    
+    fieldsets = (
+        ('اطلاعات پروژه', {
+            'fields': ('projects_section', 'name', 'short_description', 'is_active'),
+        }),
+        ('رسانه', {
+            'fields': ('main_image', 'project_video'),
+        }),
+        ('موقعیت', {
+            'fields': ('location_title', 'area', 'google_maps_link'),
+        }),
+        ('قیمت و وضعیت', {
+            'fields': (
+                ('starting_price', 'golden_visa_eligible'),
+                ('status', 'progress_percentage'),
+                'delivery_date',
+            ),
+        }),
+        ('دکمه CTA', {
+            'fields': ('cta_text', 'cta_link', 'display_order'),
+        }),
+    )
+
+
+@admin.register(GVFaPropertyRelation, site=persian_admin_site)
+class GVFaPropertyRelationAdmin(PersianBaseAdmin):
+    list_display = ('get_title', 'property', 'badge_text', 'display_order', 'is_active')
+    list_filter = ('is_active',)
+    search_fields = ('display_title', 'property__name')
+    list_editable = ('display_order', 'is_active')
+    autocomplete_fields = ['property']
+    
+    @admin.display(description='عنوان نمایشی')
+    def get_title(self, obj):
+        return obj.display_title or obj.property.name
+
+
+@admin.register(GVFamilySection, site=persian_admin_site)
+class GVFamilySectionAdmin(PersianBaseAdmin):
+    list_display = ('section_title', 'landing_page', 'is_enabled', 'cards_count')
+    list_filter = ('is_enabled',)
+    inlines = [GVFamilyMemberCardInline]
+    
+    @admin.display(description='کارت‌ها')
+    def cards_count(self, obj):
+        count = obj.member_cards.count()
+        return f'{count} کارت'
+
+
+@admin.register(GVDocumentsSection, site=persian_admin_site)
+class GVDocumentsSectionAdmin(PersianBaseAdmin):
+    list_display = ('section_title', 'landing_page', 'is_enabled', 'items_count')
+    list_filter = ('is_enabled',)
+    inlines = [GVDocumentItemInline]
+    
+    @admin.display(description='مدارک')
+    def items_count(self, obj):
+        count = obj.document_items.count()
+        return f'{count} مدرک'
+
+
+@admin.register(GVCostSection, site=persian_admin_site)
+class GVCostSectionAdmin(PersianBaseAdmin):
+    list_display = ('section_title', 'landing_page', 'is_enabled', 'items_count')
+    list_filter = ('is_enabled',)
+    inlines = [GVCostItemInline]
+    
+    @admin.display(description='هزینه‌ها')
+    def items_count(self, obj):
+        count = obj.cost_items.count()
+        return f'{count} آیتم'
+
+
+@admin.register(GVTestimonialsSection, site=persian_admin_site)
+class GVTestimonialsSectionAdmin(PersianBaseAdmin):
+    list_display = ('section_title', 'landing_page', 'is_enabled', 'items_count')
+    list_filter = ('is_enabled',)
+    inlines = [GVTestimonialInline]
+    
+    @admin.display(description='نظرات')
+    def items_count(self, obj):
+        count = obj.testimonials.count()
+        return f'{count} نظر'
+
+
+@admin.register(GVFAQSection, site=persian_admin_site)
+class GVFAQSectionAdmin(PersianBaseAdmin):
+    list_display = ('section_title', 'landing_page', 'is_enabled', 'items_count')
+    list_filter = ('is_enabled',)
+    inlines = [GVFAQItemInline]
+    
+    @admin.display(description='سوالات')
+    def items_count(self, obj):
+        count = obj.faq_items.count()
+        return f'{count} سوال'
+
+
+@admin.register(GVFinalCTASection, site=persian_admin_site)
+class GVFinalCTASectionAdmin(PersianBaseAdmin):
+    list_display = ('title', 'landing_page', 'is_enabled')
+    list_filter = ('is_enabled',)
+
+
+@admin.register(GVSEOSettings, site=persian_admin_site)
+class GVSEOSettingsAdmin(PersianBaseAdmin):
+    list_display = ('seo_title', 'landing_page', 'robots_index', 'include_in_sitemap')
+    
+    fieldsets = (
+        ('متا تگ‌ها', {
+            'fields': ('landing_page', 'seo_title', 'meta_description', 'meta_keywords', 'canonical_url'),
+        }),
+        ('Open Graph', {
+            'fields': ('og_title', 'og_description', 'og_image', 'twitter_image'),
+            'classes': ('collapse',),
+        }),
+        ('ربات‌ها', {
+            'fields': ('robots_index', 'robots_follow', 'include_in_sitemap'),
+        }),
+        ('Schema', {
+            'fields': ('schema_json',),
+            'classes': ('collapse',),
+        }),
+    )
+
+
+@admin.register(GVAnimationSettings, site=persian_admin_site)
+class GVAnimationSettingsAdmin(PersianBaseAdmin):
+    list_display = ('landing_page', 'animations_enabled', 'parallax_enabled')
+
+
+@admin.register(GVDesignSettings, site=persian_admin_site)
+class GVDesignSettingsAdmin(PersianBaseAdmin):
+    list_display = ('landing_page', 'card_style', 'font_family', 'primary_color')
 
 
 def _register_legacy_fa_models():

@@ -1,0 +1,341 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   Golden Visa Admin Page Builder Styles
+   استایل‌های صفحه‌ساز ادمین گلدن ویزا
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* ── Tab-like Fieldsets ───────────────────────────────────────────────────────── */
+.model-goldenvisalandingpage .inline-group {
+    margin-top: 24px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.model-goldenvisalandingpage .inline-group h2 {
+    background: linear-gradient(135deg, #1e3a5f 0%, #0f2847 100%);
+    color: #fff;
+    padding: 14px 20px;
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.model-goldenvisalandingpage .inline-group h2:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+}
+
+.model-goldenvisalandingpage .inline-group.collapsed h2 {
+    border-radius: 12px;
+}
+
+.model-goldenvisalandingpage .inline-group h2::before {
+    content: '▼';
+    font-size: 10px;
+    opacity: 0.7;
+    transition: transform 0.2s;
+}
+
+.model-goldenvisalandingpage .inline-group.collapsed h2::before {
+    transform: rotate(-90deg);
+}
+
+/* ── Section Cards ────────────────────────────────────────────────────────────── */
+.model-goldenvisalandingpage .inline-related {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    margin: 16px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.model-goldenvisalandingpage .inline-related h3 {
+    background: #f8fafc;
+    margin: -16px -16px 16px -16px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 14px;
+    color: #374151;
+    border-radius: 8px 8px 0 0;
+}
+
+/* ── Form Fields ──────────────────────────────────────────────────────────────── */
+.model-goldenvisalandingpage .form-row {
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.model-goldenvisalandingpage .form-row:last-child {
+    border-bottom: none;
+}
+
+.model-goldenvisalandingpage label {
+    font-weight: 600;
+    color: #374151;
+    font-size: 13px;
+    min-width: 140px;
+}
+
+.model-goldenvisalandingpage .help {
+    color: #6b7280;
+    font-size: 11px;
+    margin-top: 4px;
+    display: block;
+}
+
+/* ── Image Preview ────────────────────────────────────────────────────────────── */
+.model-goldenvisalandingpage .file-upload img {
+    max-width: 200px;
+    max-height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+    margin-top: 8px;
+}
+
+/* ── Inline Items (Cards, Steps, etc.) ────────────────────────────────────────── */
+.model-goldenvisalandingpage .tabular td,
+.model-goldenvisalandingpage .tabular th {
+    padding: 12px 8px;
+    font-size: 13px;
+}
+
+.model-goldenvisalandingpage .tabular th {
+    background: #f8fafc;
+    font-weight: 600;
+    color: #475569;
+}
+
+.model-goldenvisalandingpage .tabular tr.has_original {
+    background: #fefefe;
+}
+
+.model-goldenvisalandingpage .tabular tr.add-row {
+    background: #f0fdf4;
+}
+
+/* ── Stacked Inlines (Better Layout) ──────────────────────────────────────────── */
+.model-goldenvisalandingpage .stacked {
+    background: #fff;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.model-goldenvisalandingpage .stacked h3 {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    padding: 12px 16px;
+    margin: 0;
+    font-size: 14px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.model-goldenvisalandingpage .stacked .inline_label {
+    font-weight: 600;
+    color: #1e40af;
+}
+
+.model-goldenvisalandingpage .stacked fieldset {
+    padding: 16px;
+    margin: 0;
+}
+
+/* ── CKEditor Integration ─────────────────────────────────────────────────────── */
+.model-goldenvisalandingpage .django_ckeditor_5 {
+    direction: rtl;
+    min-height: 200px;
+}
+
+.model-goldenvisalandingpage .ck-editor__editable {
+    min-height: 150px !important;
+    direction: rtl;
+    text-align: right;
+}
+
+/* ── Toggle Switches (for Boolean Fields) ─────────────────────────────────────── */
+.model-goldenvisalandingpage input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #2563eb;
+}
+
+/* ── Status Indicators ────────────────────────────────────────────────────────── */
+.gv-status-enabled {
+    background: #dcfce7;
+    color: #166534;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.gv-status-disabled {
+    background: #f1f5f9;
+    color: #64748b;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* ── Edit Button ──────────────────────────────────────────────────────────────── */
+.gv-edit-btn:hover {
+    background: linear-gradient(135deg, #1d4ed8, #1e40af) !important;
+    box-shadow: 0 4px 12px rgba(37,99,235,0.4) !important;
+    transform: translateY(-1px);
+}
+
+/* ── Page Builder Header ──────────────────────────────────────────────────────── */
+.model-goldenvisalandingpage #content > h1 {
+    background: linear-gradient(135deg, #1e3a5f 0%, #0f2847 100%);
+    color: #fff;
+    padding: 20px 24px;
+    margin: -20px -24px 24px -24px;
+    border-radius: 0;
+}
+
+.model-goldenvisalandingpage #content > h1::before {
+    content: '🏗️ ';
+    font-size: 24px;
+}
+
+/* ── Save Buttons ─────────────────────────────────────────────────────────────── */
+.model-goldenvisalandingpage .submit-row {
+    background: #f8fafc;
+    padding: 16px 24px;
+    border-radius: 12px;
+    margin-top: 24px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    position: sticky;
+    bottom: 16px;
+    z-index: 100;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.1);
+}
+
+.model-goldenvisalandingpage .submit-row input[type="submit"] {
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.model-goldenvisalandingpage .submit-row input[name="_save"] {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: #fff;
+}
+
+.model-goldenvisalandingpage .submit-row input[name="_save"]:hover {
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    transform: translateY(-1px);
+}
+
+.model-goldenvisalandingpage .submit-row input[name="_continue"] {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #fff;
+}
+
+.model-goldenvisalandingpage .submit-row input[name="_continue"]:hover {
+    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    transform: translateY(-1px);
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .model-goldenvisalandingpage .inline-group h2 {
+        font-size: 13px;
+        padding: 12px 16px;
+    }
+    
+    .model-goldenvisalandingpage .form-row {
+        flex-direction: column;
+    }
+    
+    .model-goldenvisalandingpage .form-row label {
+        min-width: auto;
+        margin-bottom: 4px;
+    }
+}
+
+/* ── RTL Support ──────────────────────────────────────────────────────────────── */
+html[dir="rtl"] .model-goldenvisalandingpage .inline-group h2::before {
+    content: '◀';
+}
+
+html[dir="rtl"] .model-goldenvisalandingpage .inline-group.collapsed h2::before {
+    transform: rotate(90deg);
+}
+
+/* ── Nested Inline Links ──────────────────────────────────────────────────────── */
+.gv-nested-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.gv-nested-link:hover {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+/* ── Section Count Badges ─────────────────────────────────────────────────────── */
+.gv-count-badge {
+    background: #fff;
+    color: #1e40af;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+/* ── Drag Handle for Reordering ───────────────────────────────────────────────── */
+.gv-drag-handle {
+    cursor: grab;
+    color: #9ca3af;
+    padding: 4px;
+}
+
+.gv-drag-handle:hover {
+    color: #6b7280;
+}
+
+/* ── Section Preview ──────────────────────────────────────────────────────────── */
+.gv-section-preview {
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 8px;
+    padding: 12px;
+    margin: 8px 0;
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* ── Fieldset Descriptions (Info Boxes) ───────────────────────────────────────── */
+.model-goldenvisalandingpage fieldset.module .description {
+    margin-bottom: 16px;
+}
+
+.model-goldenvisalandingpage fieldset.module .description div {
+    border-radius: 8px;
+}
