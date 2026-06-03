@@ -1285,6 +1285,71 @@ class GoldenVisaLandingPage(GVBaseModel):
         help_text='تصویر برای اشتراک‌گذاری (1200x630 پیکسل)',
     )
     
+    # ── Style Settings (تنظیمات استایل) ────────────────────────────────────────
+    FONT_CHOICES = [
+        ('Vazirmatn', 'وزیرمتن'),
+        ('IRANSans', 'ایران سنس'),
+        ('Yekan', 'یکان'),
+        ('Samim', 'صمیم'),
+        ('Shabnam', 'شبنم'),
+        ('Tahoma', 'تاهوما'),
+    ]
+    
+    style_font_family = models.CharField(
+        max_length=50,
+        choices=FONT_CHOICES,
+        default='Vazirmatn',
+        verbose_name='فونت اصلی',
+    )
+    style_primary_color = models.CharField(
+        max_length=20,
+        default='#c9a227',
+        verbose_name='رنگ اصلی (طلایی)',
+        help_text='رنگ دکمه‌ها و آیکون‌ها - مثال: #c9a227',
+    )
+    style_secondary_color = models.CharField(
+        max_length=20,
+        default='#0a1530',
+        verbose_name='رنگ ثانویه (تیره)',
+        help_text='رنگ پس‌زمینه هیرو و سکشن‌ها - مثال: #0a1530',
+    )
+    style_hero_title_size = models.CharField(
+        max_length=20,
+        default='3.5rem',
+        verbose_name='سایز عنوان هیرو',
+        help_text='مثال: 3rem, 3.5rem, 4rem',
+    )
+    style_section_title_size = models.CharField(
+        max_length=20,
+        default='2.4rem',
+        verbose_name='سایز عنوان سکشن‌ها',
+        help_text='مثال: 2rem, 2.4rem, 2.8rem',
+    )
+    style_body_text_size = models.CharField(
+        max_length=20,
+        default='1.1rem',
+        verbose_name='سایز متن بدنه',
+        help_text='مثال: 1rem, 1.1rem, 1.2rem',
+    )
+    style_button_radius = models.CharField(
+        max_length=20,
+        default='14px',
+        verbose_name='گردی دکمه‌ها',
+        help_text='مثال: 8px, 12px, 14px, 50px',
+    )
+    style_card_radius = models.CharField(
+        max_length=20,
+        default='20px',
+        verbose_name='گردی کارت‌ها',
+        help_text='مثال: 12px, 16px, 20px, 24px',
+    )
+    style_hero_overlay_opacity = models.CharField(
+        max_length=10,
+        default='0.85',
+        verbose_name='شفافیت overlay هیرو',
+        help_text='عدد بین 0 تا 1 - مثال: 0.7, 0.85, 0.9',
+    )
+    
     class Meta:
         db_table = 'gv_landing_page'
         verbose_name = 'صفحه لندینگ گلدن ویزا'

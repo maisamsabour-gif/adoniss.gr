@@ -1467,6 +1467,17 @@ class GoldenVisaLandingPageAdmin(PersianBaseAdmin):
         ('تنظیمات اصلی', {
             'fields': ('title', 'slug', 'is_active'),
         }),
+        ('🎨 تنظیمات استایل', {
+            'fields': (
+                'style_font_family',
+                ('style_primary_color', 'style_secondary_color'),
+                ('style_hero_title_size', 'style_section_title_size', 'style_body_text_size'),
+                ('style_button_radius', 'style_card_radius'),
+                'style_hero_overlay_opacity',
+            ),
+            'classes': ('collapse',),
+            'description': 'تنظیمات فونت، رنگ و سایز المان‌های صفحه',
+        }),
         ('هیرو (Hero Section)', {
             'fields': (
                 'hero_title',

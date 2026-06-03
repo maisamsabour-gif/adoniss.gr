@@ -341,10 +341,11 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-    --gv-gold: #c9a227;
-    --gv-gold-light: #e8c547;
-    --gv-navy: #0a1530;
-    --gv-navy-light: #142448;
+    /* Dynamic styles from admin panel */
+    --gv-gold: {{ landing.style_primary_color|default:"#c9a227" }};
+    --gv-gold-light: {{ landing.style_primary_color|default:"#c9a227" }}cc;
+    --gv-navy: {{ landing.style_secondary_color|default:"#0a1530" }};
+    --gv-navy-light: {{ landing.style_secondary_color|default:"#0a1530" }}dd;
     --gv-white: #ffffff;
     --gv-gray: #f4f6f8;
     --gv-text: #1a1a2e;
@@ -352,11 +353,20 @@
     --gv-glass: rgba(255, 255, 255, 0.1);
     --gv-glass-border: rgba(255, 255, 255, 0.2);
     --gv-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    --gv-font: 'Vazirmatn', 'IRANSans', Tahoma, sans-serif;
+    --gv-font: '{{ landing.style_font_family|default:"Vazirmatn" }}', 'IRANSans', Tahoma, sans-serif;
+    
+    /* Size variables */
+    --gv-hero-title-size: {{ landing.style_hero_title_size|default:"3.5rem" }};
+    --gv-section-title-size: {{ landing.style_section_title_size|default:"2.4rem" }};
+    --gv-body-text-size: {{ landing.style_body_text_size|default:"1.1rem" }};
+    --gv-button-radius: {{ landing.style_button_radius|default:"14px" }};
+    --gv-card-radius: {{ landing.style_card_radius|default:"20px" }};
+    --gv-hero-overlay-opacity: {{ landing.style_hero_overlay_opacity|default:"0.85" }};
 }
 
 .gv-landing {
     font-family: var(--gv-font);
+    font-size: var(--gv-body-text-size);
     line-height: 1.9;
     color: var(--gv-text);
     overflow-x: hidden;
@@ -387,7 +397,8 @@
 .gv-hero-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(10,21,48,0.92) 0%, rgba(20,36,72,0.88) 100%);
+    background: linear-gradient(135deg, var(--gv-navy) 0%, var(--gv-navy-light) 100%);
+    opacity: var(--gv-hero-overlay-opacity);
     z-index: 1;
 }
 
@@ -455,7 +466,7 @@
 
 /* Hero Title */
 .gv-hero-title {
-    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-size: clamp(2rem, 5vw, var(--gv-hero-title-size));
     font-weight: 900;
     color: var(--gv-white);
     margin: 0 0 20px;
@@ -485,7 +496,7 @@
     align-items: center;
     gap: 12px;
     padding: 16px 32px;
-    border-radius: 14px;
+    border-radius: var(--gv-button-radius);
     font-size: 1rem;
     font-weight: 700;
     text-decoration: none;
@@ -697,7 +708,7 @@
 }
 
 .gv-section-title {
-    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-size: clamp(1.6rem, 3vw, var(--gv-section-title-size));
     font-weight: 800;
     color: var(--gv-navy);
     margin: 0 0 16px;
@@ -772,7 +783,7 @@
     background: rgba(255,255,255,0.05);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 20px;
+    border-radius: var(--gv-card-radius);
     padding: 32px 20px;
     text-align: center;
     transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
