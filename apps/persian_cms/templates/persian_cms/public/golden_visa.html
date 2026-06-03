@@ -1,6 +1,13 @@
 {% extends "persian_cms/public/base.html" %}
 {% load static %}
 
+{% block extra_head %}
+<!-- AOS Animation Library -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<!-- Font Awesome Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+{% endblock %}
+
 {% block content %}
 {% include "fa_new/_header.html" %}
 
@@ -8,20 +15,73 @@
     
     {% if landing %}
     
-    <!-- Hero Section -->
+    <!-- Hero Section with Parallax -->
     {% if landing.hero_title or landing.hero_image %}
-    <section class="gv-hero" {% if landing.hero_image %}style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), url('{{ landing.hero_image.url }}');"{% endif %}>
-        <div class="gv-container">
-            <h1 class="gv-hero-title">{{ landing.hero_title|default:landing.title }}</h1>
-            {% if landing.hero_subtitle %}
-            <p class="gv-hero-subtitle">{{ landing.hero_subtitle }}</p>
-            {% endif %}
-            {% if landing.hero_cta_text %}
-            <a href="{{ landing.hero_cta_link|default:'#contact' }}" class="gv-btn gv-btn-primary">
-                {{ landing.hero_cta_text }}
-            </a>
-            {% endif %}
+    <section class="gv-hero" {% if landing.hero_image %}style="background-image: linear-gradient(rgba(10,21,48,0.75), rgba(10,21,48,0.85)), url('{{ landing.hero_image.url }}');"{% endif %}>
+        
+        <!-- Animated Particles Background -->
+        <div class="gv-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
         </div>
+        
+        <div class="gv-container">
+            <div class="gv-hero-badge" data-aos="fade-down" data-aos-delay="100">
+                <i class="fas fa-crown"></i>
+                <span>گلدن ویزا</span>
+            </div>
+            
+            <h1 class="gv-hero-title" data-aos="fade-up" data-aos-delay="200">
+                {{ landing.hero_title|default:landing.title }}
+            </h1>
+            
+            {% if landing.hero_subtitle %}
+            <p class="gv-hero-subtitle" data-aos="fade-up" data-aos-delay="300">
+                {{ landing.hero_subtitle }}
+            </p>
+            {% endif %}
+            
+            {% if landing.hero_cta_text %}
+            <div class="gv-hero-ctas" data-aos="fade-up" data-aos-delay="400">
+                <a href="{{ landing.hero_cta_link|default:'#contact' }}" class="gv-btn gv-btn-primary gv-btn-glow">
+                    <i class="fas fa-paper-plane"></i>
+                    {{ landing.hero_cta_text }}
+                </a>
+                <a href="#intro" class="gv-btn gv-btn-outline">
+                    <i class="fas fa-info-circle"></i>
+                    اطلاعات بیشتر
+                </a>
+            </div>
+            {% endif %}
+            
+            <!-- Floating Stats -->
+            <div class="gv-hero-stats" data-aos="fade-up" data-aos-delay="500">
+                <div class="gv-stat">
+                    <div class="gv-stat-icon"><i class="fas fa-passport"></i></div>
+                    <div class="gv-stat-number" data-count="250">۲۵۰<span>+</span></div>
+                    <div class="gv-stat-label">ویزای موفق</div>
+                </div>
+                <div class="gv-stat">
+                    <div class="gv-stat-icon"><i class="fas fa-building"></i></div>
+                    <div class="gv-stat-number" data-count="100">۱۰۰<span>+</span></div>
+                    <div class="gv-stat-label">پروژه فعال</div>
+                </div>
+                <div class="gv-stat">
+                    <div class="gv-stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="gv-stat-number" data-count="15">۱۵<span>+</span></div>
+                    <div class="gv-stat-label">سال تجربه</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="gv-scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        
         {% if landing.hero_video %}
         <video class="gv-hero-video" autoplay muted loop playsinline>
             <source src="{{ landing.hero_video.url }}" type="video/mp4">
@@ -32,27 +92,66 @@
     
     <!-- Intro Section -->
     {% if landing.intro_title or landing.intro_body %}
-    <section class="gv-section gv-intro">
+    <section id="intro" class="gv-section gv-intro">
         <div class="gv-container">
-            {% if landing.intro_title %}
-            <h2 class="gv-section-title">{{ landing.intro_title }}</h2>
-            {% endif %}
+            <div class="gv-section-header" data-aos="fade-up">
+                <span class="gv-section-tag"><i class="fas fa-lightbulb"></i> آشنایی</span>
+                {% if landing.intro_title %}
+                <h2 class="gv-section-title">{{ landing.intro_title }}</h2>
+                {% endif %}
+            </div>
             {% if landing.intro_body %}
-            <div class="gv-content">{{ landing.intro_body|safe }}</div>
+            <div class="gv-content gv-content-card" data-aos="fade-up" data-aos-delay="100">
+                {{ landing.intro_body|safe }}
+            </div>
             {% endif %}
         </div>
     </section>
     {% endif %}
     
-    <!-- Benefits Section -->
+    <!-- Benefits Section with Cards -->
     {% if landing.benefits_title or landing.benefits_body %}
     <section class="gv-section gv-benefits">
         <div class="gv-container">
-            {% if landing.benefits_title %}
-            <h2 class="gv-section-title">{{ landing.benefits_title }}</h2>
-            {% endif %}
+            <div class="gv-section-header" data-aos="fade-up">
+                <span class="gv-section-tag"><i class="fas fa-star"></i> مزایا</span>
+                {% if landing.benefits_title %}
+                <h2 class="gv-section-title">{{ landing.benefits_title }}</h2>
+                {% endif %}
+            </div>
+            
+            <!-- Benefits Icons Grid -->
+            <div class="gv-benefits-icons" data-aos="fade-up" data-aos-delay="100">
+                <div class="gv-benefit-icon-card">
+                    <div class="gv-icon-wrapper"><i class="fas fa-plane-departure"></i></div>
+                    <span>سفر آزاد</span>
+                </div>
+                <div class="gv-benefit-icon-card">
+                    <div class="gv-icon-wrapper"><i class="fas fa-graduation-cap"></i></div>
+                    <span>تحصیل</span>
+                </div>
+                <div class="gv-benefit-icon-card">
+                    <div class="gv-icon-wrapper"><i class="fas fa-briefcase"></i></div>
+                    <span>کسب و کار</span>
+                </div>
+                <div class="gv-benefit-icon-card">
+                    <div class="gv-icon-wrapper"><i class="fas fa-home"></i></div>
+                    <span>اقامت</span>
+                </div>
+                <div class="gv-benefit-icon-card">
+                    <div class="gv-icon-wrapper"><i class="fas fa-heart"></i></div>
+                    <span>بهداشت</span>
+                </div>
+                <div class="gv-benefit-icon-card">
+                    <div class="gv-icon-wrapper"><i class="fas fa-shield-alt"></i></div>
+                    <span>امنیت</span>
+                </div>
+            </div>
+            
             {% if landing.benefits_body %}
-            <div class="gv-content">{{ landing.benefits_body|safe }}</div>
+            <div class="gv-content" data-aos="fade-up" data-aos-delay="200">
+                {{ landing.benefits_body|safe }}
+            </div>
             {% endif %}
         </div>
     </section>
@@ -62,48 +161,67 @@
     {% if landing.requirements_title or landing.requirements_body %}
     <section class="gv-section gv-requirements">
         <div class="gv-container">
-            {% if landing.requirements_title %}
-            <h2 class="gv-section-title">{{ landing.requirements_title }}</h2>
-            {% endif %}
+            <div class="gv-section-header" data-aos="fade-up">
+                <span class="gv-section-tag"><i class="fas fa-clipboard-check"></i> شرایط</span>
+                {% if landing.requirements_title %}
+                <h2 class="gv-section-title">{{ landing.requirements_title }}</h2>
+                {% endif %}
+            </div>
             {% if landing.requirements_body %}
-            <div class="gv-content">{{ landing.requirements_body|safe }}</div>
+            <div class="gv-content gv-content-card" data-aos="fade-up" data-aos-delay="100">
+                {{ landing.requirements_body|safe }}
+            </div>
             {% endif %}
         </div>
     </section>
     {% endif %}
     
-    <!-- Process Section -->
+    <!-- Process Section with Timeline -->
     {% if landing.process_title or landing.process_body %}
     <section class="gv-section gv-process">
         <div class="gv-container">
-            {% if landing.process_title %}
-            <h2 class="gv-section-title">{{ landing.process_title }}</h2>
-            {% endif %}
+            <div class="gv-section-header" data-aos="fade-up">
+                <span class="gv-section-tag"><i class="fas fa-route"></i> مراحل</span>
+                {% if landing.process_title %}
+                <h2 class="gv-section-title">{{ landing.process_title }}</h2>
+                {% endif %}
+            </div>
             {% if landing.process_body %}
-            <div class="gv-content">{{ landing.process_body|safe }}</div>
+            <div class="gv-content gv-timeline-content" data-aos="fade-up" data-aos-delay="100">
+                {{ landing.process_body|safe }}
+            </div>
             {% endif %}
         </div>
     </section>
     {% endif %}
     
-    <!-- FAQ Section -->
+    <!-- FAQ Section with Accordion -->
     {% if landing.faq_title or landing.faq_body %}
     <section class="gv-section gv-faq">
         <div class="gv-container">
-            {% if landing.faq_title %}
-            <h2 class="gv-section-title">{{ landing.faq_title }}</h2>
-            {% endif %}
+            <div class="gv-section-header" data-aos="fade-up">
+                <span class="gv-section-tag"><i class="fas fa-question-circle"></i> سوالات</span>
+                {% if landing.faq_title %}
+                <h2 class="gv-section-title">{{ landing.faq_title }}</h2>
+                {% endif %}
+            </div>
             {% if landing.faq_body %}
-            <div class="gv-content">{{ landing.faq_body|safe }}</div>
+            <div class="gv-content gv-faq-content" data-aos="fade-up" data-aos-delay="100">
+                {{ landing.faq_body|safe }}
+            </div>
             {% endif %}
         </div>
     </section>
     {% endif %}
     
-    <!-- CTA Banner -->
+    <!-- CTA Banner with Gradient -->
     {% if landing.cta_banner_title or landing.cta_banner_text %}
     <section class="gv-section gv-cta-banner">
-        <div class="gv-container">
+        <div class="gv-cta-bg"></div>
+        <div class="gv-container" data-aos="zoom-in">
+            <div class="gv-cta-icon">
+                <i class="fas fa-rocket"></i>
+            </div>
             {% if landing.cta_banner_title %}
             <h2 class="gv-cta-title">{{ landing.cta_banner_title }}</h2>
             {% endif %}
@@ -111,14 +229,16 @@
             <p class="gv-cta-text">{{ landing.cta_banner_text }}</p>
             {% endif %}
             {% if landing.cta_banner_button %}
-            <a href="#contact" class="gv-btn gv-btn-primary">{{ landing.cta_banner_button }}</a>
+            <a href="#contact" class="gv-btn gv-btn-cta gv-btn-glow">
+                <i class="fas fa-arrow-left"></i>
+                {{ landing.cta_banner_button }}
+            </a>
             {% endif %}
         </div>
     </section>
     {% endif %}
     
     {% else %}
-    <!-- Fallback if no landing page -->
     <section class="gv-section">
         <div class="gv-container">
             <h1>گلدن ویزای یونان</h1>
@@ -130,11 +250,16 @@
 </main>
 
 <style>
-/* Golden Visa Landing Page Styles */
+/* ══════════════════════════════════════════════════════════════════════════════
+   GOLDEN VISA LANDING — PREMIUM ANIMATED DESIGN
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* Base */
 .gv-landing {
     font-family: var(--adonis-font-primary, 'Vazirmatn'), 'IRANSans', sans-serif;
-    line-height: 1.8;
+    line-height: 1.9;
     color: #1a1a2e;
+    overflow-x: hidden;
 }
 
 .gv-container {
@@ -143,19 +268,54 @@
     padding: 0 24px;
 }
 
-/* Hero */
+/* ── Hero Section ─────────────────────────────────────────────────────────────── */
 .gv-hero {
-    min-height: 70vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    background: linear-gradient(135deg, #0a1530 0%, #1a2a5e 50%, #0d1b3e 100%);
     background-size: cover;
     background-position: center;
+    background-attachment: fixed;
     position: relative;
     color: #fff;
-    padding: 80px 24px;
+    padding: 100px 24px;
+    overflow: hidden;
+}
+
+/* Animated Particles */
+.gv-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.particle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: rgba(201, 162, 39, 0.3);
+    border-radius: 50%;
+    animation: float-particle 15s infinite;
+}
+
+.particle:nth-child(1) { left: 10%; animation-delay: 0s; width: 8px; height: 8px; }
+.particle:nth-child(2) { left: 30%; animation-delay: 2s; width: 12px; height: 12px; }
+.particle:nth-child(3) { left: 50%; animation-delay: 4s; width: 6px; height: 6px; }
+.particle:nth-child(4) { left: 70%; animation-delay: 6s; width: 14px; height: 14px; }
+.particle:nth-child(5) { left: 90%; animation-delay: 8s; width: 10px; height: 10px; }
+
+@keyframes float-particle {
+    0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
 }
 
 .gv-hero-video {
@@ -166,7 +326,7 @@
     height: 100%;
     object-fit: cover;
     z-index: 0;
-    opacity: 0.3;
+    opacity: 0.25;
 }
 
 .gv-hero .gv-container {
@@ -174,46 +334,210 @@
     z-index: 1;
 }
 
+/* Hero Badge */
+.gv-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(201, 162, 39, 0.2);
+    border: 1px solid rgba(201, 162, 39, 0.4);
+    color: #c9a227;
+    padding: 10px 24px;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+    backdrop-filter: blur(10px);
+    animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(201, 162, 39, 0.3); }
+    50% { box-shadow: 0 0 40px rgba(201, 162, 39, 0.5); }
+}
+
+.gv-hero-badge i {
+    font-size: 1.1rem;
+}
+
 .gv-hero-title {
-    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-size: clamp(2.2rem, 6vw, 4rem);
     font-weight: 800;
-    margin-bottom: 20px;
-    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    margin-bottom: 24px;
+    text-shadow: 0 4px 30px rgba(0,0,0,0.4);
+    background: linear-gradient(135deg, #fff 0%, #c9a227 50%, #fff 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shine 4s linear infinite;
+}
+
+@keyframes shine {
+    to { background-position: 200% center; }
 }
 
 .gv-hero-subtitle {
-    font-size: clamp(1rem, 2vw, 1.4rem);
+    font-size: clamp(1.05rem, 2.2vw, 1.5rem);
     opacity: 0.9;
-    max-width: 700px;
-    margin: 0 auto 30px;
+    max-width: 750px;
+    margin: 0 auto 36px;
+    line-height: 2;
 }
 
-/* Sections */
+/* Hero CTAs */
+.gv-hero-ctas {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 50px;
+}
+
+/* Hero Stats */
+.gv-hero-stats {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.gv-stat {
+    text-align: center;
+    padding: 20px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+    min-width: 120px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gv-stat:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(201, 162, 39, 0.2);
+}
+
+.gv-stat-icon {
+    font-size: 1.8rem;
+    color: #c9a227;
+    margin-bottom: 10px;
+}
+
+.gv-stat-number {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #fff;
+}
+
+.gv-stat-number span {
+    color: #c9a227;
+}
+
+.gv-stat-label {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-top: 4px;
+}
+
+/* Scroll Indicator */
+.gv-scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    opacity: 0.6;
+    animation: bounce 2s infinite;
+    font-size: 1.5rem;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+    40% { transform: translateX(-50%) translateY(-15px); }
+    60% { transform: translateX(-50%) translateY(-7px); }
+}
+
+/* ── Sections ─────────────────────────────────────────────────────────────────── */
 .gv-section {
-    padding: 80px 0;
+    padding: 100px 0;
+    position: relative;
 }
 
 .gv-section:nth-child(even) {
-    background: #f8f9fa;
+    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+/* Section Header */
+.gv-section-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.gv-section-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #c9a227 0%, #d4af37 100%);
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 15px rgba(201, 162, 39, 0.3);
 }
 
 .gv-section-title {
-    font-size: clamp(1.5rem, 3vw, 2.2rem);
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 40px;
-    color: #1a1a2e;
+    font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+    font-weight: 800;
+    color: #0a1530;
+    margin: 0;
+    position: relative;
+    display: inline-block;
 }
 
+.gv-section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #c9a227, #d4af37);
+    border-radius: 2px;
+}
+
+/* Content */
 .gv-content {
     max-width: 900px;
     margin: 0 auto;
     font-size: 1.1rem;
+    line-height: 2.2;
+}
+
+.gv-content-card {
+    background: #fff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.05);
 }
 
 .gv-content h3, .gv-content h4 {
-    margin-top: 30px;
-    color: #1a1a2e;
+    margin-top: 32px;
+    margin-bottom: 16px;
+    color: #0a1530;
+    font-weight: 700;
+}
+
+.gv-content h3::before {
+    content: '◆';
+    color: #c9a227;
+    margin-left: 10px;
+    font-size: 0.8em;
 }
 
 .gv-content ul, .gv-content ol {
@@ -221,70 +545,248 @@
 }
 
 .gv-content li {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    position: relative;
 }
 
-/* CTA Banner */
+.gv-content ul li::marker {
+    color: #c9a227;
+}
+
+/* ── Benefits Icons ───────────────────────────────────────────────────────────── */
+.gv-benefits-icons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 20px;
+    margin-bottom: 50px;
+}
+
+.gv-benefit-icon-card {
+    background: #fff;
+    padding: 30px 20px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 2px solid transparent;
+}
+
+.gv-benefit-icon-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    border-color: #c9a227;
+    box-shadow: 0 15px 40px rgba(201, 162, 39, 0.2);
+}
+
+.gv-icon-wrapper {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 16px;
+    background: linear-gradient(135deg, #0a1530 0%, #1a2a5e 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    color: #c9a227;
+    transition: all 0.3s ease;
+}
+
+.gv-benefit-icon-card:hover .gv-icon-wrapper {
+    background: linear-gradient(135deg, #c9a227 0%, #d4af37 100%);
+    color: #fff;
+    transform: rotateY(360deg);
+}
+
+.gv-benefit-icon-card span {
+    font-weight: 600;
+    color: #0a1530;
+    font-size: 1rem;
+}
+
+/* ── CTA Banner ───────────────────────────────────────────────────────────────── */
 .gv-cta-banner {
-    background: linear-gradient(135deg, #c9a227 0%, #b8941f 100%);
+    background: linear-gradient(135deg, #0a1530 0%, #1a2a5e 50%, #0d1b3e 100%);
     color: #fff;
     text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.gv-cta-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a227' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.5;
+}
+
+.gv-cta-banner .gv-container {
+    position: relative;
+    z-index: 1;
+}
+
+.gv-cta-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 24px;
+    background: linear-gradient(135deg, #c9a227 0%, #d4af37 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #fff;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
 }
 
 .gv-cta-title {
     color: #fff;
-    font-size: 2rem;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
     margin-bottom: 16px;
+    font-weight: 800;
 }
 
 .gv-cta-text {
     font-size: 1.2rem;
-    opacity: 0.95;
-    margin-bottom: 24px;
+    opacity: 0.9;
+    margin-bottom: 32px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* Buttons */
+/* ── Buttons ──────────────────────────────────────────────────────────────────── */
 .gv-btn {
-    display: inline-block;
-    padding: 14px 32px;
-    border-radius: 8px;
-    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 36px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 2px solid transparent;
+}
+
+.gv-btn i {
+    transition: transform 0.3s ease;
+}
+
+.gv-btn:hover i {
+    transform: translateX(-5px);
 }
 
 .gv-btn-primary {
+    background: linear-gradient(135deg, #c9a227 0%, #d4af37 100%);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(201, 162, 39, 0.4);
+}
+
+.gv-btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(201, 162, 39, 0.5);
+}
+
+.gv-btn-outline {
+    background: transparent;
+    color: #fff;
+    border-color: rgba(255,255,255,0.4);
+}
+
+.gv-btn-outline:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: #fff;
+}
+
+.gv-btn-cta {
+    background: #fff;
+    color: #0a1530;
+    font-size: 1.1rem;
+    padding: 18px 42px;
+}
+
+.gv-btn-cta:hover {
     background: #c9a227;
     color: #fff;
 }
 
-.gv-btn-primary:hover {
-    background: #b8941f;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(201,162,39,0.4);
+.gv-btn-glow {
+    animation: btn-glow 2s infinite;
 }
 
-.gv-cta-banner .gv-btn-primary {
-    background: #fff;
-    color: #c9a227;
+@keyframes btn-glow {
+    0%, 100% { box-shadow: 0 4px 20px rgba(201, 162, 39, 0.4); }
+    50% { box-shadow: 0 4px 35px rgba(201, 162, 39, 0.7); }
 }
 
-.gv-cta-banner .gv-btn-primary:hover {
-    background: #f5f5f5;
-}
-
-/* Responsive */
+/* ── Responsive ───────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
     .gv-hero {
-        min-height: 60vh;
-        padding: 60px 16px;
+        min-height: 90vh;
+        padding: 80px 16px;
+        background-attachment: scroll;
     }
     
     .gv-section {
-        padding: 50px 0;
+        padding: 60px 0;
+    }
+    
+    .gv-hero-stats {
+        gap: 20px;
+    }
+    
+    .gv-stat {
+        min-width: 100px;
+        padding: 15px;
+    }
+    
+    .gv-content-card {
+        padding: 24px;
+    }
+    
+    .gv-hero-ctas {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .gv-btn {
+        width: 100%;
+        max-width: 280px;
+        justify-content: center;
     }
 }
 </style>
+
+<!-- AOS Init -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-out-cubic',
+            once: true,
+            offset: 50
+        });
+        
+        // Parallax effect on scroll
+        window.addEventListener('scroll', function() {
+            const hero = document.querySelector('.gv-hero');
+            if (hero) {
+                const scrolled = window.pageYOffset;
+                hero.style.backgroundPositionY = scrolled * 0.5 + 'px';
+            }
+        });
+    });
+</script>
 
 {% include "fa_new/_footer.html" %}
 {% endblock %}
