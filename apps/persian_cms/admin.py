@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib import admin
+from django.db import models
 from django.utils.html import format_html, mark_safe
 from django_ckeditor_5.widgets import CKEditor5Widget
 
@@ -11,6 +12,19 @@ except ImportError:
     SORTABLE_AVAILABLE = False
     SortableAdminMixin = object
     SortableInlineAdminMixin = object
+
+
+# ── CKEditor5 Mixin for TextFields ─────────────────────────────────────────────
+class CKEditor5TextFieldMixin:
+    """
+    Mixin to automatically use CKEditor5 widget for all TextFields in inlines.
+    Provides rich text editing with font, color, size, and link support.
+    """
+    formfield_overrides = {
+        models.TextField: {
+            'widget': CKEditor5Widget(config_name='persian_blog')
+        },
+    }
 
 from core.admin import (
     FaFooterSettingsAdmin,
@@ -1072,7 +1086,7 @@ class GVProjectGalleryImageInline(admin.TabularInline):
 
 # ── Section Inlines with All Fields ───────────────────────────────────────────
 
-class GVHeroSectionInline(admin.StackedInline):
+class GVHeroSectionInline(CKEditor5TextFieldMixin, admin.StackedInline):
     model = GVHeroSection
     extra = 0
     max_num = 1
@@ -1109,7 +1123,7 @@ class GVHeroSectionInline(admin.StackedInline):
     )
 
 
-class GVBenefitsSectionInline(admin.StackedInline):
+class GVBenefitsSectionInline(CKEditor5TextFieldMixin, admin.StackedInline):
     model = GVBenefitsSection
     extra = 0
     max_num = 1
@@ -1137,7 +1151,7 @@ class GVBenefitsSectionInline(admin.StackedInline):
     )
 
 
-class GVEligibilitySectionInline(admin.StackedInline):
+class GVEligibilitySectionInline(CKEditor5TextFieldMixin, admin.StackedInline):
     model = GVEligibilitySection
     extra = 0
     max_num = 1
@@ -1166,7 +1180,7 @@ class GVEligibilitySectionInline(admin.StackedInline):
     )
 
 
-class GVProcessSectionInline(admin.StackedInline):
+class GVProcessSectionInline(CKEditor5TextFieldMixin, admin.StackedInline):
     model = GVProcessSection
     extra = 0
     max_num = 1
@@ -1194,7 +1208,7 @@ class GVProcessSectionInline(admin.StackedInline):
     )
 
 
-class GVStatisticsSectionInline(admin.StackedInline):
+class GVStatisticsSectionInline(CKEditor5TextFieldMixin, admin.StackedInline):
     model = GVStatisticsSection
     extra = 0
     max_num = 1
@@ -1221,7 +1235,7 @@ class GVStatisticsSectionInline(admin.StackedInline):
     )
 
 
-class GVProjectsSectionInline(admin.StackedInline):
+class GVProjectsSectionInline(CKEditor5TextFieldMixin, admin.StackedInline):
     model = GVProjectsSection
     extra = 0
     max_num = 1
@@ -1242,7 +1256,7 @@ class GVProjectsSectionInline(admin.StackedInline):
     )
 
 
-class GVFamilySectionInline(admin.StackedInline):
+class GVFamilySectionInline(CKEditor5TextFieldMixin, admin.StackedInline):
     model = GVFamilySection
     extra = 0
     max_num = 1
@@ -1270,7 +1284,7 @@ class GVFamilySectionInline(admin.StackedInline):
     )
 
 
-class GVDocumentsSectionInline(admin.StackedInline):
+class GVDocumentsSectionInline(CKEditor5TextFieldMixin, admin.StackedInline):
     model = GVDocumentsSection
     extra = 0
     max_num = 1
@@ -1298,7 +1312,7 @@ class GVDocumentsSectionInline(admin.StackedInline):
     )
 
 
-class GVCostSectionInline(admin.StackedInline):
+class GVCostSectionInline(CKEditor5TextFieldMixin, admin.StackedInline):
     model = GVCostSection
     extra = 0
     max_num = 1
@@ -1326,7 +1340,7 @@ class GVCostSectionInline(admin.StackedInline):
     )
 
 
-class GVTestimonialsSectionInline(admin.StackedInline):
+class GVTestimonialsSectionInline(CKEditor5TextFieldMixin, admin.StackedInline):
     model = GVTestimonialsSection
     extra = 0
     max_num = 1
@@ -1354,7 +1368,7 @@ class GVTestimonialsSectionInline(admin.StackedInline):
     )
 
 
-class GVFAQSectionInline(admin.StackedInline):
+class GVFAQSectionInline(CKEditor5TextFieldMixin, admin.StackedInline):
     model = GVFAQSection
     extra = 0
     max_num = 1
@@ -1381,7 +1395,7 @@ class GVFAQSectionInline(admin.StackedInline):
     )
 
 
-class GVFinalCTASectionInline(admin.StackedInline):
+class GVFinalCTASectionInline(CKEditor5TextFieldMixin, admin.StackedInline):
     model = GVFinalCTASection
     extra = 0
     max_num = 1
@@ -1420,7 +1434,7 @@ class GVFinalCTASectionInline(admin.StackedInline):
     )
 
 
-class GVSEOSettingsInline(admin.StackedInline):
+class GVSEOSettingsInline(CKEditor5TextFieldMixin, admin.StackedInline):
     model = GVSEOSettings
     extra = 0
     max_num = 1
@@ -1457,7 +1471,7 @@ class GVSEOSettingsInline(admin.StackedInline):
     )
 
 
-class GVAnimationSettingsInline(admin.StackedInline):
+class GVAnimationSettingsInline(CKEditor5TextFieldMixin, admin.StackedInline):
     model = GVAnimationSettings
     extra = 0
     max_num = 1
@@ -1486,7 +1500,7 @@ class GVAnimationSettingsInline(admin.StackedInline):
     )
 
 
-class GVDesignSettingsInline(admin.StackedInline):
+class GVDesignSettingsInline(CKEditor5TextFieldMixin, admin.StackedInline):
     model = GVDesignSettings
     extra = 1
     max_num = 1

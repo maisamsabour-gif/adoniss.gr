@@ -17,20 +17,39 @@
 .gv-tabbed-admin input[type="password"],
 .gv-tabbed-admin input[type="tel"],
 .gv-tabbed-admin input[type="search"],
-.gv-tabbed-admin textarea,
 .gv-tabbed-admin select,
 .gv-tabbed-admin .vTextField,
-.gv-tabbed-admin .vLargeTextField,
 .gv-tabbed-admin .vURLField {
     background-color: #ffffff !important;
     color: #1f2937 !important;
     border: 1px solid #d1d5db !important;
     border-radius: 8px !important;
-    padding: 10px 14px !important;
+    padding: 12px 16px !important;
     font-size: 14px !important;
     font-family: 'IRANSansX', 'Vazirmatn', 'Tahoma', sans-serif !important;
     transition: all 0.2s ease;
     direction: rtl;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* ═══ Large Text Areas ═══ */
+.gv-tabbed-admin textarea,
+.gv-tabbed-admin .vLargeTextField {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 10px !important;
+    padding: 16px 18px !important;
+    font-size: 15px !important;
+    line-height: 1.7 !important;
+    font-family: 'IRANSansX', 'Vazirmatn', 'Tahoma', sans-serif !important;
+    transition: all 0.2s ease;
+    direction: rtl;
+    width: 100% !important;
+    min-height: 180px !important;
+    resize: vertical !important;
+    box-sizing: border-box !important;
 }
 
 .gv-tabbed-admin input:focus,
@@ -302,20 +321,115 @@
 }
 
 /* ═══ CKEditor Integration ═══ */
-.gv-tabbed-admin .ck-editor {
-    border-radius: 10px !important;
+.gv-tabbed-admin .ck-editor,
+.gv-tabbed-admin .django-ckeditor-widget {
+    border-radius: 12px !important;
     overflow: hidden;
+    width: 100% !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.gv-tabbed-admin .ck-editor__top {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+    border-bottom: 1px solid #dee2e6 !important;
+}
+
+.gv-tabbed-admin .ck-toolbar {
+    background: transparent !important;
+    border: none !important;
+    padding: 8px 12px !important;
+    flex-wrap: wrap !important;
+}
+
+.gv-tabbed-admin .ck-toolbar__items {
+    flex-wrap: wrap !important;
+}
+
+.gv-tabbed-admin .ck-button {
+    border-radius: 6px !important;
+    margin: 2px !important;
+    transition: all 0.2s ease !important;
+}
+
+.gv-tabbed-admin .ck-button:hover {
+    background: rgba(212,175,55,0.15) !important;
+}
+
+.gv-tabbed-admin .ck-button.ck-on {
+    background: #D4AF37 !important;
+    color: #1a1a2e !important;
 }
 
 .gv-tabbed-admin .ck-editor__main {
     background: #ffffff !important;
 }
 
-.gv-tabbed-admin .ck-content {
+.gv-tabbed-admin .ck-content,
+.gv-tabbed-admin .ck-editor__editable {
     background: #ffffff !important;
     color: #1f2937 !important;
-    min-height: 200px;
-    direction: rtl;
+    min-height: 250px !important;
+    max-height: 500px !important;
+    padding: 20px 24px !important;
+    direction: rtl !important;
+    text-align: right !important;
+    font-family: 'IRANSansX', 'Vazirmatn', 'Tahoma', sans-serif !important;
+    font-size: 15px !important;
+    line-height: 1.8 !important;
+    overflow-y: auto !important;
+}
+
+.gv-tabbed-admin .ck-content:focus,
+.gv-tabbed-admin .ck-editor__editable:focus {
+    outline: none !important;
+    box-shadow: inset 0 0 0 2px rgba(212,175,55,0.3) !important;
+}
+
+.gv-tabbed-admin .ck-content p,
+.gv-tabbed-admin .ck-editor__editable p {
+    margin: 0 0 12px 0;
+}
+
+.gv-tabbed-admin .ck-content h2,
+.gv-tabbed-admin .ck-content h3,
+.gv-tabbed-admin .ck-content h4 {
+    color: #1a1a2e;
+    font-weight: 700;
+    margin: 20px 0 12px 0;
+}
+
+.gv-tabbed-admin .ck-content ul,
+.gv-tabbed-admin .ck-content ol {
+    padding-right: 24px;
+    padding-left: 0;
+}
+
+.gv-tabbed-admin .ck-content a {
+    color: #D4AF37;
+    text-decoration: underline;
+}
+
+/* CKEditor dropdown menus */
+.ck-dropdown__panel,
+.ck-list {
+    background: #ffffff !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important;
+}
+
+.ck-list__item {
+    padding: 8px 16px !important;
+}
+
+.ck-list__item:hover {
+    background: rgba(212,175,55,0.1) !important;
+}
+
+/* CKEditor5 widget wrapper */
+.gv-tabbed-admin .django-ckeditor-widget,
+.gv-tabbed-admin div[id*="ckeditor"] {
+    width: 100% !important;
+    min-width: 100% !important;
 }
 
 /* ═══ Related Widget ═══ */
