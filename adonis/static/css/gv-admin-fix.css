@@ -1,6 +1,9 @@
-/* Golden Visa Admin - Force white backgrounds for form fields */
+/* ═══════════════════════════════════════════════════════════════════════════
+   Golden Visa Admin - Force white backgrounds for ALL form fields
+   Persian Admin Panel - Dark Theme Override
+   ═══════════════════════════════════════════════════════════════════════════ */
 
-/* Target ALL form elements */
+/* ── Base Form Elements ──────────────────────────────────────────────────── */
 textarea,
 input[type="text"],
 input[type="url"],
@@ -12,25 +15,80 @@ input[type="tel"],
 select,
 .vLargeTextField,
 .vTextField {
-    background: #fff !important;
-    background-color: #fff !important;
-    color: #1f2937 !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #111827 !important;
     border: 1px solid #d1d5db !important;
 }
 
-/* Select dropdowns */
+/* ── SELECT & DROPDOWN - Main Fix ────────────────────────────────────────── */
 select,
 select option,
 .form-row select,
+.form-control,
+.form-select,
 fieldset select,
-#content select {
-    background: #fff !important;
-    background-color: #fff !important;
-    color: #1f2937 !important;
+#content select,
+#changelist select,
+.inline-group select,
+.tabular select,
+.stacked select,
+.aligned select,
+.module select {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #111827 !important;
     border: 1px solid #d1d5db !important;
+    -webkit-appearance: menulist !important;
+    -moz-appearance: menulist !important;
+    appearance: menulist !important;
 }
 
-/* More specific selectors */
+/* ── SELECT OPTIONS (Dropdown items) ─────────────────────────────────────── */
+option,
+select option,
+select optgroup,
+.form-row select option,
+fieldset select option,
+#content select option {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    padding: 8px 12px !important;
+}
+
+/* Option hover and selected states */
+option:hover,
+option:focus,
+option:checked,
+select option:hover,
+select option:checked {
+    background: #eaf2ff !important;
+    background-color: #eaf2ff !important;
+    color: #111827 !important;
+}
+
+/* ── Focus States ────────────────────────────────────────────────────────── */
+select:focus,
+.form-control:focus,
+.form-select:focus {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    border-color: #2563eb !important;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15) !important;
+    outline: none !important;
+}
+
+textarea:focus,
+input:focus {
+    background: #ffffff !important;
+    border-color: #2563eb !important;
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15) !important;
+}
+
+/* ── More Specific Selectors ─────────────────────────────────────────────── */
 #content textarea,
 #content input[type="text"],
 #content input[type="url"],
@@ -41,24 +99,28 @@ fieldset select,
 fieldset textarea,
 fieldset input,
 fieldset select {
-    background: #fff !important;
-    background-color: #fff !important;
-    color: #1f2937 !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #111827 !important;
     border: 1px solid #d1d5db !important;
 }
 
-/* Unfold specific overrides */
+/* ── Unfold Theme Override ───────────────────────────────────────────────── */
 .border-base-200 textarea,
 .border-base-200 input,
 .border-base-200 select,
 [class*="bg-"] textarea,
-[class*="bg-"] input[type="text"],
-[class*="bg-"] select {
-    background: #fff !important;
-    color: #1f2937 !important;
+[class*="bg-"] input,
+[class*="bg-"] select,
+[class*="dark"] select,
+[class*="dark"] input,
+[class*="dark"] textarea {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #111827 !important;
 }
 
-/* Inline form fields */
+/* ── Inline Forms ────────────────────────────────────────────────────────── */
 .inline-group input,
 .inline-group select,
 .inline-group textarea,
@@ -68,36 +130,49 @@ fieldset select {
 .stacked input,
 .stacked select,
 .stacked textarea {
-    background: #fff !important;
-    color: #1f2937 !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #111827 !important;
     border: 1px solid #d1d5db !important;
 }
 
-/* Django admin specific */
+/* ── Django Admin Specific ───────────────────────────────────────────────── */
 .aligned input,
 .aligned select,
 .aligned textarea,
 .module input,
 .module select,
 .module textarea {
-    background: #fff !important;
-    color: #1f2937 !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #111827 !important;
 }
 
-/* Focus states */
-textarea:focus,
-input:focus,
-select:focus {
-    background: #fff !important;
-    border-color: #3b82f6 !important;
-    outline: none !important;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
-}
-
-/* Readonly fields */
+/* ── Readonly & Disabled ─────────────────────────────────────────────────── */
 input[readonly],
 textarea[readonly],
-select[disabled] {
+select[disabled],
+input[disabled],
+textarea[disabled] {
     background: #f3f4f6 !important;
+    background-color: #f3f4f6 !important;
     color: #6b7280 !important;
+}
+
+/* ── Chrome/Webkit Specific Fix ──────────────────────────────────────────── */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    select,
+    select option {
+        background: #ffffff !important;
+        color: #111827 !important;
+    }
+}
+
+/* ── Firefox Specific Fix ────────────────────────────────────────────────── */
+@-moz-document url-prefix() {
+    select,
+    select option {
+        background: #ffffff !important;
+        color: #111827 !important;
+    }
 }
