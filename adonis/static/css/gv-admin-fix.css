@@ -1,24 +1,46 @@
 /* Golden Visa Admin - Force white backgrounds for form fields */
 
-/* Target ALL textarea and text inputs */
+/* Target ALL form elements */
 textarea,
 input[type="text"],
 input[type="url"],
 input[type="number"],
-.vLargeTextField {
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="tel"],
+select,
+.vLargeTextField,
+.vTextField {
     background: #fff !important;
     background-color: #fff !important;
     color: #1f2937 !important;
+    border: 1px solid #d1d5db !important;
+}
+
+/* Select dropdowns */
+select,
+select option,
+.form-row select,
+fieldset select,
+#content select {
+    background: #fff !important;
+    background-color: #fff !important;
+    color: #1f2937 !important;
+    border: 1px solid #d1d5db !important;
 }
 
 /* More specific selectors */
 #content textarea,
 #content input[type="text"],
 #content input[type="url"],
+#content input[type="number"],
 .form-row textarea,
 .form-row input[type="text"],
+.form-row input,
 fieldset textarea,
-fieldset input {
+fieldset input,
+fieldset select {
     background: #fff !important;
     background-color: #fff !important;
     color: #1f2937 !important;
@@ -28,16 +50,54 @@ fieldset input {
 /* Unfold specific overrides */
 .border-base-200 textarea,
 .border-base-200 input,
+.border-base-200 select,
 [class*="bg-"] textarea,
-[class*="bg-"] input[type="text"] {
+[class*="bg-"] input[type="text"],
+[class*="bg-"] select {
+    background: #fff !important;
+    color: #1f2937 !important;
+}
+
+/* Inline form fields */
+.inline-group input,
+.inline-group select,
+.inline-group textarea,
+.tabular input,
+.tabular select,
+.tabular textarea,
+.stacked input,
+.stacked select,
+.stacked textarea {
+    background: #fff !important;
+    color: #1f2937 !important;
+    border: 1px solid #d1d5db !important;
+}
+
+/* Django admin specific */
+.aligned input,
+.aligned select,
+.aligned textarea,
+.module input,
+.module select,
+.module textarea {
     background: #fff !important;
     color: #1f2937 !important;
 }
 
 /* Focus states */
 textarea:focus,
-input[type="text"]:focus {
+input:focus,
+select:focus {
     background: #fff !important;
     border-color: #3b82f6 !important;
     outline: none !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Readonly fields */
+input[readonly],
+textarea[readonly],
+select[disabled] {
+    background: #f3f4f6 !important;
+    color: #6b7280 !important;
 }
