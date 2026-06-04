@@ -1,0 +1,948 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls static %}
+
+{% block extrahead %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/gv-admin-tabs.css' %}">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════════
+   Golden Visa Landing Page - Tab-Based Admin Interface
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* Hide original form elements until JS reorganizes them */
+.gv-tabbed-admin #content-main form > div:not(.gv-tabs-container):not(.submit-row) {
+    display: none !important;
+}
+
+/* Show elements after JS processes them */
+.gv-tabbed-admin.tabs-ready #content-main form > div:not(.gv-tabs-container):not(.submit-row) {
+    display: block !important;
+}
+
+/* ═══ Tab Navigation Container ═══ */
+.gv-tabs-nav-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    border-radius: 16px 16px 0 0;
+    padding: 0;
+    margin: 0 0 -1px 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+}
+
+.gv-tabs-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 16px 20px;
+    direction: rtl;
+}
+
+.gv-tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    color: rgba(255,255,255,0.75);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'IRANSansX', 'Vazirmatn', 'Tahoma', sans-serif;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+}
+
+.gv-tab-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(212,175,55,0.1) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.gv-tab-btn:hover {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    border-color: rgba(212,175,55,0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.gv-tab-btn:hover::before {
+    opacity: 1;
+}
+
+.gv-tab-btn.active {
+    background: linear-gradient(135deg, #D4AF37 0%, #c5a028 100%);
+    color: #1a1a2e;
+    border-color: #D4AF37;
+    box-shadow: 0 4px 16px rgba(212,175,55,0.4);
+    transform: translateY(-2px);
+}
+
+.gv-tab-btn .tab-icon {
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+.gv-tab-btn .tab-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.gv-tab-btn.active .tab-badge {
+    background: rgba(0,0,0,0.2);
+}
+
+.gv-tab-btn.has-error {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 2px rgba(239,68,68,0.3);
+}
+
+.gv-tab-btn.has-error .tab-badge {
+    background: #ef4444;
+    color: #fff;
+}
+
+/* ═══ Tab Progress Indicator ═══ */
+.gv-tabs-progress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+    background: rgba(0,0,0,0.2);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    direction: rtl;
+}
+
+.gv-tabs-progress .progress-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    font-family: 'IRANSansX', 'Vazirmatn', 'Tahoma', sans-serif;
+}
+
+.gv-tabs-progress .progress-bar {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.gv-tabs-progress .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #D4AF37, #f5d456);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+    box-shadow: 0 0 10px rgba(212,175,55,0.5);
+}
+
+.gv-tabs-progress .progress-text {
+    font-size: 12px;
+    color: #D4AF37;
+    font-weight: 600;
+    min-width: 50px;
+    text-align: left;
+}
+
+/* ═══ Tab Panels ═══ */
+.gv-tab-panel {
+    display: none;
+    animation: gvFadeIn 0.35s ease;
+    padding: 0;
+}
+
+.gv-tab-panel.active {
+    display: block;
+}
+
+@keyframes gvFadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(15px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* ═══ Tab Panel Header ═══ */
+.gv-tab-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    direction: rtl;
+}
+
+.gv-tab-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    font-family: 'IRANSansX', 'Vazirmatn', 'Tahoma', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.gv-tab-header h3 .header-icon {
+    font-size: 22px;
+}
+
+.gv-tab-header .tab-summary {
+    display: flex;
+    gap: 16px;
+    font-size: 13px;
+}
+
+.gv-tab-summary-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 8px;
+    color: rgba(255,255,255,0.8);
+}
+
+.gv-tab-summary-item.status-active {
+    background: rgba(34,197,94,0.2);
+    color: #22c55e;
+}
+
+.gv-tab-summary-item.status-inactive {
+    background: rgba(239,68,68,0.2);
+    color: #ef4444;
+}
+
+.gv-tab-summary-item .summary-icon {
+    font-size: 14px;
+}
+
+/* ═══ Tab Panel Content ═══ */
+.gv-tab-content {
+    padding: 24px;
+    background: #1e293b;
+    min-height: 300px;
+}
+
+/* ═══ Inline Groups Inside Tabs ═══ */
+.gv-tab-panel .inline-group {
+    margin: 0 0 24px 0;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.02);
+}
+
+.gv-tab-panel .inline-group h2 {
+    margin: 0;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(212,175,55,0.05) 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 15px;
+    font-weight: 600;
+    color: #D4AF37;
+    font-family: 'IRANSansX', 'Vazirmatn', 'Tahoma', sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.2s ease;
+}
+
+.gv-tab-panel .inline-group h2:hover {
+    background: linear-gradient(135deg, rgba(212,175,55,0.2) 0%, rgba(212,175,55,0.08) 100%);
+}
+
+.gv-tab-panel .inline-group h2::after {
+    content: '▼';
+    font-size: 10px;
+    color: rgba(212,175,55,0.7);
+    transition: transform 0.3s ease;
+}
+
+.gv-tab-panel .inline-group.collapsed h2::after {
+    transform: rotate(-90deg);
+}
+
+.gv-tab-panel .inline-group .inline-related {
+    padding: 20px;
+}
+
+.gv-tab-panel .inline-group.collapsed .inline-related {
+    display: none;
+}
+
+/* ═══ Fieldsets Inside Tabs ═══ */
+.gv-tab-panel fieldset.module {
+    margin: 0 0 20px 0;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.02);
+}
+
+.gv-tab-panel fieldset.module h2 {
+    margin: 0;
+    padding: 14px 20px;
+    background: rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    font-family: 'IRANSansX', 'Vazirmatn', 'Tahoma', sans-serif;
+}
+
+.gv-tab-panel fieldset.module .form-row {
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.gv-tab-panel fieldset.module .form-row:last-child {
+    border-bottom: none;
+}
+
+/* ═══ Sticky Save Buttons ═══ */
+.gv-sticky-submit {
+    position: sticky;
+    bottom: 0;
+    z-index: 999;
+    background: linear-gradient(180deg, rgba(15,23,42,0) 0%, #0f172a 20%, #0f172a 100%);
+    padding: 20px 24px 24px;
+    margin: 0 -24px -24px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    direction: rtl;
+}
+
+.gv-sticky-submit::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: linear-gradient(180deg, transparent, rgba(15,23,42,0.95));
+    pointer-events: none;
+}
+
+.gv-sticky-submit .submit-row {
+    position: relative;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    border: none;
+    display: flex;
+    gap: 12px;
+}
+
+.gv-sticky-submit .submit-row input[type="submit"],
+.gv-sticky-submit .submit-row button {
+    padding: 14px 28px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-family: 'IRANSansX', 'Vazirmatn', 'Tahoma', sans-serif;
+}
+
+.gv-sticky-submit .submit-row input[name="_save"],
+.gv-sticky-submit .submit-row input.default {
+    background: linear-gradient(135deg, #D4AF37 0%, #c5a028 100%);
+    color: #1a1a2e;
+    box-shadow: 0 4px 16px rgba(212,175,55,0.35);
+}
+
+.gv-sticky-submit .submit-row input[name="_save"]:hover,
+.gv-sticky-submit .submit-row input.default:hover {
+    background: linear-gradient(135deg, #e5c142 0%, #D4AF37 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212,175,55,0.45);
+}
+
+.gv-sticky-submit .submit-row input[name="_continue"],
+.gv-sticky-submit .submit-row input[name="_addanother"] {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.gv-sticky-submit .submit-row input[name="_continue"]:hover,
+.gv-sticky-submit .submit-row input[name="_addanother"]:hover {
+    background: rgba(255,255,255,0.15);
+    border-color: rgba(255,255,255,0.3);
+}
+
+/* ═══ Mobile Responsive ═══ */
+@media (max-width: 900px) {
+    .gv-tabs-nav {
+        padding: 12px;
+        gap: 6px;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    
+    .gv-tabs-nav::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .gv-tab-btn {
+        padding: 10px 14px;
+        font-size: 12px;
+        flex-shrink: 0;
+    }
+    
+    .gv-tab-btn .tab-icon {
+        font-size: 14px;
+    }
+    
+    .gv-tab-btn .tab-badge {
+        min-width: 18px;
+        height: 18px;
+        font-size: 10px;
+    }
+    
+    .gv-tab-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px;
+    }
+    
+    .gv-tab-header .tab-summary {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .gv-tab-content {
+        padding: 16px;
+    }
+    
+    .gv-sticky-submit {
+        padding: 16px;
+        margin: 0 -16px -16px;
+    }
+    
+    .gv-sticky-submit .submit-row {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .gv-sticky-submit .submit-row input[type="submit"] {
+        padding: 12px 20px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 600px) {
+    .gv-tab-btn {
+        padding: 8px 12px;
+        font-size: 11px;
+    }
+    
+    .gv-tab-btn .tab-icon {
+        display: none;
+    }
+}
+
+/* ═══ Image Preview Enhancement ═══ */
+.gv-tab-panel .file-upload .clearable-file-input {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.gv-tab-panel .file-upload img,
+.gv-tab-panel .inline-related img {
+    max-width: 200px;
+    max-height: 150px;
+    border-radius: 8px;
+    border: 2px solid rgba(255,255,255,0.1);
+    object-fit: cover;
+    transition: all 0.3s ease;
+}
+
+.gv-tab-panel .file-upload img:hover,
+.gv-tab-panel .inline-related img:hover {
+    border-color: #D4AF37;
+    transform: scale(1.02);
+    box-shadow: 0 4px 20px rgba(212,175,55,0.3);
+}
+
+/* ═══ Quick Actions Bar ═══ */
+.gv-quick-actions {
+    display: flex;
+    gap: 10px;
+    padding: 12px 20px;
+    background: rgba(0,0,0,0.15);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    direction: rtl;
+}
+
+.gv-quick-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    color: rgba(255,255,255,0.7);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'IRANSansX', 'Vazirmatn', 'Tahoma', sans-serif;
+}
+
+.gv-quick-action-btn:hover {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+}
+
+/* ═══ Loading State ═══ */
+.gv-tabs-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+    gap: 12px;
+}
+
+.gv-tabs-loading .spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(255,255,255,0.1);
+    border-top-color: #D4AF37;
+    border-radius: 50%;
+    animation: gvSpin 0.8s linear infinite;
+}
+
+@keyframes gvSpin {
+    to { transform: rotate(360deg); }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="gv-tabbed-admin" id="gv-tabbed-admin">
+    <!-- Loading State -->
+    <div class="gv-tabs-loading" id="gv-tabs-loading">
+        <div class="spinner"></div>
+        <span>در حال بارگذاری صفحه ساز...</span>
+    </div>
+    
+    <!-- Tabs Container (will be populated by JS) -->
+    <div class="gv-tabs-container" id="gv-tabs-container" style="display: none;">
+        <!-- Tab Navigation -->
+        <div class="gv-tabs-nav-wrapper">
+            <nav class="gv-tabs-nav" id="gv-tabs-nav" role="tablist">
+                <!-- Tabs will be inserted here by JS -->
+            </nav>
+            <div class="gv-tabs-progress">
+                <span class="progress-label">پیشرفت تکمیل فرم:</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="gv-progress-fill" style="width: 0%"></div>
+                </div>
+                <span class="progress-text" id="gv-progress-text">0%</span>
+            </div>
+        </div>
+        
+        <!-- Tab Panels Container -->
+        <div class="gv-tabs-panels" id="gv-tabs-panels">
+            <!-- Panels will be inserted here by JS -->
+        </div>
+    </div>
+    
+    <!-- Original Form Content -->
+    {{ block.super }}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ══════════════════════════════════════════════════════════════════════════════
+    // Golden Visa Landing Page - Tab-Based Admin Interface JavaScript
+    // ══════════════════════════════════════════════════════════════════════════════
+    
+    // Tab configuration with keywords for matching
+    const TAB_CONFIG = [
+        {
+            id: 'general',
+            title: 'اطلاعات کلی',
+            icon: '📋',
+            keywords: ['تنظیمات اصلی'],
+            description: 'عنوان، اسلاگ و وضعیت فعال/غیرفعال'
+        },
+        {
+            id: 'hero',
+            title: 'Hero Section',
+            icon: '🎬',
+            keywords: ['هیرو', 'Hero', 'بخش هیرو'],
+            description: 'بخش اصلی بالای صفحه'
+        },
+        {
+            id: 'benefits',
+            title: 'مزایا',
+            icon: '⭐',
+            keywords: ['مزایا', 'Benefits', 'بخش مزایا'],
+            description: 'مزایای اقامت'
+        },
+        {
+            id: 'eligibility',
+            title: 'شرایط و سرمایه',
+            icon: '💰',
+            keywords: ['شرایط', 'سرمایه', 'Eligibility'],
+            description: 'شرایط سرمایه‌گذاری'
+        },
+        {
+            id: 'process',
+            title: 'مراحل',
+            icon: '📊',
+            keywords: ['مراحل', 'Process'],
+            description: 'مراحل دریافت اقامت'
+        },
+        {
+            id: 'projects',
+            title: 'پروژه‌ها و آمار',
+            icon: '🏗️',
+            keywords: ['پروژه', 'Projects', 'آمار', 'Statistics'],
+            description: 'پروژه‌های ساختمانی و آمار'
+        },
+        {
+            id: 'sections',
+            title: 'سایر بخش‌ها',
+            icon: '📄',
+            keywords: ['معرفی', 'خانواده', 'Family', 'مدارک', 'Documents', 'هزینه', 'Cost', 'نظرات', 'Testimonials'],
+            description: 'خانواده، مدارک، هزینه‌ها، نظرات'
+        },
+        {
+            id: 'faq',
+            title: 'سوالات متداول',
+            icon: '❓',
+            keywords: ['سوالات', 'FAQ'],
+            description: 'سوالات متداول'
+        },
+        {
+            id: 'cta',
+            title: 'CTA و دکمه‌ها',
+            icon: '📢',
+            keywords: ['CTA', 'فراخوان', 'بنر'],
+            description: 'فراخوان‌ها و دکمه‌های اقدام'
+        },
+        {
+            id: 'seo',
+            title: 'سئو',
+            icon: '🔍',
+            keywords: ['سئو', 'SEO', 'متا'],
+            description: 'تنظیمات موتورهای جستجو'
+        },
+        {
+            id: 'design',
+            title: 'تنظیمات نمایش',
+            icon: '🎨',
+            keywords: ['استایل', 'فونت', 'رنگ', 'انیمیشن', 'Animation', 'Design', 'طراحی'],
+            description: 'استایل، انیمیشن و طراحی'
+        }
+    ];
+    
+    const container = document.getElementById('gv-tabbed-admin');
+    const tabsContainer = document.getElementById('gv-tabs-container');
+    const tabsNav = document.getElementById('gv-tabs-nav');
+    const tabsPanels = document.getElementById('gv-tabs-panels');
+    const loading = document.getElementById('gv-tabs-loading');
+    
+    // Find the form
+    const form = container.querySelector('form');
+    if (!form) {
+        console.error('Form not found');
+        loading.innerHTML = '<span style="color:#ef4444;">خطا: فرم یافت نشد</span>';
+        return;
+    }
+    
+    // Collect all fieldsets and inline groups
+    const allFieldsets = Array.from(form.querySelectorAll('fieldset.module'));
+    const allInlines = Array.from(form.querySelectorAll('.inline-group'));
+    const submitRow = form.querySelector('.submit-row');
+    
+    // Function to find which tab an element belongs to based on its heading
+    function findTabForElement(element) {
+        const heading = element.querySelector('h2');
+        if (!heading) return null;
+        
+        const text = heading.textContent.trim();
+        
+        for (const tab of TAB_CONFIG) {
+            for (const keyword of tab.keywords) {
+                if (text.includes(keyword)) {
+                    return tab.id;
+                }
+            }
+        }
+        
+        // Default to design tab for unmatched items
+        return 'design';
+    }
+    
+    // Create a map of elements to tabs
+    const elementToTab = new Map();
+    
+    allFieldsets.forEach(fs => {
+        const tabId = findTabForElement(fs);
+        if (tabId) {
+            elementToTab.set(fs, tabId);
+        }
+    });
+    
+    allInlines.forEach(inline => {
+        const tabId = findTabForElement(inline);
+        if (tabId) {
+            elementToTab.set(inline, tabId);
+        }
+    });
+    
+    // Build tabs UI
+    TAB_CONFIG.forEach((tab, index) => {
+        // Count elements for this tab
+        const elementCount = [...elementToTab.entries()].filter(([_, id]) => id === tab.id).length;
+        
+        // Create tab button
+        const tabBtn = document.createElement('button');
+        tabBtn.type = 'button';
+        tabBtn.className = 'gv-tab-btn' + (index === 0 ? ' active' : '');
+        tabBtn.setAttribute('role', 'tab');
+        tabBtn.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
+        tabBtn.setAttribute('data-tab', tab.id);
+        tabBtn.innerHTML = `
+            <span class="tab-icon">${tab.icon}</span>
+            <span class="tab-title">${tab.title}</span>
+            ${elementCount > 0 ? `<span class="tab-badge">${elementCount}</span>` : ''}
+        `;
+        tabBtn.addEventListener('click', () => switchTab(tab.id));
+        tabsNav.appendChild(tabBtn);
+        
+        // Create tab panel
+        const panel = document.createElement('div');
+        panel.className = 'gv-tab-panel' + (index === 0 ? ' active' : '');
+        panel.setAttribute('role', 'tabpanel');
+        panel.setAttribute('data-panel', tab.id);
+        panel.id = `panel-${tab.id}`;
+        
+        // Add panel header
+        const header = document.createElement('div');
+        header.className = 'gv-tab-header';
+        header.innerHTML = `
+            <h3>
+                <span class="header-icon">${tab.icon}</span>
+                ${tab.title}
+            </h3>
+            <div class="tab-summary">
+                <span class="gv-tab-summary-item">
+                    <span class="summary-icon">📝</span>
+                    ${tab.description}
+                </span>
+            </div>
+        `;
+        panel.appendChild(header);
+        
+        // Create content wrapper
+        const content = document.createElement('div');
+        content.className = 'gv-tab-content';
+        content.id = `content-${tab.id}`;
+        
+        panel.appendChild(content);
+        tabsPanels.appendChild(panel);
+    });
+    
+    // Move elements to their respective tabs
+    elementToTab.forEach((tabId, element) => {
+        const content = document.getElementById(`content-${tabId}`);
+        if (content) {
+            // Move the actual element (not clone) to preserve form functionality
+            content.appendChild(element);
+        }
+    });
+    
+    // Add submit row at the bottom (outside tabs but inside form)
+    if (submitRow) {
+        const stickyWrapper = document.createElement('div');
+        stickyWrapper.className = 'gv-sticky-submit-wrapper';
+        stickyWrapper.innerHTML = `
+            <div class="gv-sticky-submit">
+                ${submitRow.outerHTML}
+            </div>
+        `;
+        tabsPanels.after(stickyWrapper);
+        submitRow.style.display = 'none';
+    }
+    
+    // Switch tab function
+    function switchTab(tabId) {
+        // Update buttons
+        document.querySelectorAll('.gv-tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-selected', 'false');
+        });
+        const activeBtn = document.querySelector(`.gv-tab-btn[data-tab="${tabId}"]`);
+        if (activeBtn) {
+            activeBtn.classList.add('active');
+            activeBtn.setAttribute('aria-selected', 'true');
+        }
+        
+        // Update panels
+        document.querySelectorAll('.gv-tab-panel').forEach(panel => {
+            panel.classList.remove('active');
+        });
+        const activePanel = document.querySelector(`.gv-tab-panel[data-panel="${tabId}"]`);
+        if (activePanel) {
+            activePanel.classList.add('active');
+            // Scroll to top of panel
+            activePanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        // Update URL hash
+        history.replaceState(null, '', `#tab-${tabId}`);
+        
+        // Update progress
+        updateProgress();
+    }
+    
+    // Calculate and update progress
+    function updateProgress() {
+        const allInputs = form.querySelectorAll('input:not([type="hidden"]):not([type="submit"]):not([type="button"]):not([type="checkbox"]), textarea, select');
+        let filled = 0;
+        let total = 0;
+        
+        allInputs.forEach(input => {
+            // Count only visible and required fields or fields with values
+            total++;
+            if (input.value && input.value.trim() !== '') {
+                filled++;
+            }
+        });
+        
+        const percentage = total > 0 ? Math.round((filled / total) * 100) : 0;
+        const progressFill = document.getElementById('gv-progress-fill');
+        const progressText = document.getElementById('gv-progress-text');
+        if (progressFill) progressFill.style.width = `${percentage}%`;
+        if (progressText) progressText.textContent = `${percentage}%`;
+    }
+    
+    // Make inline groups collapsible
+    function setupCollapsibleInlines() {
+        document.querySelectorAll('.gv-tab-panel .inline-group h2').forEach(heading => {
+            heading.style.cursor = 'pointer';
+            heading.addEventListener('click', function(e) {
+                // Don't collapse if clicking on a link inside the heading
+                if (e.target.tagName === 'A') return;
+                const group = this.closest('.inline-group');
+                group.classList.toggle('collapsed');
+            });
+        });
+    }
+    
+    // Check for errors and mark tabs
+    function markTabsWithErrors() {
+        document.querySelectorAll('.gv-tab-panel').forEach(panel => {
+            const errors = panel.querySelectorAll('.errorlist li, .errors');
+            const tabId = panel.getAttribute('data-panel');
+            const tabBtn = document.querySelector(`.gv-tab-btn[data-tab="${tabId}"]`);
+            
+            if (errors.length > 0 && tabBtn) {
+                tabBtn.classList.add('has-error');
+                
+                // Update badge to show error count
+                let badge = tabBtn.querySelector('.tab-badge');
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.className = 'tab-badge';
+                    tabBtn.appendChild(badge);
+                }
+                badge.textContent = `⚠️ ${errors.length}`;
+                badge.style.background = 'rgba(239,68,68,0.8)';
+                
+                // Switch to first tab with errors
+                const isFirstError = !document.querySelector('.gv-tab-btn.has-error.active');
+                if (isFirstError) {
+                    switchTab(tabId);
+                }
+            }
+        });
+    }
+    
+    // Initialize from URL hash
+    function initFromHash() {
+        const hash = window.location.hash;
+        if (hash && hash.startsWith('#tab-')) {
+            const tabId = hash.replace('#tab-', '');
+            const tabBtn = document.querySelector(`.gv-tab-btn[data-tab="${tabId}"]`);
+            if (tabBtn) {
+                switchTab(tabId);
+            }
+        }
+    }
+    
+    // Show tabs, hide loading
+    function showTabs() {
+        loading.style.display = 'none';
+        tabsContainer.style.display = 'block';
+        container.classList.add('tabs-ready');
+        
+        setupCollapsibleInlines();
+        markTabsWithErrors();
+        updateProgress();
+        initFromHash();
+    }
+    
+    // Initialize with a small delay to ensure DOM is ready
+    setTimeout(showTabs, 150);
+    
+    // Listen for input changes to update progress
+    form.addEventListener('input', updateProgress);
+    form.addEventListener('change', updateProgress);
+    
+    // Keyboard navigation
+    tabsNav.addEventListener('keydown', function(e) {
+        const tabs = Array.from(tabsNav.querySelectorAll('.gv-tab-btn'));
+        const currentIndex = tabs.findIndex(t => t.classList.contains('active'));
+        
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+            e.preventDefault();
+            // RTL: ArrowRight goes to previous, ArrowLeft goes to next
+            const direction = e.key === 'ArrowRight' ? -1 : 1;
+            const newIndex = (currentIndex + direction + tabs.length) % tabs.length;
+            tabs[newIndex].click();
+            tabs[newIndex].focus();
+        }
+    });
+});
+</script>
+{% endblock %}

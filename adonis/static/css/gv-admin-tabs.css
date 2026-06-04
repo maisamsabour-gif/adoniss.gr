@@ -1,0 +1,602 @@
+/* ═══════════════════════════════════════════════════════════════════════════════
+   Golden Visa Landing Page - Tab-Based Admin Interface
+   Professional RTL-ready tabbed interface for Django Admin
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* ═══ Base Container ═══ */
+.gv-tabbed-admin {
+    direction: rtl;
+    font-family: 'IRANSansX', 'Vazirmatn', 'Tahoma', sans-serif;
+}
+
+/* ═══ Form Controls - Light Theme Override ═══ */
+.gv-tabbed-admin input[type="text"],
+.gv-tabbed-admin input[type="email"],
+.gv-tabbed-admin input[type="url"],
+.gv-tabbed-admin input[type="number"],
+.gv-tabbed-admin input[type="password"],
+.gv-tabbed-admin input[type="tel"],
+.gv-tabbed-admin input[type="search"],
+.gv-tabbed-admin textarea,
+.gv-tabbed-admin select,
+.gv-tabbed-admin .vTextField,
+.gv-tabbed-admin .vLargeTextField,
+.gv-tabbed-admin .vURLField {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 8px !important;
+    padding: 10px 14px !important;
+    font-size: 14px !important;
+    font-family: 'IRANSansX', 'Vazirmatn', 'Tahoma', sans-serif !important;
+    transition: all 0.2s ease;
+    direction: rtl;
+}
+
+.gv-tabbed-admin input:focus,
+.gv-tabbed-admin textarea:focus,
+.gv-tabbed-admin select:focus {
+    background-color: #ffffff !important;
+    border-color: #D4AF37 !important;
+    box-shadow: 0 0 0 3px rgba(212,175,55,0.15) !important;
+    outline: none !important;
+}
+
+.gv-tabbed-admin select option {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    padding: 8px !important;
+}
+
+.gv-tabbed-admin select option:hover,
+.gv-tabbed-admin select option:checked {
+    background-color: #fef3c7 !important;
+    color: #1f2937 !important;
+}
+
+/* ═══ Labels ═══ */
+.gv-tabbed-admin label,
+.gv-tabbed-admin .form-row > label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    color: rgba(255,255,255,0.9);
+}
+
+.gv-tabbed-admin .required label::after,
+.gv-tabbed-admin label.required::after {
+    content: ' *';
+    color: #ef4444;
+}
+
+/* ═══ Help Text ═══ */
+.gv-tabbed-admin .help,
+.gv-tabbed-admin .helptext {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.5;
+}
+
+/* ═══ Error States ═══ */
+.gv-tabbed-admin .errorlist {
+    margin: 8px 0;
+    padding: 10px 14px;
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 8px;
+    list-style: none;
+}
+
+.gv-tabbed-admin .errorlist li {
+    color: #ef4444;
+    font-size: 13px;
+    padding: 4px 0;
+}
+
+.gv-tabbed-admin .errors input,
+.gv-tabbed-admin .errors textarea,
+.gv-tabbed-admin .errors select {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 2px rgba(239,68,68,0.2) !important;
+}
+
+/* ═══ Checkboxes and Radio Buttons ═══ */
+.gv-tabbed-admin input[type="checkbox"],
+.gv-tabbed-admin input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    margin-left: 8px;
+    cursor: pointer;
+    accent-color: #D4AF37;
+}
+
+.gv-tabbed-admin .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ═══ File Inputs ═══ */
+.gv-tabbed-admin input[type="file"] {
+    padding: 8px;
+    background: rgba(255,255,255,0.05);
+    border: 2px dashed rgba(255,255,255,0.2);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.gv-tabbed-admin input[type="file"]:hover {
+    border-color: #D4AF37;
+    background: rgba(212,175,55,0.05);
+}
+
+/* ═══ Image Previews ═══ */
+.gv-tabbed-admin .file-upload {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.gv-tabbed-admin .file-upload a img,
+.gv-tabbed-admin .inline-related a img {
+    max-width: 200px;
+    max-height: 150px;
+    border-radius: 10px;
+    border: 2px solid rgba(255,255,255,0.1);
+    object-fit: cover;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.gv-tabbed-admin .file-upload a img:hover,
+.gv-tabbed-admin .inline-related a img:hover {
+    border-color: #D4AF37;
+    transform: scale(1.03);
+    box-shadow: 0 8px 24px rgba(212,175,55,0.25);
+}
+
+.gv-tabbed-admin .clearable-file-input {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
+.gv-tabbed-admin .clearable-file-input .file-upload {
+    flex: 1;
+}
+
+/* ═══ Delete Checkbox ═══ */
+.gv-tabbed-admin .delete {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 6px;
+    font-size: 12px;
+    color: #ef4444;
+    margin-top: 8px;
+    transition: all 0.2s ease;
+}
+
+.gv-tabbed-admin .delete:hover {
+    background: rgba(239,68,68,0.2);
+}
+
+/* ═══ Form Rows ═══ */
+.gv-tabbed-admin .form-row {
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    clear: both;
+}
+
+.gv-tabbed-admin .form-row:last-child {
+    border-bottom: none;
+}
+
+.gv-tabbed-admin .form-row > div {
+    margin-top: 6px;
+}
+
+/* ═══ Aligned Form ═══ */
+.gv-tabbed-admin .aligned .form-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 16px;
+    align-items: start;
+}
+
+@media (max-width: 768px) {
+    .gv-tabbed-admin .aligned .form-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+}
+
+/* ═══ Inline Groups ═══ */
+.gv-tabbed-admin .inline-group {
+    margin: 20px 0;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.02);
+}
+
+.gv-tabbed-admin .inline-group h2 {
+    margin: 0;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, rgba(212,175,55,0.12) 0%, rgba(212,175,55,0.04) 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 15px;
+    font-weight: 600;
+    color: #D4AF37;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.gv-tabbed-admin .inline-group h2:hover {
+    background: linear-gradient(135deg, rgba(212,175,55,0.18) 0%, rgba(212,175,55,0.08) 100%);
+}
+
+.gv-tabbed-admin .inline-group h2::after {
+    content: '▼';
+    font-size: 10px;
+    color: rgba(212,175,55,0.6);
+    transition: transform 0.3s ease;
+}
+
+.gv-tabbed-admin .inline-group.collapsed h2::after {
+    transform: rotate(-90deg);
+}
+
+.gv-tabbed-admin .inline-group .inline-related {
+    padding: 20px;
+}
+
+.gv-tabbed-admin .inline-group.collapsed .inline-related,
+.gv-tabbed-admin .inline-group.collapsed .tabular {
+    display: none;
+}
+
+/* ═══ Fieldsets ═══ */
+.gv-tabbed-admin fieldset.module {
+    margin: 0 0 20px 0;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.02);
+}
+
+.gv-tabbed-admin fieldset.module h2 {
+    margin: 0;
+    padding: 14px 20px;
+    background: rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+}
+
+.gv-tabbed-admin fieldset.module .form-row {
+    padding: 14px 20px;
+}
+
+/* ═══ Collapse Sections ═══ */
+.gv-tabbed-admin fieldset.collapse {
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(0,0,0,0.1);
+}
+
+.gv-tabbed-admin fieldset.collapse.collapsed h2 {
+    background: rgba(255,255,255,0.03);
+}
+
+/* ═══ CKEditor Integration ═══ */
+.gv-tabbed-admin .ck-editor {
+    border-radius: 10px !important;
+    overflow: hidden;
+}
+
+.gv-tabbed-admin .ck-editor__main {
+    background: #ffffff !important;
+}
+
+.gv-tabbed-admin .ck-content {
+    background: #ffffff !important;
+    color: #1f2937 !important;
+    min-height: 200px;
+    direction: rtl;
+}
+
+/* ═══ Related Widget ═══ */
+.gv-tabbed-admin .related-widget-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.gv-tabbed-admin .related-widget-wrapper select {
+    flex: 1;
+}
+
+.gv-tabbed-admin .related-widget-wrapper .related-lookup,
+.gv-tabbed-admin .related-widget-wrapper .add-related,
+.gv-tabbed-admin .related-widget-wrapper .change-related,
+.gv-tabbed-admin .related-widget-wrapper .delete-related {
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 12px;
+    transition: all 0.2s ease;
+}
+
+.gv-tabbed-admin .related-widget-wrapper a:hover {
+    background: rgba(255,255,255,0.12);
+    color: #D4AF37;
+}
+
+/* ═══ Tabular Inline Tables ═══ */
+.gv-tabbed-admin .tabular table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.gv-tabbed-admin .tabular th {
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-weight: 600;
+    font-size: 13px;
+    color: rgba(255,255,255,0.8);
+    text-align: right;
+}
+
+.gv-tabbed-admin .tabular td {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    vertical-align: middle;
+}
+
+.gv-tabbed-admin .tabular tr:hover td {
+    background: rgba(255,255,255,0.02);
+}
+
+/* ═══ Add Another Row ═══ */
+.gv-tabbed-admin .add-row {
+    padding: 12px 20px;
+    background: rgba(255,255,255,0.02);
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.gv-tabbed-admin .add-row a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(212,175,55,0.08) 100%);
+    border: 1px solid rgba(212,175,55,0.3);
+    border-radius: 8px;
+    color: #D4AF37;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.gv-tabbed-admin .add-row a:hover {
+    background: linear-gradient(135deg, rgba(212,175,55,0.25) 0%, rgba(212,175,55,0.15) 100%);
+    border-color: rgba(212,175,55,0.5);
+}
+
+/* ═══ Object Tools (Top Buttons) ═══ */
+.gv-tabbed-admin .object-tools {
+    margin: 0 0 20px 0;
+    padding: 0;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.gv-tabbed-admin .object-tools li {
+    list-style: none;
+}
+
+.gv-tabbed-admin .object-tools a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.2s ease;
+}
+
+.gv-tabbed-admin .object-tools a:hover {
+    background: rgba(255,255,255,0.12);
+    color: #D4AF37;
+    border-color: rgba(212,175,55,0.3);
+}
+
+/* ═══ Breadcrumbs ═══ */
+.gv-tabbed-admin .breadcrumbs {
+    padding: 12px 20px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 13px;
+}
+
+.gv-tabbed-admin .breadcrumbs a {
+    color: #D4AF37;
+    text-decoration: none;
+}
+
+.gv-tabbed-admin .breadcrumbs a:hover {
+    text-decoration: underline;
+}
+
+/* ═══ Animations ═══ */
+@keyframes gvShimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.gv-tabbed-admin .loading-shimmer {
+    background: linear-gradient(90deg, 
+        rgba(255,255,255,0.05) 25%, 
+        rgba(255,255,255,0.1) 50%, 
+        rgba(255,255,255,0.05) 75%
+    );
+    background-size: 200% 100%;
+    animation: gvShimmer 1.5s ease-in-out infinite;
+}
+
+/* ═══ Sticky Submit Wrapper ═══ */
+.gv-sticky-submit-wrapper {
+    position: sticky;
+    bottom: 0;
+    z-index: 999;
+    background: linear-gradient(180deg, rgba(15,23,42,0) 0%, #0f172a 15%, #0f172a 100%);
+    padding: 24px;
+    margin: 20px -24px -24px;
+}
+
+.gv-sticky-submit-wrapper .gv-sticky-submit {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    direction: rtl;
+}
+
+.gv-sticky-submit-wrapper .submit-row {
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    border: none;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.gv-sticky-submit-wrapper .submit-row p {
+    margin: 0;
+}
+
+.gv-sticky-submit-wrapper .submit-row input[type="submit"],
+.gv-sticky-submit-wrapper .submit-row button {
+    padding: 14px 28px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-family: 'IRANSansX', 'Vazirmatn', 'Tahoma', sans-serif;
+}
+
+.gv-sticky-submit-wrapper .submit-row input[name="_save"],
+.gv-sticky-submit-wrapper .submit-row input.default {
+    background: linear-gradient(135deg, #D4AF37 0%, #c5a028 100%);
+    color: #1a1a2e;
+    box-shadow: 0 4px 16px rgba(212,175,55,0.35);
+}
+
+.gv-sticky-submit-wrapper .submit-row input[name="_save"]:hover,
+.gv-sticky-submit-wrapper .submit-row input.default:hover {
+    background: linear-gradient(135deg, #e5c142 0%, #D4AF37 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212,175,55,0.45);
+}
+
+.gv-sticky-submit-wrapper .submit-row input[name="_continue"],
+.gv-sticky-submit-wrapper .submit-row input[name="_addanother"] {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.gv-sticky-submit-wrapper .submit-row input[name="_continue"]:hover,
+.gv-sticky-submit-wrapper .submit-row input[name="_addanother"]:hover {
+    background: rgba(255,255,255,0.15);
+    border-color: rgba(255,255,255,0.3);
+    transform: translateY(-1px);
+}
+
+.gv-sticky-submit-wrapper .submit-row .deletelink {
+    background: rgba(239,68,68,0.15);
+    color: #ef4444;
+    border: 1px solid rgba(239,68,68,0.3);
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.2s ease;
+}
+
+.gv-sticky-submit-wrapper .submit-row .deletelink:hover {
+    background: rgba(239,68,68,0.25);
+    border-color: rgba(239,68,68,0.5);
+}
+
+/* ═══ Tab Badge Enhancement ═══ */
+.gv-tab-btn .tab-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 7px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 11px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-right: 6px;
+}
+
+.gv-tab-btn.active .tab-badge {
+    background: rgba(0,0,0,0.25);
+    color: #1a1a2e;
+}
+
+/* ═══ Empty Panel State ═══ */
+.gv-tab-content:empty::after {
+    content: 'هیچ فیلدی در این بخش وجود ندارد';
+    display: block;
+    padding: 40px;
+    text-align: center;
+    color: rgba(255,255,255,0.4);
+    font-size: 14px;
+}
+
+/* ═══ Print Styles ═══ */
+@media print {
+    .gv-tabs-nav-wrapper,
+    .gv-tabs-progress,
+    .gv-sticky-submit-wrapper,
+    .object-tools {
+        display: none !important;
+    }
+    
+    .gv-tab-panel {
+        display: block !important;
+        page-break-inside: avoid;
+    }
+}

@@ -1522,6 +1522,9 @@ class GoldenVisaLandingPageAdmin(PersianBaseAdmin):
     تمام بخش‌های صفحه از یک جا قابل مدیریت هستند.
     """
     
+    # Use custom tab-based template
+    change_form_template = 'admin/persian_cms/goldenvisalandingpage/change_form.html'
+    
     form = GoldenVisaLandingPageForm
     list_display = ('title', 'slug', 'is_active', 'updated_at', 'edit_link')
     list_display_links = ('title',)
@@ -1606,7 +1609,11 @@ class GoldenVisaLandingPageAdmin(PersianBaseAdmin):
     ]
     
     class Media:
-        css = {'all': ('css/persian-admin.css', 'css/gv-admin-fix.css',)}
+        css = {'all': (
+            'css/persian-admin.css', 
+            'css/gv-admin-fix.css',
+            'css/gv-admin-tabs.css',
+        )}
         js = ('js/ckeditor5-word-cleanup.js',)
     
     def get_form(self, request, obj=None, **kwargs):
