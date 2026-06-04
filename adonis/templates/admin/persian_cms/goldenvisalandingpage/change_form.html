@@ -3,8 +3,77 @@
 
 {% block extrahead %}
 {{ block.super }}
-<link rel="stylesheet" href="{% static 'css/gv-admin-tabs.css' %}">
+<link rel="stylesheet" href="{% static 'css/gv-admin-tabs.css' %}?v={{ request.timestamp|default:"2" }}">
 <style>
+/* ══════════════════════════════════════════════════════════════════════════════
+   Force Large Text Boxes - Inline Override
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* All textareas must be large */
+textarea,
+.vLargeTextField,
+.gv-tabbed-admin textarea {
+    width: 100% !important;
+    min-width: 100% !important;
+    min-height: 300px !important;
+    height: auto !important;
+    padding: 20px !important;
+    font-size: 15px !important;
+    line-height: 1.8 !important;
+    border-radius: 12px !important;
+    background: #ffffff !important;
+    color: #1f2937 !important;
+    border: 1px solid #d1d5db !important;
+    resize: vertical !important;
+    box-sizing: border-box !important;
+    display: block !important;
+    direction: rtl !important;
+}
+
+/* CKEditor boxes must be large */
+.ck-editor__editable,
+.ck-content,
+.django-ckeditor-widget .ck-editor__editable {
+    min-height: 350px !important;
+    max-height: 600px !important;
+    padding: 24px !important;
+    font-size: 16px !important;
+    line-height: 1.9 !important;
+    background: #ffffff !important;
+    color: #1f2937 !important;
+    direction: rtl !important;
+}
+
+/* CKEditor wrapper full width */
+.django-ckeditor-widget,
+.ck-editor,
+.ck-editor__main {
+    width: 100% !important;
+    display: block !important;
+}
+
+/* Form row full width */
+.form-row,
+.form-row > div,
+fieldset .form-row {
+    width: 100% !important;
+}
+
+/* Aligned form fix */
+.aligned .form-row {
+    display: block !important;
+}
+
+.aligned .form-row > label {
+    display: block !important;
+    width: 100% !important;
+    margin-bottom: 10px !important;
+}
+
+.aligned .form-row > div {
+    width: 100% !important;
+    margin-right: 0 !important;
+}
 /* ══════════════════════════════════════════════════════════════════════════════
    Golden Visa Landing Page - Tab-Based Admin Interface
    ══════════════════════════════════════════════════════════════════════════════ */
