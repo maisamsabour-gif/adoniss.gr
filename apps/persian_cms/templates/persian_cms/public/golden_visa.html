@@ -107,13 +107,13 @@
     {% if landing.intro_title or landing.intro_body %}
     <section id="intro" class="gv-section gv-section-light">
         <div class="gv-container">
-            <div class="gv-section-head" data-aos="fade-up">
-                <div class="gv-icon-glass"><i class="fas fa-info-circle"></i></div>
+            <div class="gv-section-head" data-aos="zoom-in-up" data-aos-duration="700">
+                <div class="gv-icon-glass gv-icon-pulse"><i class="fas fa-info-circle"></i></div>
                 <h2 class="gv-section-title">{{ landing.intro_title|default:"معرفی" }}</h2>
-                <div class="gv-title-line"></div>
+                <div class="gv-title-line gv-line-animated"></div>
             </div>
             {% if landing.intro_body %}
-            <div class="gv-content-box" data-aos="fade-up" data-aos-delay="100">
+            <div class="gv-content-box" data-aos="fade-up" data-aos-delay="150" data-aos-duration="800">
                 {{ landing.intro_body|safe }}
             </div>
             {% endif %}
@@ -127,49 +127,54 @@
     {% if landing.benefits_title or landing.benefits_body %}
     <section id="benefits" class="gv-section gv-section-dark">
         <div class="gv-section-bg-pattern"></div>
+        <div class="gv-floating-shapes">
+            <div class="gv-float-shape gv-float-1"></div>
+            <div class="gv-float-shape gv-float-2"></div>
+            <div class="gv-float-shape gv-float-3"></div>
+        </div>
         <div class="gv-container">
-            <div class="gv-section-head" data-aos="fade-up">
-                <div class="gv-icon-glass gv-icon-gold"><i class="fas fa-star"></i></div>
+            <div class="gv-section-head" data-aos="flip-down" data-aos-duration="800">
+                <div class="gv-icon-glass gv-icon-gold gv-icon-spin"><i class="fas fa-star"></i></div>
                 <h2 class="gv-section-title gv-title-light">{{ landing.benefits_title|default:"مزایا" }}</h2>
-                <div class="gv-title-line gv-line-gold"></div>
+                <div class="gv-title-line gv-line-gold gv-line-animated"></div>
             </div>
             
             <!-- Benefits Grid -->
             <div class="gv-benefits-grid">
-                <div class="gv-benefit-card" data-aos="flip-up" data-aos-delay="0">
-                    <div class="gv-benefit-icon"><i class="fas fa-plane-departure"></i></div>
+                <div class="gv-benefit-card gv-card-hover" data-aos="zoom-in-right" data-aos-delay="0" data-aos-duration="600">
+                    <div class="gv-benefit-icon gv-icon-bounce"><i class="fas fa-plane-departure"></i></div>
                     <h4>سفر بدون ویزا</h4>
                     <p>دسترسی به ۲۷ کشور شنگن</p>
                 </div>
-                <div class="gv-benefit-card" data-aos="flip-up" data-aos-delay="100">
-                    <div class="gv-benefit-icon"><i class="fas fa-home"></i></div>
+                <div class="gv-benefit-card gv-card-hover" data-aos="zoom-in-down" data-aos-delay="100" data-aos-duration="600">
+                    <div class="gv-benefit-icon gv-icon-bounce"><i class="fas fa-home"></i></div>
                     <h4>اقامت اروپا</h4>
                     <p>زندگی در یونان و اروپا</p>
                 </div>
-                <div class="gv-benefit-card" data-aos="flip-up" data-aos-delay="200">
-                    <div class="gv-benefit-icon"><i class="fas fa-graduation-cap"></i></div>
+                <div class="gv-benefit-card gv-card-hover" data-aos="zoom-in-left" data-aos-delay="200" data-aos-duration="600">
+                    <div class="gv-benefit-icon gv-icon-bounce"><i class="fas fa-graduation-cap"></i></div>
                     <h4>تحصیل رایگان</h4>
                     <p>دانشگاه‌های معتبر اروپایی</p>
                 </div>
-                <div class="gv-benefit-card" data-aos="flip-up" data-aos-delay="300">
-                    <div class="gv-benefit-icon"><i class="fas fa-briefcase"></i></div>
+                <div class="gv-benefit-card gv-card-hover" data-aos="zoom-in-right" data-aos-delay="300" data-aos-duration="600">
+                    <div class="gv-benefit-icon gv-icon-bounce"><i class="fas fa-briefcase"></i></div>
                     <h4>کسب و کار</h4>
                     <p>فعالیت اقتصادی در اروپا</p>
                 </div>
-                <div class="gv-benefit-card" data-aos="flip-up" data-aos-delay="400">
-                    <div class="gv-benefit-icon"><i class="fas fa-heart-pulse"></i></div>
+                <div class="gv-benefit-card gv-card-hover" data-aos="zoom-in-up" data-aos-delay="400" data-aos-duration="600">
+                    <div class="gv-benefit-icon gv-icon-bounce"><i class="fas fa-heart-pulse"></i></div>
                     <h4>بهداشت و درمان</h4>
                     <p>خدمات پزشکی پیشرفته</p>
                 </div>
-                <div class="gv-benefit-card" data-aos="flip-up" data-aos-delay="500">
-                    <div class="gv-benefit-icon"><i class="fas fa-users"></i></div>
+                <div class="gv-benefit-card gv-card-hover" data-aos="zoom-in-left" data-aos-delay="500" data-aos-duration="600">
+                    <div class="gv-benefit-icon gv-icon-bounce"><i class="fas fa-users"></i></div>
                     <h4>خانواده</h4>
                     <p>اقامت برای همه اعضا</p>
                 </div>
             </div>
             
             {% if landing.benefits_body %}
-            <div class="gv-content-box gv-content-dark" data-aos="fade-up" data-aos-delay="200">
+            <div class="gv-content-box gv-content-dark" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
                 {{ landing.benefits_body|safe }}
             </div>
             {% endif %}
@@ -183,14 +188,14 @@
     {% if landing.requirements_title or landing.requirements_body %}
     <section id="requirements" class="gv-section gv-section-light">
         <div class="gv-container">
-            <div class="gv-section-head" data-aos="fade-up">
-                <div class="gv-icon-glass"><i class="fas fa-clipboard-list"></i></div>
+            <div class="gv-section-head" data-aos="fade-down" data-aos-duration="700">
+                <div class="gv-icon-glass gv-icon-pulse"><i class="fas fa-clipboard-list"></i></div>
                 <h2 class="gv-section-title">{{ landing.requirements_title|default:"شرایط" }}</h2>
-                <div class="gv-title-line"></div>
+                <div class="gv-title-line gv-line-animated"></div>
             </div>
             
             <!-- Requirements List -->
-            <div class="gv-req-list" data-aos="fade-up" data-aos-delay="100">
+            <div class="gv-req-list" data-aos="fade-right" data-aos-delay="100" data-aos-duration="700">
                 <div class="gv-req-item">
                     <div class="gv-req-num">۱</div>
                     <div class="gv-req-text">حداقل سرمایه‌گذاری ۲۵۰,۰۰۰ یورو</div>
@@ -223,38 +228,42 @@
          ═══════════════════════════════════════════════════════════════════════ -->
     {% if landing.process_title or landing.process_body %}
     <section id="process" class="gv-section gv-section-gradient">
+        <div class="gv-floating-shapes">
+            <div class="gv-float-shape gv-float-1"></div>
+            <div class="gv-float-shape gv-float-2"></div>
+        </div>
         <div class="gv-container">
-            <div class="gv-section-head" data-aos="fade-up">
-                <div class="gv-icon-glass gv-icon-white"><i class="fas fa-route"></i></div>
-                <h2 class="gv-section-title gv-title-light">{{ landing.process_title|default:"مراحل" }}</h2>
-                <div class="gv-title-line gv-line-white"></div>
+            <div class="gv-section-head" data-aos="zoom-in-down" data-aos-duration="700">
+                <div class="gv-icon-glass gv-icon-white gv-icon-spin"><i class="fas fa-route"></i></div>
+                <h2 class="gv-section-title gv-title-light gv-gradient-text">{{ landing.process_title|default:"مراحل" }}</h2>
+                <div class="gv-title-line gv-line-white gv-line-animated"></div>
             </div>
             
             <!-- Timeline -->
-            <div class="gv-timeline">
-                <div class="gv-timeline-item" data-aos="fade-left" data-aos-delay="0">
-                    <div class="gv-timeline-dot"><i class="fas fa-search"></i></div>
+            <div class="gv-timeline gv-stagger">
+                <div class="gv-timeline-item gv-card-hover" data-aos="flip-right" data-aos-delay="0" data-aos-duration="700">
+                    <div class="gv-timeline-dot gv-icon-pulse"><i class="fas fa-search"></i></div>
                     <div class="gv-timeline-content">
                         <h4>مشاوره اولیه</h4>
                         <p>بررسی شرایط و انتخاب بهترین گزینه</p>
                     </div>
                 </div>
-                <div class="gv-timeline-item" data-aos="fade-right" data-aos-delay="100">
-                    <div class="gv-timeline-dot"><i class="fas fa-building"></i></div>
+                <div class="gv-timeline-item gv-card-hover" data-aos="flip-left" data-aos-delay="150" data-aos-duration="700">
+                    <div class="gv-timeline-dot gv-icon-pulse"><i class="fas fa-building"></i></div>
                     <div class="gv-timeline-content">
                         <h4>انتخاب ملک</h4>
                         <p>بازدید و انتخاب ملک مناسب</p>
                     </div>
                 </div>
-                <div class="gv-timeline-item" data-aos="fade-left" data-aos-delay="200">
-                    <div class="gv-timeline-dot"><i class="fas fa-file-signature"></i></div>
+                <div class="gv-timeline-item gv-card-hover" data-aos="flip-right" data-aos-delay="300" data-aos-duration="700">
+                    <div class="gv-timeline-dot gv-icon-pulse"><i class="fas fa-file-signature"></i></div>
                     <div class="gv-timeline-content">
                         <h4>مدارک و قرارداد</h4>
                         <p>تکمیل مدارک و امضای قرارداد</p>
                     </div>
                 </div>
-                <div class="gv-timeline-item" data-aos="fade-right" data-aos-delay="300">
-                    <div class="gv-timeline-dot"><i class="fas fa-passport"></i></div>
+                <div class="gv-timeline-item gv-card-hover" data-aos="flip-left" data-aos-delay="450" data-aos-duration="700">
+                    <div class="gv-timeline-dot gv-icon-pulse"><i class="fas fa-passport"></i></div>
                     <div class="gv-timeline-content">
                         <h4>دریافت اقامت</h4>
                         <p>صدور کارت اقامت ۵ ساله</p>
@@ -263,7 +272,7 @@
             </div>
             
             {% if landing.process_body %}
-            <div class="gv-content-box gv-content-glass" data-aos="fade-up" data-aos-delay="200">
+            <div class="gv-content-box gv-content-glass" data-aos="zoom-in" data-aos-delay="300" data-aos-duration="800">
                 {{ landing.process_body|safe }}
             </div>
             {% endif %}
@@ -277,14 +286,14 @@
     {% if landing.faq_title or landing.faq_body %}
     <section id="faq" class="gv-section gv-section-light">
         <div class="gv-container">
-            <div class="gv-section-head" data-aos="fade-up">
-                <div class="gv-icon-glass"><i class="fas fa-question-circle"></i></div>
+            <div class="gv-section-head" data-aos="flip-up" data-aos-duration="700">
+                <div class="gv-icon-glass gv-icon-pulse"><i class="fas fa-question-circle"></i></div>
                 <h2 class="gv-section-title">{{ landing.faq_title|default:"سوالات متداول" }}</h2>
-                <div class="gv-title-line"></div>
+                <div class="gv-title-line gv-line-animated"></div>
             </div>
             
             {% if landing.faq_body %}
-            <div class="gv-faq-content" data-aos="fade-up" data-aos-delay="100">
+            <div class="gv-faq-content" data-aos="fade-left" data-aos-delay="150" data-aos-duration="800">
                 {{ landing.faq_body|safe }}
             </div>
             {% endif %}
@@ -298,9 +307,13 @@
     {% if landing.cta_banner_title or landing.cta_banner_text %}
     <section id="contact" class="gv-cta-section">
         <div class="gv-cta-bg"></div>
+        <div class="gv-floating-shapes">
+            <div class="gv-float-shape gv-float-1"></div>
+            <div class="gv-float-shape gv-float-2"></div>
+        </div>
         <div class="gv-container">
-            <div class="gv-cta-box" data-aos="zoom-in" data-aos-duration="800">
-                <div class="gv-cta-icon">
+            <div class="gv-cta-box" data-aos="zoom-in-up" data-aos-duration="900" data-aos-easing="ease-out-back">
+                <div class="gv-cta-icon gv-icon-bounce">
                     <i class="fas fa-rocket"></i>
                 </div>
                 {% if landing.cta_banner_title %}
@@ -636,6 +649,127 @@
 @keyframes bounce-arrow {
     0%, 100% { opacity: 0.5; transform: translateY(0); }
     50% { opacity: 1; transform: translateY(4px); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   NEW ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Floating Shapes for Sections */
+.gv-floating-shapes {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.gv-float-shape {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(201, 162, 39, 0.1), rgba(201, 162, 39, 0.05));
+    animation: gv-float 20s ease-in-out infinite;
+}
+
+.gv-float-1 { width: 300px; height: 300px; top: -100px; right: -100px; animation-delay: 0s; }
+.gv-float-2 { width: 200px; height: 200px; bottom: 10%; left: -50px; animation-delay: -7s; }
+.gv-float-3 { width: 150px; height: 150px; top: 50%; right: 10%; animation-delay: -14s; }
+
+@keyframes gv-float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(30px, -40px) rotate(90deg); }
+    50% { transform: translate(-20px, 30px) rotate(180deg); }
+    75% { transform: translate(25px, 15px) rotate(270deg); }
+}
+
+/* Icon Animations */
+.gv-icon-pulse {
+    animation: gv-pulse 2s ease-in-out infinite;
+}
+
+.gv-icon-spin:hover i {
+    animation: gv-spin 0.8s ease-in-out;
+}
+
+.gv-icon-bounce:hover {
+    animation: gv-bounce 0.6s ease;
+}
+
+@keyframes gv-pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.4); }
+    50% { transform: scale(1.05); box-shadow: 0 0 20px 10px rgba(201, 162, 39, 0); }
+}
+
+@keyframes gv-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes gv-bounce {
+    0%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-15px); }
+    50% { transform: translateY(-8px); }
+    70% { transform: translateY(-12px); }
+}
+
+/* Line Animation */
+.gv-line-animated {
+    position: relative;
+    overflow: hidden;
+}
+
+.gv-line-animated::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: gv-shine 3s ease-in-out infinite;
+}
+
+@keyframes gv-shine {
+    0% { left: -100%; }
+    50%, 100% { left: 100%; }
+}
+
+/* Card Hover Effects */
+.gv-card-hover {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.gv-card-hover:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+}
+
+/* Stagger Animation for Lists */
+.gv-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.gv-stagger > *:nth-child(2) { animation-delay: 100ms; }
+.gv-stagger > *:nth-child(3) { animation-delay: 200ms; }
+.gv-stagger > *:nth-child(4) { animation-delay: 300ms; }
+.gv-stagger > *:nth-child(5) { animation-delay: 400ms; }
+.gv-stagger > *:nth-child(6) { animation-delay: 500ms; }
+
+/* Gradient Text Animation */
+.gv-gradient-text {
+    background: linear-gradient(90deg, var(--gv-gold), #f5d77d, var(--gv-gold));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gv-gradient 4s linear infinite;
+}
+
+@keyframes gv-gradient {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+
+/* Parallax Effect */
+.gv-parallax {
+    transform: translateZ(0);
+    will-change: transform;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
