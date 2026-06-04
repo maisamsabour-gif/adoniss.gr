@@ -119,7 +119,10 @@
          BENEFITS SECTION
          ═══════════════════════════════════════════════════════════════════════ -->
     {% if landing.benefits_title or landing.benefits_body %}
-    <section id="benefits" class="gv-section gv-section-dark">
+    <section id="benefits" class="gv-section gv-section-dark gv-benefits-section" {% if landing.benefits_section.background_image %}style="--benefits-bg-image: url('{{ landing.benefits_section.background_image.url }}'); --benefits-bg-opacity: {{ landing.benefits_section.background_opacity|default:'0.3' }};"{% endif %}>
+        {% if landing.benefits_section.background_image %}
+        <div class="gv-section-bg-image"></div>
+        {% endif %}
         <div class="gv-section-bg-pattern"></div>
         <div class="gv-floating-shapes">
             <div class="gv-float-shape gv-float-1"></div>
@@ -902,12 +905,31 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+   BENEFITS SECTION BACKGROUND
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.gv-benefits-section {
+    position: relative;
+}
+
+.gv-section-bg-image {
+    position: absolute;
+    inset: 0;
+    background-image: var(--benefits-bg-image);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: var(--benefits-bg-opacity, 0.3);
+    z-index: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
    BENEFITS GRID
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .gv-benefits-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 24px;
     margin-bottom: 50px;
 }
@@ -1232,6 +1254,12 @@
     
     .gv-benefits-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .gv-benefits-grid {
+        grid-template-columns: 1fr;
     }
 }
 </style>

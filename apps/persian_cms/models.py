@@ -1528,6 +1528,12 @@ class GVBenefitsSection(GVBaseModel):
         blank=True,
         verbose_name='تصویر پس‌زمینه',
     )
+    background_opacity = models.CharField(
+        max_length=10,
+        default='0.3',
+        verbose_name='شفافیت تصویر پس‌زمینه',
+        help_text='عدد بین 0 تا 1 (مثلاً 0.3 یعنی 30% شفافیت)',
+    )
     side_image = models.ImageField(
         upload_to='gv_landing/benefits/',
         blank=True,
