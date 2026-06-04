@@ -1,0 +1,17 @@
+[0;1;32m●[0m adonis.service - Adonis Persian Site Gunicorn Daemon
+     Loaded: loaded (]8;;file://adonis-farsi/etc/systemd/system/adonis.service\/etc/systemd/system/adonis.service]8;;\; [0;1;32menabled[0m; preset: [0;1;32menabled[0m)
+     Active: [0;1;32mactive (running)[0m since Thu 2026-06-04 07:47:46 UTC; 1min 47s ago
+ Invocation: c2c8c1954e974387bb0af24278287e8e
+   Main PID: 595706 (gunicorn)
+      Tasks: 7[0;38:5:245m (limit: 3647)[0m
+     Memory: 337.3M (peak: 337.4M)
+        CPU: 7.000s
+     CGroup: /system.slice/adonis.service
+             ├─[0;38:5:245m595706 /root/adonis_site/venv/bin/python /root/adonis_site/venv/bin/gunicorn adonis.wsgi:application --config /root/adonis_site/deploy/gunicorn/gunicorn.conf.py --access-logfile /root/adonis_site/logs/gunicorn-access.log --error-logfile /root/adonis_site/logs/gunicorn-error.log[0m
+             ├─[0;38:5:245m595708 /root/adonis_site/venv/bin/python /root/adonis_site/venv/bin/gunicorn adonis.wsgi:application --config /root/adonis_site/deploy/gunicorn/gunicorn.conf.py --access-logfile /root/adonis_site/logs/gunicorn-access.log --error-logfile /root/adonis_site/logs/gunicorn-error.log[0m
+             ├─[0;38:5:245m595709 /root/adonis_site/venv/bin/python /root/adonis_site/venv/bin/gunicorn adonis.wsgi:application --config /root/adonis_site/deploy/gunicorn/gunicorn.conf.py --access-logfile /root/adonis_site/logs/gunicorn-access.log --error-logfile /root/adonis_site/logs/gunicorn-error.log[0m
+             ├─[0;38:5:245m595710 /root/adonis_site/venv/bin/python /root/adonis_site/venv/bin/gunicorn adonis.wsgi:application --config /root/adonis_site/deploy/gunicorn/gunicorn.conf.py --access-logfile /root/adonis_site/logs/gunicorn-access.log --error-logfile /root/adonis_site/logs/gunicorn-error.log[0m
+             ├─[0;38:5:245m595711 /root/adonis_site/venv/bin/python /root/adonis_site/venv/bin/gunicorn adonis.wsgi:application --config /root/adonis_site/deploy/gunicorn/gunicorn.conf.py --access-logfile /root/adonis_site/logs/gunicorn-access.log --error-logfile /root/adonis_site/logs/gunicorn-error.log[0m
+             └─[0;38:5:245m595712 /root/adonis_site/venv/bin/python /root/adonis_site/venv/bin/gunicorn adonis.wsgi:application --config /root/adonis_site/deploy/gunicorn/gunicorn.conf.py --access-logfile /root/adonis_site/logs/gunicorn-access.log --error-logfile /root/adonis_site/logs/gunicorn-error.log[0m
+
+Jun 04 07:47:46 adonis-farsi systemd[1]: Started adonis.service - Adonis Persian Site Gunicorn Daemon.
