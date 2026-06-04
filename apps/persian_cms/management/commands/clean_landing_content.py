@@ -36,73 +36,99 @@ from apps.persian_cms.models import (
 )
 
 
-def clean_html_content(html):
+def clean_html_content(html, strip_all_tags=False):
     """
     Clean HTML content by removing unnecessary inline styles and Word-specific markup.
+    If strip_all_tags=True, removes ALL HTML and returns plain text.
     """
     if not html:
         return html
     
     original = html
     
-    # Remove style attributes from tags
+    # First, unescape any HTML entities that represent tags
+    html = html.replace('&lt;', '<')
+    html = html.replace('&gt;', '>')
+    html = html.replace('&quot;', '"')
+    html = html.replace('&#39;', "'")
+    html = html.replace('&amp;', '&')
+    
+    # Remove ALL style attributes
     html = re.sub(r'\s*style\s*=\s*["\'][^"\']*["\']', '', html, flags=re.IGNORECASE)
     
-    # Remove class attributes (often Word-specific)
+    # Remove ALL class attributes
     html = re.sub(r'\s*class\s*=\s*["\'][^"\']*["\']', '', html, flags=re.IGNORECASE)
     
-    # Remove Word-specific tags
-    word_tags = ['o:p', 'v:shape', 'v:shapetype', 'w:sdt', 'w:sdtContent', 'w:sdtPr']
+    # Remove ALL id attributes
+    html = re.sub(r'\s*id\s*=\s*["\'][^"\']*["\']', '', html, flags=re.IGNORECASE)
+    
+    # Remove ALL data- attributes
+    html = re.sub(r'\s*data-[a-z0-9-]+\s*=\s*["\'][^"\']*["\']', '', html, flags=re.IGNORECASE)
+    
+    # Remove Word-specific tags completely
+    word_tags = ['o:p', 'v:shape', 'v:shapetype', 'w:sdt', 'w:sdtContent', 'w:sdtPr', 'xml', 'meta', 'link', 'style']
     for tag in word_tags:
         html = re.sub(rf'<{tag}[^>]*>.*?</{tag}>', '', html, flags=re.IGNORECASE | re.DOTALL)
         html = re.sub(rf'<{tag}[^>]*/>', '', html, flags=re.IGNORECASE)
+        html = re.sub(rf'<{tag}[^>]*>', '', html, flags=re.IGNORECASE)
     
-    # Remove empty span tags
-    html = re.sub(r'<span\s*>\s*</span>', '', html, flags=re.IGNORECASE)
-    html = re.sub(r'<span>([^<]*)</span>', r'\1', html, flags=re.IGNORECASE)
+    # Remove span tags completely but keep content
+    html = re.sub(r'<span[^>]*>(.*?)</span>', r'\1', html, flags=re.IGNORECASE | re.DOTALL)
     
-    # Remove empty paragraphs
-    html = re.sub(r'<p\s*>\s*</p>', '', html, flags=re.IGNORECASE)
-    html = re.sub(r'<p\s*>\s*&nbsp;\s*</p>', '', html, flags=re.IGNORECASE)
+    # Remove div tags but keep content  
+    html = re.sub(r'<div[^>]*>(.*?)</div>', r'\1', html, flags=re.IGNORECASE | re.DOTALL)
     
-    # Clean up p tags - keep content, remove attributes
-    html = re.sub(r'<p\s+[^>]*>', '<p>', html, flags=re.IGNORECASE)
-    
-    # Remove font tags (often from Word)
+    # Remove font tags but keep content
     html = re.sub(r'<font[^>]*>(.*?)</font>', r'\1', html, flags=re.IGNORECASE | re.DOTALL)
     
-    # Remove mso- prefixed styles (Microsoft Office)
-    html = re.sub(r'mso-[^;:"\']+[;]?', '', html, flags=re.IGNORECASE)
+    # Clean p tags - remove all attributes
+    html = re.sub(r'<p\s+[^>]*>', '<p>', html, flags=re.IGNORECASE)
     
-    # Remove XML declarations
+    # Clean other common tags
+    for tag in ['strong', 'b', 'i', 'em', 'u', 'a', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'br']:
+        # Keep tag but remove attributes (except href for <a>)
+        if tag == 'a':
+            # For links, keep href but remove other attributes
+            html = re.sub(rf'<a\s+(?:(?!href)[^>])*href\s*=\s*["\']([^"\']*)["\'][^>]*>', r'<a href="\1">', html, flags=re.IGNORECASE)
+        else:
+            html = re.sub(rf'<{tag}\s+[^>]*>', f'<{tag}>', html, flags=re.IGNORECASE)
+    
+    # Remove empty tags
+    html = re.sub(r'<p>\s*</p>', '', html, flags=re.IGNORECASE)
+    html = re.sub(r'<p>\s*&nbsp;\s*</p>', '', html, flags=re.IGNORECASE)
+    html = re.sub(r'<p>&nbsp;</p>', '', html, flags=re.IGNORECASE)
+    html = re.sub(r'<br\s*/?>\s*<br\s*/?>', '<br>', html, flags=re.IGNORECASE)
+    
+    # Remove XML/DOCTYPE declarations
     html = re.sub(r'<\?xml[^>]*\?>', '', html, flags=re.IGNORECASE)
+    html = re.sub(r'<!DOCTYPE[^>]*>', '', html, flags=re.IGNORECASE)
     
-    # Remove comments
+    # Remove HTML comments
     html = re.sub(r'<!--.*?-->', '', html, flags=re.DOTALL)
     
-    # Remove extra whitespace between tags
+    # Remove mso- prefixed anything
+    html = re.sub(r'mso-[^;:"\'>\s]+[;]?', '', html, flags=re.IGNORECASE)
+    
+    # Clean up multiple newlines
+    html = re.sub(r'\n\s*\n', '\n', html)
+    
+    # Clean up extra whitespace
+    html = re.sub(r' +', ' ', html)
     html = re.sub(r'>\s+<', '><', html)
     
-    # Remove leading/trailing whitespace
+    # Remove &nbsp; at start/end of paragraphs
+    html = re.sub(r'<p>&nbsp;', '<p>', html, flags=re.IGNORECASE)
+    html = re.sub(r'&nbsp;</p>', '</p>', html, flags=re.IGNORECASE)
+    
+    # Strip leading/trailing whitespace
     html = html.strip()
     
-    # Convert multiple spaces to single space
-    html = re.sub(r' +', ' ', html)
-    
-    # Ensure proper paragraph structure
-    # Split by </p> and rejoin with proper spacing
-    if '<p>' in html.lower():
-        parts = re.split(r'</p>\s*', html, flags=re.IGNORECASE)
-        cleaned_parts = []
-        for part in parts:
-            part = part.strip()
-            if part and not part.lower().startswith('<p>'):
-                part = '<p>' + part
-            if part:
-                cleaned_parts.append(part)
-        html = '</p>\n'.join(cleaned_parts)
-        if cleaned_parts and not html.endswith('</p>'):
-            html += '</p>'
+    # If strip_all_tags requested, remove everything
+    if strip_all_tags:
+        html = re.sub(r'<[^>]+>', '', html)
+        html = re.sub(r'&nbsp;', ' ', html)
+        html = re.sub(r' +', ' ', html)
+        html = html.strip()
     
     return html
 
