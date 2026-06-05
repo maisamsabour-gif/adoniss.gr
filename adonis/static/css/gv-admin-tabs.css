@@ -158,17 +158,90 @@ form textarea {
 
 /* ═══ File Inputs ═══ */
 .gv-tabbed-admin input[type="file"] {
-    padding: 8px;
-    background: rgba(255,255,255,0.05);
-    border: 2px dashed rgba(255,255,255,0.2);
+    padding: 12px;
+    background: #ffffff;
+    border: 2px dashed #d1d5db;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
+    color: #1f2937;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .gv-tabbed-admin input[type="file"]:hover {
     border-color: #D4AF37;
-    background: rgba(212,175,55,0.05);
+    background: #fffef5;
+}
+
+/* ═══ Clearable File Input - Clear Checkbox ═══ */
+.gv-tabbed-admin .clearable-file-input,
+.gv-tabbed-admin .file-upload,
+.inline-group .clearable-file-input,
+.inline-related .file-upload {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    padding: 16px !important;
+    background: rgba(255,255,255,0.05) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    border-radius: 10px !important;
+}
+
+/* Current file link */
+.gv-tabbed-admin .clearable-file-input a,
+.inline-group .file-upload a {
+    color: #D4AF37 !important;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+    word-break: break-all;
+}
+
+.gv-tabbed-admin .clearable-file-input a:hover {
+    text-decoration: underline !important;
+}
+
+/* Clear checkbox styling */
+.gv-tabbed-admin input[type="checkbox"][name$="-clear"],
+.gv-tabbed-admin input.clear-checkbox,
+input[type="checkbox"][name*="clear"],
+.inline-group input[type="checkbox"] {
+    width: 20px !important;
+    height: 20px !important;
+    margin-left: 8px !important;
+    cursor: pointer !important;
+    accent-color: #ef4444 !important;
+    vertical-align: middle !important;
+}
+
+/* Clear label styling */
+.gv-tabbed-admin .clearable-file-input label,
+.gv-tabbed-admin label[for$="-clear"],
+label[for*="clear"] {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 8px 16px !important;
+    background: rgba(239,68,68,0.1) !important;
+    border: 1px solid rgba(239,68,68,0.3) !important;
+    border-radius: 6px !important;
+    color: #ef4444 !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    margin-top: 8px !important;
+}
+
+.gv-tabbed-admin .clearable-file-input label:hover,
+label[for*="clear"]:hover {
+    background: rgba(239,68,68,0.2) !important;
+    border-color: rgba(239,68,68,0.5) !important;
+}
+
+/* File input wrapper */
+.gv-tabbed-admin .file-upload-wrapper {
+    margin-top: 10px;
 }
 
 /* ═══ Image Previews ═══ */

@@ -1086,34 +1086,35 @@ class GVProjectGalleryImageInline(admin.TabularInline):
 
 # ── Section Inlines with All Fields ───────────────────────────────────────────
 
+class ClearableFileWidget(forms.ClearableFileInput):
+    """Custom widget with Persian labels for clear checkbox."""
+    clear_checkbox_label = 'حذف'
+    initial_text = 'فایل فعلی'
+    input_text = 'تغییر'
+    template_name = 'admin/widgets/clearable_file_input.html'
+
+
 class GVHeroSectionForm(forms.ModelForm):
-    """Custom form to allow clearing video file."""
-    clear_video = forms.BooleanField(
-        required=False,
-        label='حذف ویدیو',
-        help_text='برای حذف ویدیو فعلی این گزینه را تیک بزنید',
-    )
+    """Custom form with clearable file widgets."""
     
     class Meta:
         model = GVHeroSection
         fields = '__all__'
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Only show clear checkbox if video exists
-        if self.instance and self.instance.pk and self.instance.background_video:
-            self.fields['clear_video'].initial = False
-        else:
-            self.fields['clear_video'].widget = forms.HiddenInput()
-    
-    def save(self, commit=True):
-        instance = super().save(commit=False)
-        if self.cleaned_data.get('clear_video') and instance.background_video:
-            # Delete the file from storage
-            instance.background_video.delete(save=False)
-        if commit:
-            instance.save()
-        return instance
+        widgets = {
+            'background_video': forms.ClearableFileInput(attrs={
+                'class': 'clearable-file-input',
+                'style': 'display: block; padding: 10px; background: #fff; border-radius: 8px;'
+            }),
+            'background_image': forms.ClearableFileInput(attrs={
+                'class': 'clearable-file-input',
+            }),
+            'hero_main_visual': forms.ClearableFileInput(attrs={
+                'class': 'clearable-file-input',
+            }),
+            'video_poster': forms.ClearableFileInput(attrs={
+                'class': 'clearable-file-input',
+            }),
+        }
 
 
 class GVHeroSectionInline(CKEditor5TextFieldMixin, admin.StackedInline):
@@ -1147,7 +1148,7 @@ class GVHeroSectionInline(CKEditor5TextFieldMixin, admin.StackedInline):
                 'hero_main_visual',
                 'hero_image_alt',
                 ('background_image', 'mobile_background_image'),
-                ('background_video', 'clear_video'),
+                'background_video',
                 'video_poster',
             ),
         }),
