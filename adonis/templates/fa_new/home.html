@@ -73,7 +73,7 @@
     <main id="adonis-fa-new-main" class="adonis-fa-new-main">
 
         {# ───────────── Hero ───────────── #}
-        <section class="adonis-fa-new-hero" id="adonis-fa-new-top">
+        <section class="adonis-fa-new-hero{% if not hero_has_video %} adonis-fa-new-hero--static{% endif %}" id="adonis-fa-new-top">
             <div class="hero-pin-stage">
 
                 {% if hero_has_video and hero_video_url %}
@@ -110,6 +110,9 @@
 
                 <div class="hero-scrim" aria-hidden="true"></div>
 
+                {% if hero_has_video %}
+                {# ═══ VIDEO MODE: Multiple scroll-based overlays ═══ #}
+                
                 {# ── Overlay 1 ── label / title / subtitle from admin "متن‌های هیرو فارسی" #}
                 <div class="hero-scene"
                      data-start="{{ settings.o1_start|default:0 }}"
@@ -178,6 +181,29 @@
                     <span class="hero-scroll-line"></span>
                     <span>اسکرول کنید</span>
                 </div>
+                
+                {% else %}
+                {# ═══ IMAGE MODE: Single static hero content (no scroll) ═══ #}
+                <div class="hero-scene hero-scene--static" style="opacity: 1; visibility: visible;">
+                    {% if settings.hero_label or settings.o1_eyebrow %}
+                    <p class="hero-eyebrow">{{ settings.hero_label|default:settings.o1_eyebrow }}</p>
+                    {% endif %}
+                    <h1>{% hero_headline settings.hero_title|default:settings.o1_title settings.o1_highlight %}</h1>
+                    {% if settings.hero_subtitle or settings.o1_subtitle %}
+                    <div class="hero-sub">{{ settings.hero_subtitle|default:settings.o1_subtitle|safe }}</div>
+                    {% endif %}
+                    <div class="hero-cta-buttons" style="margin-top:1.5rem">
+                        <a href="{% if settings.cta_primary_url %}{{ settings.cta_primary_url }}{% else %}#{{ consult_anchor }}{% endif %}" class="btn-primary">
+                            {{ settings.cta_primary_label|default:settings.hero_cta_text|default:'دریافت مشاوره' }}
+                        </a>
+                        {% if settings.cta_secondary_label %}
+                        <a href="{% if settings.cta_secondary_url %}{{ settings.cta_secondary_url }}{% else %}#{{ projects_anchor }}{% endif %}" class="btn-secondary">
+                            {{ settings.cta_secondary_label }}
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
 
             </div>
         </section>

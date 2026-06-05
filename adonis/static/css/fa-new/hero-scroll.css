@@ -325,3 +325,55 @@
     }
     .hero-scroll-hint { display: none; }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   STATIC IMAGE MODE — No cinematic scroll, just a single-screen hero
+   ══════════════════════════════════════════════════════════════════════════ */
+.adonis-fa-new-hero--static {
+    height: 100vh !important;
+    height: 100svh !important;
+    min-height: 100vh !important;
+    min-height: 100svh !important;
+    max-height: 100vh !important;
+    max-height: 100svh !important;
+}
+
+.adonis-fa-new-hero--static .hero-pin-stage {
+    position: relative;
+    height: 100%;
+}
+
+/* Static image background */
+.adonis-fa-new-hero--static .adonis-fa-new-hero-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center center;
+    z-index: 0;
+}
+
+/* Static scene — always visible, centered */
+.adonis-fa-new-hero--static .hero-scene--static {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    pointer-events: auto;
+    direction: rtl;
+}
+
+/* Hide scroll hint in static mode (not rendered, but just in case) */
+.adonis-fa-new-hero--static .hero-scroll-hint {
+    display: none !important;
+}
