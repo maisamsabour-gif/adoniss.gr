@@ -1086,8 +1086,39 @@ class GVProjectGalleryImageInline(admin.TabularInline):
 
 # ── Section Inlines with All Fields ───────────────────────────────────────────
 
+class GVHeroSectionForm(forms.ModelForm):
+    """Custom form to allow clearing video file."""
+    clear_video = forms.BooleanField(
+        required=False,
+        label='حذف ویدیو',
+        help_text='برای حذف ویدیو فعلی این گزینه را تیک بزنید',
+    )
+    
+    class Meta:
+        model = GVHeroSection
+        fields = '__all__'
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Only show clear checkbox if video exists
+        if self.instance and self.instance.pk and self.instance.background_video:
+            self.fields['clear_video'].initial = False
+        else:
+            self.fields['clear_video'].widget = forms.HiddenInput()
+    
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if self.cleaned_data.get('clear_video') and instance.background_video:
+            # Delete the file from storage
+            instance.background_video.delete(save=False)
+        if commit:
+            instance.save()
+        return instance
+
+
 class GVHeroSectionInline(CKEditor5TextFieldMixin, admin.StackedInline):
     model = GVHeroSection
+    form = GVHeroSectionForm
     extra = 0
     max_num = 1
     can_delete = False
@@ -1116,9 +1147,9 @@ class GVHeroSectionInline(CKEditor5TextFieldMixin, admin.StackedInline):
                 'hero_main_visual',
                 'hero_image_alt',
                 ('background_image', 'mobile_background_image'),
-                'background_video',
+                ('background_video', 'clear_video'),
+                'video_poster',
             ),
-            'classes': ('collapse',),
         }),
     )
 

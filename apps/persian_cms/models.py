@@ -1443,6 +1443,12 @@ class GVHeroSection(GVBaseModel):
         verbose_name='Alt Text تصویر هیرو',
         help_text='توضیح تصویر برای سئو و دسترسی‌پذیری',
     )
+    video_poster = models.ImageField(
+        upload_to='gv_landing/hero/',
+        blank=True,
+        verbose_name='پوستر ویدیو',
+        help_text='تصویری که قبل از پخش ویدیو نمایش داده می‌شود',
+    )
     display_order = models.PositiveIntegerField(default=1, verbose_name='ترتیب نمایش')
     
     class Meta:
