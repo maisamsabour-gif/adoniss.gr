@@ -710,6 +710,28 @@ class FaPropertyMediaAdmin(PersianBaseAdmin):
 class GoldenVisaLandingPageForm(forms.ModelForm):
     """Form with CKEditor5 for all rich text fields - uses persian_clean for Word paste cleanup."""
     
+    # Checkbox to delete hero video
+    delete_hero_video = forms.BooleanField(
+        required=False,
+        label='🗑️ حذف ویدیو هیرو',
+        help_text='تیک بزنید و ذخیره کنید تا ویدیو حذف شود',
+        widget=forms.CheckboxInput(attrs={
+            'class': 'delete-file-checkbox',
+            'style': 'width: 24px; height: 24px; accent-color: #ef4444; cursor: pointer;'
+        })
+    )
+    
+    # Checkbox to delete hero image
+    delete_hero_image = forms.BooleanField(
+        required=False,
+        label='🗑️ حذف تصویر هیرو',
+        help_text='تیک بزنید و ذخیره کنید تا تصویر حذف شود',
+        widget=forms.CheckboxInput(attrs={
+            'class': 'delete-file-checkbox',
+            'style': 'width: 24px; height: 24px; accent-color: #ef4444; cursor: pointer;'
+        })
+    )
+    
     class Meta:
         model = GoldenVisaLandingPage
         fields = '__all__'
@@ -734,7 +756,40 @@ class GoldenVisaLandingPageForm(forms.ModelForm):
                 config_name='persian_clean',
                 attrs={'class': 'django_ckeditor_5', 'dir': 'rtl'},
             ),
+            'hero_video': forms.ClearableFileInput(attrs={
+                'accept': 'video/*',
+                'style': 'padding: 10px; background: #fff; border-radius: 8px; color: #333;'
+            }),
+            'hero_image': forms.ClearableFileInput(attrs={
+                'accept': 'image/*',
+                'style': 'padding: 10px; background: #fff; border-radius: 8px; color: #333;'
+            }),
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Hide delete checkboxes if no file exists
+        if not (self.instance and self.instance.pk and self.instance.hero_video):
+            self.fields['delete_hero_video'].widget = forms.HiddenInput()
+        if not (self.instance and self.instance.pk and self.instance.hero_image):
+            self.fields['delete_hero_image'].widget = forms.HiddenInput()
+    
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        
+        # Delete video if checkbox is checked
+        if self.cleaned_data.get('delete_hero_video') and instance.hero_video:
+            instance.hero_video.delete(save=False)
+        
+        # Delete image if checkbox is checked
+        if self.cleaned_data.get('delete_hero_image') and instance.hero_image:
+            instance.hero_image.delete(save=False)
+        
+        if commit:
+            instance.save()
+            self.save_m2m()
+        
+        return instance
 
 
 class GVFAQItemForm(forms.ModelForm):
@@ -1606,8 +1661,8 @@ class GoldenVisaLandingPageAdmin(PersianBaseAdmin):
             'fields': (
                 'hero_title',
                 'hero_subtitle',
-                'hero_image',
-                'hero_video',
+                ('hero_image', 'delete_hero_image'),
+                ('hero_video', 'delete_hero_video'),
                 'hero_cta_text',
                 'hero_cta_link',
             ),
