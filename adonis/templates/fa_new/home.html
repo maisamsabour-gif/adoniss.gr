@@ -76,6 +76,8 @@
         <section class="adonis-fa-new-hero" id="adonis-fa-new-top">
             <div class="hero-pin-stage">
 
+                {% if hero_has_video and hero_video_url %}
+                {# Show video when available #}
                 <video class="adonis-fa-new-video"
                        muted playsinline webkit-playsinline=""
                        preload="metadata" disablepictureinpicture
@@ -96,6 +98,15 @@
                     }
                 })();
                 </script>
+                {% else %}
+                {# Show image when no video #}
+                <div class="adonis-fa-new-hero-image" 
+                     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+                            background-image: url('{{ hero_video_poster_url }}');
+                            background-size: cover; background-position: center;
+                            z-index: 0;">
+                </div>
+                {% endif %}
 
                 <div class="hero-scrim" aria-hidden="true"></div>
 

@@ -1447,15 +1447,17 @@ def fa_new_home(request):
     from core.models import FaNewSettings, FaNewFeaturedProperties, FaNewSection, FaNavMenuItem, FaFooterSettings
     fa_new = FaNewSettings.get_settings()
 
+    # Hero media - video or image
+    hero_video_url = None
+    hero_video_url_mobile = None
+    hero_has_video = False
+    
     if fa_new.hero_video:
         hero_video_url = fa_new.hero_video.url
-    else:
-        hero_video_url = '/media/hero/adonis-hero-scroll.mp4'
+        hero_video_url_mobile = hero_video_url.replace('_web.mp4', '_mobile.mp4')
+        hero_has_video = True
 
-    # Lighter variant for phones (client-side selected; cache-safe). Falls back
-    # to the desktop file when no "_web" variant naming is present.
-    hero_video_url_mobile = hero_video_url.replace('_web.mp4', '_mobile.mp4')
-
+    # Poster/image - used as background when no video, or as video poster
     if fa_new.hero_video_poster:
         hero_video_poster_url = fa_new.hero_video_poster.url
     else:
@@ -1660,6 +1662,7 @@ def fa_new_home(request):
         'hero_video_url': hero_video_url,
         'hero_video_url_mobile': hero_video_url_mobile,
         'hero_video_poster_url': hero_video_poster_url,
+        'hero_has_video': hero_has_video,
         'header_logo_url': header_logo_url,
         'fa': fa_new,        # legacy alias kept for other template references
         'settings': fa_new,  # primary alias — use {{ settings.field_name }}
