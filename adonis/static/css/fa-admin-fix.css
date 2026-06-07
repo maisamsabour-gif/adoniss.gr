@@ -124,19 +124,42 @@ html.dark .inline-related select,
 /* ── Select Dropdown ─────────────────────────────────────────────────────────── */
 select,
 html.dark select,
-.dark select {
+.dark select,
+body select,
+#content select,
+form select,
+fieldset select,
+.form-row select {
     background-color: #ffffff !important;
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E") !important;
     background-repeat: no-repeat !important;
     background-position: left 12px center !important;
     padding-left: 36px !important;
+    padding-right: 12px !important;
     -webkit-appearance: none !important;
     appearance: none !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 8px !important;
+    min-height: 44px !important;
 }
 
-select option {
+select option,
+html.dark select option,
+.dark select option {
     background-color: #ffffff !important;
-    color: #111827 !important;
+    color: #1f2937 !important;
+    padding: 10px !important;
+}
+
+/* Section type dropdown specific */
+#id_section_type,
+select[name="section_type"] {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
+    font-weight: 600 !important;
 }
 
 /* ── Checkbox & Radio ────────────────────────────────────────────────────────── */
@@ -366,4 +389,601 @@ nav ol li a.active {
     background-color: #ffffff !important;
     color: #111827 !important;
     -webkit-text-fill-color: #111827 !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   FaNewSection Admin - Why Adonis Stats Section Specific
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* Ensure all FaNewSection form fields are visible and editable */
+#fanewsection_form input,
+#fanewsection_form textarea,
+#fanewsection_form select,
+form[action*="fanewsection"] input,
+form[action*="fanewsection"] textarea,
+form[action*="fanewsection"] select {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    -webkit-text-fill-color: #111827 !important;
+    border: 1px solid #cbd5e1 !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+/* Fix disabled appearance on fields that shouldn't be disabled */
+#fanewsection_form input:not([type="hidden"]):not(:disabled),
+#fanewsection_form textarea:not(:disabled),
+#fanewsection_form select:not(:disabled) {
+    cursor: text !important;
+    background-color: #ffffff !important;
+}
+
+/* Section items inline fields */
+.fa-section-items-inline input,
+.fa-section-items-inline textarea,
+.fa-section-items-inline select,
+#items-group input,
+#items-group textarea,
+#items-group select {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    -webkit-text-fill-color: #111827 !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+/* Fix Tailwind dark mode overrides */
+.dark input.bg-white,
+.dark textarea.bg-white,
+.dark select.bg-white,
+input.dark\:bg-base-900,
+textarea.dark\:bg-base-900,
+select.dark\:bg-base-900 {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+}
+
+/* Ensure eyebrow, title, subtitle fields are editable */
+#id_eyebrow,
+#id_title,
+#id_subtitle,
+#id_description {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    -webkit-text-fill-color: #111827 !important;
+    border: 1px solid #cbd5e1 !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    cursor: text !important;
+}
+
+/* Remove any disabled styling from active fields */
+input:not([disabled]),
+textarea:not([disabled]),
+select:not([disabled]) {
+    opacity: 1 !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   AGGRESSIVE DARK MODE OVERRIDE - Force all inputs to be white and readable
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* Target all possible dark mode containers */
+body.dark input,
+body.dark textarea,
+body.dark select,
+html.dark body input,
+html.dark body textarea,
+html.dark body select,
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select,
+.bg-base-900 input,
+.bg-base-900 textarea,
+.bg-base-900 select {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 8px !important;
+}
+
+/* Tailwind dark classes */
+.dark\:bg-base-900 input,
+.dark\:bg-base-900 textarea,
+.dark\:bg-base-900 select,
+[class*="dark:bg-"] input,
+[class*="dark:bg-"] textarea,
+[class*="dark:bg-"] select {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   SPECIFIC FIELD FIXES - Target each field by ID
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* All text inputs by ID */
+#id_eyebrow,
+#id_title,
+#id_title_color,
+#id_subtitle,
+#id_description,
+#id_section_name,
+#id_order,
+#id_anchor_id,
+#id_cta_primary_text,
+#id_cta_primary_url,
+#id_cta_secondary_text,
+#id_cta_secondary_url,
+#id_background_color,
+#id_gradient_color,
+#id_text_color,
+#id_accent_color,
+#id_card_background,
+#id_border_color {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
+    border: 1px solid #d1d5db !important;
+    padding: 12px 16px !important;
+    font-size: 15px !important;
+    border-radius: 8px !important;
+    box-sizing: border-box !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    cursor: text !important;
+}
+
+/* Number inputs */
+#id_order,
+#id_background_image_opacity,
+#id_border_radius,
+#id_shadow_intensity,
+#id_blur_intensity,
+#id_section_padding_top,
+#id_section_padding_bottom,
+#id_card_gap,
+#id_title_font_size_desktop,
+#id_title_font_size_mobile,
+#id_subtitle_font_size,
+#id_description_font_size,
+#id_max_width_container,
+#id_decorative_opacity,
+#id_decorative_blur_intensity {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
+    border: 1px solid #d1d5db !important;
+    padding: 10px 14px !important;
+    font-size: 15px !important;
+    border-radius: 8px !important;
+    width: auto !important;
+    min-width: 100px !important;
+}
+
+/* Textarea fields - FORCE WHITE */
+#id_subtitle,
+#id_description,
+#id_card_1_description,
+#id_card_2_description,
+textarea[name="subtitle"],
+textarea[name="description"],
+textarea#id_subtitle,
+textarea#id_description {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
+    min-height: 120px !important;
+    line-height: 1.6 !important;
+    resize: vertical !important;
+    width: 100% !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 8px !important;
+    padding: 12px 16px !important;
+    font-size: 15px !important;
+}
+
+/* Select/dropdown fields */
+#id_section_type,
+#id_background_image_position,
+#id_font_weight,
+#id_text_alignment,
+#id_mobile_layout,
+#id_desktop_layout {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
+    border: 1px solid #d1d5db !important;
+    padding: 10px 36px 10px 14px !important;
+    font-size: 15px !important;
+    border-radius: 8px !important;
+    min-height: 44px !important;
+    cursor: pointer !important;
+}
+
+/* Slug/anchor field */
+#id_anchor_id {
+    font-family: monospace !important;
+    letter-spacing: 0.5px !important;
+}
+
+/* Number/range inputs */
+input[type="number"],
+input[type="range"] {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+}
+
+/* Opacity slider specific styling */
+#id_background_image_opacity {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    height: 8px !important;
+    background: linear-gradient(to right, #e5e7eb, #3b82f6) !important;
+    border-radius: 4px !important;
+    padding: 0 !important;
+}
+
+#id_background_image_opacity::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    width: 20px !important;
+    height: 20px !important;
+    background: #3b82f6 !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2) !important;
+}
+
+/* File input styling */
+input[type="file"] {
+    padding: 10px !important;
+    background-color: #f9fafb !important;
+    border: 2px dashed #d1d5db !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+}
+
+input[type="file"]:hover {
+    border-color: #3b82f6 !important;
+    background-color: #eff6ff !important;
+}
+
+/* Image preview in admin */
+.file-upload,
+.clearable-file-input,
+p.file-upload {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 12px !important;
+    background: #f9fafb !important;
+    border-radius: 8px !important;
+    border: 1px solid #e5e7eb !important;
+}
+
+.file-upload img,
+.clearable-file-input img {
+    max-height: 60px !important;
+    border-radius: 6px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+}
+
+/* Inline item cards */
+.inline-related,
+.inline-group .tabular td,
+.dynamic-items_set-* {
+    background-color: #f9fafb !important;
+    border-radius: 12px !important;
+    margin-bottom: 16px !important;
+    padding: 16px !important;
+    border: 1px solid #e5e7eb !important;
+}
+
+.inline-related h3,
+.inline-group h3 {
+    color: #1f2937 !important;
+    font-weight: 700 !important;
+    margin-bottom: 12px !important;
+}
+
+/* Item stat_number, badge, title fields */
+.inline-related input[id*="stat_number"],
+.inline-related input[id*="badge"],
+.inline-related input[id*="title"],
+.inline-related textarea[id*="body"] {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    border: 1px solid #d1d5db !important;
+    padding: 10px 14px !important;
+    border-radius: 6px !important;
+}
+
+/* Submit buttons - keep them styled */
+input[type="submit"],
+button[type="submit"],
+.submit-row input,
+.submit-row button {
+    background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 12px 24px !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+input[type="submit"]:hover,
+button[type="submit"]:hover {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   FINAL NUCLEAR OVERRIDE - Force ALL form elements to be readable
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* Every single input, textarea, select in the admin */
+body input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not([type="hidden"]):not([type="range"]),
+body textarea,
+body select {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 6px !important;
+}
+
+/* Force text color on all form elements */
+input,
+textarea,
+select,
+option {
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
+}
+
+/* Dark theme specific - highest priority */
+html[class*="dark"] input,
+html[class*="dark"] textarea,
+html[class*="dark"] select,
+body[class*="dark"] input,
+body[class*="dark"] textarea,
+body[class*="dark"] select,
+[class*="dark"] input,
+[class*="dark"] textarea,
+[class*="dark"] select {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
+    border-color: #d1d5db !important;
+}
+
+/* Tab buttons fix */
+.nav-tabs,
+.tabs,
+[role="tablist"] {
+    background: transparent !important;
+}
+
+.nav-tabs button,
+.nav-tabs a,
+.tabs button,
+.tabs a,
+[role="tab"] {
+    background-color: #f3f4f6 !important;
+    color: #374151 !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px 8px 0 0 !important;
+    padding: 10px 20px !important;
+    font-weight: 600 !important;
+}
+
+.nav-tabs button.active,
+.nav-tabs a.active,
+.tabs button.active,
+.tabs a.active,
+[role="tab"][aria-selected="true"] {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    border-bottom-color: #ffffff !important;
+}
+
+/* Fieldset headers */
+fieldset legend,
+.module caption,
+.collapse-toggle {
+    color: #1f2937 !important;
+    font-weight: 700 !important;
+}
+
+html.dark fieldset legend,
+html.dark .module caption {
+    color: #f9fafb !important;
+}
+
+/* Alert/hint box styling */
+.messagelist li,
+.alert,
+.hint-box,
+[class*="alert-"] {
+    border-radius: 8px !important;
+    padding: 12px 16px !important;
+    margin-bottom: 12px !important;
+}
+
+.alert-success,
+.messagelist .success {
+    background-color: #dcfce7 !important;
+    color: #166534 !important;
+    border: 1px solid #86efac !important;
+}
+
+/* Help text readability */
+.help-text,
+.helptext,
+p.help,
+span.help {
+    color: #6b7280 !important;
+    font-size: 13px !important;
+    margin-top: 4px !important;
+}
+
+html.dark .help-text,
+html.dark .helptext,
+html.dark p.help {
+    color: #9ca3af !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   EXTREME OVERRIDE - Target Unfold/Tailwind dark classes directly
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* Unfold uses these specific background classes */
+.bg-white\/5 input,
+.bg-white\/5 textarea,
+.bg-white\/5 select,
+.dark\:bg-white\/5 input,
+.dark\:bg-white\/5 textarea,
+.dark\:bg-white\/5 select,
+.bg-base-50 input,
+.bg-base-50 textarea,
+.bg-base-50 select,
+.dark\:bg-base-900 input,
+.dark\:bg-base-900 textarea,
+.dark\:bg-base-900 select,
+[class*="bg-white"] input,
+[class*="bg-white"] textarea,
+[class*="bg-white"] select,
+[class*="bg-base"] input,
+[class*="bg-base"] textarea,
+[class*="bg-base"] select {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
+    border: 1px solid #d1d5db !important;
+}
+
+/* Target by Tailwind text color classes */
+.text-gray-900 input,
+.text-gray-900 textarea,
+.text-gray-900 select,
+.dark\:text-gray-100 input,
+.dark\:text-gray-100 textarea,
+.dark\:text-gray-100 select,
+[class*="text-gray"] input,
+[class*="text-gray"] textarea,
+[class*="text-gray"] select,
+[class*="text-font"] input,
+[class*="text-font"] textarea,
+[class*="text-font"] select {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
+}
+
+/* Form control wrappers */
+.form-control,
+.form-group,
+.field-box,
+.flex.flex-col input,
+.flex.flex-col textarea,
+.flex.flex-col select {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+}
+
+/* Input wrappers in Unfold */
+div[class*="rounded"] input,
+div[class*="rounded"] textarea,
+div[class*="rounded"] select,
+div[class*="border"] input,
+div[class*="border"] textarea,
+div[class*="border"] select {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
+}
+
+/* Absolutely everything - last resort */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="tel"],
+input[type="password"],
+input[type="search"],
+textarea,
+select:not([multiple]) {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
+    border: 1px solid #cbd5e1 !important;
+    opacity: 1 !important;
+}
+
+/* Focus states - keep white */
+input:focus,
+textarea:focus,
+select:focus {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
+    border-color: #3b82f6 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+}
+
+/* Placeholder text */
+::placeholder {
+    color: #9ca3af !important;
+    -webkit-text-fill-color: #9ca3af !important;
+    opacity: 1 !important;
+}
+
+/* Disabled state - slightly different */
+input:disabled,
+textarea:disabled,
+select:disabled {
+    background-color: #f3f4f6 !important;
+    color: #6b7280 !important;
+    cursor: not-allowed !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   SUBTITLE TEXTAREA - HIGHEST PRIORITY FIX
+   ══════════════════════════════════════════════════════════════════════════════ */
+textarea,
+textarea.vLargeTextField,
+textarea[id*="subtitle"],
+textarea[name*="subtitle"],
+#id_subtitle,
+form textarea,
+fieldset textarea,
+.form-row textarea,
+div textarea {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
+    caret-color: #1f2937 !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 8px !important;
+    padding: 12px 16px !important;
+}
+
+/* Dark mode textarea override */
+html.dark textarea,
+body.dark textarea,
+.dark textarea,
+[data-theme="dark"] textarea {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    -webkit-text-fill-color: #1f2937 !important;
 }

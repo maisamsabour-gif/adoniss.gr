@@ -208,6 +208,77 @@
             </div>
         </section>
 
+        {# ───────────── Why Adonis Stats Section ───────────── #}
+        {% for section in sections_render %}
+            {% if section.section_type == 'why_adonis_stats' and section.is_active %}
+            <section id="why-adonis-stats" class="why-adonis-stats-section"
+                {% if section.background_image %}
+                style="--wa-bg-image: url('{{ section.background_image.url }}'); --wa-bg-opacity: {{ section.background_image_opacity|default:50 }};"
+                {% endif %}>
+                {% if section.background_image %}
+                <div class="why-adonis-bg-overlay"></div>
+                {% endif %}
+                <div class="why-adonis-container">
+                    <div class="why-adonis-header">
+                        <span class="why-adonis-eyebrow"{% if section.accent_color %} style="color: {{ section.accent_color }}; border-color: {{ section.accent_color }}40; background: {{ section.accent_color }}15;"{% endif %}>{{ section.eyebrow|default:'چرا آدونیس؟' }}</span>
+                        <h2 class="why-adonis-title" style="{% if section.title_color %}color: {{ section.title_color }};{% endif %}{% if section.title_font_size_desktop %} font-size: {{ section.title_font_size_desktop }}px;{% endif %}{% if section.text_alignment %} text-align: {{ section.text_alignment }};{% endif %}">{{ section.title }}</h2>
+                        <p class="why-adonis-subtitle" style="{% if section.text_color %}color: {{ section.text_color }};{% endif %}{% if section.subtitle_font_size %} font-size: {{ section.subtitle_font_size }}px;{% endif %}{% if section.subtitle_alignment %} text-align: {{ section.subtitle_alignment }};{% endif %}">{{ section.subtitle }}</p>
+                    </div>
+
+                    <div class="why-adonis-grid">
+                        {% for item in section.items.all %}
+                        <div class="why-adonis-card" data-fa-reveal style="--reveal-delay: {{ forloop.counter0 }};">
+                            <div class="why-adonis-icon">
+                                {% if forloop.counter == 1 %}
+                                {# Award/Medal - سال سابقه #}
+                                <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="24" cy="18" r="12" stroke="currentColor" stroke-width="2"/>
+                                    <circle cx="24" cy="18" r="7" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>
+                                    <path d="M18 28L15 44L24 38L33 44L30 28" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M24 14V22M20 18H28" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                </svg>
+                                {% elif forloop.counter == 2 %}
+                                {# Family - خانواده رضایتمند #}
+                                <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="24" cy="12" r="6" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M14 42V38C14 33.5817 17.5817 30 22 30H26C30.4183 30 34 33.5817 34 38V42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    <circle cx="10" cy="18" r="4" stroke="currentColor" stroke-width="1.5" opacity="0.7"/>
+                                    <path d="M4 42V39C4 36.2386 6.23858 34 9 34H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+                                    <circle cx="38" cy="18" r="4" stroke="currentColor" stroke-width="1.5" opacity="0.7"/>
+                                    <path d="M44 42V39C44 36.2386 41.7614 34 39 34H37" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+                                </svg>
+                                {% elif forloop.counter == 3 %}
+                                {# Document Check - پرونده موفق #}
+                                <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M28 4H12C9.79086 4 8 5.79086 8 8V40C8 42.2091 9.79086 44 12 44H36C38.2091 44 40 42.2091 40 40V16L28 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M28 4V16H40" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M18 28L22 32L30 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M14 36H26" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+                                </svg>
+                                {% else %}
+                                {# Building - پروژه ساختمانی #}
+                                <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="8" y="16" width="16" height="28" rx="2" stroke="currentColor" stroke-width="2"/>
+                                    <rect x="24" y="6" width="16" height="38" rx="2" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M12 22H20M12 28H20M12 34H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+                                    <path d="M28 12H36M28 18H36M28 24H36M28 30H36" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+                                    <rect x="14" y="38" width="4" height="6" stroke="currentColor" stroke-width="1.5"/>
+                                    <rect x="30" y="36" width="4" height="8" stroke="currentColor" stroke-width="1.5"/>
+                                </svg>
+                                {% endif %}
+                            </div>
+                            <div class="why-adonis-number" data-counter-target="{{ item.stat_number }}">
+                                <span class="why-adonis-suffix">{{ item.badge }}</span><span class="why-adonis-counter">0</span>
+                            </div>
+                            <h3 class="why-adonis-card-title">{{ item.title }}</h3>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+            {% endif %}
+        {% endfor %}
+
         {# ───────────── Benefits Cards (under Hero) ───────────── #}
         {% if benefits_cards %}
         <section class="adonis-fa-new-section fa-benefits-cards-section"
@@ -744,7 +815,7 @@
                         <div class="swiper-pagination fa-featprop-pag"></div>
                     </div>
                     <div class="fa-featprop-cta" data-fa-reveal>
-                        <a href="/fa-new/properties/" class="fa-featprop-all">
+                        <a href="/properties/" class="fa-featprop-all">
                             <span>مشاهده همه املاک آدونیس</span>
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </a>
@@ -1127,7 +1198,7 @@
         };
         
         // Submit
-        fetch('/fa-new/api/consult/', {
+        fetch('/api/consult/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -121,9 +121,9 @@ def _persian_sidebar_navigation(request):
             'separator': True,
             'collapsible': False,
             'items': [
-                {'title': 'صفحه اصلی', 'icon': 'home', 'link': '/fa-new/', 'has_permission': True},
-                {'title': 'صفحه املاک', 'icon': 'apartment', 'link': '/fa-new/properties/', 'has_permission': True},
-                {'title': 'صفحه بلاگ', 'icon': 'article', 'link': '/fa-new/blog/', 'has_permission': True},
+                {'title': 'صفحه اصلی', 'icon': 'home', 'link': '/', 'has_permission': True},
+                {'title': 'صفحه املاک', 'icon': 'apartment', 'link': '/properties/', 'has_permission': True},
+                {'title': 'صفحه بلاگ', 'icon': 'article', 'link': '/blog/', 'has_permission': True},
             ],
         },
     ]
@@ -138,7 +138,7 @@ class PersianAdminSite(UnfoldAdminSite):
     site_header = "ADONIS Persian CMS"
     site_title = "پنل مدیریت فارسی آدونیس"
     index_title = "داشبورد مدیریت محتوای فارسی"
-    site_url = "/fa-new/"
+    site_url = "/"
     enable_nav_sidebar = True
     login_template = "persian_cms/admin/login.html"
     logout_template = "persian_cms/admin/logout.html"

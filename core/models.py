@@ -1898,6 +1898,7 @@ class FaNewSection(models.Model):
     SECTION_TYPES = [
         ('why_greece', 'مزایای کلیدی یونان'),
         ('why_adonis', 'آشنایی با آدونیس'),
+        ('why_adonis_stats', 'چرا آدونیس؟ (آمار)'),
         ('intro_stats', 'آشنایی با آدونیس (قدیمی)'),
         ('services', 'خدمات آدونیس'),
         ('routes', 'مسیرهای گلدن ویزا'),
@@ -2106,6 +2107,7 @@ class FaNewSection(models.Model):
     background_color = models.CharField(max_length=30, blank=True, default='#071527', verbose_name='background color')
     gradient_color = models.CharField(max_length=30, blank=True, default='transparent', verbose_name='gradient color')
     text_color = models.CharField(max_length=30, blank=True, default='#FFFFFF', verbose_name='text color')
+    title_color = models.CharField(max_length=30, blank=True, default='#0B1F3A', verbose_name='رنگ عنوان', help_text='رنگ عنوان اصلی سکشن (مثال: #0B1F3A برای سرمه‌ای)')
     accent_color = models.CharField(max_length=30, blank=True, default='#1E5AA8', verbose_name='accent color')
     card_background = models.CharField(max_length=30, blank=True, default='#FFFFFF', verbose_name='card background')
     border_color = models.CharField(max_length=30, blank=True, default='rgba(11,31,58,0.1)', verbose_name='border color')
@@ -2146,7 +2148,13 @@ class FaNewSection(models.Model):
         max_length=10,
         choices=TEXT_ALIGNMENT_CHOICES,
         default='center',
-        verbose_name='text alignment',
+        verbose_name='تراز عنوان',
+    )
+    subtitle_alignment = models.CharField(
+        max_length=10,
+        choices=TEXT_ALIGNMENT_CHOICES,
+        default='center',
+        verbose_name='تراز زیرعنوان',
     )
 
     # ── 7) Responsive ────────────────────────────────────────────────────────
@@ -2315,7 +2323,7 @@ class FaNewSection(models.Model):
 
     @property
     def admin_preview_url(self):
-        return f'/fa-new/#{self.resolved_anchor_id}'
+        return f'/#{self.resolved_anchor_id}'
 
     @property
     def card_1_inline_style(self):

@@ -1761,6 +1761,13 @@ _FA_SECTION_HINTS = {
         "آمار را از طریق آیتم‌های پایین اضافه کنید. "
         "آیتم‌هایی که عدد آمار دارند به‌صورت استت‌کارت و بقیه به‌صورت بولت نمایش می‌یابند.",
     ),
+    'why_adonis_stats': (
+        'success',
+        "سکشن چرا آدونیس - ۴ کارت آماری. "
+        "متن‌ها: eyebrow، title، title_color، subtitle. "
+        "تصویر: background_image و background_image_opacity (0-100). "
+        "کارت‌ها: stat_number (عدد)، badge (پسوند +)، title (عنوان).",
+    ),
     'intro_stats': (
         'warning',
         "⚠️ «آشنایی با آدونیس (قدیمی)» — "
@@ -1832,6 +1839,10 @@ _FA_SECTION_TYPE_IMAGES_FIELDS = {
         ('background_image', 'background_image_alt'),
         'background_video',
     ),
+    'why_adonis_stats': (
+        ('background_image', 'background_image_alt'),
+        ('background_image_opacity', 'background_image_position'),
+    ),
     'why_greece': (
         ('background_image', 'background_image_alt'),
         ('background_image_opacity', 'background_image_position'),
@@ -1854,8 +1865,27 @@ _FA_SECTION_BASE_IMAGES_FIELDS = (
 )
 
 
+class FaNewSectionForm(forms.ModelForm):
+    """Custom form for FaNewSection with color picker widgets."""
+    class Meta:
+        model = FaNewSection
+        fields = '__all__'
+        widgets = {
+            'title_color': _ColorInput(),
+            'text_color': _ColorInput(),
+            'accent_color': _ColorInput(),
+            'background_color': _ColorInput(),
+            'gradient_color': _ColorInput(),
+            'card_background': _ColorInput(),
+            'border_color': forms.TextInput(attrs={'style': 'width:200px;'}),
+            'card_1_accent_color': _ColorInput(),
+            'card_2_accent_color': _ColorInput(),
+        }
+
+
 @admin.register(FaNewSection)
 class FaNewSectionAdmin(admin.ModelAdmin):
+    form = FaNewSectionForm
     change_form_template = 'admin/core/fanewsection/change_form.html'
     change_list_template = 'admin/core/fanewsection/change_list.html'
     list_display = (
@@ -1887,30 +1917,57 @@ class FaNewSectionAdmin(admin.ModelAdmin):
                 'preview_button',
             ),
         }),
-        ('۲ · عنوان و متن‌ها', {
-            'description': 'عنوان اصلی، زیرعنوان و توضیح سکشن. این متن‌ها در بالای سکشن روی سایت نمایش داده می‌شوند.',
+        ('۲ · برچسب کوچک (Eyebrow)', {
+            'description': 'متن کوچک بالای عنوان اصلی',
             'fields': (
                 'eyebrow',
+                'accent_color',
+            ),
+        }),
+        ('۳ · عنوان اصلی (Title)', {
+            'description': 'عنوان بزرگ سکشن با تنظیمات رنگ و سایز',
+            'fields': (
                 'title',
+                'title_color',
+                ('title_font_size_desktop', 'title_font_size_mobile'),
+                'text_alignment',
+            ),
+        }),
+        ('۴ · زیرعنوان (Subtitle)', {
+            'description': 'توضیحات زیر عنوان اصلی',
+            'fields': (
                 'subtitle',
+                ('text_color', 'subtitle_font_size', 'subtitle_alignment'),
+            ),
+        }),
+        ('۵ · توضیحات و دکمه‌ها', {
+            'classes': ('collapse',),
+            'description': 'توضیحات اضافی و دکمه‌های CTA',
+            'fields': (
                 'description',
+                'description_font_size',
                 ('cta_primary_text', 'cta_primary_url'),
                 ('cta_secondary_text', 'cta_secondary_url'),
             ),
         }),
-        ('۳ · تصاویر و ویدیو', {
-            'description': (
-                'برای سکشن «مزایای کلیدی یونان» (why_greece): تصویر پس‌زمینه بنر ۴ کارت را اینجا آپلود کنید. '
-                'برای سکشن «آشنایی با آدونیس» (why_adonis): تصویر اصلی سمت چپ را اینجا آپلود کنید.'
-            ),
+        ('۶ · تصاویر و ویدیو', {
+            'description': 'تصویر پس‌زمینه سکشن',
             'fields': _FA_SECTION_BASE_IMAGES_FIELDS,
         }),
-        ('۴ · کارت‌های دو‌تایی (gateway — نسخه قدیمی)', {
+        ('۷ · طراحی پس‌زمینه', {
             'classes': ('collapse',),
-            'description': (
-                'فیلدهای قدیمی gateway. '
-                'برای مدیریت بهتر، از اینلاین «کارت‌های مسیر سرمایه‌گذاری» پایین صفحه استفاده کنید.'
+            'description': 'رنگ پس‌زمینه و استایل سکشن',
+            'fields': (
+                ('background_color', 'gradient_color'),
+                ('card_background', 'border_color'),
+                ('border_radius', 'shadow_intensity', 'blur_intensity'),
+                ('section_padding_top', 'section_padding_bottom', 'card_gap'),
+                ('font_weight', 'line_height'),
             ),
+        }),
+        ('۸ · کارت‌های دو‌تایی (gateway)', {
+            'classes': ('collapse',),
+            'description': 'فیلدهای قدیمی gateway.',
             'fields': (
                 'card_1_label', 'card_1_title', 'card_1_subtitle', 'card_1_description',
                 ('card_1_image', 'card_1_image_alt'),
@@ -1922,33 +1979,14 @@ class FaNewSectionAdmin(admin.ModelAdmin):
                 'card_2_accent_color',
             ),
         }),
-        ('۵ · طراحی و رنگ‌بندی', {
-            'classes': ('collapse',),
-            'description': 'تنظیمات ظاهری سکشن. در اکثر حالات نیازی به تغییر این فیلدها ندارید.',
-            'fields': (
-                ('background_color', 'gradient_color', 'text_color', 'accent_color'),
-                ('card_background', 'border_color'),
-                ('border_radius', 'shadow_intensity', 'blur_intensity'),
-                ('section_padding_top', 'section_padding_bottom', 'card_gap'),
-            ),
-        }),
-        ('۶ · تایپوگرافی', {
-            'classes': ('collapse',),
-            'description': 'سایز فونت و فاصله‌گذاری متن‌ها.',
-            'fields': (
-                ('title_font_size_desktop', 'title_font_size_mobile'),
-                ('subtitle_font_size', 'description_font_size'),
-                ('font_weight', 'line_height', 'text_alignment'),
-            ),
-        }),
-        ('۷ · ریسپانسیو و نمایش', {
+        ('۹ · ریسپانسیو و نمایش', {
             'classes': ('collapse',),
             'fields': (
                 ('mobile_layout', 'desktop_layout'),
                 ('max_width_container', 'hide_image_on_mobile'),
             ),
         }),
-        ('۸ · المان تزئینی (انتقال Hero به Gateway)', {
+        ('۱۰ · المان تزئینی', {
             'classes': ('collapse',),
             'description': 'گل‌های تزئینی بین هیرو و سکشن gateway.',
             'fields': (

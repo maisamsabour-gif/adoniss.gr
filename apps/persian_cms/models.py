@@ -75,11 +75,11 @@ class PersianPage(PersianTimeStampedModel):
 
     # Fixed public paths for the built-in page types.
     FIXED_ROUTES = {
-        "home": "/fa-new/",
-        "about": "/fa-new/about/",
-        "contact": "/fa-new/contact/",
-        "golden_visa": "/fa-new/golden-visa/",
-        "blog": "/fa-new/blog/",
+        "home": "/",
+        "about": "/about/",
+        "contact": "/contact/",
+        "golden_visa": "/golden-visa/",
+        "blog": "/blog/",
     }
 
     def __str__(self):
@@ -92,7 +92,7 @@ class PersianPage(PersianTimeStampedModel):
         if self.page_type in self.FIXED_ROUTES:
             return self.FIXED_ROUTES[self.page_type]
         slug = self.slug or slugify(self.title, allow_unicode=True)
-        return f"/fa-new/p/{slug}/"
+        return f"/p/{slug}/"
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -1077,7 +1077,7 @@ class FaProperty(PersianTimeStampedModel):
         return f'{self.name} - {self.get_property_type_display()} در {self.area or self.location or self.city}'
     
     def get_absolute_url(self):
-        return f'/fa-new/properties/{self.slug}/'
+        return f'/properties/{self.slug}/'
 
 
 class FaPropertyMedia(PersianTimeStampedModel):
@@ -1988,7 +1988,7 @@ class GVProjectsSection(GVBaseModel):
     cta_link = models.CharField(
         max_length=500,
         blank=True,
-        default='/fa-new/properties/',
+        default='/properties/',
         verbose_name='لینک دکمه CTA',
     )
     display_order = models.PositiveIntegerField(default=6, verbose_name='ترتیب نمایش')

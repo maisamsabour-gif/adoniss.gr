@@ -2,11 +2,11 @@
 {% comment %}
 Shared Persian header / menu (home + internal pages).
 Pass is_home=True on the home page so the logo/CTA use in-page anchors;
-on internal pages they link back to /fa-new/.
+on internal pages they link back to /.
 {% endcomment %}
 <header class="adonis-fa-new-header" id="adonis-fa-new-header" data-fa-header>
     <div class="adonis-fa-new-header-inner">
-        <a class="adonis-fa-new-logo" href="{% if is_home %}#adonis-fa-new-top{% else %}/fa-new/{% endif %}" aria-label="ADONIS">
+        <a class="adonis-fa-new-logo" href="{% if is_home %}#adonis-fa-new-top{% else %}/{% endif %}" aria-label="ADONIS">
             {% if settings.header_logo %}
                 <img src="{{ settings.header_logo.url }}" alt="ADONIS" class="adonis-fa-new-logo-img">
             {% elif header_logo_url %}
@@ -44,11 +44,11 @@ on internal pages they link back to /fa-new/.
                         {% endif %}
                     {% endfor %}
                 {% else %}
-                    <li><a href="/fa-new/">خانه</a></li>
-                    <li><a href="/fa-new/golden-visa/">گلدن ویزا</a></li>
-                    <li><a href="/fa-new/blog/">بلاگ</a></li>
-                    <li><a href="/fa-new/about/">درباره ما</a></li>
-                    <li><a href="/fa-new/contact/">تماس</a></li>
+                    <li><a href="/">خانه</a></li>
+                    <li><a href="/golden-visa/">گلدن ویزا</a></li>
+                    <li><a href="/blog/">بلاگ</a></li>
+                    <li><a href="/about/">درباره ما</a></li>
+                    <li><a href="/contact/">تماس</a></li>
                 {% endif %}
             </ul>
         </nav>
@@ -84,11 +84,11 @@ on internal pages they link back to /fa-new/.
                     {% endif %}
                 {% endfor %}
             {% else %}
-                <li><a href="/fa-new/">خانه</a></li>
-                <li><a href="/fa-new/golden-visa/">گلدن ویزا</a></li>
-                <li><a href="/fa-new/blog/">بلاگ</a></li>
-                <li><a href="/fa-new/about/">درباره ما</a></li>
-                <li><a href="/fa-new/contact/">تماس</a></li>
+                <li><a href="/">خانه</a></li>
+                <li><a href="/golden-visa/">گلدن ویزا</a></li>
+                <li><a href="/blog/">بلاگ</a></li>
+                <li><a href="/about/">درباره ما</a></li>
+                <li><a href="/contact/">تماس</a></li>
             {% endif %}
             <li><button type="button" onclick="openFaConsultModal(); closeFaMobileMenu();" class="adonis-fa-new-mobile-cta">مشاوره رایگان</button></li>
         </ul>

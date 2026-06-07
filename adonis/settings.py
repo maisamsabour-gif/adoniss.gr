@@ -646,6 +646,7 @@ UNFOLD = {
     'SITE_TITLE': 'ADONIS Admin',
     'SITE_HEADER': 'ADONIS Group',
     'SITE_SYMBOL': 'domain',
+    'SITE_URL': '/',
     'SHOW_HISTORY': True,
     'DASHBOARD_CALLBACK': 'core.admin_dashboard.dashboard_callback',
     'STYLES': [
@@ -696,7 +697,7 @@ UNFOLD = {
                     {'title': _('📐 سکشن‌های صفحه اصلی'), 'icon': 'view_agenda', 'icon_class': 'text-blue-400', 'link': reverse_lazy('admin:core_fanewsection_changelist'), 'permission': _can('core.change_fanewsection')},
                     {'title': _('🧭 منوی ناوبری (+ زیرمنو)'), 'icon': 'menu', 'icon_class': 'text-blue-500', 'link': reverse_lazy('admin:core_fanavmenuitem_changelist'), 'permission': _can('core.change_fanavmenuitem')},
                     {'title': _('🦶 فوتر'), 'icon': 'bottom_navigation', 'link': reverse_lazy('admin:core_fafootersettings_changelist'), 'permission': _can('core.change_fafootersettings')},
-                    {'title': _('👁 پیش‌نمایش صفحه فارسی'), 'icon': 'preview', 'icon_class': 'text-green-300', 'link': '/fa-new/'},
+                    {'title': _('👁 پیش‌نمایش صفحه فارسی'), 'icon': 'preview', 'icon_class': 'text-green-300', 'link': '/'},
                 ],
             },
             {
@@ -873,7 +874,7 @@ UNFOLD_PERSIAN = {
                 'separator': True,
                 'collapsible': False,
                 'items': [
-                    {'title': _('🌐 مشاهده سایت'), 'icon': 'preview', 'link': '/fa-new/'},
+                    {'title': _('🌐 مشاهده سایت'), 'icon': 'preview', 'link': '/'},
                 ],
             },
         ],

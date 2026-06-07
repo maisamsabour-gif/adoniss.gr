@@ -413,10 +413,10 @@ def fa_admin_dashboard(request: HttpRequest) -> HttpResponse:
 
 
 def fa_new_robots_txt(request: HttpRequest) -> HttpResponse:
-    sitemap_url = request.build_absolute_uri("/fa-new/sitemap.xml")
+    sitemap_url = request.build_absolute_uri("/sitemap.xml")
     lines = [
         "User-agent: *",
-        "Allow: /fa-new/",
+        "Allow: /",
         "Disallow: /fa-admin/",
         "Disallow: /persian-admin/",
         f"Sitemap: {sitemap_url}",

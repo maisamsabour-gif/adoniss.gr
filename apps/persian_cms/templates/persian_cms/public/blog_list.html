@@ -6,7 +6,7 @@
         <h1 class="adonis-fa-new-section-title">بلاگ فارسی</h1>
         {% for post in posts %}
         <article style="margin-bottom:28px;">
-            <h2><a href="/fa-new/blog/{{ post.slug }}/">{{ post.title }}</a></h2>
+            <h2><a href="/blog/{{ post.slug }}/">{{ post.title }}</a></h2>
             {% if post.excerpt %}<p>{{ post.excerpt }}</p>{% endif %}
         </article>
         {% empty %}

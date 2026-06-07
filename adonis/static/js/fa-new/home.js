@@ -470,3 +470,83 @@
         canvas.style.display = "none";
     }
 })();
+
+/* ============================================================================
+ * Why Adonis Stats - Counter Animation
+ * Animates numbers from 0 to target value when entering viewport.
+ * ========================================================================== */
+(function () {
+    "use strict";
+
+    var prefersReducedMotion =
+        window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    var counters = document.querySelectorAll("[data-counter-target]");
+    if (!counters.length) return;
+
+    var DURATION = 2000;
+
+    function easeOutQuart(t) {
+        return 1 - Math.pow(1 - t, 4);
+    }
+
+    function animateCounter(el) {
+        var target = parseInt(el.getAttribute("data-counter-target"), 10);
+        if (isNaN(target) || target <= 0) return;
+
+        var valueEl = el.querySelector(".why-adonis-counter") ||
+                      el.querySelector(".fa-why-adonis-counter") || 
+                      el.querySelector(".fa-stats-counter") || 
+                      el.querySelector(".fa-counter-value");
+        if (!valueEl) return;
+
+        var startTime = null;
+
+        function step(timestamp) {
+            if (!startTime) startTime = timestamp;
+            var progress = Math.min((timestamp - startTime) / DURATION, 1);
+            var easedProgress = easeOutQuart(progress);
+            var current = Math.floor(easedProgress * target);
+
+            valueEl.textContent = current;
+
+            if (progress < 1) {
+                requestAnimationFrame(step);
+            } else {
+                valueEl.textContent = target;
+            }
+        }
+
+        requestAnimationFrame(step);
+    }
+
+    if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+        counters.forEach(function (el) {
+            var target = parseInt(el.getAttribute("data-counter-target"), 10);
+            var valueEl = el.querySelector(".why-adonis-counter") ||
+                          el.querySelector(".fa-why-adonis-counter") || 
+                          el.querySelector(".fa-stats-counter") || 
+                          el.querySelector(".fa-counter-value");
+            if (valueEl && !isNaN(target)) {
+                valueEl.textContent = target;
+            }
+        });
+    } else {
+        var counterObserver = new IntersectionObserver(
+            function (entries, obs) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        animateCounter(entry.target);
+                        obs.unobserve(entry.target);
+                    }
+                });
+            },
+            { threshold: 0.2, rootMargin: "0px 0px -5% 0px" }
+        );
+
+        counters.forEach(function (el) {
+            counterObserver.observe(el);
+        });
+    }
+})();

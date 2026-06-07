@@ -2794,3 +2794,600 @@
     }
 }
 
+/* ══════════════════════════════════════════════════════════════════════════════
+   «چرا آدونیس؟» — WHY ADONIS STATS SECTION
+   Premium glassmorphism cards with beautiful animations
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.fa-why-adonis-section {
+    display: block;
+    position: relative;
+    width: 100%;
+    padding: 80px 24px;
+    margin: 0;
+    background: linear-gradient(180deg, #071527 0%, #0B1F3A 100%);
+    direction: rtl;
+    text-align: center;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* Subtle top glow only */
+.fa-why-adonis-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+    pointer-events: none;
+}
+
+.fa-why-adonis-wrapper {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+/* ── Section Header (Minimal) ── */
+.fa-why-adonis-header {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin: 0 auto 48px auto;
+    padding: 0;
+}
+
+.fa-why-adonis-eyebrow {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #D4AF37;
+    letter-spacing: 0.12em;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
+
+.fa-why-adonis-title {
+    display: block;
+    font-family: "Vazirmatn", system-ui, sans-serif;
+    font-size: clamp(24px, 4vw, 36px);
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 14px 0;
+    line-height: 1.4;
+}
+
+.fa-why-adonis-desc {
+    display: block;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.8;
+}
+
+/* ── Cards Grid (4 columns) ── */
+.fa-why-adonis-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 20px !important;
+    width: 100% !important;
+    max-width: 1100px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+/* ── Single Card (Minimal Design) ── */
+.fa-why-adonis-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    min-height: 220px;
+    padding: 32px 20px 28px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+}
+
+.fa-why-adonis-card:hover {
+    transform: translateY(-6px);
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(212, 175, 55, 0.25);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* ── Card Icon (Minimal Design) ── */
+.fa-why-adonis-icon {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    max-width: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto 20px auto !important;
+    border-radius: 12px !important;
+    background: rgba(212, 175, 55, 0.1) !important;
+    border: 1px solid rgba(212, 175, 55, 0.2) !important;
+    transition: all 0.3s ease !important;
+    overflow: hidden !important;
+}
+
+.fa-why-adonis-icon svg {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    max-width: 22px !important;
+    min-height: 22px !important;
+    max-height: 22px !important;
+    color: #D4AF37 !important;
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
+}
+
+.fa-why-adonis-card:hover .fa-why-adonis-icon {
+    background: rgba(212, 175, 55, 0.15) !important;
+    border-color: rgba(212, 175, 55, 0.3) !important;
+}
+
+/* ── Counter Number (Minimal) ── */
+.fa-why-adonis-number {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    margin: 0 auto 10px auto;
+    direction: ltr;
+}
+
+.fa-why-adonis-counter {
+    font-family: "Vazirmatn", system-ui, sans-serif;
+    font-size: clamp(36px, 5vw, 48px);
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.fa-why-adonis-suffix {
+    font-family: "Vazirmatn", system-ui, sans-serif;
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 700;
+    color: #D4AF37;
+    margin-left: 2px;
+}
+
+/* ── Card Title (Minimal) ── */
+.fa-why-adonis-card-title {
+    display: block;
+    font-family: "Vazirmatn", system-ui, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* ── Card Description (optional) ── */
+.fa-why-adonis-card-desc {
+    display: block;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 8px 0 0 0;
+    line-height: 1.6;
+}
+
+/* ── Card Reveal Animation (Subtle) ── */
+.fa-why-adonis-card[data-fa-reveal] {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.fa-why-adonis-card[data-fa-reveal].fa-revealed {
+    animation: fa-why-card-reveal 0.5s ease-out forwards;
+}
+
+@keyframes fa-why-card-reveal {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Stagger delays */
+.fa-why-adonis-card[data-fa-reveal].fa-revealed:nth-child(1) { animation-delay: 0s; }
+.fa-why-adonis-card[data-fa-reveal].fa-revealed:nth-child(2) { animation-delay: 0.08s; }
+.fa-why-adonis-card[data-fa-reveal].fa-revealed:nth-child(3) { animation-delay: 0.16s; }
+.fa-why-adonis-card[data-fa-reveal].fa-revealed:nth-child(4) { animation-delay: 0.24s; }
+
+/* ── Responsive: Tablet (2x2) ── */
+@media (max-width: 1024px) {
+    .fa-why-adonis-section {
+        padding: 64px 20px;
+    }
+
+    .fa-why-adonis-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        max-width: 520px;
+    }
+
+    .fa-why-adonis-header {
+        margin-bottom: 40px;
+    }
+
+    .fa-why-adonis-card {
+        min-height: 200px;
+    }
+}
+
+/* ── Responsive: Mobile (1 column) ── */
+@media (max-width: 640px) {
+    .fa-why-adonis-section {
+        padding: 48px 16px;
+    }
+
+    .fa-why-adonis-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        max-width: 320px;
+    }
+
+    .fa-why-adonis-card {
+        min-height: auto;
+        padding: 24px 16px 20px;
+    }
+
+    .fa-why-adonis-icon {
+        width: 40px !important;
+        height: 40px !important;
+        min-width: 40px !important;
+        max-width: 40px !important;
+        min-height: 40px !important;
+        max-height: 40px !important;
+        margin-bottom: 16px !important;
+        border-radius: 10px !important;
+    }
+
+    .fa-why-adonis-icon svg {
+        width: 18px !important;
+        height: 18px !important;
+        min-width: 18px !important;
+        max-width: 18px !important;
+    }
+
+    .fa-why-adonis-counter {
+        font-size: 32px;
+    }
+
+    .fa-why-adonis-suffix {
+        font-size: 18px;
+    }
+
+    .fa-why-adonis-header {
+        margin-bottom: 32px;
+    }
+
+    .fa-why-adonis-title {
+        font-size: 22px;
+    }
+
+    .fa-why-adonis-desc {
+        font-size: 13px;
+    }
+
+    .fa-why-adonis-card-title {
+        font-size: 13px;
+    }
+}
+
+/* ── Touch device ── */
+@media (hover: none) {
+    .fa-why-adonis-card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .fa-why-adonis-card:hover .fa-why-adonis-icon {
+        transform: none;
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   WHY ADONIS STATS SECTION (New Classes)
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.why-adonis-stats-section {
+    display: block;
+    position: relative;
+    width: 100%;
+    padding: 100px 24px;
+    margin: 0;
+    background: linear-gradient(135deg, #0B1F3A 0%, #1a3a5c 50%, #0d2847 100%);
+    direction: rtl;
+    text-align: center;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.why-adonis-stats-section[style*="--wa-bg-image"]::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: var(--wa-bg-image);
+    background-size: cover;
+    background-position: center;
+    opacity: calc(var(--wa-bg-opacity, 50) / 100);
+    z-index: 0;
+}
+
+.why-adonis-bg-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(11, 31, 58, 0.85) 0%, rgba(26, 58, 92, 0.75) 50%, rgba(13, 40, 71, 0.85) 100%);
+    z-index: 1;
+}
+
+.why-adonis-container {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+    z-index: 2;
+}
+
+.why-adonis-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin: 0 auto 60px auto;
+}
+
+.why-adonis-eyebrow {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #D4AF37;
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+    padding: 8px 20px;
+    background: rgba(212, 175, 55, 0.15);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 24px;
+    backdrop-filter: blur(8px);
+}
+
+.why-adonis-title {
+    display: block;
+    width: 100%;
+    font-family: "Vazirmatn", system-ui, sans-serif;
+    font-size: clamp(30px, 4.5vw, 46px);
+    font-weight: 800;
+    color: #FFFFFF;
+    margin: 0 0 18px 0;
+    line-height: 1.3;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.why-adonis-subtitle {
+    display: block;
+    width: 100%;
+    max-width: 680px;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.75);
+    margin: 0;
+    line-height: 1.9;
+    text-align: center;
+}
+
+.why-adonis-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 28px;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.why-adonis-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    min-height: 280px;
+    padding: 40px 24px 36px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.why-adonis-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.5), transparent 40%, transparent 60%, rgba(212, 175, 55, 0.3));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.why-adonis-card:hover {
+    transform: translateY(-12px) scale(1.02);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(212, 175, 55, 0.35);
+    box-shadow: 
+        0 24px 48px rgba(0, 0, 0, 0.3),
+        0 0 60px rgba(212, 175, 55, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.why-adonis-card:hover::before {
+    opacity: 1;
+}
+
+.why-adonis-icon {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px auto;
+    border-radius: 20px;
+    background: linear-gradient(145deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.08));
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    backdrop-filter: blur(8px);
+    transition: all 0.4s ease;
+}
+
+.why-adonis-card:hover .why-adonis-icon {
+    transform: scale(1.1) rotate(3deg);
+    background: linear-gradient(145deg, rgba(212, 175, 55, 0.35), rgba(212, 175, 55, 0.15));
+    box-shadow: 0 8px 32px rgba(212, 175, 55, 0.3);
+    border-color: rgba(212, 175, 55, 0.5);
+}
+
+.why-adonis-icon svg {
+    width: 44px;
+    height: 44px;
+    color: #D4AF37;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    transition: all 0.3s ease;
+}
+
+.why-adonis-card:hover .why-adonis-icon svg {
+    color: #F0D060;
+    filter: drop-shadow(0 4px 8px rgba(212, 175, 55, 0.4));
+}
+
+.why-adonis-number {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    margin: 0 auto 14px auto;
+    direction: ltr;
+}
+
+.why-adonis-counter {
+    font-family: "Vazirmatn", system-ui, sans-serif;
+    font-size: clamp(44px, 6vw, 56px);
+    font-weight: 800;
+    color: #FFFFFF;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.why-adonis-suffix {
+    font-family: "Vazirmatn", system-ui, sans-serif;
+    font-size: clamp(28px, 4vw, 36px);
+    font-weight: 700;
+    color: #D4AF37;
+    margin-right: 4px;
+    text-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
+}
+
+.why-adonis-card-title {
+    font-family: "Vazirmatn", system-ui, sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.95);
+    margin: 0;
+    line-height: 1.6;
+}
+
+.why-adonis-card-desc {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.65);
+    margin: 10px 0 0 0;
+    line-height: 1.7;
+}
+
+.why-adonis-card[data-fa-reveal] {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+}
+
+.why-adonis-card[data-fa-reveal].is-revealed {
+    animation: why-adonis-reveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes why-adonis-reveal {
+    to { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+    }
+}
+
+.why-adonis-card[data-fa-reveal].is-revealed:nth-child(1) { animation-delay: 0s; }
+.why-adonis-card[data-fa-reveal].is-revealed:nth-child(2) { animation-delay: 0.12s; }
+.why-adonis-card[data-fa-reveal].is-revealed:nth-child(3) { animation-delay: 0.24s; }
+.why-adonis-card[data-fa-reveal].is-revealed:nth-child(4) { animation-delay: 0.36s; }
+
+@media (max-width: 1024px) {
+    .why-adonis-stats-section { padding: 80px 20px; }
+    .why-adonis-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; max-width: 600px; }
+    .why-adonis-header { margin-bottom: 48px; }
+    .why-adonis-card { min-height: 260px; }
+    .why-adonis-icon { width: 72px; height: 72px; }
+    .why-adonis-icon svg { width: 40px; height: 40px; }
+}
+
+@media (max-width: 640px) {
+    .why-adonis-stats-section { padding: 60px 16px; }
+    .why-adonis-grid { grid-template-columns: 1fr; gap: 20px; max-width: 380px; }
+    .why-adonis-card { min-height: auto; padding: 36px 24px 32px; }
+    .why-adonis-icon { width: 68px; height: 68px; margin-bottom: 20px; border-radius: 18px; }
+    .why-adonis-icon svg { width: 36px; height: 36px; }
+    .why-adonis-counter { font-size: 42px; }
+    .why-adonis-suffix { font-size: 26px; }
+    .why-adonis-header { margin-bottom: 40px; }
+    .why-adonis-title { font-size: 26px; }
+    .why-adonis-subtitle { font-size: 15px; }
+    .why-adonis-card-title { font-size: 16px; }
+}
+
+@media (hover: none) {
+    .why-adonis-card:hover { 
+        transform: none; 
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+    .why-adonis-card:hover .why-adonis-icon {
+        transform: none;
+        box-shadow: none;
+    }
+}
+

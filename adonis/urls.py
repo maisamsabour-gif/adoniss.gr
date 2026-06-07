@@ -70,13 +70,18 @@ urlpatterns = [
     # Language switcher endpoint (must be outside i18n_patterns)
     path('i18n/', include('django.conf.urls.i18n')),
 
-    # Django admin (keeps plain /admin/ URL, no language prefix needed)
+    # Admin dashboard utilities (available on both admin paths)
     path('admin/dashboard-stats/', admin_dashboard_stats, name='admin_dashboard_stats'),
     path('admin/seo-dashboard/', seo_dashboard, name='seo_dashboard'),
     path('admin/site-backup/', site_backup_page, name='site_backup_page'),
     path('admin/site-backup/generate/', site_backup_generate, name='site_backup_generate'),
     path('admin/site-backup/download/', site_backup_download, name='site_backup_download'),
-    path('admin/', admin.site.urls),
+    
+    # Persian Admin (main admin with Landing Page builder) at /admin/
+    path('admin/', persian_admin_site.urls),
+    
+    # Keep default Django admin at /django-admin/ for technical access if needed
+    path('django-admin/', admin.site.urls),
 
     # Rich-text editor
     path('ckeditor5/', include('django_ckeditor_5.urls')),
