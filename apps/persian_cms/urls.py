@@ -12,10 +12,10 @@ urlpatterns = [
     # Persian admin
     path("fa-admin/dashboard/", views.fa_admin_dashboard, name="fa_admin_dashboard"),
     path("fa-admin/", persian_admin_site.urls),
-    path("persian-admin/", RedirectView.as_view(url="/fa-admin/", permanent=False), name="persian_admin_redirect_root"),
+    path("persian-admin/", RedirectView.as_view(url="/admin/", permanent=False), name="persian_admin_redirect_root"),
     path(
         "persian-admin/<path:subpath>/",
-        RedirectView.as_view(url="/fa-admin/%(subpath)s", permanent=False),
+        RedirectView.as_view(url="/admin/%(subpath)s", permanent=False),
         name="persian_admin_redirect",
     ),
 

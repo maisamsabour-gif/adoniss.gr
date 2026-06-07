@@ -12,7 +12,7 @@ class PersianAdminNoIndexMiddleware:
 
     def __call__(self, request):
         response = self.get_response(request)
-        if request.path.startswith("/fa-admin/") or request.path.startswith("/persian-admin/"):
+        if request.path.startswith("/admin/") or request.path.startswith("/persian-admin/"):
             response["X-Robots-Tag"] = "noindex, nofollow, noarchive"
         return response
 

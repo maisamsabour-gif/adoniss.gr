@@ -18,9 +18,9 @@ def _persian_sidebar_navigation(request):
             'separator': True,
             'collapsible': True,
             'items': [
-                {'title': 'تنظیمات هیرو', 'icon': 'play_circle', 'link': '/fa-admin/core/fanewsettings/', 'has_permission': True},
-                {'title': 'سکشن‌های صفحه', 'icon': 'view_agenda', 'link': '/fa-admin/core/fanewsection/', 'has_permission': True},
-                {'title': 'تنظیمات فوتر', 'icon': 'bottom_navigation', 'link': '/fa-admin/core/fafootersettings/', 'has_permission': True},
+                {'title': 'تنظیمات هیرو', 'icon': 'play_circle', 'link': '/admin/core/fanewsettings/', 'has_permission': True},
+                {'title': 'سکشن‌های صفحه', 'icon': 'view_agenda', 'link': '/admin/core/fanewsection/', 'has_permission': True},
+                {'title': 'تنظیمات فوتر', 'icon': 'bottom_navigation', 'link': '/admin/core/fafootersettings/', 'has_permission': True},
             ],
         },
         # ═══════════════════════════════════════════════════════════════════
@@ -31,10 +31,10 @@ def _persian_sidebar_navigation(request):
             'separator': True,
             'collapsible': True,
             'items': [
-                {'title': 'همه منوها', 'icon': 'menu', 'link': '/fa-admin/core/fanavmenuitem/', 'has_permission': True},
-                {'title': 'افزودن آیتم منو', 'icon': 'add_circle', 'link': '/fa-admin/core/fanavmenuitem/add/', 'has_permission': True},
-                {'title': 'همه صفحات', 'icon': 'description', 'link': '/fa-admin/persian_cms/persianpage/', 'has_permission': True},
-                {'title': 'ساخت صفحه جدید', 'icon': 'note_add', 'link': '/fa-admin/persian_cms/persianpage/add/', 'has_permission': True},
+                {'title': 'همه منوها', 'icon': 'menu', 'link': '/admin/core/fanavmenuitem/', 'has_permission': True},
+                {'title': 'افزودن آیتم منو', 'icon': 'add_circle', 'link': '/admin/core/fanavmenuitem/add/', 'has_permission': True},
+                {'title': 'همه صفحات', 'icon': 'description', 'link': '/admin/persian_cms/persianpage/', 'has_permission': True},
+                {'title': 'ساخت صفحه جدید', 'icon': 'note_add', 'link': '/admin/persian_cms/persianpage/add/', 'has_permission': True},
             ],
         },
         # ═══════════════════════════════════════════════════════════════════
@@ -45,9 +45,9 @@ def _persian_sidebar_navigation(request):
             'separator': True,
             'collapsible': True,
             'items': [
-                {'title': 'همه پروژه‌ها', 'icon': 'apartment', 'link': '/fa-admin/persian_cms/faproperty/', 'has_permission': True},
-                {'title': 'افزودن پروژه', 'icon': 'add_home', 'link': '/fa-admin/persian_cms/faproperty/add/', 'has_permission': True},
-                {'title': 'رسانه‌های پروژه‌ها', 'icon': 'photo_library', 'link': '/fa-admin/persian_cms/fapropertymedia/', 'has_permission': True},
+                {'title': 'همه پروژه‌ها', 'icon': 'apartment', 'link': '/admin/persian_cms/faproperty/', 'has_permission': True},
+                {'title': 'افزودن پروژه', 'icon': 'add_home', 'link': '/admin/persian_cms/faproperty/add/', 'has_permission': True},
+                {'title': 'رسانه‌های پروژه‌ها', 'icon': 'photo_library', 'link': '/admin/persian_cms/fapropertymedia/', 'has_permission': True},
             ],
         },
         # ═══════════════════════════════════════════════════════════════════
@@ -58,10 +58,10 @@ def _persian_sidebar_navigation(request):
             'separator': True,
             'collapsible': True,
             'items': [
-                {'title': 'همه پست‌ها', 'icon': 'article', 'link': '/fa-admin/persian_cms/persianblogpost/', 'has_permission': True},
-                {'title': 'نوشتن پست جدید', 'icon': 'post_add', 'link': '/fa-admin/persian_cms/persianblogpost/add/', 'has_permission': True},
-                {'title': 'سوالات متداول', 'icon': 'quiz', 'link': '/fa-admin/persian_cms/persianfaq/', 'has_permission': True},
-                {'title': 'رسانه‌ها', 'icon': 'perm_media', 'link': '/fa-admin/persian_cms/persianmediaasset/', 'has_permission': True},
+                {'title': 'همه پست‌ها', 'icon': 'article', 'link': '/admin/persian_cms/persianblogpost/', 'has_permission': True},
+                {'title': 'نوشتن پست جدید', 'icon': 'post_add', 'link': '/admin/persian_cms/persianblogpost/add/', 'has_permission': True},
+                {'title': 'سوالات متداول', 'icon': 'quiz', 'link': '/admin/persian_cms/persianfaq/', 'has_permission': True},
+                {'title': 'رسانه‌ها', 'icon': 'perm_media', 'link': '/admin/persian_cms/persianmediaasset/', 'has_permission': True},
             ],
         },
         # ═══════════════════════════════════════════════════════════════════
@@ -72,8 +72,8 @@ def _persian_sidebar_navigation(request):
             'separator': True,
             'collapsible': True,
             'items': [
-                {'title': 'همه لندینگ‌ها', 'icon': 'rocket_launch', 'link': '/fa-admin/persian_cms/goldenvisalandingpage/', 'has_permission': True},
-                {'title': 'ساخت لندینگ جدید', 'icon': 'add_circle', 'link': '/fa-admin/persian_cms/goldenvisalandingpage/add/', 'has_permission': True},
+                {'title': 'همه لندینگ‌ها', 'icon': 'rocket_launch', 'link': '/admin/persian_cms/goldenvisalandingpage/', 'has_permission': True},
+                {'title': 'ساخت لندینگ جدید', 'icon': 'add_circle', 'link': '/admin/persian_cms/goldenvisalandingpage/add/', 'has_permission': True},
             ],
         },
         # ═══════════════════════════════════════════════════════════════════
@@ -84,8 +84,8 @@ def _persian_sidebar_navigation(request):
             'separator': True,
             'collapsible': True,
             'items': [
-                {'title': 'فرم‌های تماس', 'icon': 'mail', 'link': '/fa-admin/core/contactsubmission/', 'has_permission': True},
-                {'title': 'درخواست مشاوره', 'icon': 'support_agent', 'link': '/fa-admin/core/consultrequest/', 'has_permission': True},
+                {'title': 'فرم‌های تماس', 'icon': 'mail', 'link': '/admin/core/contactsubmission/', 'has_permission': True},
+                {'title': 'درخواست مشاوره', 'icon': 'support_agent', 'link': '/admin/core/consultrequest/', 'has_permission': True},
             ],
         },
         # ═══════════════════════════════════════════════════════════════════
@@ -96,8 +96,8 @@ def _persian_sidebar_navigation(request):
             'separator': True,
             'collapsible': True,
             'items': [
-                {'title': 'تنظیمات سئو', 'icon': 'travel_explore', 'link': '/fa-admin/persian_cms/persianseosettings/', 'has_permission': True},
-                {'title': 'ریدایرکت‌ها', 'icon': 'alt_route', 'link': '/fa-admin/persian_cms/persianredirectmap/', 'has_permission': True},
+                {'title': 'تنظیمات سئو', 'icon': 'travel_explore', 'link': '/admin/persian_cms/persianseosettings/', 'has_permission': True},
+                {'title': 'ریدایرکت‌ها', 'icon': 'alt_route', 'link': '/admin/persian_cms/persianredirectmap/', 'has_permission': True},
             ],
         },
         # ═══════════════════════════════════════════════════════════════════

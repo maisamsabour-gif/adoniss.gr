@@ -707,12 +707,12 @@ UNFOLD = {
                 'separator': True,
                 'collapsible': True,
                 'items': [
-                    {'title': _('📝 بلاگ فارسی'), 'icon': 'edit_note', 'icon_class': 'text-green-400', 'link': '/fa-admin/persian_cms/persianblogpost/', 'permission': _any_staff},
-                    {'title': _('📄 صفحات فارسی (تعریف/طراحی)'), 'icon': 'description', 'icon_class': 'text-green-400', 'link': '/fa-admin/persian_cms/persianpage/', 'permission': _any_staff},
-                    {'title': _('➕ صفحه جدید'), 'icon': 'note_add', 'link': '/fa-admin/persian_cms/persianpage/add/', 'permission': _any_staff},
-                    {'title': _('🔍 تنظیمات سئو فارسی'), 'icon': 'travel_explore', 'link': '/fa-admin/persian_cms/persianseosettings/', 'permission': _any_staff},
+                    {'title': _('📝 بلاگ فارسی'), 'icon': 'edit_note', 'icon_class': 'text-green-400', 'link': '/admin/persian_cms/persianblogpost/', 'permission': _any_staff},
+                    {'title': _('📄 صفحات فارسی (تعریف/طراحی)'), 'icon': 'description', 'icon_class': 'text-green-400', 'link': '/admin/persian_cms/persianpage/', 'permission': _any_staff},
+                    {'title': _('➕ صفحه جدید'), 'icon': 'note_add', 'link': '/admin/persian_cms/persianpage/add/', 'permission': _any_staff},
+                    {'title': _('🔍 تنظیمات سئو فارسی'), 'icon': 'travel_explore', 'link': '/admin/persian_cms/persianseosettings/', 'permission': _any_staff},
                     {'title': _('🤖 پایپ‌لاین SEO فارسی'), 'icon': 'auto_awesome', 'icon_class': 'text-green-400', 'link': reverse_lazy('admin:properties_facontentpipeline_changelist'), 'permission': _any_staff},
-                    {'title': _('🛠 پنل کامل مدیریت فارسی'), 'icon': 'dashboard', 'icon_class': 'text-green-400', 'link': '/fa-admin/', 'permission': _any_staff},
+                    {'title': _('🛠 پنل کامل مدیریت فارسی'), 'icon': 'dashboard', 'icon_class': 'text-green-400', 'link': '/admin/', 'permission': _any_staff},
                 ],
             },
             {
@@ -722,9 +722,9 @@ UNFOLD = {
                 'separator': True,
                 'collapsible': True,
                 'items': [
-                    {'title': _('📋 پروژه‌های ملکی فارسی'), 'icon': 'apartment', 'icon_class': 'text-amber-500', 'link': '/fa-admin/persian_cms/faproperty/', 'permission': _any_staff},
-                    {'title': _('➕ افزودن پروژه جدید'), 'icon': 'add_home', 'icon_class': 'text-amber-400', 'link': '/fa-admin/persian_cms/faproperty/add/', 'permission': _any_staff},
-                    {'title': _('🖼️ رسانه‌های املاک'), 'icon': 'photo_library', 'link': '/fa-admin/persian_cms/fapropertymedia/', 'permission': _any_staff},
+                    {'title': _('📋 پروژه‌های ملکی فارسی'), 'icon': 'apartment', 'icon_class': 'text-amber-500', 'link': '/admin/persian_cms/faproperty/', 'permission': _any_staff},
+                    {'title': _('➕ افزودن پروژه جدید'), 'icon': 'add_home', 'icon_class': 'text-amber-400', 'link': '/admin/persian_cms/faproperty/add/', 'permission': _any_staff},
+                    {'title': _('🖼️ رسانه‌های املاک'), 'icon': 'photo_library', 'link': '/admin/persian_cms/fapropertymedia/', 'permission': _any_staff},
                 ],
             },
             {
@@ -788,7 +788,7 @@ UNFOLD = {
 }
 
 # ══════════════════════════════════════════════════════════════════════════════
-# UNFOLD_PERSIAN — Separate settings for Persian admin at /fa-admin/
+# UNFOLD_PERSIAN — Separate settings for Persian admin at /admin/
 # This ensures the Persian admin sidebar only shows Persian models
 # ══════════════════════════════════════════════════════════════════════════════
 UNFOLD_PERSIAN = {
@@ -810,9 +810,9 @@ UNFOLD_PERSIAN = {
                 'separator': True,
                 'collapsible': False,
                 'items': [
-                    {'title': _('📋 همه پروژه‌ها'), 'icon': 'apartment', 'link': '/fa-admin/persian_cms/faproperty/'},
-                    {'title': _('➕ افزودن پروژه'), 'icon': 'add_home', 'link': '/fa-admin/persian_cms/faproperty/add/'},
-                    {'title': _('🖼️ رسانه‌های املاک'), 'icon': 'photo_library', 'link': '/fa-admin/persian_cms/fapropertymedia/'},
+                    {'title': _('📋 همه پروژه‌ها'), 'icon': 'apartment', 'link': '/admin/persian_cms/faproperty/'},
+                    {'title': _('➕ افزودن پروژه'), 'icon': 'add_home', 'link': '/admin/persian_cms/faproperty/add/'},
+                    {'title': _('🖼️ رسانه‌های املاک'), 'icon': 'photo_library', 'link': '/admin/persian_cms/fapropertymedia/'},
                 ],
             },
             {
@@ -820,10 +820,10 @@ UNFOLD_PERSIAN = {
                 'separator': True,
                 'collapsible': True,
                 'items': [
-                    {'title': _('⚙️ تنظیمات هیرو'), 'icon': 'play_circle', 'link': '/fa-admin/core/fanewsettings/'},
-                    {'title': _('📐 سکشن‌ها'), 'icon': 'view_agenda', 'link': '/fa-admin/core/fanewsection/'},
-                    {'title': _('🧭 منوی ناوبری'), 'icon': 'menu', 'link': '/fa-admin/core/fanavmenuitem/'},
-                    {'title': _('🦶 فوتر'), 'icon': 'bottom_navigation', 'link': '/fa-admin/core/fafootersettings/'},
+                    {'title': _('⚙️ تنظیمات هیرو'), 'icon': 'play_circle', 'link': '/admin/core/fanewsettings/'},
+                    {'title': _('📐 سکشن‌ها'), 'icon': 'view_agenda', 'link': '/admin/core/fanewsection/'},
+                    {'title': _('🧭 منوی ناوبری'), 'icon': 'menu', 'link': '/admin/core/fanavmenuitem/'},
+                    {'title': _('🦶 فوتر'), 'icon': 'bottom_navigation', 'link': '/admin/core/fafootersettings/'},
                 ],
             },
             {
@@ -831,11 +831,11 @@ UNFOLD_PERSIAN = {
                 'separator': True,
                 'collapsible': True,
                 'items': [
-                    {'title': _('📝 بلاگ فارسی'), 'icon': 'edit_note', 'link': '/fa-admin/persian_cms/persianblogpost/'},
-                    {'title': _('📄 صفحات'), 'icon': 'description', 'link': '/fa-admin/persian_cms/persianpage/'},
-                    {'title': _('🚀 لندینگ پیج‌ها'), 'icon': 'rocket_launch', 'link': '/fa-admin/persian_cms/goldenvisalandingpage/'},
-                    {'title': _('🔍 تنظیمات سئو'), 'icon': 'travel_explore', 'link': '/fa-admin/persian_cms/persianseosettings/'},
-                    {'title': _('❓ سوالات متداول'), 'icon': 'quiz', 'link': '/fa-admin/persian_cms/persianfaq/'},
+                    {'title': _('📝 بلاگ فارسی'), 'icon': 'edit_note', 'link': '/admin/persian_cms/persianblogpost/'},
+                    {'title': _('📄 صفحات'), 'icon': 'description', 'link': '/admin/persian_cms/persianpage/'},
+                    {'title': _('🚀 لندینگ پیج‌ها'), 'icon': 'rocket_launch', 'link': '/admin/persian_cms/goldenvisalandingpage/'},
+                    {'title': _('🔍 تنظیمات سئو'), 'icon': 'travel_explore', 'link': '/admin/persian_cms/persianseosettings/'},
+                    {'title': _('❓ سوالات متداول'), 'icon': 'quiz', 'link': '/admin/persian_cms/persianfaq/'},
                 ],
             },
             {
@@ -843,20 +843,20 @@ UNFOLD_PERSIAN = {
                 'separator': False,
                 'collapsible': True,
                 'items': [
-                    {'title': _('🎬 هیرو'), 'icon': 'slideshow', 'link': '/fa-admin/persian_cms/gvherosection/'},
-                    {'title': _('⭐ مزایا'), 'icon': 'stars', 'link': '/fa-admin/persian_cms/gvbenefitssection/'},
-                    {'title': _('✅ شرایط'), 'icon': 'checklist', 'link': '/fa-admin/persian_cms/gveligibilitysection/'},
-                    {'title': _('📊 مراحل'), 'icon': 'timeline', 'link': '/fa-admin/persian_cms/gvprocesssection/'},
-                    {'title': _('📈 آمار'), 'icon': 'analytics', 'link': '/fa-admin/persian_cms/gvstatisticssection/'},
-                    {'title': _('🏗️ پروژه‌ها'), 'icon': 'business', 'link': '/fa-admin/persian_cms/gvproject/'},
-                    {'title': _('👨‍👩‍👧 خانواده'), 'icon': 'family_restroom', 'link': '/fa-admin/persian_cms/gvfamilysection/'},
-                    {'title': _('📋 مدارک'), 'icon': 'folder', 'link': '/fa-admin/persian_cms/gvdocumentssection/'},
-                    {'title': _('💰 هزینه‌ها'), 'icon': 'payments', 'link': '/fa-admin/persian_cms/gvcostsection/'},
-                    {'title': _('💬 نظرات'), 'icon': 'reviews', 'link': '/fa-admin/persian_cms/gvtestimonialssection/'},
-                    {'title': _('❓ FAQ'), 'icon': 'help', 'link': '/fa-admin/persian_cms/gvfaqsection/'},
-                    {'title': _('📢 CTA'), 'icon': 'campaign', 'link': '/fa-admin/persian_cms/gvfinalctasection/'},
-                    {'title': _('🔍 سئو'), 'icon': 'search', 'link': '/fa-admin/persian_cms/gvseosettings/'},
-                    {'title': _('🎨 طراحی'), 'icon': 'palette', 'link': '/fa-admin/persian_cms/gvdesignsettings/'},
+                    {'title': _('🎬 هیرو'), 'icon': 'slideshow', 'link': '/admin/persian_cms/gvherosection/'},
+                    {'title': _('⭐ مزایا'), 'icon': 'stars', 'link': '/admin/persian_cms/gvbenefitssection/'},
+                    {'title': _('✅ شرایط'), 'icon': 'checklist', 'link': '/admin/persian_cms/gveligibilitysection/'},
+                    {'title': _('📊 مراحل'), 'icon': 'timeline', 'link': '/admin/persian_cms/gvprocesssection/'},
+                    {'title': _('📈 آمار'), 'icon': 'analytics', 'link': '/admin/persian_cms/gvstatisticssection/'},
+                    {'title': _('🏗️ پروژه‌ها'), 'icon': 'business', 'link': '/admin/persian_cms/gvproject/'},
+                    {'title': _('👨‍👩‍👧 خانواده'), 'icon': 'family_restroom', 'link': '/admin/persian_cms/gvfamilysection/'},
+                    {'title': _('📋 مدارک'), 'icon': 'folder', 'link': '/admin/persian_cms/gvdocumentssection/'},
+                    {'title': _('💰 هزینه‌ها'), 'icon': 'payments', 'link': '/admin/persian_cms/gvcostsection/'},
+                    {'title': _('💬 نظرات'), 'icon': 'reviews', 'link': '/admin/persian_cms/gvtestimonialssection/'},
+                    {'title': _('❓ FAQ'), 'icon': 'help', 'link': '/admin/persian_cms/gvfaqsection/'},
+                    {'title': _('📢 CTA'), 'icon': 'campaign', 'link': '/admin/persian_cms/gvfinalctasection/'},
+                    {'title': _('🔍 سئو'), 'icon': 'search', 'link': '/admin/persian_cms/gvseosettings/'},
+                    {'title': _('🎨 طراحی'), 'icon': 'palette', 'link': '/admin/persian_cms/gvdesignsettings/'},
                 ],
             },
             {
@@ -864,9 +864,9 @@ UNFOLD_PERSIAN = {
                 'separator': True,
                 'collapsible': True,
                 'items': [
-                    {'title': _('🖼️ رسانه‌ها'), 'icon': 'perm_media', 'link': '/fa-admin/persian_cms/persianmediaasset/'},
-                    {'title': _('🔗 منوها'), 'icon': 'link', 'link': '/fa-admin/persian_cms/persianmenuitem/'},
-                    {'title': _('🔀 ریدایرکت‌ها'), 'icon': 'alt_route', 'link': '/fa-admin/persian_cms/persianredirectmap/'},
+                    {'title': _('🖼️ رسانه‌ها'), 'icon': 'perm_media', 'link': '/admin/persian_cms/persianmediaasset/'},
+                    {'title': _('🔗 منوها'), 'icon': 'link', 'link': '/admin/persian_cms/persianmenuitem/'},
+                    {'title': _('🔀 ریدایرکت‌ها'), 'icon': 'alt_route', 'link': '/admin/persian_cms/persianredirectmap/'},
                 ],
             },
             {

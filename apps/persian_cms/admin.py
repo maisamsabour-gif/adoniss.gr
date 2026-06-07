@@ -154,7 +154,7 @@ class PersianPageAdmin(PersianBaseAdmin):
     @admin.display(description="عملیات")
     def edit_button(self, obj):
         return format_html(
-            '<a href="/fa-admin/persian_cms/persianpage/{}/change/" '
+            '<a href="/admin/persian_cms/persianpage/{}/change/" '
             'style="background:#2563eb;color:#fff;'
             'padding:6px 12px;border-radius:6px;text-decoration:none;font-weight:500;'
             'font-size:12px;display:inline-flex;align-items:center;gap:4px;'
@@ -460,7 +460,7 @@ class FaPropertyAdmin(PersianBaseAdmin):
     @admin.display(description='عملیات')
     def edit_button(self, obj):
         return format_html(
-            '<a href="/fa-admin/persian_cms/faproperty/{}/change/" '
+            '<a href="/admin/persian_cms/faproperty/{}/change/" '
             'style="background:#2563eb;color:#fff;'
             'padding:6px 12px;border-radius:6px;text-decoration:none;font-weight:500;'
             'font-size:12px;display:inline-flex;align-items:center;gap:4px;'
@@ -1637,7 +1637,7 @@ class GoldenVisaLandingPageAdmin(PersianBaseAdmin):
     @admin.display(description='ویرایش')
     def edit_link(self, obj):
         return format_html(
-            '<a href="/fa-admin/persian_cms/goldenvisalandingpage/{}/change/" '
+            '<a href="/admin/persian_cms/goldenvisalandingpage/{}/change/" '
             'style="background:#2563eb;color:#fff;padding:6px 12px;border-radius:6px;'
             'text-decoration:none;font-size:12px;">✏️ ویرایش</a>',
             obj.pk

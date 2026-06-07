@@ -2300,7 +2300,7 @@ class FaNavMenuItemAdmin(admin.ModelAdmin):
     def edit_button(self, obj):
         return format_html(
             '<div style="display:flex;gap:8px;align-items:center;">'
-            '<a href="/fa-admin/core/fanavmenuitem/{}/change/" '
+            '<a href="/admin/core/fanavmenuitem/{}/change/" '
             'style="background:linear-gradient(135deg,#10b981,#34d399);color:#fff;'
             'padding:6px 14px;border-radius:6px;text-decoration:none;font-weight:600;'
             'font-size:12px;display:inline-flex;align-items:center;gap:4px;'
@@ -2386,7 +2386,7 @@ class FaFooterSettingsAdmin(ModelAdmin):
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Register core models on the Persian Admin Site (/fa-admin/)
+# Register core models on the Persian Admin Site (/admin/)
 # ══════════════════════════════════════════════════════════════════════════════
 try:
     persian_admin_site.register(FaNewSettings, FaNewSettingsAdmin)

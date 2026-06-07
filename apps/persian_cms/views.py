@@ -391,7 +391,7 @@ def fa_new_blog_detail(request: HttpRequest, slug: str) -> HttpResponse:
     return render(request, "persian_cms/public/blog_detail.html", context)
 
 
-@user_passes_test(_is_staff, login_url="/fa-admin/login/")
+@user_passes_test(_is_staff, login_url="/admin/login/")
 def fa_admin_dashboard(request: HttpRequest) -> HttpResponse:
     try:
         pages_count = PersianPage.objects.count()
@@ -417,7 +417,7 @@ def fa_new_robots_txt(request: HttpRequest) -> HttpResponse:
     lines = [
         "User-agent: *",
         "Allow: /",
-        "Disallow: /fa-admin/",
+        "Disallow: /admin/",
         "Disallow: /persian-admin/",
         f"Sitemap: {sitemap_url}",
     ]
