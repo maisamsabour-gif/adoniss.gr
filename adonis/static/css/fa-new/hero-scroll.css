@@ -115,6 +115,21 @@
     pointer-events: auto;
 }
 
+/* ── Admin-controlled vertical position ── */
+.hero-scene--pos-top {
+    justify-content: flex-start !important;
+    padding-top: 20vh !important;
+    padding-bottom: 2rem !important;
+}
+.hero-scene--pos-center {
+    justify-content: center !important;
+}
+.hero-scene--pos-bottom {
+    justify-content: flex-end !important;
+    padding-top: 2rem !important;
+    padding-bottom: 25vh !important;
+}
+
 .hero-eyebrow {
     font-size: 0.75rem;
     letter-spacing: 0.2em;
@@ -292,6 +307,12 @@
     .hero-scene h1,
     .hero-scene h2 { font-size: clamp(1.45rem, 8vw, 2rem); }
     .hero-scene { padding-bottom: clamp(3.5rem, 14vh, 5.5rem); }
+}
+
+/* Mobile position adjustments */
+@media (max-width: 768px) {
+    .hero-scene--pos-top { padding-top: 15vh !important; }
+    .hero-scene--pos-bottom { padding-bottom: 18vh !important; }
 }
 
 /* iOS Safari notch / home-indicator safe area */

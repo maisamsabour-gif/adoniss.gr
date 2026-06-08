@@ -474,6 +474,7 @@
 /* ============================================================================
  * Why Adonis Stats - Counter Animation
  * Animates numbers from 0 to target value when entering viewport.
+ * Supports Persian/Farsi numerals and custom animation duration.
  * ========================================================================== */
 (function () {
     "use strict";
@@ -485,10 +486,40 @@
     var counters = document.querySelectorAll("[data-counter-target]");
     if (!counters.length) return;
 
-    var DURATION = 2000;
+    var PERSIAN_DIGITS = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+
+    function toPersianNumber(num) {
+        return String(num).replace(/[0-9]/g, function(d) {
+            return PERSIAN_DIGITS[parseInt(d, 10)];
+        });
+    }
+
+    function getStatsSection(el) {
+        return el.closest('[data-stats-persian]');
+    }
+
+    function shouldUsePersian(el) {
+        var section = getStatsSection(el);
+        if (!section) return true;
+        return section.getAttribute('data-stats-persian') === 'true';
+    }
+
+    function getAnimationDuration(el) {
+        var section = getStatsSection(el);
+        if (!section) return 2000;
+        var duration = parseInt(section.getAttribute('data-stats-duration'), 10);
+        return isNaN(duration) ? 2000 : duration;
+    }
 
     function easeOutQuart(t) {
         return 1 - Math.pow(1 - t, 4);
+    }
+
+    function formatNumber(num, usePersian) {
+        if (usePersian) {
+            return toPersianNumber(num);
+        }
+        return String(num);
     }
 
     function animateCounter(el) {
@@ -501,20 +532,22 @@
                       el.querySelector(".fa-counter-value");
         if (!valueEl) return;
 
+        var usePersian = shouldUsePersian(el);
+        var duration = getAnimationDuration(el);
         var startTime = null;
 
         function step(timestamp) {
             if (!startTime) startTime = timestamp;
-            var progress = Math.min((timestamp - startTime) / DURATION, 1);
+            var progress = Math.min((timestamp - startTime) / duration, 1);
             var easedProgress = easeOutQuart(progress);
             var current = Math.floor(easedProgress * target);
 
-            valueEl.textContent = current;
+            valueEl.textContent = formatNumber(current, usePersian);
 
             if (progress < 1) {
                 requestAnimationFrame(step);
             } else {
-                valueEl.textContent = target;
+                valueEl.textContent = formatNumber(target, usePersian);
             }
         }
 
@@ -529,7 +562,8 @@
                           el.querySelector(".fa-stats-counter") || 
                           el.querySelector(".fa-counter-value");
             if (valueEl && !isNaN(target)) {
-                valueEl.textContent = target;
+                var usePersian = shouldUsePersian(el);
+                valueEl.textContent = formatNumber(target, usePersian);
             }
         });
     } else {

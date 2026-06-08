@@ -46,10 +46,12 @@
             --hero-cta1-text:  {{ settings.hero_cta_primary_text|default:'#0B1F3A' }};
             --hero-cta2-bd:    {{ settings.hero_cta_secondary_border|default:'rgba(255,255,255,0.35)' }};
             --hero-cta2-text:  {{ settings.hero_cta_secondary_text|default:'#ffffff' }};
+            --hero-title-font-size:    {{ settings.hero_title_font_size|default:'48px' }};
+            --hero-subtitle-font-size: {{ settings.hero_subtitle_font_size|default:'18px' }};
         }
-        .hero-scene h1, .hero-scene h2      { color: var(--hero-text); }
+        .hero-scene h1, .hero-scene h2      { color: var(--hero-text); font-size: var(--hero-title-font-size); }
         .hero-scene h1 span, .hero-scene h2 span { color: var(--hero-accent) !important; }
-        .hero-sub                            { color: var(--hero-sub); }
+        .hero-sub                            { color: var(--hero-sub); font-size: var(--hero-subtitle-font-size); }
         .hero-scrim                          {
             background: linear-gradient(
                 to bottom,
@@ -60,6 +62,11 @@
         }
         .btn-primary   { background: var(--hero-cta1-bg);   color: var(--hero-cta1-text); }
         .btn-secondary { border-color: var(--hero-cta2-bd); color: var(--hero-cta2-text); }
+        
+        /* Hero content vertical position */
+        .hero-scene--pos-top    { justify-content: flex-start !important; padding-top: 20vh !important; padding-bottom: 2rem !important; }
+        .hero-scene--pos-center { justify-content: center !important; }
+        .hero-scene--pos-bottom { justify-content: flex-end !important; padding-top: 2rem !important; padding-bottom: 25vh !important; }
     </style>
     {% endif %}
 </head>
@@ -114,7 +121,7 @@
                 {# ═══ VIDEO MODE: Multiple scroll-based overlays ═══ #}
                 
                 {# ── Overlay 1 ── label / title / subtitle from admin "متن‌های هیرو فارسی" #}
-                <div class="hero-scene"
+                <div class="hero-scene hero-scene--pos-{{ settings.hero_content_vertical_position|default:'center' }}"
                      data-start="{{ settings.o1_start|default:0 }}"
                      data-end="{{ settings.o1_end|default:30 }}">
                     {% if settings.hero_label or settings.o1_eyebrow %}
@@ -134,7 +141,7 @@
                 </div>
 
                 {# ── Overlay 2 ── #}
-                <div class="hero-scene"
+                <div class="hero-scene hero-scene--pos-{{ settings.hero_content_vertical_position|default:'center' }}"
                      data-start="{{ settings.o2_start|default:30 }}"
                      data-end="{{ settings.o2_end|default:60 }}">
                     {% if settings.o2_eyebrow %}
@@ -147,7 +154,7 @@
                 </div>
 
                 {# ── Overlay 3 ── #}
-                <div class="hero-scene"
+                <div class="hero-scene hero-scene--pos-{{ settings.hero_content_vertical_position|default:'center' }}"
                      data-start="{{ settings.o3_start|default:60 }}"
                      data-end="{{ settings.o3_end|default:85 }}">
                     {% if settings.o3_eyebrow %}
@@ -160,7 +167,7 @@
                 </div>
 
                 {# ── Overlay 4 — CTA slide ── #}
-                <div class="hero-scene hero-scene--cta"
+                <div class="hero-scene hero-scene--cta hero-scene--pos-{{ settings.hero_content_vertical_position|default:'center' }}"
                      data-start="{{ settings.o4_start|default:85 }}"
                      data-end="{{ settings.o4_end|default:101 }}">
                     {% if settings.o4_eyebrow %}
@@ -184,7 +191,7 @@
                 
                 {% else %}
                 {# ═══ IMAGE MODE: Single static hero content (no scroll) ═══ #}
-                <div class="hero-scene hero-scene--static" style="opacity: 1; visibility: visible;">
+                <div class="hero-scene hero-scene--static hero-scene--pos-{{ settings.hero_content_vertical_position|default:'center' }}" style="opacity: 1; visibility: visible;">
                     {% if settings.hero_label or settings.o1_eyebrow %}
                     <p class="hero-eyebrow">{{ settings.hero_label|default:settings.o1_eyebrow }}</p>
                     {% endif %}
@@ -212,9 +219,14 @@
         {% for section in sections_render %}
             {% if section.section_type == 'why_adonis_stats' and section.is_active %}
             <section id="why-adonis-stats" class="why-adonis-stats-section"
-                {% if section.background_image %}
-                style="--wa-bg-image: url('{{ section.background_image.url }}'); --wa-bg-opacity: {{ section.background_image_opacity|default:50 }};"
-                {% endif %}>
+                data-stats-persian="{{ section.stats_use_persian_numbers|yesno:'true,false' }}"
+                data-stats-duration="{{ section.stats_animation_duration|default:2000 }}"
+                style="{% if section.background_image %}--wa-bg-image: url('{{ section.background_image.url }}'); --wa-bg-opacity: {{ section.background_image_opacity|default:50 }};{% endif %}
+                       --wa-number-size: {{ section.stats_number_font_size|default:56 }}px;
+                       --wa-number-size-mobile: {{ section.stats_number_font_size_mobile|default:40 }}px;
+                       --wa-number-color: {{ section.stats_number_color|default:'#D4B057' }};
+                       --wa-suffix-size: {{ section.stats_suffix_font_size|default:32 }}px;
+                       --wa-card-title-size: {{ section.stats_card_title_font_size|default:16 }}px;">
                 {% if section.background_image %}
                 <div class="why-adonis-bg-overlay"></div>
                 {% endif %}

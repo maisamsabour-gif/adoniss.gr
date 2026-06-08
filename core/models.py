@@ -1701,6 +1701,29 @@ class FaNewSettings(models.Model):
         verbose_name='دکمه دوم — رنگ متن',
     )
 
+    # ── Hero Position & Font Sizes ──────────────────────────────────────────────
+    VERTICAL_POSITION_CHOICES = [
+        ('top', 'بالا'),
+        ('center', 'وسط'),
+        ('bottom', 'پایین'),
+    ]
+    hero_content_vertical_position = models.CharField(
+        max_length=12, blank=True, default='center',
+        choices=VERTICAL_POSITION_CHOICES,
+        verbose_name='جایگاه عمودی محتوای هیرو',
+        help_text='تعیین می‌کند عنوان و زیرعنوان در کجای صفحه هیرو قرار بگیرند.',
+    )
+    hero_title_font_size = models.CharField(
+        max_length=10, blank=True, default='48px',
+        verbose_name='اندازه فونت عنوان هیرو',
+        help_text='مثال: 48px, 56px, 64px — مقدار پیش‌فرض: 48px',
+    )
+    hero_subtitle_font_size = models.CharField(
+        max_length=10, blank=True, default='18px',
+        verbose_name='اندازه فونت زیرعنوان هیرو',
+        help_text='مثال: 16px, 18px, 20px — مقدار پیش‌فرض: 18px',
+    )
+
     # ── Meta ──────────────────────────────────────────────────────────────────
     note = models.CharField(
         max_length=200, blank=True,
@@ -2212,6 +2235,50 @@ class FaNewSection(models.Model):
         default=False,
         verbose_name='نمایش تزئینات در موبایل',
         help_text='اگر خاموش باشد، در موبایل لایه تزئینی کامل مخفی می‌شود.',
+    )
+
+    # ── 11) Why Adonis Stats specific fields ──────────────────────────────────
+    stats_use_persian_numbers = models.BooleanField(
+        default=True,
+        verbose_name='اعداد فارسی',
+        help_text='اعداد آماری را به صورت فارسی (۰۱۲۳۴۵۶۷۸۹) نمایش بده',
+    )
+    stats_number_font_size = models.PositiveIntegerField(
+        default=56,
+        validators=[MinValueValidator(20), MaxValueValidator(120)],
+        verbose_name='سایز عدد (px)',
+        help_text='سایز فونت اعداد آماری در دسکتاپ. پیشنهاد: ۴۸ تا ۷۲ پیکسل',
+    )
+    stats_number_font_size_mobile = models.PositiveIntegerField(
+        default=40,
+        validators=[MinValueValidator(16), MaxValueValidator(80)],
+        verbose_name='سایز عدد موبایل (px)',
+        help_text='سایز فونت اعداد آماری در موبایل. پیشنهاد: ۳۲ تا ۴۸ پیکسل',
+    )
+    stats_number_color = models.CharField(
+        max_length=30,
+        blank=True,
+        default='#D4B057',
+        verbose_name='رنگ اعداد',
+        help_text='رنگ اعداد آماری. پیش‌فرض: طلایی (#D4B057)',
+    )
+    stats_suffix_font_size = models.PositiveIntegerField(
+        default=32,
+        validators=[MinValueValidator(12), MaxValueValidator(60)],
+        verbose_name='سایز پسوند (+)',
+        help_text='سایز فونت پسوند (مثل +) در دسکتاپ',
+    )
+    stats_card_title_font_size = models.PositiveIntegerField(
+        default=16,
+        validators=[MinValueValidator(12), MaxValueValidator(32)],
+        verbose_name='سایز عنوان کارت',
+        help_text='سایز فونت عنوان زیر هر عدد (مثلاً «سال سابقه»)',
+    )
+    stats_animation_duration = models.PositiveIntegerField(
+        default=2000,
+        validators=[MinValueValidator(500), MaxValueValidator(5000)],
+        verbose_name='مدت انیمیشن (ms)',
+        help_text='مدت زمان انیمیشن شمارش اعداد به میلی‌ثانیه',
     )
 
     class Meta:

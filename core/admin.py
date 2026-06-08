@@ -1453,6 +1453,18 @@ class FaNewSettingsAdmin(ModelAdmin):
             ),
         }),
 
+        # ── 3.5. Hero Position & Font Size ────────────────────────────────
+        ('📐 جایگاه و اندازه فونت هیرو', {
+            'description': (
+                'تنظیمات جایگاه عنوان و زیرعنوان در هیرو و اندازه فونت آن‌ها. '
+                'برای پایین‌تر آوردن عنوان، گزینه «پایین» را انتخاب کنید.'
+            ),
+            'fields': (
+                'hero_content_vertical_position',
+                ('hero_title_font_size', 'hero_subtitle_font_size'),
+            ),
+        }),
+
         # ── 4. Overlay 1 ──────────────────────────────────────────────────
         ('🎬 متن اسلاید ۱ — روی ویدیو', {
             'classes': ('collapse',),
@@ -1642,6 +1654,30 @@ class FaNewSectionItemInline(StackedInline):
         return super().get_extra(request, obj, **kwargs)
 
 
+class FaNewStatsItemInline(StackedInline):
+    """Specialized inline for why_adonis_stats section — simplified fields."""
+    model = FaNewSectionItem
+    extra = 0
+    min_num = 4
+    max_num = 4
+    validate_min = True
+    verbose_name = 'کارت آماری'
+    verbose_name_plural = '۴ کارت آماری — عدد، پسوند (+) و عنوان هر کارت را وارد کنید'
+    ordering = ('order',)
+    classes = ()
+    tab = False
+
+    fieldsets = (
+        ('📊 اطلاعات کارت آماری', {
+            'description': 'عدد آمار به صورت انگلیسی وارد شود (مثلاً 450). تبدیل به فارسی بر اساس تنظیمات سکشن انجام می‌شود.',
+            'fields': (
+                ('order', 'stat_number', 'badge'),
+                'title',
+            ),
+        }),
+    )
+
+
 class FaNewResidencyTypeInline(StackedInline):
     """Inline for the 3 residency type cards (residency_types section)."""
     model = FaNewSectionItem
@@ -1763,10 +1799,11 @@ _FA_SECTION_HINTS = {
     ),
     'why_adonis_stats': (
         'success',
-        "سکشن چرا آدونیس - ۴ کارت آماری. "
-        "متن‌ها: eyebrow، title، title_color، subtitle. "
-        "تصویر: background_image و background_image_opacity (0-100). "
-        "کارت‌ها: stat_number (عدد)، badge (پسوند +)، title (عنوان).",
+        "📊 سکشن «چرا آدونیس؟» — ۴ کارت آماری زیر هیرو. "
+        "متن‌ها: eyebrow، title، subtitle. "
+        "تصویر: background_image و background_image_opacity. "
+        "کارت‌ها: از آیتم‌های پایین مدیریت می‌شوند (stat_number، badge، title). "
+        "⚙️ تنظیمات اعداد: از فیلدست «تنظیمات اعداد آماری» می‌توانید اعداد فارسی/انگلیسی، سایز، رنگ و سرعت انیمیشن را تنظیم کنید.",
     ),
     'intro_stats': (
         'warning',
@@ -1880,6 +1917,7 @@ class FaNewSectionForm(forms.ModelForm):
             'border_color': forms.TextInput(attrs={'style': 'width:200px;'}),
             'card_1_accent_color': _ColorInput(),
             'card_2_accent_color': _ColorInput(),
+            'stats_number_color': _ColorInput(),
         }
 
 
@@ -1996,7 +2034,17 @@ class FaNewSectionAdmin(admin.ModelAdmin):
                 ('decorative_animation_enabled', 'decorative_show_on_mobile'),
             ),
         }),
-        ('۹ · پیش‌نمایش', {
+        ('۱۱ · تنظیمات اعداد آماری (why_adonis_stats)', {
+            'description': 'تنظیمات سفارشی برای بخش «چرا آدونیس؟ (آمار)» — سایز، رنگ و نمایش فارسی اعداد.',
+            'fields': (
+                'stats_use_persian_numbers',
+                ('stats_number_font_size', 'stats_number_font_size_mobile'),
+                'stats_number_color',
+                ('stats_suffix_font_size', 'stats_card_title_font_size'),
+                'stats_animation_duration',
+            ),
+        }),
+        ('۱۲ · پیش‌نمایش', {
             'fields': ('admin_small_preview',),
         }),
     )
@@ -2008,6 +2056,7 @@ class FaNewSectionAdmin(admin.ModelAdmin):
         'gateway':     ('🏢', '#eff6ff', '#1d4ed8'),
         'intro_stats': ('⭐', '#fefce8', '#854d0e'),
         'why_adonis':  ('🏛️', '#f0fdf4', '#15803d'),
+        'why_adonis_stats': ('📊', '#fef3c7', '#92400e'),
         'routes':      ('🛣️',  '#f5f3ff', '#6d28d9'),
         'projects':    ('🏗️',  '#fff7ed', '#c2410c'),
         'process':     ('📋', '#f0f9ff', '#0369a1'),
@@ -2121,6 +2170,8 @@ class FaNewSectionAdmin(admin.ModelAdmin):
             return [FaNewGatewayCardInline]
         if obj.section_type == 'residency_types':
             return [FaNewResidencyTypeInline]
+        if obj.section_type == 'why_adonis_stats':
+            return [FaNewStatsItemInline]
         return [FaNewSectionItemInline]
 
     # ── context-sensitive fieldsets ───────────────────────────────────────────
@@ -2150,6 +2201,16 @@ class FaNewSectionAdmin(admin.ModelAdmin):
                 if 'decorative_flowers_enabled' not in fs[1].get('fields', ())
                 and not any(
                     isinstance(f, (list, tuple)) and 'decorative_flowers_enabled' in f
+                    for f in fs[1].get('fields', ())
+                )
+            ]
+        # Remove stats customization fieldset for non-why_adonis_stats sections
+        if st != 'why_adonis_stats':
+            all_fs = [
+                fs for fs in all_fs
+                if 'stats_use_persian_numbers' not in fs[1].get('fields', ())
+                and not any(
+                    isinstance(f, (list, tuple)) and 'stats_use_persian_numbers' in f
                     for f in fs[1].get('fields', ())
                 )
             ]

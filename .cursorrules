@@ -1,0 +1,19 @@
+# PROJECT RULES - READ BEFORE ANY ACTION
+
+## Server & Domain
+- This server: Adonis-farsi (SSH: Adonis-farsi)
+- Persian site domain: adoniss.eu
+- Project path: /root/adonis_site/
+- Admin panel: https://adoniss.eu/admin/
+- Restart: cd /root/adonis_site && bash restart.sh
+
+## What NOT to do
+- NEVER use /var/www/adonis_site/ — wrong server
+- NEVER touch ubuntu-adonis server
+- NEVER redirect adoniss.eu to adonisgroup.gr
+- adonisgroup.gr = English site on a DIFFERENT server
+
+## Django
+- Persian frontend: /fa-new/ routes
+- Gunicorn: 127.0.0.1:8000
+- collectstatic required after every CSS change
